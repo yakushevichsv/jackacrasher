@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAE81AD5E216000115F6 /* AppDelegate.swift */; };
 		21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21FFEAEA1AD5E216000115F6 /* GameScene.sks */; };
 		21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAEC1AD5E216000115F6 /* GameScene.swift */; };
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		21FFEAE31AD5E216000115F6 /* JackACrasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JackACrasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21FFEAE71AD5E216000115F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21FFEAE81AD5E216000115F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -60,6 +62,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		215A5D211AD6792B00F136D3 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
+			);
+			name = Model;
+			sourceTree = "<group>";
+		};
 		21FFEADA1AD5E216000115F6 = {
 			isa = PBXGroup;
 			children = (
@@ -81,6 +91,7 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				215A5D211AD6792B00F136D3 /* Model */,
 				21FFEAE81AD5E216000115F6 /* AppDelegate.swift */,
 				21FFEAEA1AD5E216000115F6 /* GameScene.sks */,
 				21FFEAEC1AD5E216000115F6 /* GameScene.swift */,
@@ -221,6 +232,7 @@
 			files = (
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
+				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -415,6 +427,7 @@
 				21FFEB081AD5E216000115F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		21FFEB091AD5E216000115F6 /* Build configuration list for PBXNativeTarget "JackACrasherTests" */ = {
 			isa = XCConfigurationList;
@@ -423,6 +436,7 @@
 				21FFEB0B1AD5E216000115F6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
