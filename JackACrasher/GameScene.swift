@@ -10,7 +10,7 @@ import SpriteKit
 
 class GameScene: SKScene {
     var asteroidManager:AsteroidManager!
-    
+    var playerName:String!
     let asterName:String! = "TestAster"
     
     override func didMoveToView(view: SKView) {
@@ -47,6 +47,9 @@ class GameScene: SKScene {
             
         }
         
+        let player = Player(position: CGPointMake(500, 500))
+        self.playerName = player.name
+        self.addChild(player)
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
@@ -55,16 +58,64 @@ class GameScene: SKScene {
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
         
-            for nodeAny in self.nodesAtPoint(location) {
+            /*for nodeAny in self.nodesAtPoint(location) {
                 let node = nodeAny as SKNode
                 
                 if (node.name != nil && node.name! == self.asterName) {
                     self.asteroidManager.influenceAtPoint(location)
                 }
+            }*/
+            
+            /*if let playerNode = self.childNodeWithName(self.playerName) as? Player {
+                
+               let moveAct =  SKAction.moveTo(location, duration: 1.0)
+               
+                let eEngine = SKAction.runBlock({ () -> Void in
+                    playerNode.enableEngine()
+                })
+                
+                let sEngine = SKAction.runBlock({ () -> Void in
+                    playerNode.disableEngine()
+                })
+        
+                let seg = SKAction.sequence([eEngine,moveAct,sEngine])
+                
+                playerNode.runAction(seg)
+                
+            }*/
+        }
+    }
+    
+    override func touchesEnded(touches: NSSet, withEvent event: UIEvent) {
+        for touch: AnyObject in touches {
+            let location = touch.locationInNode(self)
+            
+            /*for nodeAny in self.nodesAtPoint(location) {
+            let node = nodeAny as SKNode
+            
+            if (node.name != nil && node.name! == self.asterName) {
+            self.asteroidManager.influenceAtPoint(location)
+            }
+            }*/
+            
+            if let playerNode = self.childNodeWithName(self.playerName) as? Player {
+                
+                let moveAct =  SKAction.moveTo(location, duration: 1.0)
+                
+                let eEngine = SKAction.runBlock({ () -> Void in
+                    playerNode.enableEngine()
+                })
+                
+                let sEngine = SKAction.runBlock({ () -> Void in
+                    playerNode.disableEngine()
+                })
+                
+                let seg = SKAction.sequence([eEngine,moveAct,sEngine])
+                
+                playerNode.runAction(seg)
+                
             }
         }
-        
-        
     }
    
     override func update(currentTime: CFTimeInterval) {

@@ -8,12 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
+		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
+		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
+		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
+		21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B341ADA9D8F0071A217 /* Images.xcassets */; };
 		21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAE81AD5E216000115F6 /* AppDelegate.swift */; };
 		21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21FFEAEA1AD5E216000115F6 /* GameScene.sks */; };
 		21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAEC1AD5E216000115F6 /* GameScene.swift */; };
 		21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAEE1AD5E216000115F6 /* GameViewController.swift */; };
 		21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 21FFEAF01AD5E216000115F6 /* Main.storyboard */; };
-		21FFEAF41AD5E216000115F6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21FFEAF31AD5E216000115F6 /* Images.xcassets */; };
 		21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 21FFEAF51AD5E216000115F6 /* LaunchScreen.xib */; };
 		21FFEB031AD5E216000115F6 /* JackACrasherTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEB021AD5E216000115F6 /* JackACrasherTests.swift */; };
 /* End PBXBuildFile section */
@@ -30,6 +33,10 @@
 
 /* Begin PBXFileReference section */
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
+		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
+		21E56B2D1ADA93BB0071A217 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = JackACrasher/Particles/spark.png; sourceTree = "<group>"; };
+		21E56B311ADA9C2A0071A217 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = Entities/Player.swift; sourceTree = "<group>"; };
+		21E56B341ADA9D8F0071A217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		21FFEAE31AD5E216000115F6 /* JackACrasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JackACrasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21FFEAE71AD5E216000115F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21FFEAE81AD5E216000115F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -37,7 +44,6 @@
 		21FFEAEC1AD5E216000115F6 /* GameScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		21FFEAEE1AD5E216000115F6 /* GameViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameViewController.swift; sourceTree = "<group>"; };
 		21FFEAF11AD5E216000115F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		21FFEAF31AD5E216000115F6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		21FFEAF61AD5E216000115F6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		21FFEAFC1AD5E216000115F6 /* JackACrasherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = JackACrasherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		21FFEB011AD5E216000115F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -70,6 +76,24 @@
 			name = Model;
 			sourceTree = "<group>";
 		};
+		21E56B301ADA93C10071A217 /* Particles */ = {
+			isa = PBXGroup;
+			children = (
+				21E56B2C1ADA93BB0071A217 /* Engine.sks */,
+				21E56B2D1ADA93BB0071A217 /* spark.png */,
+			);
+			name = Particles;
+			path = ..;
+			sourceTree = "<group>";
+		};
+		21E56B331ADA9C2E0071A217 /* Entities */ = {
+			isa = PBXGroup;
+			children = (
+				21E56B311ADA9C2A0071A217 /* Player.swift */,
+			);
+			name = Entities;
+			sourceTree = "<group>";
+		};
 		21FFEADA1AD5E216000115F6 = {
 			isa = PBXGroup;
 			children = (
@@ -91,15 +115,17 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				21E56B301ADA93C10071A217 /* Particles */,
 				215A5D211AD6792B00F136D3 /* Model */,
+				21E56B331ADA9C2E0071A217 /* Entities */,
 				21FFEAE81AD5E216000115F6 /* AppDelegate.swift */,
 				21FFEAEA1AD5E216000115F6 /* GameScene.sks */,
 				21FFEAEC1AD5E216000115F6 /* GameScene.swift */,
 				21FFEAEE1AD5E216000115F6 /* GameViewController.swift */,
 				21FFEAF01AD5E216000115F6 /* Main.storyboard */,
-				21FFEAF31AD5E216000115F6 /* Images.xcassets */,
 				21FFEAF51AD5E216000115F6 /* LaunchScreen.xib */,
 				21FFEAE61AD5E216000115F6 /* Supporting Files */,
+				21E56B341ADA9D8F0071A217 /* Images.xcassets */,
 			);
 			path = JackACrasher;
 			sourceTree = "<group>";
@@ -210,9 +236,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
-				21FFEAF41AD5E216000115F6 /* Images.xcassets in Resources */,
+				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
 				21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */,
+				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
+				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -233,6 +261,7 @@
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
+				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
