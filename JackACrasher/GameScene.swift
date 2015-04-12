@@ -12,6 +12,36 @@ class GameScene: SKScene {
     var asteroidManager:AsteroidManager!
     var playerName:String!
     let asterName:String! = "TestAster"
+    let bgStarsName:String! = "bgStars"
+    let bgZPosition:CGFloat = 1
+    let fgZPosition:CGFloat = 5
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        
+        self.createPlayer()
+        self.fillInBackgroundLayer()
+    }
+    
+    func fillInBackgroundLayer() {
+        
+        let emitterNode = SKEmitterNode(fileNamed: "BGStarts.sks")
+        let sceneSize = self.size
+        emitterNode.position = CGPointMake(self.size.width, 0.5*self.size.height)
+        
+        emitterNode.name = self.bgStarsName
+        emitterNode.zPosition = bgZPosition
+        emitterNode.targetNode = nil
+        
+        addChild(emitterNode)
+    }
+    
+    func createPlayer() {
+        let player = Player(position: CGPointMake(500, 500))
+        self.playerName = player.name
+        player.zPosition = fgZPosition
+        self.addChild(player)
+    }
     
     override func didMoveToView(view: SKView) {
         
@@ -47,9 +77,6 @@ class GameScene: SKScene {
             
         }
         
-        let player = Player(position: CGPointMake(500, 500))
-        self.playerName = player.name
-        self.addChild(player)
     }
     
     override func touchesBegan(touches: NSSet, withEvent event: UIEvent) {
