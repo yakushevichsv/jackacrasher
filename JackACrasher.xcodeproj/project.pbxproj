@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
-		21689F671ADAD6AC001456D6 /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 21689F661ADAD6AC001456D6 /* star.png */; };
+		21803C581ADC189D00DDC5ED /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 21803C571ADC189D00DDC5ED /* star.png */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
 		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
 		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
@@ -36,7 +36,7 @@
 /* Begin PBXFileReference section */
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
-		21689F661ADAD6AC001456D6 /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
+		21803C571ADC189D00DDC5ED /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
 		21E56B2D1ADA93BB0071A217 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = JackACrasher/Particles/spark.png; sourceTree = "<group>"; };
 		21E56B311ADA9C2A0071A217 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = Entities/Player.swift; sourceTree = "<group>"; };
@@ -83,10 +83,10 @@
 		21E56B301ADA93C10071A217 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
+				21803C571ADC189D00DDC5ED /* star.png */,
 				21E56B2C1ADA93BB0071A217 /* Engine.sks */,
 				21E56B2D1ADA93BB0071A217 /* spark.png */,
 				21689F641ADAD696001456D6 /* BGStarts.sks */,
-				21689F661ADAD6AC001456D6 /* star.png */,
 			);
 			name = Particles;
 			path = ..;
@@ -241,12 +241,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21803C581ADC189D00DDC5ED /* star.png in Resources */,
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
 				21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */,
 				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
-				21689F671ADAD6AC001456D6 /* star.png in Resources */,
 				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
 				21689F651ADAD696001456D6 /* BGStarts.sks in Resources */,
 			);
