@@ -125,7 +125,7 @@ class GameScene: SKScene {
             }
             }*/
             
-            if let playerNode = self.childNodeWithName(self.playerName) as? Player {
+            /*if let playerNode = self.childNodeWithName(self.playerName) as? Player {
                 
                 let moveAct =  SKAction.moveTo(location, duration: 1.0)
                 
@@ -141,7 +141,7 @@ class GameScene: SKScene {
                 
                 playerNode.runAction(seg)
                 
-            }
+            }*/
         }
     }
    
