@@ -10,10 +10,11 @@ import UIKit
 import SpriteKit
 
 struct EntityCategory {
-    static var Asteroid: UInt32  = 1<<0
+    static var Asteroid: UInt32  = 1 << 0
     static var Player : UInt32  = 1 << 1
     static var Boss : UInt32 = 1 << 3
     static var PlayerLaser: UInt32 = 1 << 2
+    static var TrashAsteroid:UInt32 = 1 << 4
 }
 
 enum PlayerMovement {
@@ -26,12 +27,25 @@ enum PlayerMode {
     case Firing
 }
 
+enum PlayerFlyDistance {
+    case None
+    case Short
+    case Middle
+    case Long
+}
+
 class Player: SKSpriteNode {
     private let engineNodeName = "engineEmitter"
     private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
     private var movementStyle:PlayerMovement = .Fly
     private var playerMode:PlayerMode = .Idle
+    
+    private typealias playerDistFlyMapType = Dictionary<PlayerFlyDistance,(distance:CGFloat,eParticleLifeTime:CGFloat)>
+    
+    
+    private var playerDistFlyMap: playerDistFlyMapType!
+    
     
     var projectileSpeed : Float = 40
     
@@ -45,7 +59,7 @@ class Player: SKSpriteNode {
         
         self.name = "Player"
         
-        createEngine()
+        self.playerDistFlyMap = createEngine()
         createProjectileGun()
     }
     
@@ -55,7 +69,7 @@ class Player: SKSpriteNode {
     
     //MARK: Engine methods
     
-    private func createEngine() {
+    private func createEngine() -> playerDistFlyMapType {
         
         let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks")
         
@@ -67,21 +81,58 @@ class Player: SKSpriteNode {
         
         engineEmitter.targetNode = scene
         
+        var dic = playerDistFlyMapType()
+        
+        let distance = max(self.size.width,self.size.height)*0.5
+        let eMax = engineEmitter.particleLifetime
+        dic[.Long] = (distance,eMax)
+        dic[.Middle] = (distance*0.5,eMax*0.5)
+        dic[.Short] = (distance*0.1,eMax*0.1)
+        
+        
         engineEmitter.hidden = true
+        
+        return dic
     }
 
-    func enableEngine() {
-        self.defineEngineState(false)
+    func defineEngineStateUsingDistance(dist:CGFloat) {
+        
+        var playerDist: PlayerFlyDistance
+        if (dist == 0) {
+            playerDist = .None
+        }
+        else {
+        
+            let sDist = self.playerDistFlyMap[.Short]!.distance;
+            let mDist = self.playerDistFlyMap[.Middle]!.distance;
+            
+            if (sDist >= dist) {
+                playerDist = .Short
+            } else if (mDist >= dist) {
+                playerDist = .Middle
+            } else {
+                playerDist = .Long
+            }
+        }
+        
+        self.defineEngineState(playerDist)
     }
     
     func disableEngine() {
-        self.defineEngineState(true)
+        self.defineEngineStateUsingDistance(0)
     }
     
-    func defineEngineState(enabled:Bool) {
+    func defineEngineState(flyDistance:PlayerFlyDistance) {
         
-        if let engineNode = self.childNodeWithName(engineNodeName) {
-            engineNode.hidden = enabled
+        if let engineNode = self.childNodeWithName(engineNodeName) as? SKEmitterNode {
+            
+            if (.None == flyDistance) {
+                engineNode.hidden = true
+            }
+            else {
+                engineNode.hidden = false
+                engineNode.particleLifetime = self.playerDistFlyMap[flyDistance]!.eParticleLifeTime
+            }
         }
     }
     
@@ -91,8 +142,10 @@ class Player: SKSpriteNode {
         
         let moveAct =  SKAction.moveTo(point, duration: self.flyDuration)
         
+        let dist = sqrt(self.position.x*self.position.x + self.position.y*self.position.y)
+        
         let eEngine = SKAction.runBlock({ () -> Void in
-            self.enableEngine()
+            self.defineEngineStateUsingDistance(dist)
         })
         
         let sEngine = SKAction.runBlock({ () -> Void in
@@ -185,7 +238,7 @@ class Player: SKSpriteNode {
         
         let len = sqrt(pow(xDiff, 2) + pow(yDiff, 2))
         
-        return throwProjectileAtDirection(CGVectorMake(xDiff/len, yDiff/len))
+        return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)))
     }
     
     
