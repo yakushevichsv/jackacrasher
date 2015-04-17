@@ -8,19 +8,27 @@
 
 import SpriteKit
 
-class GameScene: SKScene {
+class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
+    
     var asteroidManager:AsteroidManager!
-    var playerName:String!
+    var asteroidGenerator:AsteroidGenerator!
+    
     let asterName:String! = "TestAster"
     let bgStarsName:String! = "bgStars"
     let bgZPosition:CGFloat = 1
     let fgZPosition:CGFloat = 5
+    var trashAsteroidsCount:Int = 0
+    
+    private var player:Player!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         self.createPlayer()
         self.fillInBackgroundLayer()
+        self.createAsteroidGenerator()
+        
+        self.physicsWorld.contactDelegate = self
     }
     
     func fillInBackgroundLayer() {
@@ -36,11 +44,18 @@ class GameScene: SKScene {
         addChild(emitterNode)
     }
     
+    func createAsteroidGenerator() {
+        
+        self.asteroidGenerator = AsteroidGenerator(sceneSize: self.size, andDelegate: self)
+        self.asteroidGenerator.start()
+    }
+    
     func createPlayer() {
         let player = Player(position: CGPointMake(500, 500))
-        self.playerName = player.name
         player.zPosition = fgZPosition
         self.addChild(player)
+        self.player = player
+        self.player.hidden = false
     }
     
     override func didMoveToView(view: SKView) {
@@ -117,35 +132,105 @@ class GameScene: SKScene {
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
-            /*for nodeAny in self.nodesAtPoint(location) {
-            let node = nodeAny as SKNode
-            
-            if (node.name != nil && node.name! == self.asterName) {
-            self.asteroidManager.influenceAtPoint(location)
+            if (self.player.canThrowProjectile()) {
+                self.player.throwProjectileToLocation(location)
+            } else {
+                self.player.moveToPoint(location)
             }
-            }*/
-            
-            /*if let playerNode = self.childNodeWithName(self.playerName) as? Player {
-                
-                let moveAct =  SKAction.moveTo(location, duration: 1.0)
-                
-                let eEngine = SKAction.runBlock({ () -> Void in
-                    playerNode.enableEngine()
-                })
-                
-                let sEngine = SKAction.runBlock({ () -> Void in
-                    playerNode.disableEngine()
-                })
-                
-                let seg = SKAction.sequence([eEngine,moveAct,sEngine])
-                
-                playerNode.runAction(seg)
-                
-            }*/
         }
     }
    
     override func update(currentTime: CFTimeInterval) {
         /* Called before each frame is rendered */
+    }
+    
+    //MARK: Asteroid Generator's delegate methods
+    func didMoveOutAsteroidForGenerator(generator: AsteroidGenerator, asteroid: SKSpriteNode, withType type: AsteroidType) {
+        
+        switch (type) {
+        case .Trash:
+            if (self.trashAsteroidsCount != 0 && asteroid.parent != nil) {
+                self.trashAsteroidsCount--
+            }
+            
+            if (self.trashAsteroidsCount == 0) {
+                self.player.disableProjectileGun()
+                generator.paused = self.trashAsteroidsCount != 0
+            }
+            
+            println("Trash asteroids count \(self.trashAsteroidsCount) after removing" )
+            
+            break;
+        default:
+            break;
+        }
+    }
+    
+    func asteroidGenerator(generator: AsteroidGenerator, didProduceAsteroids: [SKSpriteNode], type: AsteroidType) {
+        
+        for node in didProduceAsteroids {
+            node.zPosition = self.fgZPosition
+            self.addChild(node)
+
+        }
+        generator.paused = true
+        
+        
+        switch (type) {
+        case .Trash:
+            self.player.removeAllActions()
+            self.player.disableEngine()
+            self.trashAsteroidsCount += didProduceAsteroids.count
+            
+            println("Trash asteroids count \(self.trashAsteroidsCount) addition" )
+            self.player.enableProjectileGun()
+            
+            //eee Move up if there is a contact...
+            break;
+        default:
+            break;
+        }
+    }
+    
+    //MARK: Contact methods
+    
+    func didBeginContact(contact: SKPhysicsContact)
+    {
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        var trashAster:SKPhysicsBody? = nil
+        
+        if (bodyA.categoryBitMask == EntityCategory.TrashAsteroid ) {
+            trashAster = bodyA
+        }
+        else if (bodyB.categoryBitMask == EntityCategory.TrashAsteroid) {
+            trashAster = bodyB
+        }
+        else {
+            return
+        }
+        
+        
+        var laser:SKPhysicsBody? = nil
+            
+        if (trashAster! == bodyA &&  bodyB.categoryBitMask == EntityCategory.PlayerLaser ) {
+            laser = bodyB
+        }
+        else if (trashAster! == bodyB &&  bodyA.categoryBitMask == EntityCategory.PlayerLaser ) {
+            laser = bodyA
+        }
+        else {
+            return
+        }
+        
+        self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: trashAster!.node as! SKSpriteNode, withType: AsteroidType.Trash)
+        
+        trashAster!.node?.removeFromParent()
+        laser!.node?.removeFromParent()
+        
+        //TODO: Play sound here....
+        //TODO: present explosion here....
+        
     }
 }

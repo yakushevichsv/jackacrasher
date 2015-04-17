@@ -12,8 +12,8 @@ import SpriteKit
 struct EntityCategory {
     static var Asteroid: UInt32  = 1 << 0
     static var Player : UInt32  = 1 << 1
-    static var Boss : UInt32 = 1 << 3
     static var PlayerLaser: UInt32 = 1 << 2
+    static var Boss : UInt32 = 1 << 3
     static var TrashAsteroid:UInt32 = 1 << 4
 }
 
@@ -24,7 +24,7 @@ enum PlayerMovement {
 
 enum PlayerMode {
     case Idle
-    case Firing
+    case CanFire
 }
 
 enum PlayerFlyDistance {
@@ -47,9 +47,9 @@ class Player: SKSpriteNode {
     private var playerDistFlyMap: playerDistFlyMapType!
     
     
-    var projectileSpeed : Float = 40
+    var projectileSpeed : Float = 600
     
-    var flyDuration : NSTimeInterval  = 2.0
+    var flyDurationSpeed : Float = 400
     var teleportDuration : NSTimeInterval = 0.3
     
     init(position:CGPoint) {
@@ -58,7 +58,7 @@ class Player: SKSpriteNode {
         super.init(texture: texture,color:SKColor.whiteColor(), size:texture.size())
         
         self.name = "Player"
-        
+        self.position = position
         self.playerDistFlyMap = createEngine()
         createProjectileGun()
     }
@@ -83,11 +83,11 @@ class Player: SKSpriteNode {
         
         var dic = playerDistFlyMapType()
         
-        let distance = max(self.size.width,self.size.height)*0.5
+        let distance = max(self.size.width,self.size.height)*sqrt(2)
         let eMax = engineEmitter.particleLifetime
         dic[.Long] = (distance,eMax)
-        dic[.Middle] = (distance*0.5,eMax*0.5)
-        dic[.Short] = (distance*0.1,eMax*0.1)
+        dic[.Middle] = (distance/1.2,eMax*0.5)
+        dic[.Short] = (distance/2,eMax*0.1)
         
         
         engineEmitter.hidden = true
@@ -140,9 +140,19 @@ class Player: SKSpriteNode {
     
     private func flyToPoint(point:CGPoint) {
         
-        let moveAct =  SKAction.moveTo(point, duration: self.flyDuration)
         
-        let dist = sqrt(self.position.x*self.position.x + self.position.y*self.position.y)
+        if self.actionForKey("flyToPoint") != nil {
+            self.removeActionForKey("flyToPoint")
+        }
+        
+        
+        let dist = sqrt(pow(self.position.x - point.x,2) + pow(self.position.y - point.y,2))
+        
+        
+        let duration = NSTimeInterval(dist/CGFloat(self.flyDurationSpeed))
+        
+        let moveAct =  SKAction.moveTo(point, duration: NSTimeInterval(dist/CGFloat(self.flyDurationSpeed)))
+        
         
         let eEngine = SKAction.runBlock({ () -> Void in
             self.defineEngineStateUsingDistance(dist)
@@ -154,7 +164,7 @@ class Player: SKSpriteNode {
         
         let seg = SKAction.sequence([eEngine,moveAct,sEngine])
         
-        self.runAction(seg)
+        self.runAction(seg ,withKey:"flyToPoint")
     }
     
     private func teleportToPoint(point:CGPoint) {
@@ -200,27 +210,32 @@ class Player: SKSpriteNode {
     
     private func createProjectileGun() {
     
-        let texute = SKTexture(imageNamed: "projectile")
-        var size = texture?.size()
+        let texuteProjectile = SKTexture(imageNamed: "projectile")
+        var size = texuteProjectile.size()
         
-        size?.width *= 0.8
-        size?.height *= 0.8
+        size.width *= 0.8
+        size.height *= 0.8
         
-        let miniProjectile = SKSpriteNode(texture: texture, size: size!)
+        let miniProjectile = SKSpriteNode(texture: texture, size: size)
+        miniProjectile.anchorPoint = CGPointMake(0.5, 0.5)
         miniProjectile.name = projectileNodeName
         miniProjectile.hidden = true
         
-        let point = CGPointMake(size!.width*0.5, size!.height*0.5)
+        let point = CGPointMake(size.width*0.5, size.height*0.5)
         miniProjectile.position = point
         
         addChild(miniProjectile)
     }
     
-    func enableProjectileGun() {
+    internal func canThrowProjectile() -> Bool {
+        return self.playerMode == .CanFire
+    }
+    
+    internal func enableProjectileGun() {
         defineProjectileGunState(false)
     }
     
-    func disableProjectileGun() {
+    internal func disableProjectileGun() {
         defineProjectileGunState(true)
     }
     
@@ -228,6 +243,12 @@ class Player: SKSpriteNode {
         if let node = self.childNodeWithName(projectileNodeName) {
             node.hidden = hidden
             self.numberOfThrownProjectiles = 0
+            
+            if (hidden) {
+                self.playerMode = .Idle
+            } else {
+                self.playerMode = .CanFire
+            }
         }
     }
     
@@ -283,13 +304,15 @@ class Player: SKSpriteNode {
         
         projectile.runAction(SKAction.sequence([fadeIn,moveTo,SKAction.removeFromParent()]))
         projectile.position = position
+        projectile.physicsBody = SKPhysicsBody(rectangleOfSize: projectile.size)
         projectile.name = "projectile_\(++self.numberOfThrownProjectiles)"
-        projectile.physicsBody?.collisionBitMask = 0
-        projectile.physicsBody?.contactTestBitMask = EntityCategory.Asteroid
+        projectile.physicsBody!.collisionBitMask = 0
         
+        projectile.physicsBody!.categoryBitMask  = EntityCategory.PlayerLaser
+        projectile.physicsBody!.contactTestBitMask = EntityCategory.TrashAsteroid | EntityCategory.Asteroid
         projectile.userData = ["owner":"p"]
         
-        
+        projectile.zPosition = self.zPosition
         self.parent!.addChild(projectile)
         
         return projectile
