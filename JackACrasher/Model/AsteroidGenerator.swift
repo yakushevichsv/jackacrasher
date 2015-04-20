@@ -15,8 +15,14 @@ enum AsteroidType {
     case Bomb
     case Joint
     case RopeBased
+    case Regular
 }
 
+enum RegularAsteroidSize {
+    case Small
+    case Medium
+    case Big
+}
 
 
 protocol AsteroidGeneratorDelegate:NSObjectProtocol {
@@ -30,7 +36,8 @@ class AsteroidGenerator: NSObject {
     private weak var delegate:AsteroidGeneratorDelegate!
     private var timer:NSTimer!
     private var prevAsteroidType: AsteroidType = .None
-    private var trashAtlas:SKTextureAtlas?
+    private var trashAtlas:SKTextureAtlas! = SKTextureAtlas(named: "trash")
+    private var spriteAtlas:SKTextureAtlas! = SKTextureAtlas(named: "sprites")
     private let trashAvg:CGFloat   = 80.0
     private let trashRange:CGFloat = 10.0
 
@@ -57,16 +64,14 @@ class AsteroidGenerator: NSObject {
         self.delegate = delegate
         super.init()
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        redifineTimer()
     }
     
     internal func start() {
         canFire = true
         if !self.timer.valid {
-            self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+            redifineTimer()
         }
-        //self.timer.fire()
-        
     }
     
     internal func stop() {
@@ -76,13 +81,102 @@ class AsteroidGenerator: NSObject {
         }
         canFire = false
     }
+    
+    private func redifineTimer() {
+        
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+    }
 
+    private func produceRegularAsteroid(size:RegularAsteroidSize) {
+        //HACK:
+        var imageName = "asteroid-medium"
+        switch (size) {
+        case .Medium:
+            break
+        default:
+            break
+        }
+        
+        produceRegularAsteroid(imageName)
+    }
+    
+    private func produceRegularAsteroid(imageName:String) {
+        
+        let texture = self.spriteAtlas.textureNamed(imageName)
+        let asteroidSpeed:CGFloat = 30
+        
+        let body = SKPhysicsBody(texture: texture, size: texture.size())
+        
+        body.categoryBitMask = EntityCategory.RegularAsteroid
+        body.collisionBitMask = 0
+        body.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
+        
+        let sprite = SKSpriteNode(texture: texture, size: texture.size())
+        sprite.physicsBody = body
+        
+        let yMargin = round(0.5 * max(sprite.size.width,sprite.size.height))
+        
+        let duration = NSTimeInterval(sceneSize.width/asteroidSpeed)
+        
+        let divisor = UInt32(sceneSize.height - yMargin)
+        
+        let yPos = CGFloat(arc4random() % divisor) + yMargin
+        
+        let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
+        
+        sprite.position = CGPointMake(sceneSize.width + xMargin, yPos)
+        
+        let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
+        let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock({ () -> Void in
+            self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: sprite, withType: .Regular)
+        }),SKAction.removeFromParent()])
+        sprite.runAction(sequence)
+        
+        self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Regular)
+        
+        println("Y position \(yPos) and  Scene height \(sceneSize.height) Sprite size \(sprite.size)")
+        
+        
+    }
+    
+    private func produceBombSprite() {
+        let bombSpeed:CGFloat = 200
+        let bombTexture = self.spriteAtlas.textureNamed("cartoon-bomb")
+        
+        let sprite = SKSpriteNode(texture: bombTexture)
+        sprite.zRotation = CGFloat(M_PI*0.5)
+        
+        sprite.xScale = 0.25
+        
+        let yMargin = round(0.5 * max(sprite.size.width,sprite.size.height))
+        let divisor = UInt32(sceneSize.height - yMargin)
+        
+        let yPos = CGFloat(arc4random() % divisor) + yMargin
+        
+        let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
+        
+        sprite.position = CGPointMake(sceneSize.width + xMargin, yPos)
+        
+        sprite.physicsBody = SKPhysicsBody(texture: bombTexture, size: sprite.size)
+        sprite.physicsBody!.collisionBitMask = 0
+        sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
+        sprite.physicsBody!.categoryBitMask = EntityCategory.Bomb
+        sprite.userData = ["radius":50]
+        
+        let duration = NSTimeInterval(sceneSize.width/bombSpeed)
+        
+        let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
+        let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock({ () -> Void in
+            self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: sprite, withType: .Trash)
+        }),SKAction.removeFromParent()])
+        sprite.runAction(sequence)
+        
+        self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Bomb)
+        
+        println("Y position \(yPos) and  Scene height \(sceneSize.height) Sprite size \(sprite.size)")
+    }
     
     private func produceTrashSprites() {
-        
-        if (trashAtlas == nil) {
-            trashAtlas = SKTextureAtlas(named: "trash")
-        }
         
         var minSpeed:CGFloat = CGFloat.max
         var minIndex = 0
@@ -171,7 +265,7 @@ class AsteroidGenerator: NSObject {
         var currentAstType:AsteroidType = .None
         do {
         
-            let randValue = arc4random()%10
+            let randValue = arc4random()%12
         
             if (randValue < 2) {
                 currentAstType = .Trash
@@ -179,16 +273,19 @@ class AsteroidGenerator: NSObject {
                 currentAstType = .Bomb
             } else if (randValue < 6) {
                 currentAstType = .Joint
+            }else if (randValue < 8) {
+                currentAstType = .Regular
             } else {
                 currentAstType = .RopeBased
             }
             
-            //HACK: 
-            currentAstType = .Trash
-            self.prevAsteroidType = .None
-            //end HACK
             
         } while (currentAstType == self.prevAsteroidType )
+        
+        //HACK: warning
+        
+        self.prevAsteroidType = .None
+        currentAstType = .Regular
         
         self.prevAsteroidType = currentAstType
         
@@ -196,6 +293,24 @@ class AsteroidGenerator: NSObject {
         case .Trash:
             self.produceTrashSprites()
             break
+            
+        case .Bomb:
+            self.produceBombSprite()
+            break
+        case .Regular:
+            
+            let randValue = arc4random()%3
+            var regSize:RegularAsteroidSize
+            
+            if (randValue == 2) {
+                regSize = RegularAsteroidSize.Big
+            } else if (randValue == 1) {
+                regSize = RegularAsteroidSize.Small
+            } else {
+                regSize = RegularAsteroidSize.Medium
+            }
+            
+            self.produceRegularAsteroid(regSize)
         default:
             break
         }

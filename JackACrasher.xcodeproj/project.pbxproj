@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 210DD8131AE3CAF90092DD39 /* sprites.atlas */; };
+		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		21803C581ADC189D00DDC5ED /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 21803C571ADC189D00DDC5ED /* star.png */; };
+		2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */; };
+		2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */; };
+		2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B6871AE3FF7700DDDB9F /* SoundManager.swift */; };
+		2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */; };
 		21A74E511AE0F6E00005334D /* trash.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21A74E501AE0F6E00005334D /* trash.atlas */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
@@ -36,9 +42,15 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		210DD8131AE3CAF90092DD39 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
+		210DD8151AE3CBAA0092DD39 /* Explosion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Explosion.swift; path = Entities/Explosion.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		21803C571ADC189D00DDC5ED /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
+		2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_large.wav; path = Sounds/explosion_large.wav; sourceTree = "<group>"; };
+		2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_small.wav; path = Sounds/explosion_small.wav; sourceTree = "<group>"; };
+		2199B6871AE3FF7700DDDB9F /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Model/SoundManager.swift; sourceTree = "<group>"; };
+		2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGVector+Extensions.swift"; path = "Utils/CGVector+Extensions.swift"; sourceTree = "<group>"; };
 		21A74E501AE0F6E00005334D /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
 		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
@@ -81,8 +93,35 @@
 			children = (
 				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
 				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
+				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		2199B6801AE3FC9500DDDB9F /* Atlases */ = {
+			isa = PBXGroup;
+			children = (
+				21A74E501AE0F6E00005334D /* trash.atlas */,
+				210DD8131AE3CAF90092DD39 /* sprites.atlas */,
+			);
+			name = Atlases;
+			sourceTree = "<group>";
+		};
+		2199B6821AE3FEF100DDDB9F /* Sounds */ = {
+			isa = PBXGroup;
+			children = (
+				2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */,
+				2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */,
+			);
+			name = Sounds;
+			sourceTree = "<group>";
+		};
+		2199B6891AE4470100DDDB9F /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */,
+			);
+			name = Utils;
 			sourceTree = "<group>";
 		};
 		21E56B301ADA93C10071A217 /* Particles */ = {
@@ -101,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				21E56B311ADA9C2A0071A217 /* Player.swift */,
+				210DD8151AE3CBAA0092DD39 /* Explosion.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -126,9 +166,12 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				2199B6891AE4470100DDDB9F /* Utils */,
+				2199B6821AE3FEF100DDDB9F /* Sounds */,
 				21E56B301ADA93C10071A217 /* Particles */,
 				215A5D211AD6792B00F136D3 /* Model */,
 				21E56B331ADA9C2E0071A217 /* Entities */,
+				2199B6801AE3FC9500DDDB9F /* Atlases */,
 				21FFEAE81AD5E216000115F6 /* AppDelegate.swift */,
 				21FFEAEA1AD5E216000115F6 /* GameScene.sks */,
 				21FFEAEC1AD5E216000115F6 /* GameScene.swift */,
@@ -136,7 +179,6 @@
 				21FFEAF01AD5E216000115F6 /* Main.storyboard */,
 				21FFEAF51AD5E216000115F6 /* LaunchScreen.xib */,
 				21FFEAE61AD5E216000115F6 /* Supporting Files */,
-				21A74E501AE0F6E00005334D /* trash.atlas */,
 				21E56B341ADA9D8F0071A217 /* Images.xcassets */,
 			);
 			path = JackACrasher;
@@ -247,12 +289,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */,
 				21803C581ADC189D00DDC5ED /* star.png in Resources */,
+				2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */,
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
 				21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */,
 				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
+				2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */,
 				21A74E511AE0F6E00005334D /* trash.atlas in Resources */,
 				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
 				21689F651ADAD696001456D6 /* BGStarts.sks in Resources */,
@@ -274,6 +319,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
+				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
+				2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */,
+				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,

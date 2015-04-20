@@ -15,6 +15,8 @@ struct EntityCategory {
     static var PlayerLaser: UInt32 = 1 << 2
     static var Boss : UInt32 = 1 << 3
     static var TrashAsteroid:UInt32 = 1 << 4
+    static var Bomb : UInt32 = 1 << 5
+    static var RegularAsteroid:UInt32 = 1 << 6
 }
 
 enum PlayerMovement {
@@ -59,12 +61,23 @@ class Player: SKSpriteNode {
         
         self.name = "Player"
         self.position = position
+        
         self.playerDistFlyMap = createEngine()
+        
+        createPhysicsBody()
         createProjectileGun()
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func createPhysicsBody() {
+    
+        let aPhysBody = SKPhysicsBody(rectangleOfSize: self.size)
+        aPhysBody.categoryBitMask = EntityCategory.Player
+        aPhysBody.collisionBitMask = 0
+        self.physicsBody = aPhysBody
     }
     
     //MARK: Engine methods
@@ -145,8 +158,16 @@ class Player: SKSpriteNode {
             self.removeActionForKey("flyToPoint")
         }
         
+        let xDiff = point.x - self.position.x
+        let yDiff = point.y - self.position.y
         
-        let dist = sqrt(pow(self.position.x - point.x,2) + pow(self.position.y - point.y,2))
+        let dist = sqrt(pow(xDiff,2) + pow(yDiff,2))
+
+        if (xDiff > 0 ) {
+            self.xScale = 1.0
+        } else if (xDiff != 0){
+            self.xScale = -1.0
+        }
         
         
         let duration = NSTimeInterval(dist/CGFloat(self.flyDurationSpeed))
@@ -294,6 +315,8 @@ class Player: SKSpriteNode {
         } else {
             xDiff = self.scene!.size.width + projectile.size.width * 0.5 - position.x
         }
+        
+        self.xScale = isLeft ? -1 : 1
         
         let positionFinal = CGPointMake(position.x + xDiff, position.y + yDiff)
         let length = Double(sqrt(pow(xDiff, 2) + pow(yDiff, 2)))
