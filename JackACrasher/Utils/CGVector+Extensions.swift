@@ -30,6 +30,11 @@ func length() -> CGFloat {
         
     }
     
+    
+    var angle: CGFloat {
+        return self.dx != 0 ? atan2(dy, dx) : 0
+    }
+    
 }
 
 

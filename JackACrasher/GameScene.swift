@@ -53,6 +53,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         player.zPosition = fgZPosition
         self.addChild(player)
         self.player = player
+        //self.player.anchorPoint = CGPointZero
+        //self.player.zRotation = CGFloat(140).radians
+        println("Z rotation \(self.player.zRotation)")
         self.player.hidden = false
     }
     
@@ -287,21 +290,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
             
             let angle = self.player.zRotation
             
-            let vector = CGVector(dx: cos(CGFloat(M_PI_2) - angle), dy: sin(CGFloat(M_PI_2) -  angle))
             
-            let angel2 =  CGFloat(M_PI_2) - atan(vector.dy/vector.dx) //CGFloat(M_PI_2) -  acos(normal.dx * vector.dx+normal.dy * vector.dy)
+            let angel2 =  normal.angle
             
-            self.player.anchorPoint = CGPointZero
-            self.player.zRotation = angel2*0
-            self.player.zPosition += 1
+            //self.player.anchorPoint = CGPointZero
             
-            let pointInternal = pNode.convertPoint(contact.contactPoint, fromNode: self)
+            println("Player's z (before) rotation \(angle.degree), Angle \(angel2.degree)")
+            let delta = shortestAngleBetween(angle, angel2)
+            self.player.zRotation += delta
             
-            self.player.position = CGPointZero// pointInternal
+            println("Player's z (after) rotation \(self.player.zRotation.degree)")
+            
+            //self.player.zPosition += 1
+            
+            /*let pointInternal = pNode.convertPoint(contact.contactPoint, fromNode: self)
+            
+            self.player.position = pointInternal
+            
+            println("placing player at position \(pointInternal)")
             self.player.removeFromParent()
             regularBody.contactTestBitMask &= ~EntityCategory.Player
             regularBody.categoryBitMask = 0
-            pNode.addChild(self.player)
+            pNode.addChild(self.player)*/
             
             
             return
