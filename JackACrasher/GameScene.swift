@@ -20,13 +20,23 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     var trashAsteroidsCount:Int = 0
     private var player:Player!
     
+    private var enableCuttingRope:Bool = false
+    private var startPoint:CGPoint = CGPointZero
+    private var movedPoint:CGPoint = CGPointZero
+    private var endPoint:CGPoint = CGPointZero
+    private var moving:Bool = false
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
-        self.createPlayer()
         self.fillInBackgroundLayer()
         self.createAsteroidGenerator()
+        self.createPlayer()
+        
+        self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         self.physicsWorld.contactDelegate = self
+        
+        self.asteroidManager = AsteroidManager(scene: self)
     }
     
     func fillInBackgroundLayer() {
@@ -39,6 +49,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         emitterNode.zPosition = bgZPosition
         emitterNode.targetNode = nil
         
+        emitterNode.particlePositionRange = CGVectorMake(0, self.size.height)
+        
+        let timeInterval = self.size.width/emitterNode.particleSpeed
+        
+        emitterNode.particleLifetime = timeInterval
+        
         addChild(emitterNode)
     }
     
@@ -50,9 +66,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     
     func createPlayer() {
         let player = Player(position: CGPointMake(500, 500))
+        player.alpha = 0.0
+        
         player.zPosition = fgZPosition
         self.addChild(player)
         self.player = player
+        
+        let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")
+        sparkEmitter.zPosition = player.zPosition
+        sparkEmitter.position = player.position
+        addChild(sparkEmitter)
+        runOneShortEmitter(sparkEmitter, 0.15)
+        player.runAction(SKAction.fadeInWithDuration(2.0))
+        
         //self.player.anchorPoint = CGPointZero
         //self.player.zRotation = CGFloat(140).radians
         println("Z rotation \(self.player.zRotation)")
@@ -67,8 +93,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         myLabel.fontSize = 65;
         myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
         self.addChild(myLabel)*/
-        self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
-        self.asteroidManager = AsteroidManager(scene: self)
         
         let texture1 = SKTexture(imageNamed: "Asteroid1_Part1")
         let size1 = texture1.size()
@@ -95,41 +119,102 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         
     }
     
+    private func canCutRope(touches: Set<NSObject>) -> Bool {
+        return touches.count == 1 && self.enableCuttingRope
+    }
+    
+    private func transferAsteroidsToScene(rope:Rope) {
+        
+        if let ropeJointsAster = rope.parent  as? RopeJointAsteroids {
+            
+            for regAster:RegularAsteroid in ropeJointsAster.asteroids {
+                let position = ropeJointsAster.convertPoint(regAster.position, toNode: self)
+                regAster.removeFromParent()
+                regAster.position = position
+                asteroidGenerator(self.asteroidGenerator, didProduceAsteroids: [regAster], type: .Regular)
+                
+                let action = self.asteroidGenerator.produceSeqActionToAsteroid(regAster)
+                regAster.runAction(action)
+            }
+        }
+    }
+    
+    //MARK: Touch system
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         /* Called when a touch begins */
+        self.moving = false
         
-        for touch: AnyObject in touches {
-            let location = touch.locationInNode(self)
+        if self.canCutRope(touches) {
+            self.startPoint = (touches.first as! UITouch).locationInNode(self)
+        }
         
-            /*for nodeAny in self.nodesAtPoint(location) {
-                let node = nodeAny as SKNode
-                
-                if (node.name != nil && node.name! == self.asterName) {
-                    self.asteroidManager.influenceAtPoint(location)
-                }
-            }*/
+    }
+    
+    override  func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        if self.canCutRope(touches) {
             
-            /*if let playerNode = self.childNodeWithName(self.playerName) as? Player {
+            if let touch = touches.first as? UITouch {
+            
+                let position = touch.locationInNode(self)
+                self.createSparks(position)
                 
-               let moveAct =  SKAction.moveTo(location, duration: 1.0)
-               
-                let eEngine = SKAction.runBlock({ () -> Void in
-                    playerNode.enableEngine()
-                })
-                
-                let sEngine = SKAction.runBlock({ () -> Void in
-                    playerNode.disableEngine()
-                })
-        
-                let seg = SKAction.sequence([eEngine,moveAct,sEngine])
-                
-                playerNode.runAction(seg)
-                
-            }*/
+                self.moving = true
+            }
         }
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        if self.canCutRope(touches) &&  self.moving {
+            
+            let touch = touches.first as! UITouch
+            let location = touch.locationInNode(self)
+            self.endPoint = location
+            
+            if (!CGPointEqualToPoint(self.startPoint, self.endPoint)){
+                
+                if let  body = self.physicsWorld.bodyAlongRayStart(self.startPoint, end: self.endPoint) {
+                    
+                    if body.categoryBitMask == EntityCategory.Rope {
+                        
+                        if !body.joints.isEmpty {
+                            
+                            for var i = 0; i < body.joints.endIndex;i++ {
+                                let joint: AnyObject = body.joints[i]
+                                
+                                let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
+                                
+                                physicsWorld.removeJoint(skJoint)
+                            }
+                           
+                            if let bNode = body.node {
+                                
+                                let bNodeParent = bNode.parent!
+                                
+                                let position = bNodeParent.convertPoint(bNode.position, toNode: self.scene!)
+                                
+                                bNode.removeFromParent()
+                            
+                                bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.5),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock({ () -> Void in
+                                    self.displayScoreAdditionLabel(position, scoreAddition: 20)
+                                })]))
+                                
+                                self.enableCuttingRope = false
+                                
+                            }
+                            
+                            
+                        }
+                        
+                    }
+                }
+            }
+            
+            self.moving = false
+            return
+        }
+        
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
@@ -137,13 +222,79 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
                 self.player.throwProjectileToLocation(location)
             } else if (self.player.parent == self.player.scene) {
                 self.player.moveToPoint(location)
-            } else  {
-                //TODO: handle touch...
+            } else  if (self.player.parent!.isKindOfClass(RegularAsteroid)) {
                 
-                shakeCamera(0.8)
+                
+                
+                self.physicsWorld.enumerateBodiesAtPoint(location, usingBlock: { (body, pointer) -> Void in
+                    
+                    if let regAster = body.node as? RegularAsteroid {
+
+                            if regAster == self.player.parent! {
+                                
+                                if (regAster.tryToDestroyWithForce(self.player.punchForce)) {
+                                    
+                                    
+                                    self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                                    
+                                    var scale:CGFloat
+                                    
+                                    switch (regAster.asteroidSize){
+                                    case .Big:
+                                        scale = 4.0
+                                        break;
+                                    case .Medium:
+                                        scale = 2.0
+                                        break;
+                                    case .Small:
+                                        scale = 1.0
+                                        break;
+                                    default:
+                                        scale = 1.0
+                                        break;
+                                    }
+                                    
+                                    //MARK: Continue here, create crystal, with score addition.
+                                    
+                                    self.createRocksExplosion(location,scale:scale)
+                                }
+                                self.shakeCamera(0.8)
+                            
+                            pointer.memory = true
+                        }
+                    }
+                })
+
+                
+                
             }
         }
     }
+
+    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+        self.moving = false
+    }
+    
+    func createSparks(point:CGPoint) {
+        
+        let particlePath = NSBundle.mainBundle().pathForResource("Sparky", ofType:"sks")
+        var sparky = NSKeyedUnarchiver.unarchiveObjectWithFile(particlePath!) as! SKNode
+        
+        sparky.position = point
+        sparky.name = "PARTICLE"
+        addChild(sparky)
+    }
+    
+    func createRocksExplosion(point:CGPoint,scale:CGFloat) {
+        
+        let  emitter = SKEmitterNode(fileNamed: "Explosion")
+        emitter!.zPosition = self.fgZPosition
+        emitter!.position = point
+        emitter!.targetNode = self
+        emitter.particleScale = scale
+        addChild(emitter!)
+    }
+    
     
     func shakeCamera(duration:NSTimeInterval) {
         let amplitudeX:CGFloat = 10;
@@ -168,28 +319,45 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         /* Called before each frame is rendered */
     }
     
-    func returnPlayerToScene(sprite:SKSpriteNode) -> Bool {
+    func returnPlayerToScene(sprite:SKNode) -> Bool {
         
         if let playerParent = self.player.parent {
             
             if playerParent == sprite {
                 playerParent.physicsBody!.categoryBitMask = EntityCategory.RegularAsteroid
-                self.player.removeFromParent()
                 
-                addChild(self.player)
-                self.player.position = CGPointMake(self.player.size.width, self.player.position.y)
-                self.player.anchorPoint = CGPointMake(0.5, 0.5)
-                self.player.physicsBody!.contactTestBitMask != EntityCategory.Player
-                self.player.zRotation = 0
-                self.player.zPosition--
+                self.player.position  = convertNodePosition(self.player, toScene: self)
+                
+                self.removePlayerFromRegularAsteroidToScene()
                 return true
             }
         }
         return false
     }
     
+    func removePlayerFromRegularAsteroidToScene() {
+        if let regularAsteroid = self.player.parent as? RegularAsteroid {
+            self.player.anchorPoint = CGPointMake(0.5, 0.5)
+            self.player.physicsBody!.contactTestBitMask != EntityCategory.Player
+            self.player.zRotation = 0
+            self.player.zPosition--
+            
+            if (self.player.position.x <= 0 ) {
+                self.player.position.x = CGFloat(self.player.size.width*0.5)
+            }
+            
+            if (self.player.position.y <= 0 ){
+                self.player.position.y = CGFloat(self.player.size.height*0.5)
+            }
+            
+            self.player.removeFromParent()
+            regularAsteroid.removeFromParent()
+            addChild(self.player)
+        }
+    }
+    
     //MARK: Asteroid Generator's delegate methods
-    func didMoveOutAsteroidForGenerator(generator: AsteroidGenerator, asteroid: SKSpriteNode, withType type: AsteroidType) {
+    func didMoveOutAsteroidForGenerator(generator: AsteroidGenerator, asteroid: SKNode, withType type: AsteroidType) {
         
         switch (type) {
         case .Trash:
@@ -205,19 +373,21 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
             println("Trash asteroids count \(self.trashAsteroidsCount) after removing" )
             
             break
+        case .RopeBased:
+            self.enableCuttingRope = false
+            fallthrough
+        case .Regular:
+            returnPlayerToScene(asteroid)
+            fallthrough
         case .Bomb:
             generator.paused = false
-            break
-        case .Regular:
-            generator.paused = false
-            returnPlayerToScene(asteroid)
             break
         default:
             break
         }
     }
     
-    func asteroidGenerator(generator: AsteroidGenerator, didProduceAsteroids: [SKSpriteNode], type: AsteroidType) {
+    func asteroidGenerator(generator: AsteroidGenerator, didProduceAsteroids: [SKNode], type: AsteroidType) {
         
         for node in didProduceAsteroids {
             node.zPosition = self.fgZPosition
@@ -239,10 +409,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
             //eee Move up if there is a contact...
             break;
         case .Bomb:
-            break;
+            break
         case .Regular:
             self.player.disableProjectileGun()
-            break;
+            break
+        case .RopeBased:
+            if let asteroids = didProduceAsteroids.last as? RopeJointAsteroids {
+                asteroids.prepare()
+                self.enableCuttingRope = true
+            }
+            break
         default:
             break;
         }
@@ -301,9 +477,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
             
             println("Player's z (after) rotation \(self.player.zRotation.degree)")
             
-            //self.player.zPosition += 1
+            self.player.zPosition += 1
             
-            /*let pointInternal = pNode.convertPoint(contact.contactPoint, fromNode: self)
+            let pointInternal = pNode.convertPoint(contact.contactPoint, fromNode: pNode.scene!)
             
             self.player.position = pointInternal
             
@@ -311,7 +487,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
             self.player.removeFromParent()
             regularBody.contactTestBitMask &= ~EntityCategory.Player
             regularBody.categoryBitMask = 0
-            pNode.addChild(self.player)*/
+            pNode.addChild(self.player)
             
             
             return
@@ -420,21 +596,34 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
                 return
             }
             
-            let scoreLabel = SKLabelNode(fontNamed: "Menlo-Regular")
-            scoreLabel.text = "+\(scoreAddition)"
-            scoreLabel.fontSize = 30.0
-            scoreLabel.horizontalAlignmentMode = .Center
-            scoreLabel.position = position
-            scoreLabel.runAction(SKAction.sequence([
-                SKAction.moveByX(0, y: 30, duration: 1.0),
-                SKAction.fadeOutWithDuration(1.0),
-                SKAction.removeFromParent()
-                ]))
-            addChild(scoreLabel)
+            displayScoreAdditionLabel(position,scoreAddition: scoreAddition)
             
             //TODO: add score here....
             break;
         }
         
+    }
+    
+    func displayScoreAdditionLabel(position:CGPoint,scoreAddition:CGFloat) {
+        let scoreLabel = SKLabelNode(fontNamed: "Menlo-Regular")
+        scoreLabel.text = "+\(scoreAddition)"
+        scoreLabel.fontSize = 30.0
+        scoreLabel.horizontalAlignmentMode = .Center
+        scoreLabel.position = position
+        
+        var yDiff:CGFloat = 0.0
+        if (self.scene!.size.height >= 30 + position.y) {
+            yDiff = -30
+        }
+        else {
+            yDiff = 30
+        }
+        
+        scoreLabel.runAction(SKAction.sequence([
+            SKAction.moveByX(0, y: yDiff, duration: 1.0),
+            SKAction.fadeOutWithDuration(1.0),
+            SKAction.removeFromParent()
+            ]))
+        addChild(scoreLabel)
     }
 }

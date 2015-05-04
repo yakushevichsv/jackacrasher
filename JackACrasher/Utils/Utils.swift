@@ -8,6 +8,22 @@
 
 import Foundation
 import CoreGraphics
+import SpriteKit
+
+func runOneShortEmitter(emitter:SKEmitterNode, duration:NSTimeInterval) {
+    
+   emitter.runAction(SKAction.sequence([SKAction.waitForDuration(duration), SKAction.runBlock { () -> Void in
+        emitter.particleBirthRate = 0 }, SKAction.waitForDuration(NSTimeInterval(emitter.particleLifetime + emitter.particleLifetimeRange)), SKAction.removeFromParent()]))
+}
+
+func convertNodePosition(node:SKNode!,toScene scene:SKScene!) -> CGPoint {
+    
+    if (node.parent == nil && scene == node.parent!) {
+        return node.position
+    }
+    
+    return node.parent!.convertPoint(node.position, toNode: scene)
+}
 
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
@@ -113,3 +129,4 @@ func shortestAngleBetween(angle1: CGFloat,
         }
         return angle
 }
+

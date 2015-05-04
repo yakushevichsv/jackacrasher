@@ -10,19 +10,31 @@
 		21068A3A1AE555DB007398B5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21068A391AE555DB007398B5 /* Utils.swift */; };
 		210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 210DD8131AE3CAF90092DD39 /* sprites.atlas */; };
 		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
+		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
+		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
+		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		21803C581ADC189D00DDC5ED /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 21803C571ADC189D00DDC5ED /* star.png */; };
+		2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCDF1AF6567E00518F97 /* Spawn.sks */; };
+		2192CCE21AF6574800518F97 /* realStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCE11AF6574800518F97 /* realStar.png */; };
 		2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */; };
 		2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */; };
 		2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B6871AE3FF7700DDDB9F /* SoundManager.swift */; };
 		2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */; };
 		21A74E511AE0F6E00005334D /* trash.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21A74E501AE0F6E00005334D /* trash.atlas */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
+		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
 		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
 		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
 		21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B341ADA9D8F0071A217 /* Images.xcassets */; };
+		21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */; };
+		21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */; };
+		21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FC6D7B1AEC0457001D99B6 /* Rope.swift */; };
+		21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */; };
+		21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */; };
+		21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */; };
 		21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAE81AD5E216000115F6 /* AppDelegate.swift */; };
 		21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21FFEAEA1AD5E216000115F6 /* GameScene.sks */; };
 		21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFEAEC1AD5E216000115F6 /* GameScene.swift */; };
@@ -46,19 +58,31 @@
 		21068A391AE555DB007398B5 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utils.swift; path = Utils/Utils.swift; sourceTree = "<group>"; };
 		210DD8131AE3CAF90092DD39 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
 		210DD8151AE3CBAA0092DD39 /* Explosion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Explosion.swift; path = Entities/Explosion.swift; sourceTree = "<group>"; };
+		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
+		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
+		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		21803C571ADC189D00DDC5ED /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
+		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
+		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
 		2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_large.wav; path = Sounds/explosion_large.wav; sourceTree = "<group>"; };
 		2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_small.wav; path = Sounds/explosion_small.wav; sourceTree = "<group>"; };
 		2199B6871AE3FF7700DDDB9F /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Model/SoundManager.swift; sourceTree = "<group>"; };
 		2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGVector+Extensions.swift"; path = "Utils/CGVector+Extensions.swift"; sourceTree = "<group>"; };
 		21A74E501AE0F6E00005334D /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
+		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
 		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
 		21E56B2D1ADA93BB0071A217 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = JackACrasher/Particles/spark.png; sourceTree = "<group>"; };
 		21E56B311ADA9C2A0071A217 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = Entities/Player.swift; sourceTree = "<group>"; };
 		21E56B341ADA9D8F0071A217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectRope.swift; path = Entities/DirectRope.swift; sourceTree = "<group>"; };
+		21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RopeJointAsteroids.swift; path = Entities/RopeJointAsteroids.swift; sourceTree = "<group>"; };
+		21FC6D7B1AEC0457001D99B6 /* Rope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rope.swift; path = Entities/Rope.swift; sourceTree = "<group>"; };
+		21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressTimerNode.swift; path = Entities/ProgressTimerNode.swift; sourceTree = "<group>"; };
+		21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DigitNode.swift; path = Entities/DigitNode.swift; sourceTree = "<group>"; };
+		21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegularAsteroid.swift; path = Entities/RegularAsteroid.swift; sourceTree = "<group>"; };
 		21FFEAE31AD5E216000115F6 /* JackACrasher.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = JackACrasher.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		21FFEAE71AD5E216000115F6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		21FFEAE81AD5E216000115F6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -130,8 +154,14 @@
 		21E56B301ADA93C10071A217 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
+				2192CCE11AF6574800518F97 /* realStar.png */,
+				2192CCDF1AF6567E00518F97 /* Spawn.sks */,
+				211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */,
+				211243621AEAE07A006B5487 /* Explosion.sks */,
+				211243601AEAE070006B5487 /* Rock.png */,
 				21803C571ADC189D00DDC5ED /* star.png */,
 				21E56B2C1ADA93BB0071A217 /* Engine.sks */,
+				21DC553C1AF42DB60083210D /* Sparky.sks */,
 				21E56B2D1ADA93BB0071A217 /* spark.png */,
 				21689F641ADAD696001456D6 /* BGStarts.sks */,
 			);
@@ -144,8 +174,30 @@
 			children = (
 				21E56B311ADA9C2A0071A217 /* Player.swift */,
 				210DD8151AE3CBAA0092DD39 /* Explosion.swift */,
+				21F0FFA91AED1A9C00C2BDB6 /* TextOnAsteroid */,
+				21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */,
+				21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */,
+				21F0FFA61AED09B300C2BDB6 /* Rope */,
 			);
 			name = Entities;
+			sourceTree = "<group>";
+		};
+		21F0FFA61AED09B300C2BDB6 /* Rope */ = {
+			isa = PBXGroup;
+			children = (
+				21FC6D7B1AEC0457001D99B6 /* Rope.swift */,
+				21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */,
+			);
+			name = Rope;
+			sourceTree = "<group>";
+		};
+		21F0FFA91AED1A9C00C2BDB6 /* TextOnAsteroid */ = {
+			isa = PBXGroup;
+			children = (
+				21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */,
+				21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */,
+			);
+			name = TextOnAsteroid;
 			sourceTree = "<group>";
 		};
 		21FFEADA1AD5E216000115F6 = {
@@ -261,6 +313,7 @@
 				TargetAttributes = {
 					21FFEAE21AD5E216000115F6 = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = 44P2L32FL4;
 					};
 					21FFEAFB1AD5E216000115F6 = {
 						CreatedOnToolsVersion = 6.2;
@@ -293,9 +346,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */,
+				211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */,
 				21803C581ADC189D00DDC5ED /* star.png in Resources */,
+				2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */,
+				21DC553D1AF42DB60083210D /* Sparky.sks in Resources */,
 				2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */,
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
+				2192CCE21AF6574800518F97 /* realStar.png in Resources */,
+				211243611AEAE070006B5487 /* Rock.png in Resources */,
+				211243631AEAE07A006B5487 /* Explosion.sks in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
 				21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */,
 				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
@@ -324,13 +383,19 @@
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
 				2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */,
+				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,
 				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
+				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
+				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,
+				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
+				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
+				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +520,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -465,6 +531,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";

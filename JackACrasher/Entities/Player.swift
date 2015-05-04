@@ -17,7 +17,10 @@ struct EntityCategory {
     static var TrashAsteroid:UInt32 = 1 << 4
     static var Bomb : UInt32 = 1 << 5
     static var RegularAsteroid:UInt32 = 1 << 6
+    static var Rope:UInt32 = 1 << 7
 }
+
+typealias ForceType = Int
 
 enum PlayerMovement {
     case Fly
@@ -42,6 +45,8 @@ class Player: SKSpriteNode {
     private var numberOfThrownProjectiles = 0
     private var movementStyle:PlayerMovement = .Fly
     private var playerMode:PlayerMode = .Idle
+    
+    internal var punchForce:ForceType = 1
     
     private typealias playerDistFlyMapType = Dictionary<PlayerFlyDistance,(distance:CGFloat,eParticleLifeTime:CGFloat)>
     
