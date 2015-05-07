@@ -22,6 +22,7 @@
 		2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */; };
 		2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B6871AE3FF7700DDDB9F /* SoundManager.swift */; };
 		2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */; };
+		219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A6D221AFABCC400A63E7F /* HUDNode.swift */; };
 		21A74E511AE0F6E00005334D /* trash.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21A74E501AE0F6E00005334D /* trash.atlas */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
@@ -70,6 +71,7 @@
 		2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_small.wav; path = Sounds/explosion_small.wav; sourceTree = "<group>"; };
 		2199B6871AE3FF7700DDDB9F /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Model/SoundManager.swift; sourceTree = "<group>"; };
 		2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGVector+Extensions.swift"; path = "Utils/CGVector+Extensions.swift"; sourceTree = "<group>"; };
+		219A6D221AFABCC400A63E7F /* HUDNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HUDNode.swift; path = HUD/HUDNode.swift; sourceTree = "<group>"; };
 		21A74E501AE0F6E00005334D /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
@@ -151,6 +153,14 @@
 			name = Utils;
 			sourceTree = "<group>";
 		};
+		219A6D211AFABCA300A63E7F /* HUD */ = {
+			isa = PBXGroup;
+			children = (
+				219A6D221AFABCC400A63E7F /* HUDNode.swift */,
+			);
+			name = HUD;
+			sourceTree = "<group>";
+		};
 		21E56B301ADA93C10071A217 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
@@ -221,6 +231,7 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				219A6D211AFABCA300A63E7F /* HUD */,
 				2199B6891AE4470100DDDB9F /* Utils */,
 				2199B6821AE3FEF100DDDB9F /* Sounds */,
 				21E56B301ADA93C10071A217 /* Particles */,
@@ -392,6 +403,7 @@
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
 				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,
+				219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */,
 				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,

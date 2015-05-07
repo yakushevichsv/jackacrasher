@@ -27,10 +27,30 @@ extension SKNode {
 
 class GameViewController: UIViewController {
 
+    @IBOutlet weak var btnPlay: UIButton!
+    
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    private var skView:SKView! {
+        get { return self.view as! SKView}
+    }
+    
+    @IBAction func btnPressed(sender: UIButton) {
+        
+        sender.selected = !sender.selected
+        
+            if let scene = skView.scene {
+                scene.paused = sender.selected
+            }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
+            
+            scene.defineStartingRect(self.btnPlay.frame,alpha: self.btnPlay.alpha)
             // Configure the view.
             let skView = self.view as! SKView
             
@@ -46,6 +66,38 @@ class GameViewController: UIViewController {
             skView.presentScene(scene)
         }
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
+    
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    func didMoveToBG(aNotification:NSNotification) {
+        
+        self.btnPlay.selected = false
+        
+        self.btnPressed(self.btnPlay)
+    }
+    
+    func willMoveToFG(aNotification:NSNotification) {
+        
+        self.btnPlay.selected = true
+        
+        self.btnPressed(self.btnPlay)
+    }
+    
 
     override func shouldAutorotate() -> Bool {
         return true

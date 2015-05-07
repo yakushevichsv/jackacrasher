@@ -17,6 +17,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     let bgStarsName:String! = "bgStars"
     let bgZPosition:CGFloat = 1
     let fgZPosition:CGFloat = 5
+    private let maxLifesCount:Int = 5
+    private var lifeWidth:CGFloat = 0
+    private var  hudNode:HUDNode!
+    
     var trashAsteroidsCount:Int = 0
     private var player:Player!
     
@@ -33,11 +37,70 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         self.createAsteroidGenerator()
         self.createPlayer()
         
+        //self.defineStartingRect(CGRectMake(0, 0, 20, 50), alpha: 0.7)
+        
+        
+
+        
         self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         self.physicsWorld.contactDelegate = self
         
         self.asteroidManager = AsteroidManager(scene: self)
+        
     }
+    
+    internal func defineStartingRect(rect:CGRect,alpha:CGFloat) {
+        
+        if (childNodeWithName("HUD") != nil) {
+            return
+        }
+        
+        /*let height = max(200,max(self.player.size.height, CGRectGetHeight(rect)))
+        
+        let inSize = CGSizeMake(200.0, height)
+        
+        let sprite = SKSpriteNode(color: UIColor.blueColor(), size: inSize)
+        sprite.alpha = 0.7
+        sprite.name = "HUD"
+        sprite.anchorPoint = CGPointZero
+        sprite.position = CGPointMake(self.size.width - inSize.width, self.size.height - inSize.height)
+        sprite.zPosition = self.fgZPosition + 4
+        addChild(sprite)
+        
+        return;*/
+        
+        
+        let height = CGRectGetHeight(rect)
+        
+        let inSize = CGSizeMake(CGFloat(round(self.size.width/6.0)), height)
+        
+        println("IN size \(inSize)")
+        
+        let hudNode = HUDNode(inSize: inSize, maxLife: self.maxLifesCount)
+        hudNode.name = "HUD"
+        hudNode.position = CGPointMake(self.size.width - inSize.width*0.5 - 10, self.size.height - inSize.height*0.5 - 100.0)
+        hudNode.alpha = alpha
+        hudNode.zPosition = self.fgZPosition + 1
+        addChild(hudNode)
+        self.hudNode = hudNode
+        println("HUD node position \(hudNode.position)")
+        
+        
+        
+        /*let sprite = SKSpriteNode(color: UIColor.blueColor(), size: inSize)
+        sprite.alpha = 0.7
+        sprite.name = "HUD"
+        sprite.anchorPoint = CGPointZero
+        sprite.position = CGPointMake(self.size.width - inSize.width, self.size.height - inSize.height)
+        sprite.zPosition = self.fgZPosition + 4
+        addChild(sprite)*/
+        
+        
+    }
+    
+    
+    
+    
     
     func fillInBackgroundLayer() {
         
@@ -165,6 +228,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        self.hudNode.decreaseLife()
         
         if self.canCutRope(touches) &&  self.moving {
             
