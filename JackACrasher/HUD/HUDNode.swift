@@ -46,6 +46,10 @@ class HUDNode: SKCropNode {
         get {return self.maxLife != 0 ? Float(life)/Float(self.maxLife) : 0.0 }
     }
     
+    internal func isDead() -> Bool {
+        return self.life == 0
+    }
+    
     internal func decreaseLife() -> Int {
         if (self.life > 0) {
             setLife(self.life - 1)

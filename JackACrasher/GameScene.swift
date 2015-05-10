@@ -8,10 +8,33 @@
 
 import SpriteKit
 
-class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
+@objc protocol GameSceneDelegate
+{
+    func gameScenePlayerDied(scene:GameScene)
+}
+
+extension GameScene {
+    class func unarchiveFromFile(file : NSString) -> SKNode? {
+        if let path = NSBundle.mainBundle().pathForResource(file as String, ofType: "sks") {
+            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
+            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
+            
+            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
+            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
+            archiver.finishDecoding()
+            return scene
+        } else {
+            return nil
+        }
+    }
+}
+
+class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,AnalogControlPositionChange {
     
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
+    
+    weak var gameSceneDelegate:GameSceneDelegate?
     
     let asterName:String! = "TestAster"
     let bgStarsName:String! = "bgStars"
@@ -29,6 +52,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     private var movedPoint:CGPoint = CGPointZero
     private var endPoint:CGPoint = CGPointZero
     private var moving:Bool = false
+    
+    private let scoreLabel = SKLabelNode(fontNamed: "Game Robot")
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -229,7 +254,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
+        //MARK: eee Test is here...
         self.hudNode.decreaseLife()
+        
+        if (self.hudNode.isDead()) {
+            
+            self.gameSceneDelegate?.gameScenePlayerDied(self)
+            
+            return
+        }
         
         if self.canCutRope(touches) &&  self.moving {
             
@@ -670,7 +703,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
     }
     
     func displayScoreAdditionLabel(position:CGPoint,scoreAddition:CGFloat) {
-        let scoreLabel = SKLabelNode(fontNamed: "Menlo-Regular")
+        scoreLabel.alpha = 1.0
         scoreLabel.text = "+\(scoreAddition)"
         scoreLabel.fontSize = 30.0
         scoreLabel.horizontalAlignmentMode = .Center
@@ -687,8 +720,25 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate {
         scoreLabel.runAction(SKAction.sequence([
             SKAction.moveByX(0, y: yDiff, duration: 1.0),
             SKAction.fadeOutWithDuration(1.0),
-            SKAction.removeFromParent()
             ]))
-        addChild(scoreLabel)
+        
+        if (scoreLabel.parent == nil) {
+            addChild(scoreLabel)
+        }
+    }
+    
+    //MARK: Processing events 
+    
+    func analogControlPositionChanged(analogControl: AnalogControl,
+        position: CGPoint)  {
+            
+            
+            self.player.physicsBody!.velocity = CGVector(
+                dx: position.x * CGFloat(self.player.flyDurationSpeed),
+                dy: -position.y * CGFloat(self.player.flyDurationSpeed))
+            
+            
+            
+            
     }
 }

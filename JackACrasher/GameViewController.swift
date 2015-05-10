@@ -9,25 +9,10 @@
 import UIKit
 import SpriteKit
 
-extension SKNode {
-    class func unarchiveFromFile(file : NSString) -> SKNode? {
-        if let path = NSBundle.mainBundle().pathForResource(file as String, ofType: "sks") {
-            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
-            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
-            
-            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
-            archiver.finishDecoding()
-            return scene
-        } else {
-            return nil
-        }
-    }
-}
-
-class GameViewController: UIViewController {
+class GameViewController: UIViewController,GameSceneDelegate {
 
     @IBOutlet weak var btnPlay: UIButton!
+    @IBOutlet weak var analogControl: AnalogControl!
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -63,7 +48,13 @@ class GameViewController: UIViewController {
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
             
+            scene.gameSceneDelegate = self
             skView.presentScene(scene)
+            
+            btnPlay.superview?.bringSubviewToFront(btnPlay)
+            
+            analogControl.delegate = scene
+            analogControl.superview?.bringSubviewToFront(analogControl)
         }
     }
     
@@ -111,12 +102,29 @@ class GameViewController: UIViewController {
         }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
-    }
-
     override func prefersStatusBarHidden() -> Bool {
         return true
     }
+    
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if let identifier = segue.identifier {
+            if identifier == "gameOver" {
+                let dVC = segue.destinationViewController as! GameOverViewController
+                let sVC = segue.sourceViewController as! GameViewController
+                
+               dVC.didWin = false
+                
+            }
+        }
+    }
+    
+    //MARK : GameScene delegate 
+    
+    func gameScenePlayerDied(scene:GameScene) {
+        self.skView.scene?.paused = true
+        performSegueWithIdentifier("gameOver", sender: self)
+    }
+    
 }
