@@ -12,6 +12,9 @@ import SpriteKit
 class GameOverViewController: UIViewController, GameOverSceneDelegate {
 
     @IBOutlet weak var containerView:UIView!
+    @IBOutlet weak var btnReplay:UIButton!
+    @IBOutlet weak var bntShop:UIButton!
+    @IBOutlet weak var btnMainMenu:UIButton!
     
     var didWin:Bool = false {
         didSet {
@@ -41,9 +44,12 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
             /* Set the scale mode to scale to fit the window */
             scene.scaleMode = .AspectFill
             scene.gameOverDelegate = self
+            scene.userInteractionEnabled = false
             self.skView.presentScene(scene)
             
             self.containerView.superview?.bringSubviewToFront(self.containerView)
+            
+            self.btnMainMenu.superview?.bringSubviewToFront(self.btnMainMenu)
         }
     }
     
@@ -65,5 +71,18 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
         let yMid = CGRectGetMidY(frame)
         
         displayGameOverContainerView(CGPointMake(xMid, yMid))
+    }
+    
+    
+    @IBAction func btnPressed(sender: UIButton) {
+        if (sender == self.btnMainMenu){
+          //TODO: write here logic for selecting what to replay
+            
+            self.navigationController?.popToRootViewControllerAnimated(false)
+            if let vc = self.navigationController?.topViewController as? GameMainViewController {
+                vc.needToDisplayAnimation = true
+            }
+        }
+        
     }
 }

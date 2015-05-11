@@ -59,7 +59,6 @@ class GameOverScene: SKScene {
         
         self.gameOverLabel = childNodeWithName(Constants.GameOverLabel) as! SKLabelNode
         self.gameOverLabel.hidden = true
-        self.gameOverLabel.fontName = "Game_Robot.ttf"
     }
 
     override func didMoveToView(view: SKView) {

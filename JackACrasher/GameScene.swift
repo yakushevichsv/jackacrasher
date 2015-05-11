@@ -53,7 +53,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     private var endPoint:CGPoint = CGPointZero
     private var moving:Bool = false
     
-    private let scoreLabel = SKLabelNode(fontNamed: "Game Robot")
+    private let scoreLabel = SKLabelNode(fontNamed: "gamerobot")
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -720,6 +720,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         scoreLabel.runAction(SKAction.sequence([
             SKAction.moveByX(0, y: yDiff, duration: 1.0),
             SKAction.fadeOutWithDuration(1.0),
+            SKAction.removeFromParent()
             ]))
         
         if (scoreLabel.parent == nil) {
