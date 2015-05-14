@@ -255,14 +255,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
         //MARK: eee Test is here...
-        self.hudNode.decreaseLife()
+        /*self.hudNode.decreaseLife()
         
         if (self.hudNode.isDead()) {
             
             self.gameSceneDelegate?.gameScenePlayerDied(self)
             
             return
-        }
+        }*/
         
         if self.canCutRope(touches) &&  self.moving {
             
@@ -489,8 +489,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
         for node in didProduceAsteroids {
             node.zPosition = self.fgZPosition
-            self.addChild(node)
-
+            addChild(node)
+            
+            assert(self.size.height > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > 0, "Doesn't contain frame!")
         }
         generator.paused = true
         
@@ -502,6 +503,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             self.trashAsteroidsCount += didProduceAsteroids.count
             
             println("Trash asteroids count \(self.trashAsteroidsCount) addition" )
+            Explosion.prepare()
             self.player.enableProjectileGun()
             
             //eee Move up if there is a contact...
@@ -675,20 +677,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
         switch explosionType {
         case .Small:
-            var explosion = Explosion(explosionType: .Small)
+            var explosion = Explosion.getExplostionForType(.Small)
             explosion.position = position
             explosion.zPosition = self.fgZPosition
             
             addChild(explosion)
-            runAction(SoundManager.explosionSmall)
+            
             break;
         case .Large:
-            var explosion = Explosion(explosionType: .Large)
+            var explosion = Explosion.getExplostionForType(.Large)
             explosion.zPosition = self.fgZPosition
             explosion.position = position
             
             addChild(explosion)
-            runAction(SoundManager.explosionLarge)
             
             if (scoreAddition == 0) {
                 return
@@ -706,6 +707,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         scoreLabel.alpha = 1.0
         scoreLabel.text = "+\(scoreAddition)"
         scoreLabel.fontSize = 30.0
+        scoreLabel.fontColor = SKColor.greenColor()
         scoreLabel.horizontalAlignmentMode = .Center
         scoreLabel.position = position
         

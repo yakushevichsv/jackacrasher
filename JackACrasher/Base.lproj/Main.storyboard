@@ -29,7 +29,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="447" y="417" width="137" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="137" id="Cx9-kA-LBI"/>
@@ -41,11 +41,29 @@
                                     <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="JcH-uk-xDZ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="262" y="504" width="76" height="46"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="0r0-lm-6Hw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
+                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
+                                <state key="normal" title="Help">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="27" y="417" width="137" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="137" id="PUB-me-Bhb"/>
@@ -56,17 +74,8 @@
                                     <color key="titleColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="262" y="504" width="76" height="46"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="0r0-lm-6Hw"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
-                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
-                                <state key="normal" title="Help">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
                         </subviews>
@@ -191,10 +200,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u7c-lb-ttF" userLabel="ContainerView">
-                                <rect key="frame" x="120" y="350" width="360" height="150"/>
+                                <rect key="frame" x="120" y="438" width="360" height="132"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q2p-pw-i4f" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="215" y="96" width="116" height="46"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="q2p-pw-i4f" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="215" y="78" width="116" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="wSN-I6-qSK"/>
                                         </constraints>
@@ -208,8 +217,8 @@
                                             <action selector="btnPressed:" destination="qda-7r-HQm" eventType="touchUpInside" id="O7M-BA-eTB"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-Zo-ova" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="143" y="32" width="74" height="46"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-Zo-ova" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="143" y="14" width="74" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="74" id="Aqo-rk-a2t"/>
                                         </constraints>
@@ -224,7 +233,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hIE-rY-cmt" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="96" width="170" height="46"/>
+                                        <rect key="frame" x="8" y="78" width="170" height="46"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="170" id="JDL-Wg-yB7"/>
                                         </constraints>
@@ -239,20 +248,20 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="top" secondItem="hIE-rY-cmt" secondAttribute="top" id="88D-Gg-l8I"/>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="leading" secondItem="qMM-Zo-ova" secondAttribute="trailing" constant="-2" id="JMl-gl-nH3"/>
-                                    <constraint firstItem="qMM-Zo-ova" firstAttribute="top" secondItem="u7c-lb-ttF" secondAttribute="top" constant="32" id="KQz-oM-LR4"/>
+                                    <constraint firstAttribute="bottom" secondItem="hIE-rY-cmt" secondAttribute="bottom" constant="8" id="RYb-ni-jbK"/>
                                     <constraint firstItem="hIE-rY-cmt" firstAttribute="top" secondItem="qMM-Zo-ova" secondAttribute="bottom" constant="18" id="ftP-8o-WJM"/>
                                     <constraint firstItem="qMM-Zo-ova" firstAttribute="leading" secondItem="hIE-rY-cmt" secondAttribute="trailing" constant="-35" id="k85-gg-lgr"/>
+                                    <constraint firstAttribute="height" constant="132" id="oVe-gq-jNl"/>
                                     <constraint firstAttribute="centerX" secondItem="qMM-Zo-ova" secondAttribute="centerX" id="wnE-dV-3t3"/>
                                 </constraints>
                             </view>
                         </subviews>
                         <constraints>
-                            <constraint firstItem="u7c-lb-ttF" firstAttribute="height" secondItem="06L-gV-J9s" secondAttribute="height" multiplier="0.25" id="4da-vm-PkA"/>
-                            <constraint firstItem="IGU-ge-GTJ" firstAttribute="top" secondItem="u7c-lb-ttF" secondAttribute="bottom" constant="100" id="9Qs-Q8-1K9"/>
+                            <constraint firstItem="u7c-lb-ttF" firstAttribute="bottom" secondItem="IGU-ge-GTJ" secondAttribute="top" multiplier="0.95" id="9Qs-Q8-1K9"/>
                             <constraint firstItem="u7c-lb-ttF" firstAttribute="width" secondItem="06L-gV-J9s" secondAttribute="width" multiplier="0.6" id="EL1-ZM-rs1"/>
                             <constraint firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" id="qVG-X7-emI"/>
                         </constraints>

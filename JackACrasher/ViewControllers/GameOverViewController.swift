@@ -50,6 +50,9 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
             self.containerView.superview?.bringSubviewToFront(self.containerView)
             
             self.btnMainMenu.superview?.bringSubviewToFront(self.btnMainMenu)
+            
+            self.btnReplay.superview?.bringSubviewToFront(self.btnReplay)
+            self.bntShop.superview?.bringSubviewToFront(self.bntShop)
         }
     }
     

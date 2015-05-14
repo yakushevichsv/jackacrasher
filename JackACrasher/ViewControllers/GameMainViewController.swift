@@ -28,7 +28,6 @@ class GameMainViewController: UIViewController {
     private var bConstrValue:CGFloat = 0
     private var tBConstrValue:CGFloat = 0
     
-    
     private var custPushSegue:UIStoryboardSegue!
     
     private func storeConstraints() {
@@ -97,6 +96,20 @@ class GameMainViewController: UIViewController {
         
     }
     
+    private func disableButtons() {
+        setButtonsState(false)
+    }
+    
+    private func enableButtons() {
+        setButtonsState(true)
+    }
+    
+    private func setButtonsState(enabled:Bool) {
+        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp] {
+            btn.enabled = enabled
+        }
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
@@ -109,14 +122,12 @@ class GameMainViewController: UIViewController {
     private func scheduleAnimation() {
         
         shiftOutButtons()
+        disableButtons()
         
-        UIView.animateWithDuration(4, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 8, options: .CurveEaseOut, animations: { () -> Void  in
+        UIView.animateWithDuration(2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 8, options: .CurveEaseOut, animations: { () -> Void  in
                 self.shiftInButtons()
             }, completion: { (finished) -> Void in
-                
-                
-                
-                //self.custPushSegue.perform()
+                self.enableButtons()
         })
         
         self.prepareCustomPushSegue()

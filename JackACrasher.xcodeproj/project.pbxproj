@@ -22,6 +22,7 @@
 		217341021AFE54C1009E934A /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217341011AFE54C1009E934A /* GameOverScene.swift */; };
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
 		21803C581ADC189D00DDC5ED /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 21803C571ADC189D00DDC5ED /* star.png */; };
+		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
 		2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCDF1AF6567E00518F97 /* Spawn.sks */; };
 		2192CCE21AF6574800518F97 /* realStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCE11AF6574800518F97 /* realStar.png */; };
 		2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */; };
@@ -79,6 +80,7 @@
 		217341011AFE54C1009E934A /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverScene.swift; path = Scenes/GameOverScene.swift; sourceTree = "<group>"; };
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
 		21803C571ADC189D00DDC5ED /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
+		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
 		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
 		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
 		2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_large.wav; path = Sounds/explosion_large.wav; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 		215A5D211AD6792B00F136D3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				218B375B1B02959A00B9085C /* GameLogicManager.swift */,
 				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
 				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
@@ -454,6 +457,7 @@
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */,
+				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,

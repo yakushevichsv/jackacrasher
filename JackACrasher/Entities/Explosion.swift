@@ -21,28 +21,70 @@ enum ExplosionType {
 
 class Explosion: SKSpriteNode {
     private static var textures:[SKTexture] = []
-    internal let explosionType:ExplosionType
+    private static var  animation:SKAction! = nil
+    
+    private static var small:Explosion!
+    private static var big:Explosion!
+    
+    internal var explosionType:ExplosionType = .Small
     
     override class func initialize() {
-        super.initialize()
+        super.initialize()        
+        prepare()
+    }
+    
+    class func getExplostionForType(type:ExplosionType) -> Explosion {
         
+        var exp:Explosion!
+        switch type {
+         case .Large:
+            exp = big
+            break
+        case .Small:
+            exp = small
+            break
+        default:
+            break
+        }
+        return exp.copy() as! Explosion
+    }
+    
+    class func prepare() {
+        //void for textures initialization...
+        
+        if (!textures.isEmpty) {
+            return
+        }
+        var curTextures :[SKTexture] = []
         for i in 1...3 {
             let texture = SKTexture(imageNamed: "explosion000\(i)")
             assert(texture != nil, "Texture is nil")
-            Explosion.textures.append(texture)
+            curTextures.append(texture)
         }
+        
+        SKTexture.preloadTextures(curTextures) { () -> Void in
+            self.textures = curTextures
+            self.animation = SKAction.animateWithTextures(curTextures, timePerFrame: 0.2)
+            self.small = Explosion(explosionType: .Small)
+            self.big = Explosion(explosionType: .Large)
+        }
+    }
+    
+    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
+        super.init(texture: texture, color: color, size: size)
     }
     
     init(explosionType type:ExplosionType) {
         self.explosionType = type
         super.init(texture: Explosion.textures.first!,color:SKColor.whiteColor(),size:Explosion.textures.first!.size())
         
-        let animation = SKAction.animateWithTextures(Explosion.textures, timePerFrame: 0.2)
         
-        runAction(SKAction.sequence([
+        let sAction = type == .Small ? SoundManager.explosionSmall : SoundManager.explosionLarge
+        
+        runAction(SKAction.sequence([sAction,
             SKAction.group([
-                animation,
-                SKAction.scaleTo(0.5, duration: 0.3)
+                Explosion.animation,
+                SKAction.scaleTo(0.5, duration: 0.3),
                 ]),
             SKAction.group([
                 SKAction.fadeAlphaTo(0, duration: 0.2),

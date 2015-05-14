@@ -105,11 +105,11 @@ class AsteroidGenerator: NSObject {
         
         let sprite = RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
-        let yMargin = round(0.5 * max(sprite.size.width,sprite.size.height))
+        let yMargin = round(max(sprite.size.width,sprite.size.height)) + 10
         
         let duration = NSTimeInterval(sceneSize.width/asteroidSpeed)
         
-        let divisor = UInt32(sceneSize.height - yMargin)
+        let divisor = UInt32(sceneSize.height - 2*yMargin)
         
         let yPos = CGFloat(arc4random() % divisor) + yMargin
         
@@ -143,8 +143,8 @@ class AsteroidGenerator: NSObject {
         
         sprite.xScale = 0.25
         
-        let yMargin = round(0.5 * max(sprite.size.width,sprite.size.height))
-        let divisor = UInt32(sceneSize.height - yMargin)
+        let yMargin = round(max(sprite.size.width,sprite.size.height)) + 10
+        let divisor = UInt32(sceneSize.height - 2*yMargin)
         
         let yPos = CGFloat(arc4random() % divisor) + yMargin
         
@@ -301,26 +301,6 @@ class AsteroidGenerator: NSObject {
     }
     
     
-    private func generateNodePosition(forSize size:CGSize) ->CGPoint {
-        
-        let position:Int32 = Int32(arc4random() % 4) * (arc4random()%2 == 1 ? 1 : -1 )
-        
-        let width = self.sceneSize.width*0.2
-        var yPos = width * CGFloat(position) + self.sceneSize.height * 0.5
-        
-        if (yPos <= size.height) {
-            yPos = size.height + 50
-        }
-        
-        if (yPos > self.sceneSize.height) {
-            yPos = CGFloat(round(self.sceneSize.height * 0.8 - size.height))
-        }
-        
-        yPos = min(max(yPos,200),800)
-        
-        return CGPointMake(self.sceneSize.width + size.width*0.5, yPos)
-    }
-    
     private func produceTrashSprites() {
         
         var minSpeed:CGFloat = CGFloat.max
@@ -328,7 +308,13 @@ class AsteroidGenerator: NSObject {
         var sprites:[SKSpriteNode] = [SKSpriteNode]()
         let actName:String = "moveDelAction"
         
-        for index in 1...3 {
+        println("Scene size \(self.sceneSize)")
+        
+        let count = 3
+        
+        var spriteFrames:[CGRect] = []
+        
+        for index in 1...count {
             
             let textName = "trash_asteroid_\(index)"
             
@@ -361,7 +347,7 @@ class AsteroidGenerator: NSObject {
             let rotateAlways = SKAction.repeatActionForever(rotate)
             
             let blinkIn = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 0.4, duration: min(1,time*0.5))
-            let blinkOut = blinkIn.reversedAction()
+            let blinkOut = SKAction.colorizeWithColor(SKColor.clearColor(), colorBlendFactor: 0.0, duration: blinkIn.duration)
             
             let blinkInOut = SKAction.repeatActionForever(SKAction.sequence([blinkIn,blinkOut]))
             
@@ -370,22 +356,38 @@ class AsteroidGenerator: NSObject {
             }),SKAction.removeFromParent()]), rotateAlways,blinkInOut])
             sprite.runAction(moveDelAction,withKey: actName )
             
-            let position:Int32 = Int32(arc4random() % 4) * (arc4random()%2 == 1 ? 1 : -1 )
+            let yMargin = round(max(sprite.size.width,sprite.size.height)) + 10
+            let divisor = UInt32(sceneSize.height - 2*yMargin)
             
-            let width = self.sceneSize.width*0.2
-            var yPos = width * CGFloat(position) + self.sceneSize.height * 0.5
+            var yPos  = CGFloat(arc4random() % divisor) + yMargin
+            let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
             
-            if (yPos <= sprite.size.height) {
-                yPos = sprite.size.height + 50
+            var curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
+            
+            for var i = 0 ; i < spriteFrames.count; i++ {
+                
+                let prevFrame = spriteFrames[i];
+                
+                var wasInside = false
+                
+                while (CGRectIntersectsRect(prevFrame, curFrame)) {
+                    yPos =  CGFloat(arc4random() % divisor) + yMargin
+                    curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
+                    wasInside = true
+                }
+                
+                if (wasInside) {
+                    i = -1
+                }
             }
             
-            if (yPos > self.sceneSize.height) {
-                yPos = CGFloat(round(self.sceneSize.height * 0.8 - sprite.size.height))
-            }
+            spriteFrames.append(curFrame)
             
-            yPos = min(max(yPos,200),800)
+            sprite.anchorPoint = CGPointMake(0.5, 0.5)
+            sprite.position = CGPointMake(sceneSize.width + xMargin, yPos)
             
-            sprite.position = CGPointMake(self.sceneSize.width + sprite.size.width*0.5, yPos)
+            println("Trash # \(index) sprite: \(sprite)")
+            
             sprite.name = textName
             sprite.physicsBody = SKPhysicsBody(texture: texture!, size: texture!.size())
             sprite.physicsBody!.categoryBitMask = EntityCategory.TrashAsteroid
@@ -395,7 +397,8 @@ class AsteroidGenerator: NSObject {
             sprites.append(sprite)
         }
         
-        assert(sprites.count == 3, "Sprites are not 3 items")
+        
+        assert(sprites.count == count, "Sprites are not \(spriteFrames.count) items")
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: sprites, type: .Trash)
     }
@@ -430,7 +433,7 @@ class AsteroidGenerator: NSObject {
         //HACK: warning
         
         self.prevAsteroidType = .None
-        currentAstType = .RopeBased
+        currentAstType = .Trash
         
         self.prevAsteroidType = currentAstType
         

@@ -11,8 +11,8 @@ import SpriteKit
 
 class SoundManager: NSObject {
    
-    internal static let explosionSmall = SKAction.sequence([SKAction.playSoundFileNamed("explosion_small.wav", waitForCompletion: true), SKAction.removeFromParent()])
+    internal static let explosionSmall = SKAction.playSoundFileNamed("explosion_small.wav", waitForCompletion: false)
     
-    internal static let explosionLarge = SKAction.sequence([SKAction.playSoundFileNamed("explosion_large.wav", waitForCompletion: true), SKAction.removeFromParent()])
+    internal static let explosionLarge = SKAction.playSoundFileNamed("explosion_large.wav", waitForCompletion: false)
     
 }
