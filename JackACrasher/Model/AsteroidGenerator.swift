@@ -32,7 +32,7 @@ protocol AsteroidGeneratorDelegate:NSObjectProtocol {
 
 class AsteroidGenerator: NSObject {
     
-    private let sceneSize:CGSize
+    private let playableRect:CGRect
     private weak var delegate:AsteroidGeneratorDelegate!
     private var timer:NSTimer!
     private var prevAsteroidType: AsteroidType = .None
@@ -59,8 +59,8 @@ class AsteroidGenerator: NSObject {
     
     private var canFire:Bool = true
     
-    init(sceneSize size:CGSize, andDelegate delegate:AsteroidGeneratorDelegate) {
-        self.sceneSize = size
+    init(playableRect rect:CGRect, andDelegate delegate:AsteroidGeneratorDelegate) {
+        self.playableRect = rect
         self.delegate = delegate
         super.init()
         
@@ -105,21 +105,21 @@ class AsteroidGenerator: NSObject {
         
         let sprite = RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
-        let yMargin = round(max(sprite.size.width,sprite.size.height)) + 10
+        let yMargin = round(1 * max(sprite.size.width,sprite.size.height)) + 10
         
-        let duration = NSTimeInterval(sceneSize.width/asteroidSpeed)
+        let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/asteroidSpeed)
         
-        let divisor = UInt32(sceneSize.height - 2*yMargin)
+        let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
         
         let yPos = CGFloat(arc4random() % divisor) + yMargin
         
         let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
         
-        sprite.position = CGPointMake(sceneSize.width + xMargin, yPos)
+        sprite.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
         
         let sequence =  produceSeqActionToAsteroid(sprite, asteroidSpeed: asteroidSpeed)
         
-        println("Y position \(yPos) and  Scene height \(sceneSize.height) Sprite size \(sprite.size)")
+        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size)")
         
         return (asteroid:sprite,actions:sequence)
     }
@@ -143,22 +143,23 @@ class AsteroidGenerator: NSObject {
         
         sprite.xScale = 0.25
         
-        let yMargin = round(max(sprite.size.width,sprite.size.height)) + 10
-        let divisor = UInt32(sceneSize.height - 2*yMargin)
+        let yMargin = round(1 * max(sprite.size.width,sprite.size.height)) + 10
+        
+        let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/bombSpeed)
+        
+        let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
         
         let yPos = CGFloat(arc4random() % divisor) + yMargin
         
         let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
-        
-        sprite.position = CGPointMake(sceneSize.width + xMargin, yPos)
+    
+        sprite.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
         
         sprite.physicsBody = SKPhysicsBody(texture: bombTexture, size: sprite.size)
         sprite.physicsBody!.collisionBitMask = 0
         sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         sprite.physicsBody!.categoryBitMask = EntityCategory.Bomb
         sprite.userData = ["radius":50]
-        
-        let duration = NSTimeInterval(sceneSize.width/bombSpeed)
         
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
         let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock({ () -> Void in
@@ -168,7 +169,7 @@ class AsteroidGenerator: NSObject {
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Bomb)
         
-        println("Y position \(yPos) and  Scene height \(sceneSize.height) Sprite size \(sprite.size)")
+        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size)")
     }
     
     private func produceRopeJointAsteroids() {
@@ -235,7 +236,7 @@ class AsteroidGenerator: NSObject {
         
             let speed:CGFloat = 40.0
             
-            let time:NSTimeInterval = NSTimeInterval(self.sceneSize.width/speed)
+            let time:NSTimeInterval = NSTimeInterval(CGRectGetWidth(self.playableRect)/speed)
             
             var minXAsteroid:RegularAsteroid!
             var maxXAsteroid:RegularAsteroid!
@@ -308,7 +309,7 @@ class AsteroidGenerator: NSObject {
         var sprites:[SKSpriteNode] = [SKSpriteNode]()
         let actName:String = "moveDelAction"
         
-        println("Scene size \(self.sceneSize)")
+        println("Scene rect \(self.playableRect)")
         
         let count = 3
         
@@ -339,7 +340,7 @@ class AsteroidGenerator: NSObject {
                 minIndex = index - 1
             }
             
-            let time:NSTimeInterval = NSTimeInterval(self.sceneSize.width/speed)
+            let time:NSTimeInterval = NSTimeInterval(CGRectGetWidth(self.playableRect)/speed)
             
             let moveAct = SKAction.moveToX(-sprite.size.width*0.5, duration: time)
             
@@ -356,8 +357,8 @@ class AsteroidGenerator: NSObject {
             }),SKAction.removeFromParent()]), rotateAlways,blinkInOut])
             sprite.runAction(moveDelAction,withKey: actName )
             
-            let yMargin = round(max(sprite.size.width,sprite.size.height)) + 10
-            let divisor = UInt32(sceneSize.height - 2*yMargin)
+            let yMargin = round(1*max(sprite.size.width,sprite.size.height)) + 10
+            let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
             
             var yPos  = CGFloat(arc4random() % divisor) + yMargin
             let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
@@ -384,7 +385,7 @@ class AsteroidGenerator: NSObject {
             spriteFrames.append(curFrame)
             
             sprite.anchorPoint = CGPointMake(0.5, 0.5)
-            sprite.position = CGPointMake(sceneSize.width + xMargin, yPos)
+            sprite.position = CGPointMake(CGRectGetWidth(self.playableRect) + xMargin, yPos)
             
             println("Trash # \(index) sprite: \(sprite)")
             

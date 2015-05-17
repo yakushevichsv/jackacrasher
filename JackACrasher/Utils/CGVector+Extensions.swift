@@ -14,7 +14,7 @@ extension CGVector{
 * Returns the length (magnitude) of the vector described by the CGVector.
 */
 func length() -> CGFloat {
-    return sqrt(pow(dx,2) + pow(dy,2))
+    return  hypot(dx, dy)
 }
     
 /**

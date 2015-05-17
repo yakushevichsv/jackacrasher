@@ -38,6 +38,8 @@ class GameOverScene: SKScene {
         static var GameOverActGroup = "GameOverActGroup"
     }
     
+    private var playableArea:CGRect = CGRectZero
+    
     weak var gameOverDelegate: GameOverSceneDelegate?
     
     private var gameOverLabel:SKLabelNode!
@@ -64,10 +66,38 @@ class GameOverScene: SKScene {
     override func didMoveToView(view: SKView) {
         super.didMoveToView(view)
         
+        self.definePlayableRect()
+        
         if (!didWin) {
             displayGameOver()
         }
         
+    }
+    
+    func definePlayableRect() {
+        
+        assert(self.scaleMode == .AspectFill, "Not aspect fill mode")
+        
+        if let presentView = self.view {
+            
+            let vH = CGRectGetHeight(presentView.bounds)
+            let vW = CGRectGetWidth(presentView.bounds)
+            
+            let hRatio = vH/self.size.height
+            let wRatio = vW/self.size.width
+            
+            let ratio = min(hRatio,wRatio)
+            
+            let h = self.size.height * ratio
+            let w = self.size.width * ratio
+            
+            
+            let yDiff = 0.5*( max(h,vH) - min(h,vH))
+            let xDiff = 0.5*( max(w,vW) - min(w,vW))
+            
+           self.playableArea = CGRectMake(xDiff/ratio, yDiff/ratio, vW/ratio, vH/ratio)
+            println("Area \(self.playableArea)")
+        }
     }
     
     private func displayGameOver() {
@@ -81,11 +111,11 @@ class GameOverScene: SKScene {
         let h = CGRectGetHeight(self.gameOverLabel.frame)*0.5
         
         
-        self.gameOverLabel.position = CGPoint(x: self.size.width * 0.5, y: -h)
+        self.gameOverLabel.position = CGPoint(x: CGRectGetMidX(self.playableArea), y: -h)
         self.gameOverLabel.hidden = false
         self.gameOverLabel.alpha = 0.0
         
-        let moveAct = SKAction.moveToY(self.size.height*0.5, duration: Constants.GameOverMoveDuration)
+        let moveAct = SKAction.moveToY(CGRectGetMidY(self.playableArea), duration: Constants.GameOverMoveDuration)
         
         let fadeIn = SKAction.fadeInWithDuration(Constants.GameOverFadeInDuration)
         

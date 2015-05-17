@@ -33,13 +33,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
-    
     weak var gameSceneDelegate:GameSceneDelegate?
     
     let asterName:String! = "TestAster"
     let bgStarsName:String! = "bgStars"
     let bgZPosition:CGFloat = 1
     let fgZPosition:CGFloat = 5
+    
+    private var lastProjectileExp:(date:NSTimeInterval,position:CGPoint) = (0,CGPointZero)
     private let maxLifesCount:Int = 5
     private var lifeWidth:CGFloat = 0
     private var  hudNode:HUDNode!
@@ -55,12 +56,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     private let scoreLabel = SKLabelNode(fontNamed: "gamerobot")
     
+    private var playableArea:CGRect = CGRectZero
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
+        
         self.fillInBackgroundLayer()
-        self.createAsteroidGenerator()
-        self.createPlayer()
         
         //self.defineStartingRect(CGRectMake(0, 0, 20, 50), alpha: 0.7)
         
@@ -80,66 +82,71 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             return
         }
         
-        /*let height = max(200,max(self.player.size.height, CGRectGetHeight(rect)))
-        
-        let inSize = CGSizeMake(200.0, height)
-        
-        let sprite = SKSpriteNode(color: UIColor.blueColor(), size: inSize)
-        sprite.alpha = 0.7
-        sprite.name = "HUD"
-        sprite.anchorPoint = CGPointZero
-        sprite.position = CGPointMake(self.size.width - inSize.width, self.size.height - inSize.height)
-        sprite.zPosition = self.fgZPosition + 4
-        addChild(sprite)
-        
-        return;*/
-        
         
         let height = CGRectGetHeight(rect)
         
-        let inSize = CGSizeMake(CGFloat(round(self.size.width/6.0)), height)
+        let inSize = CGSizeMake(CGFloat(round(self.playableArea.size.width/6.0)), height)
         
         println("IN size \(inSize)")
         
         let hudNode = HUDNode(inSize: inSize, maxLife: self.maxLifesCount)
         hudNode.name = "HUD"
-        hudNode.position = CGPointMake(self.size.width - inSize.width*0.5 - 10, self.size.height - inSize.height*0.5 - 100.0)
+        hudNode.position = CGPointMake(CGRectGetMaxX(self.playableArea) - inSize.width*0.5 - 10, CGRectGetMaxY(self.playableArea) - inSize.height*0.5 - 100.0)
         hudNode.alpha = alpha
         hudNode.zPosition = self.fgZPosition + 1
         addChild(hudNode)
         self.hudNode = hudNode
         println("HUD node position \(hudNode.position)")
         
-        
-        
-        /*let sprite = SKSpriteNode(color: UIColor.blueColor(), size: inSize)
-        sprite.alpha = 0.7
-        sprite.name = "HUD"
-        sprite.anchorPoint = CGPointZero
-        sprite.position = CGPointMake(self.size.width - inSize.width, self.size.height - inSize.height)
-        sprite.zPosition = self.fgZPosition + 4
-        addChild(sprite)*/
-        
-        
     }
     
     
-    
+    func definePlayableRect() {
+        
+        assert(self.scaleMode == .AspectFill, "Not aspect fill mode")
+        
+        if let presentView = self.view {
+            
+            /*let vH = CGRectGetHeight(presentView.bounds)
+            let vW = CGRectGetWidth(presentView.bounds)
+            
+            let hRatio = vH/self.size.height
+            let wRatio = vW/self.size.width
+            
+            let ratio = min(hRatio,wRatio)
+            
+            let h = self.size.height * ratio
+            let w = self.size.width * ratio
+            
+            
+            let yDiff = 0.5*( max(h,vH) - min(h,vH))
+            let xDiff = 0.5*( max(w,vW) - min(w,vW))
+            
+            self.playableArea = CGRectMake(xDiff/ratio, yDiff/ratio, vW/ratio, vH/ratio)*/
+            
+            let maxAspectRatio:CGFloat = 16.0/9.0 // 1
+            let playableHeight = size.width / maxAspectRatio // 2
+            let playableMargin = (size.height-playableHeight)/2.0 // 3
+            playableArea = CGRect(x: 0, y: playableMargin,
+                width: size.width,
+                height: playableHeight) // 4
+            println("Area \(self.playableArea)")
+        }
+    }
     
     
     func fillInBackgroundLayer() {
         
         let emitterNode = SKEmitterNode(fileNamed: "BGStarts.sks")
-        let sceneSize = self.size
-        emitterNode.position = CGPointMake(self.size.width, 0.5*self.size.height)
+        emitterNode.position = CGPointMake(CGRectGetWidth(self.playableArea), CGRectGetMidY(self.playableArea))
         
         emitterNode.name = self.bgStarsName
         emitterNode.zPosition = bgZPosition
         emitterNode.targetNode = nil
         
-        emitterNode.particlePositionRange = CGVectorMake(0, self.size.height)
+        emitterNode.particlePositionRange = CGVectorMake(0, CGRectGetHeight(self.playableArea))
         
-        let timeInterval = self.size.width/emitterNode.particleSpeed
+        let timeInterval = CGRectGetWidth(self.playableArea)/emitterNode.particleSpeed
         
         emitterNode.particleLifetime = timeInterval
         
@@ -148,12 +155,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     func createAsteroidGenerator() {
         
-        self.asteroidGenerator = AsteroidGenerator(sceneSize: self.size, andDelegate: self)
+        self.asteroidGenerator = AsteroidGenerator(playableRect: self.playableArea, andDelegate: self)
         self.asteroidGenerator.start()
     }
     
     func createPlayer() {
-        let player = Player(position: CGPointMake(500, 500))
+        let player = Player(position: CGPointMake(CGRectGetMidX(self.playableArea), CGRectGetMidY(self.playableArea)))
         player.alpha = 0.0
         
         player.zPosition = fgZPosition
@@ -175,12 +182,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     override func didMoveToView(view: SKView) {
         
-        /* Setup your scene here */
-        /*let myLabel = SKLabelNode(fontNamed:"Chalkduster")
-        myLabel.text = "Hello, World!";
-        myLabel.fontSize = 65;
-        myLabel.position = CGPoint(x:CGRectGetMidX(self.frame), y:CGRectGetMidY(self.frame));
-        self.addChild(myLabel)*/
+        self.definePlayableRect()
+        self.createPlayer()
+        self.createAsteroidGenerator()
         
         let texture1 = SKTexture(imageNamed: "Asteroid1_Part1")
         let size1 = texture1.size()
@@ -252,6 +256,32 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         }
     }
     
+    
+    func needToIgnore(location:CGPoint) ->Bool {
+        
+        let date = self.lastProjectileExp.date
+        
+        if NSDate.timeIntervalSinceReferenceDate() - date <= 1 {
+           
+           let diff1 = location - self.player.position
+           let diff2 = self.lastProjectileExp.position - self.player.position
+            
+            if (diff1.length() == 0 || diff2.length() == 0) {
+                return false
+            }
+            
+            let v1 = CGVector(dx: diff1.x, dy: diff1.y)
+            let v2 = CGVector(dx: diff2.x, dy: diff2.y)
+            let len1 = v1.length()
+            let len2 = v2.length()
+            
+            let cosAngle = (v1.dx*v2.dx+v1.dy*v2.dy)/(len1*len2)
+            
+           return cosAngle >= 0 && cosAngle < 1
+        }
+        return false
+    }
+    
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
         //MARK: eee Test is here...
@@ -319,7 +349,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             if (self.player.canThrowProjectile()) {
                 self.player.throwProjectileToLocation(location)
             } else if (self.player.parent == self.player.scene) {
-                self.player.moveToPoint(location)
+                if (!self.needToIgnore(location)) {
+                    self.player.moveToPoint(location)
+                }
             } else  if (self.player.parent!.isKindOfClass(RegularAsteroid)) {
                 
                 
@@ -440,11 +472,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             self.player.zRotation = 0
             self.player.zPosition--
             
-            if (self.player.position.x <= 0 ) {
+            if (self.player.position.x <= CGRectGetMinX(self.playableArea) ) {
                 self.player.position.x = CGFloat(self.player.size.width*0.5)
             }
             
-            if (self.player.position.y <= 0 ){
+            if (self.player.position.y <= CGRectGetMinY(self.playableArea) ){
                 self.player.position.y = CGFloat(self.player.size.height*0.5)
             }
             
@@ -491,7 +523,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             node.zPosition = self.fgZPosition
             addChild(node)
             
-            assert(self.size.height > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > 0, "Doesn't contain frame!")
+            //assert(CGRectGetHeight(self.playableArea) > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > CGRectGetMinY(self.playableArea), "Doesn't contain frame!")
         }
         generator.paused = true
         
@@ -666,6 +698,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             
             createExplosion(expType, position: scenePoint,withScore: 10)
             
+            if 0 == self.trashAsteroidsCount {
+
+                let timeInterval = NSDate.timeIntervalSinceReferenceDate()
+                self.lastProjectileExp = (timeInterval,scenePoint)
+            }
         }
         
         
@@ -712,7 +749,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         scoreLabel.position = position
         
         var yDiff:CGFloat = 0.0
-        if (self.scene!.size.height >= 30 + position.y) {
+        if (30 + position.y > CGRectGetMaxY(self.playableArea)) {
             yDiff = -30
         }
         else {
@@ -745,3 +782,4 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             
     }
 }
+ 
