@@ -277,10 +277,10 @@
             </objects>
             <point key="canvasLocation" x="818" y="423"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--JackA Crasher Navigation Controller-->
         <scene sceneID="ZKd-cU-x5w">
             <objects>
-                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="ekw-zd-0cC" sceneMemberID="viewController">
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="ekw-zd-0cC" customClass="JackACrasherNavigationController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedStatusBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="q52-qH-w94">

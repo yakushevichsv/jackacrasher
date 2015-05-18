@@ -32,6 +32,9 @@
 		219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A6D221AFABCC400A63E7F /* HUDNode.swift */; };
 		21A74E511AE0F6E00005334D /* trash.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21A74E501AE0F6E00005334D /* trash.atlas */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
+		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
+		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
+		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
 		21DEA0D11AFD1893004FF5D7 /* AnalogControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
@@ -90,6 +93,9 @@
 		219A6D221AFABCC400A63E7F /* HUDNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HUDNode.swift; path = HUD/HUDNode.swift; sourceTree = "<group>"; };
 		21A74E501AE0F6E00005334D /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
+		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
+		21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JackACrasherNavigationController.swift; path = Model/JackACrasherNavigationController.swift; sourceTree = "<group>"; };
+		21CCA14D1B0A881C004419A2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
 		21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnalogControl.swift; path = Views/AnalogControl.swift; sourceTree = "<group>"; };
 		21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Game_Robot.ttf; sourceTree = "<group>"; };
@@ -121,6 +127,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,6 +148,8 @@
 				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
 				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
+				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
+				21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -263,6 +272,7 @@
 		21FFEADA1AD5E216000115F6 = {
 			isa = PBXGroup;
 			children = (
+				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
 				21FFEAE51AD5E216000115F6 /* JackACrasher */,
 				21FFEAFF1AD5E216000115F6 /* JackACrasherTests */,
 				21FFEAE41AD5E216000115F6 /* Products */,
@@ -376,6 +386,11 @@
 					21FFEAE21AD5E216000115F6 = {
 						CreatedOnToolsVersion = 6.2;
 						DevelopmentTeam = 44P2L32FL4;
+						SystemCapabilities = {
+							com.apple.GameCenter = {
+								enabled = 1;
+							};
+						};
 					};
 					21FFEAFB1AD5E216000115F6 = {
 						CreatedOnToolsVersion = 6.2;
@@ -453,6 +468,7 @@
 				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,
 				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
+				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
@@ -468,6 +484,7 @@
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
+				21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -593,9 +610,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -604,9 +623,11 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
