@@ -15,6 +15,9 @@ import GameKit
     
 }
 
+let SurvivalBestScoreLbId  = "com.sygamefun.survival_best_score"
+let SurvivalTotalScoreLbId = "com.sygamefun.survival_total_score"
+
 let GameCenterManagerViewController = "GameCenterManagerViewController"
 let singleton = GameCenterManager()
 
@@ -65,5 +68,76 @@ class GameCenterManager: NSObject {
             }
         }
     }
+    
+    //MARK: Score
+    private func reportScore(score:Int64, leaderboardId: String) {
+        
+        if (!gameCenterEnabled) {
+            println("Game center is not available")
+            return
+        }
+        
+        let scoreReporter = GKScore(leaderboardIdentifier: leaderboardId)
+        scoreReporter.value   = score
+        scoreReporter.context = 0
+        
+        GKScore.reportScores([scoreReporter], withCompletionHandler: { (error) -> Void in
+            self.lastError = error
+        })
+       
+    }
+    
+    private func getScoresFromLeaderboard(leaderboardId :String,completionHandler: (([AnyObject]!, AnyObject!, NSError!) -> Void)!) {
+        
+        
+        let lb = GKLeaderboard(players: [GKLocalPlayer.localPlayer()])
+        lb.identifier = leaderboardId
+        lb.timeScope = .AllTime
+        
+        lb.loadScoresWithCompletionHandler { (scores, error) -> Void in
+            self.lastError  = error
+            completionHandler(scores,lb.localPlayerScore,error)
+        }
+    }
+    
+    
+    //MARK: Survival part
+    internal func reportSurvivalTotalScore(score:Int64) {
+        reportScore(score, leaderboardId: SurvivalTotalScoreLbId)
+    }
+    
+    internal func reportSurvivalBestScore(score:Int64) {
+        reportScore(score, leaderboardId: SurvivalBestScoreLbId)
+    }
+    
+    internal func getSurvivalBestScoreWithCompletionHandler(handler: (AnyObject!, NSError!) -> Void) {
+        
+        getScoresFromLeaderboard(SurvivalBestScoreLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
+            handler(localPlayerScore,error)
+        })
+    }
+    
+    internal func getSurvivalTotalScoreWithCompletionHandler(handler: (AnyObject!, NSError!) -> Void) {
+        
+        getScoresFromLeaderboard(SurvivalTotalScoreLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
+            var totalScore:UInt64 = 0
+            for scoreAny in scores {
+                let score = scoreAny as! GKScore
+                totalScore += UInt64(score.value)
+            }
+            
+            let context:UInt64 = UInt64(Float(totalScore)/Float(Int64.max))
+            let reminder:Int64 = Int64(totalScore -  UInt64(Int64.max) * context)
+            
+            println("Local score \(localPlayerScore)")
+            
+            let score = GKScore(leaderboardIdentifier: SurvivalBestScoreLbId)
+            score.value = reminder
+            score.context = context
+            
+            handler(score,error)
+        })
+    }
+    
     
 }
