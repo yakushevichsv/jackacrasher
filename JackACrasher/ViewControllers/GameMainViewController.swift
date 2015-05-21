@@ -15,40 +15,16 @@ class GameMainViewController: UIViewController {
     @IBOutlet weak var btnCompany:UIButton!
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
-    
-    
-    @IBOutlet weak var lConstraint:NSLayoutConstraint!
-    @IBOutlet weak var rConstraint:NSLayoutConstraint!
-    @IBOutlet weak var bConstraint:NSLayoutConstraint!
-    @IBOutlet weak var tBConstraint:NSLayoutConstraint!
-
-    
-    private var lConstrValue:CGFloat = 0
-    private var rConstrValue:CGFloat = 0
-    private var bConstrValue:CGFloat = 0
-    private var tBConstrValue:CGFloat = 0
+    @IBOutlet weak var btnGameCenter:UIButton!
     
     private var custPushSegue:UIStoryboardSegue!
-    
-    private func storeConstraints() {
-        self.lConstrValue  = self.lConstraint.constant
-        self.rConstrValue  = self.rConstraint.constant
-        self.bConstrValue  = self.bConstraint.constant
-        self.tBConstrValue = self.tBConstraint.constant
-    }
-    
-    private func restoreConstraints() {
-        self.lConstraint.constant  = self.lConstrValue
-        self.rConstraint.constant  = self.rConstrValue
-        self.bConstraint.constant  = self.bConstrValue
-        self.tBConstraint.constant = self.tBConstrValue
-    }
-    
+
     private func shiftOutButtons() {
         
         shiftXButton(self.btnCompany, isLeft: true)
         shiftXButton(self.btnStrategy, isLeft: false)
         shiftYButton(self.btnHelp, isUp: false)
+        shiftYButton(self.btnGameCenter, isUp: true)
     }
     
     private func shiftInButtons() {
@@ -56,6 +32,7 @@ class GameMainViewController: UIViewController {
         shiftXButton(self.btnCompany, isLeft: false)
         shiftXButton(self.btnStrategy, isLeft: true)
         shiftYButton(self.btnHelp, isUp: true)
+        shiftYButton(self.btnGameCenter, isUp: false)
     }
     
     private func shiftXButton(button:UIButton!, isLeft:Bool) {
@@ -71,30 +48,18 @@ class GameMainViewController: UIViewController {
     }
     
     
-    private func moveOutOfScreenButtons() {
-        
-        self.lConstraint.constant = CGRectGetMidX(self.view.bounds) + CGRectGetWidth(self.btnCompany.bounds)
-        self.rConstraint.constant = CGRectGetMidX(self.view.bounds) + CGRectGetWidth(self.btnStrategy.bounds)
-        self.bConstraint.constant = -CGRectGetHeight(self.btnHelp.bounds)
-        self.tBConstraint.constant = self.bConstrValue + self.tBConstrValue
-    }
-    
     private func prepareCustomPushSegue() {
         
         let vc = self.storyboard?.instantiateViewControllerWithIdentifier("GameViewControllerID") as? GameViewController
         
         custPushSegue = UIStoryboardSegue(identifier: "startSurvival", source: self, destination: vc!) { () -> Void in
           println("Push view")
+         GameLogicManager.sharedInstance.selectSurvival()
           self.navigationController?.pushViewController(self.custPushSegue.destinationViewController as! UIViewController, animated: false)
         }
         
     }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        
-    }
+
     
     private func disableButtons() {
         setButtonsState(false)
@@ -105,7 +70,7 @@ class GameMainViewController: UIViewController {
     }
     
     private func setButtonsState(enabled:Bool) {
-        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp] {
+        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp,self.btnGameCenter] {
             btn.enabled = enabled
         }
     }
@@ -134,10 +99,11 @@ class GameMainViewController: UIViewController {
         
     }
     
+    //MARK: eee  Why it is not called?
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let identifier = segue.identifier {
             if (identifier == "startSurvival") {
-                
+                GameLogicManager.sharedInstance.selectSurvival()
             }
         }
     }
@@ -146,7 +112,9 @@ class GameMainViewController: UIViewController {
     @IBAction func btnPressed(sender: UIButton) {
         if sender == self.btnStrategy {
             self.custPushSegue.perform()
-            sender.enabled = false
+            sender.enabled = true
+        } else if (sender == self.btnGameCenter) {
+            ///eeee Add here logic...
         }
     }
     

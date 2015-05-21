@@ -15,6 +15,7 @@
 		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
 		2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0A1AFFE88100067348 /* GameMainViewController.swift */; };
 		2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */; };
+		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217340FD1AFE5267009E934A /* GameOverViewController.swift */; };
@@ -76,6 +77,7 @@
 		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
 		2118AD0A1AFFE88100067348 /* GameMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameMainViewController.swift; path = ViewControllers/GameMainViewController.swift; sourceTree = "<group>"; };
 		2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundCornerButton.swift; path = Views/RoundCornerButton.swift; sourceTree = "<group>"; };
+		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		217340FD1AFE5267009E934A /* GameOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverViewController.swift; path = ViewControllers/GameOverViewController.swift; sourceTree = "<group>"; };
@@ -141,6 +143,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		214007A51B0D2D1A00072C9F /* Nodes */ = {
+			isa = PBXGroup;
+			children = (
+				214007A61B0D2D2A00072C9F /* Score */,
+				219A6D211AFABCA300A63E7F /* HUD */,
+			);
+			name = Nodes;
+			sourceTree = "<group>";
+		};
+		214007A61B0D2D2A00072C9F /* Score */ = {
+			isa = PBXGroup;
+			children = (
+				214007A71B0D2E2900072C9F /* ScoreNode.swift */,
+			);
+			name = Score;
+			sourceTree = "<group>";
+		};
 		215A5D211AD6792B00F136D3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
@@ -291,9 +310,9 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				214007A51B0D2D1A00072C9F /* Nodes */,
 				217340FB1AFE5124009E934A /* Scenes */,
 				21DEA0CF1AFD1761004FF5D7 /* Views */,
-				219A6D211AFABCA300A63E7F /* HUD */,
 				2199B6891AE4470100DDDB9F /* Utils */,
 				2199B6821AE3FEF100DDDB9F /* Sounds */,
 				21E56B301ADA93C10071A217 /* Particles */,
@@ -476,6 +495,7 @@
 				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
+				214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
 				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,
 				219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */,

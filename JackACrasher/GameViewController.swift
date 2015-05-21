@@ -14,9 +14,45 @@ class GameViewController: UIViewController,GameSceneDelegate {
     @IBOutlet weak var btnPlay: UIButton!
     @IBOutlet weak var analogControl: AnalogControl!
     
+    private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
+    
+    private var myContext = 0
+    
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        logicManager.addObserver(self, forKeyPath: "isLoading", options: .New, context: &myContext)
     }
+
+    
+    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>) {
+        if context == &myContext {
+            let isLoading:Bool = change[NSKeyValueChangeNewKey]!.boolValue
+            
+            println("Date changed: \(change[NSKeyValueChangeNewKey])")
+            
+            if (!isLoading) {
+                self.waitUntilNotLoadedItem()
+            }
+        } else {
+            super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
+        }
+    }
+    
+    deinit {
+        logicManager.removeObserver(self, forKeyPath: "isLoading", context: &myContext)
+    }
+    
+    private func waitUntilNotLoadedItem(force:Bool = false)  {
+        if (!logicManager.isLoading && self.isViewLoaded()) {
+                if let scene = self.skView.scene as? GameScene {
+                    if (self.logicManager.isSurvival) {
+                        scene.setTotalScore(self.logicManager.survivalTotalScore)
+                    }
+                }
+        }
+    }
+    
     private var skView:SKView! {
         get { return self.view as! SKView}
     }
@@ -55,6 +91,8 @@ class GameViewController: UIViewController,GameSceneDelegate {
             
             analogControl.delegate = scene
             analogControl.superview?.bringSubviewToFront(analogControl)
+            
+            waitUntilNotLoadedItem()
         }
     }
     
@@ -122,9 +160,16 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     //MARK : GameScene delegate 
     
-    func gameScenePlayerDied(scene:GameScene) {
+    func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64) {
         self.skView.scene?.paused = true
-        performSegueWithIdentifier("gameOver", sender: self)
+        
+        self.logicManager.storeSurvivalScores([UInt64(currentScore),totalScore], completionHandler: { (success, error) -> Void in
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.performSegueWithIdentifier("gameOver", sender: self)
+            })
+        })
+        
+        
     }
     
 }

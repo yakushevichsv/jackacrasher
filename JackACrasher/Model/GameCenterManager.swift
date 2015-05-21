@@ -70,7 +70,7 @@ class GameCenterManager: NSObject {
     }
     
     //MARK: Score
-    private func reportScore(score:Int64, leaderboardId: String) {
+    private func reportScore(score:Int64,context:UInt64 = 0, leaderboardId: String) {
         
         if (!gameCenterEnabled) {
             println("Game center is not available")
@@ -79,7 +79,7 @@ class GameCenterManager: NSObject {
         
         let scoreReporter = GKScore(leaderboardIdentifier: leaderboardId)
         scoreReporter.value   = score
-        scoreReporter.context = 0
+        scoreReporter.context = context
         
         GKScore.reportScores([scoreReporter], withCompletionHandler: { (error) -> Void in
             self.lastError = error
@@ -89,6 +89,10 @@ class GameCenterManager: NSObject {
     
     private func getScoresFromLeaderboard(leaderboardId :String,completionHandler: (([AnyObject]!, AnyObject!, NSError!) -> Void)!) {
         
+        if (!gameCenterEnabled) {
+            println("Game center is not available")
+            return
+        }
         
         let lb = GKLeaderboard(players: [GKLocalPlayer.localPlayer()])
         lb.identifier = leaderboardId
@@ -102,8 +106,12 @@ class GameCenterManager: NSObject {
     
     
     //MARK: Survival part
-    internal func reportSurvivalTotalScore(score:Int64) {
-        reportScore(score, leaderboardId: SurvivalTotalScoreLbId)
+    internal func reportSurvivalTotalScore(score:UInt64) {
+        
+        let context = score/UInt64(Int64.max)
+        let scoreDiff = Int64(score - context*UInt64(Int64.max))
+        
+        reportScore(scoreDiff,context:context, leaderboardId: SurvivalTotalScoreLbId)
     }
     
     internal func reportSurvivalBestScore(score:Int64) {

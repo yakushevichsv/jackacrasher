@@ -10,7 +10,7 @@ import SpriteKit
 
 @objc protocol GameSceneDelegate
 {
-    func gameScenePlayerDied(scene:GameScene)
+    func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64)
 }
 
 extension GameScene {
@@ -35,6 +35,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     var asteroidGenerator:AsteroidGenerator!
     weak var gameSceneDelegate:GameSceneDelegate?
     
+    private var currentGameScore:Int64 = 0
+    private var totalGameScore:UInt64 = 0 {
+        didSet {
+           self.setTotalScoreLabelValue()
+        }
+    }
+    
     let asterName:String! = "TestAster"
     let bgStarsName:String! = "bgStars"
     let bgZPosition:CGFloat = 1
@@ -57,6 +64,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     private let scoreLabel = SKLabelNode(fontNamed: "gamerobot")
     
     private var playableArea:CGRect = CGRectZero
+    private var gameScoreNode:ScoreNode!
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -74,6 +82,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
         self.asteroidManager = AsteroidManager(scene: self)
         
+    }
+    
+    internal func setTotalScore(totalScore:UInt64) {
+        self.totalGameScore = totalScore + UInt64(self.currentGameScore);
     }
     
     internal func defineStartingRect(rect:CGRect,alpha:CGFloat) {
@@ -176,6 +188,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
         //self.player.anchorPoint = CGPointZero
         //self.player.zRotation = CGFloat(140).radians
+        //MARK: ee Why fade in stopped working...
+        player.alpha = 1.0
         println("Z rotation \(self.player.zRotation)")
         self.player.hidden = false
     }
@@ -185,6 +199,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         self.definePlayableRect()
         self.createPlayer()
         self.createAsteroidGenerator()
+        
+        self.gameScoreNode = ScoreNode(point: CGPointMake(CGRectGetMinX(self.playableArea) + 40, CGRectGetMaxY(self.playableArea) - 60 ), score: self.totalGameScore)
+        self.gameScoreNode.zPosition = self.fgZPosition
+        addChild(self.gameScoreNode)
+        
+        self.setTotalScoreLabelValue()
         
         let texture1 = SKTexture(imageNamed: "Asteroid1_Part1")
         let size1 = texture1.size()
@@ -209,6 +229,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             
         }
         
+    }
+    
+    private func setTotalScoreLabelValue() {
+        self.gameScoreNode?.setScore(self.totalGameScore)
     }
     
     private func canCutRope(touches: Set<NSObject>) -> Bool {
@@ -284,16 +308,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
-        //MARK: eee Test is here...
-        /*self.hudNode.decreaseLife()
-        
-        if (self.hudNode.isDead()) {
-            
-            self.gameSceneDelegate?.gameScenePlayerDied(self)
-            
-            return
-        }*/
-        
         if self.canCutRope(touches) &&  self.moving {
             
             let touch = touches.first as! UITouch
@@ -345,6 +359,21 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
+            
+            //MARK: HACK life decrease....
+            
+            if (self.player.containsPoint(location)) {
+                
+                self.hudNode.decreaseLife()
+                
+                if (self.hudNode.isDead()) {
+                    
+                    self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore)
+                    
+                    return
+                }
+            }
+            
             
             if (self.player.canThrowProjectile()) {
                 self.player.throwProjectileToLocation(location)
@@ -696,21 +725,25 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             
             let expType = self.trashAsteroidsCount == 0 ? ExplosionType.Large : ExplosionType.Small
             
-            createExplosion(expType, position: scenePoint,withScore: 10)
+            trashAster!.node?.removeFromParent()
+            laser?.node?.removeFromParent()
             
             if 0 == self.trashAsteroidsCount {
+                createExplosion(expType, position: scenePoint,withScore: 10)
 
                 let timeInterval = NSDate.timeIntervalSinceReferenceDate()
                 self.lastProjectileExp = (timeInterval,scenePoint)
             }
+            else {
+                createExplosion(expType, position: scenePoint)
+            }
         }
         
         
-        trashAster!.node?.removeFromParent()
-        laser?.node?.removeFromParent()
+        
     }
     
-    func createExplosion(explosionType:ExplosionType, position:CGPoint, withScore scoreAddition:CGFloat) {
+    func createExplosion(explosionType:ExplosionType, position:CGPoint, withScore scoreAddition:Int64 = 0) {
         
         switch explosionType {
         case .Small:
@@ -740,13 +773,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
     }
     
-    func displayScoreAdditionLabel(position:CGPoint,scoreAddition:CGFloat) {
+    func displayScoreAdditionLabel(position:CGPoint,scoreAddition:Int64) {
         scoreLabel.alpha = 1.0
-        scoreLabel.text = "+\(scoreAddition)"
+        scoreLabel.text = (scoreAddition > 0) ? "+\(scoreAddition)" : "-\(scoreAddition)"
         scoreLabel.fontSize = 30.0
         scoreLabel.fontColor = SKColor.greenColor()
         scoreLabel.horizontalAlignmentMode = .Center
         scoreLabel.position = position
+        
+        self.currentGameScore += scoreAddition
+        self.totalGameScore += UInt64(scoreAddition)
         
         var yDiff:CGFloat = 0.0
         if (30 + position.y > CGRectGetMaxY(self.playableArea)) {

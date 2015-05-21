@@ -80,22 +80,13 @@ class GameOverScene: SKScene {
         
         if let presentView = self.view {
             
-            let vH = CGRectGetHeight(presentView.bounds)
-            let vW = CGRectGetWidth(presentView.bounds)
             
-            let hRatio = vH/self.size.height
-            let wRatio = vW/self.size.width
-            
-            let ratio = min(hRatio,wRatio)
-            
-            let h = self.size.height * ratio
-            let w = self.size.width * ratio
-            
-            
-            let yDiff = 0.5*( max(h,vH) - min(h,vH))
-            let xDiff = 0.5*( max(w,vW) - min(w,vW))
-            
-           self.playableArea = CGRectMake(xDiff/ratio, yDiff/ratio, vW/ratio, vH/ratio)
+            let maxAspectRatio:CGFloat = 16.0/9.0 // 1
+            let playableHeight = size.width / maxAspectRatio // 2
+            let playableMargin = (size.height-playableHeight)/2.0 // 3
+            playableArea = CGRect(x: 0, y: playableMargin,
+                width: size.width,
+                height: playableHeight) // 4
             println("Area \(self.playableArea)")
         }
     }

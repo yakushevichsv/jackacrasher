@@ -337,7 +337,7 @@ class Player: SKSpriteNode {
         projectile.physicsBody!.collisionBitMask = 0
         
         projectile.physicsBody!.categoryBitMask  = EntityCategory.PlayerLaser
-        projectile.physicsBody!.contactTestBitMask = EntityCategory.TrashAsteroid | EntityCategory.Asteroid
+        projectile.physicsBody!.contactTestBitMask =  EntityCategory.Asteroid
         projectile.userData = ["owner":"p"]
         
         projectile.zPosition = self.zPosition
