@@ -67,7 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             localNotification.repeatCalendar = NSCalendar.currentCalendar()
             localNotification.repeatInterval = NSCalendarUnit.CalendarUnitWeekdayOrdinal
             
-            let fireInterval:NSTimeInterval = 30//7*24*60*60
+            let fireInterval:NSTimeInterval = 7*24*60*60
             localNotification.fireDate = NSDate(timeIntervalSinceNow:fireInterval)
             
             
