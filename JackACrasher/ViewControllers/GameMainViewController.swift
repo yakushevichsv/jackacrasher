@@ -111,11 +111,17 @@ class GameMainViewController: UIViewController {
     
     @IBAction func btnPressed(sender: UIButton) {
         if sender == self.btnStrategy {
+            playBtnPressedSound()
             self.custPushSegue.perform()
             sender.enabled = true
         } else if (sender == self.btnGameCenter) {
-            ///eeee Add here logic...
+            playBtnPressedSound()
+            GameCenterManager.sharedInstance.showGKGameCenterViewController(self)
         }
+    }
+    
+    func playBtnPressedSound() {
+        SoundManager.sharedInstance.playSoundEffect("button_press.wav")
     }
     
 }

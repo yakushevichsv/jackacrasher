@@ -13,10 +13,72 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
+        
+        if let localNotification = launchOptions?[UIApplicationLaunchOptionsLocalNotificationKey] as? UILocalNotification {
+            // ...do stuff...
+            localNotification.applicationIconBadgeNumber = 0
+        }
+        else {
+            
+            let types = application.currentUserNotificationSettings().types
+            
+            if (types == UIUserNotificationType.None)
+            {
+                application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert | UIUserNotificationType.Sound | UIUserNotificationType.Badge,categories:nil))
+            }
+        }
+        
         return true
+    }
+    
+    func applicationWillTerminate(application: UIApplication) {
+        
+        let types = application.currentUserNotificationSettings().types.rawValue
+        
+        if (types == UIUserNotificationType.None.rawValue) {
+            return
+        }
+        
+        if (!application.scheduledLocalNotifications.isEmpty) {
+            for anyNotification in  application.scheduledLocalNotifications {
+                let aNotification = anyNotification as! UILocalNotification
+                application.cancelLocalNotification(aNotification);
+            }
+        }
+        
+        
+        if (application.scheduledLocalNotifications.isEmpty) {
+            
+            let localNotification = UILocalNotification()
+            
+            if (types & UIUserNotificationType.Sound.rawValue != 0) {
+                localNotification.soundName = UILocalNotificationDefaultSoundName
+            }
+            
+            if (types & UIUserNotificationType.Alert.rawValue != 0) {
+                localNotification.alertAction = "Start crashing"
+                localNotification.alertBody   = "Let's crash something!"
+                localNotification.alertTitle  = "You didn't play for a while!"
+            }
+            
+            localNotification.timeZone = NSTimeZone.localTimeZone()
+            localNotification.repeatCalendar = NSCalendar.currentCalendar()
+            localNotification.repeatInterval = NSCalendarUnit.CalendarUnitWeekdayOrdinal
+            
+            let fireInterval:NSTimeInterval = 30//7*24*60*60
+            localNotification.fireDate = NSDate(timeIntervalSinceNow:fireInterval)
+            
+            
+            application.scheduleLocalNotification(localNotification)
+        }
+    }
+    
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+        
+        notification.applicationIconBadgeNumber  = 0
+        
     }
 
     func applicationWillResignActive(application: UIApplication) {
@@ -36,11 +98,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     }
-
-    func applicationWillTerminate(application: UIApplication) {
-        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
-    }
-
-
 }
 

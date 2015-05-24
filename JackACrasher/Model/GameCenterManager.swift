@@ -21,7 +21,7 @@ let SurvivalTotalScoreLbId = "com.sygamefun.survival_total_score"
 let GameCenterManagerViewController = "GameCenterManagerViewController"
 let singleton = GameCenterManager()
 
-class GameCenterManager: NSObject {
+class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
    
     var authenticationViewController: UIViewController?
     var lastError: NSError?
@@ -66,6 +66,37 @@ class GameCenterManager: NSObject {
                 }
 
             }
+        }
+    }
+    
+    func showGKGameCenterViewController(viewController: UIViewController!) {
+        
+        if !gameCenterEnabled {
+            println("Local player is not authenticated")
+            return
+        }
+        
+        //1
+        let gameCenterViewController = GKGameCenterViewController()
+        
+        //2
+        gameCenterViewController.gameCenterDelegate = self
+        
+        //3
+        gameCenterViewController.viewState = .Leaderboards
+        
+        //4
+        viewController.presentViewController(gameCenterViewController,
+            animated: true, completion: nil)
+    }
+    
+    func reportAchievements(achievements: [GKAchievement]) {
+        if !gameCenterEnabled {
+            println("Local player is not authenticated")
+            return
+        }
+        GKAchievement.reportAchievements(achievements) {(error) in
+            self.lastError = error
         }
     }
     
@@ -145,6 +176,12 @@ class GameCenterManager: NSObject {
             
             handler(score,error)
         })
+    }
+    
+    // MARK: GKGameCenterControllerDelegate methods
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+        
+        gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
     }
     
     

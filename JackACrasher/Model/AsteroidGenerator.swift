@@ -105,7 +105,7 @@ class AsteroidGenerator: NSObject {
         
         let sprite = RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
-        let yMargin = round(1 * max(sprite.size.width,sprite.size.height)) + 10
+        let yMargin = round(1.2 * max(sprite.size.width,sprite.size.height)) + 10
         
         let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/asteroidSpeed)
         
@@ -129,6 +129,7 @@ class AsteroidGenerator: NSObject {
         let (sprite,sequence) = self.produceRegularAsteroidPrivate(size,initialAnimation:true)
         
         sprite.runAction(sequence)
+        sprite.startAnimation()
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Regular)
         
@@ -357,7 +358,7 @@ class AsteroidGenerator: NSObject {
             }),SKAction.removeFromParent()]), rotateAlways,blinkInOut])
             sprite.runAction(moveDelAction,withKey: actName )
             
-            let yMargin = round(1*max(sprite.size.width,sprite.size.height)) + 10
+            let yMargin = round(1.2*max(sprite.size.width,sprite.size.height)) + 10
             let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
             
             var yPos  = CGFloat(arc4random() % divisor) + yMargin
@@ -434,7 +435,7 @@ class AsteroidGenerator: NSObject {
         //HACK: warning
         
         self.prevAsteroidType = .None
-        currentAstType = .Trash
+        currentAstType = .Regular
         
         self.prevAsteroidType = currentAstType
         

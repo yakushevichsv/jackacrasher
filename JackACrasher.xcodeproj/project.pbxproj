@@ -22,7 +22,6 @@
 		217341001AFE54AB009E934A /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 217340FF1AFE54AB009E934A /* GameOverScene.sks */; };
 		217341021AFE54C1009E934A /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217341011AFE54C1009E934A /* GameOverScene.swift */; };
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
-		21803C581ADC189D00DDC5ED /* star.png in Resources */ = {isa = PBXBuildFile; fileRef = 21803C571ADC189D00DDC5ED /* star.png */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
 		2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCDF1AF6567E00518F97 /* Spawn.sks */; };
 		2192CCE21AF6574800518F97 /* realStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCE11AF6574800518F97 /* realStar.png */; };
@@ -36,6 +35,8 @@
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
 		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
 		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
+		21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA61B10A1B1009EDA3E /* button_press.wav */; };
+		21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA81B10AAB6009EDA3E /* star_small.png */; };
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
 		21DEA0D11AFD1893004FF5D7 /* AnalogControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
@@ -84,7 +85,6 @@
 		217340FF1AFE54AB009E934A /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = GameOverScene.sks; path = Scenes/GameOverScene.sks; sourceTree = "<group>"; };
 		217341011AFE54C1009E934A /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverScene.swift; path = Scenes/GameOverScene.swift; sourceTree = "<group>"; };
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
-		21803C571ADC189D00DDC5ED /* star.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star.png; sourceTree = "<group>"; };
 		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
 		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
 		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
@@ -98,6 +98,8 @@
 		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
 		21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JackACrasherNavigationController.swift; path = Model/JackACrasherNavigationController.swift; sourceTree = "<group>"; };
 		21CCA14D1B0A881C004419A2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		21CFBCA61B10A1B1009EDA3E /* button_press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_press.wav; sourceTree = "<group>"; };
+		21CFBCA81B10AAB6009EDA3E /* star_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_small.png; sourceTree = "<group>"; };
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
 		21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnalogControl.swift; path = Views/AnalogControl.swift; sourceTree = "<group>"; };
 		21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Game_Robot.ttf; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 		2199B6821AE3FEF100DDDB9F /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				21CFBCA61B10A1B1009EDA3E /* button_press.wav */,
 				217341031AFE5674009E934A /* lose.wav */,
 				2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */,
 				2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */,
@@ -247,7 +250,7 @@
 				211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */,
 				211243621AEAE07A006B5487 /* Explosion.sks */,
 				211243601AEAE070006B5487 /* Rock.png */,
-				21803C571ADC189D00DDC5ED /* star.png */,
+				21CFBCA81B10AAB6009EDA3E /* star_small.png */,
 				21E56B2C1ADA93BB0071A217 /* Engine.sks */,
 				21DC553C1AF42DB60083210D /* Sparky.sks */,
 				21E56B2D1ADA93BB0071A217 /* spark.png */,
@@ -291,7 +294,6 @@
 		21FFEADA1AD5E216000115F6 = {
 			isa = PBXGroup;
 			children = (
-				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
 				21FFEAE51AD5E216000115F6 /* JackACrasher */,
 				21FFEAFF1AD5E216000115F6 /* JackACrasherTests */,
 				21FFEAE41AD5E216000115F6 /* Products */,
@@ -332,6 +334,7 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
 				21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */,
 				21FFEAE71AD5E216000115F6 /* Info.plist */,
 			);
@@ -443,13 +446,14 @@
 			files = (
 				210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */,
 				211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */,
-				21803C581ADC189D00DDC5ED /* star.png in Resources */,
+				21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */,
 				217341041AFE5674009E934A /* lose.wav in Resources */,
 				2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */,
 				21DC553D1AF42DB60083210D /* Sparky.sks in Resources */,
 				2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */,
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
 				21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */,
+				21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */,
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
 				2192CCE21AF6574800518F97 /* realStar.png in Resources */,
 				211243611AEAE070006B5487 /* Rock.png in Resources */,

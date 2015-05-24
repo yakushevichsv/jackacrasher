@@ -59,6 +59,10 @@ class Player: SKSpriteNode {
     var flyDurationSpeed : Float = 400
     var teleportDuration : NSTimeInterval = 0.3
     
+    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
+        super.init(texture: texture, color: color, size: size)
+    }
+    
     init(position:CGPoint) {
         let texture = SKTexture(imageNamed: "player")
         
@@ -81,6 +85,7 @@ class Player: SKSpriteNode {
     
         let aPhysBody = SKPhysicsBody(rectangleOfSize: self.size)
         aPhysBody.categoryBitMask = EntityCategory.Player
+        aPhysBody.contactTestBitMask = 0
         aPhysBody.collisionBitMask = 0
         self.physicsBody = aPhysBody
     }

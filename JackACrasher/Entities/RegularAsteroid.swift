@@ -79,7 +79,7 @@ class RegularAsteroid: SKSpriteNode {
         self.cropNode = ProgressTimerCropNode(size: texture.size())
         self.asterSize = asteroid
         
-        super.init(texture: texture, color: UIColor.clearColor(), size: texture.size())
+        super.init(texture: texture, color: SKColor.blackColor(), size: texture.size())
         
         self.cropNode.addChild(self.digitNode)
         addChild(self.cropNode)
@@ -119,6 +119,10 @@ class RegularAsteroid: SKSpriteNode {
             
             if self.cropNode.currentProgress == 0.0 {
                 self.startRotation()
+            }
+            
+            if (time == CGFloat(duration)) {
+                self.cropNode.runAction(SKAction.removeFromParent())
             }
         }
         runAction(blockAction, withKey: self.displayAction)
