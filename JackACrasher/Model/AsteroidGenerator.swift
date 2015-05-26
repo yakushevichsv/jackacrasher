@@ -348,10 +348,12 @@ class AsteroidGenerator: NSObject {
             let rotate = SKAction.rotateByAngle(CGFloat(M_1_PI*0.5), duration: Double(1))
             let rotateAlways = SKAction.repeatActionForever(rotate)
             
-            let blinkIn = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 0.4, duration: min(1,time*0.5))
-            let blinkOut = SKAction.colorizeWithColor(SKColor.clearColor(), colorBlendFactor: 0.0, duration: blinkIn.duration)
+            let blinkIn   = SKAction.colorizeWithColor(UIColor.redColor(), colorBlendFactor: 1.0, duration: 0.0)
+            let blinkWait = SKAction.waitForDuration(0.25)
+            let blinkOut  = SKAction.colorizeWithColorBlendFactor(0.0, duration: 0.1)
             
-            let blinkInOut = SKAction.repeatActionForever(SKAction.sequence([blinkIn,blinkOut]))
+            
+            let blinkInOut = SKAction.repeatActionForever(SKAction.sequence([blinkIn, blinkWait ,blinkOut]))
             
             let moveDelAction = SKAction.group([SKAction.sequence([moveAct,SKAction.runBlock({ () -> Void in
                 self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: sprite, withType: .Trash)

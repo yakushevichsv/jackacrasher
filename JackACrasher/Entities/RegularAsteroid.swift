@@ -13,23 +13,30 @@ import SpriteKit
 let digitAppearanceSpeed = M_PI_4
 let duration = (M_PI*2)/digitAppearanceSpeed
 
-class RegularAsteroid: SKSpriteNode {
+class RegularAsteroid: SKNode {
     private let digitNode:DigitNode!
     private let cropNode:ProgressTimerCropNode!
     private let maxLife:Int
     private let displayAction = "displayAction"
     private let asterSize:RegularAsteroidSize
+    private let bgImageNode:SKSpriteNode! = SKSpriteNode()
+    
+    internal var mainSprite:SKSpriteNode! {
+        return bgImageNode
+    }
+    
+    internal var size:CGSize {
+        return bgImageNode != nil ? bgImageNode.size : CGSizeZero
+    }
     
     internal var healthState:Int {
         return self.digitNode.digit
     }
     
+    
+    
     internal var asteroidSize:RegularAsteroidSize {
         return asterSize
-    }
-    
-    convenience init(asteroid:RegularAsteroidSize, maxLife:Int) {
-        self.init(asteroid:asteroid,maxLife:maxLife, needToAnimate:true)
     }
     
     init(asteroid:RegularAsteroidSize,maxLife:Int, needToAnimate:Bool) {
@@ -79,7 +86,12 @@ class RegularAsteroid: SKSpriteNode {
         self.cropNode = ProgressTimerCropNode(size: texture.size())
         self.asterSize = asteroid
         
-        super.init(texture: texture, color: SKColor.blackColor(), size: texture.size())
+        super.init()
+        
+        self.bgImageNode.texture = texture
+        self.bgImageNode.size = texture.size()
+        
+        self.addChild(bgImageNode)
         
         self.cropNode.addChild(self.digitNode)
         addChild(self.cropNode)
@@ -122,7 +134,7 @@ class RegularAsteroid: SKSpriteNode {
             }
             
             if (time == CGFloat(duration)) {
-                self.cropNode.runAction(SKAction.removeFromParent())
+              self.cropNode.runAction(SKAction.sequence([ SKAction.waitForDuration(1), SKAction.removeFromParent()]))
             }
         }
         runAction(blockAction, withKey: self.displayAction)

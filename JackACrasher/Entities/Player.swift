@@ -39,12 +39,49 @@ enum PlayerFlyDistance {
     case Long
 }
 
-class Player: SKSpriteNode {
+private let playerBGNodeName = "playerBGNode"
+private let playerImageName = "player"
+
+private let hammerImageName = "throw_hammer"
+private let hammerNodeName = "throwHammer"
+
+private let playerNode = "playerNode"
+
+class Player: SKNode {
     private let engineNodeName = "engineEmitter"
     private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
     private var movementStyle:PlayerMovement = .Fly
     private var playerMode:PlayerMode = .Idle
+    
+    private var hammerSprite:SKSpriteNode! = nil
+    
+    private static var sBGSprite:SKSpriteNode!
+    private static var sHammerSprite:SKSpriteNode!
+    private static var sContext:dispatch_once_t = 0
+    
+    private var playerBGSprite:SKSpriteNode! {
+        return self.childNodeWithName(playerBGNodeName) as! SKSpriteNode
+    }
+    
+    internal var size :CGSize {
+        return Player.sBGSprite.size
+    }
+    
+    internal class func loadAssets() {
+       
+        dispatch_once(&sContext) { () -> Void in
+           let playerSprite = SKSpriteNode(imageNamed: playerImageName)
+            playerSprite.name = playerBGNodeName
+            Player.sBGSprite = playerSprite
+            
+            let hammerSprite = SKSpriteNode(imageNamed: hammerImageName)
+            hammerSprite.name = hammerNodeName
+            Player.sHammerSprite = hammerSprite
+        }
+    }
+    
+    //TODO: add methods for loading textures....
     
     internal var punchForce:ForceType = 1
     
@@ -59,16 +96,17 @@ class Player: SKSpriteNode {
     var flyDurationSpeed : Float = 400
     var teleportDuration : NSTimeInterval = 0.3
     
-    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
-        super.init(texture: texture, color: color, size: size)
-    }
     
     init(position:CGPoint) {
-        let texture = SKTexture(imageNamed: "player")
+        super.init()
         
-        super.init(texture: texture,color:SKColor.whiteColor(), size:texture.size())
+        let bgSprite = Player.sBGSprite.copy() as! SKNode
+        bgSprite.position = CGPointZero
         
-        self.name = "Player"
+        addChild(bgSprite)
+        
+        
+        self.name = playerNode
         self.position = position
         
         self.playerDistFlyMap = createEngine()
@@ -90,13 +128,47 @@ class Player: SKSpriteNode {
         self.physicsBody = aPhysBody
     }
     
+    //MARK: Hammer  methods
+    internal func displayHammer() {
+        
+        self.hammerSprite = Player.displayHammerForSprite(self,size:self.size)
+    }
+    
+    internal class func displayHammerForSprite(sprite:SKSpriteNode!) -> SKSpriteNode! {
+        return displayHammerForSprite(sprite, size: sprite.size)
+    }
+
+    internal class func displayHammerForSprite(sprite:SKNode!,size:CGSize) -> SKSpriteNode! {
+        
+        var hammerSprite:SKSpriteNode!
+        
+        if (sprite.childNodeWithName(Player.sHammerSprite.name!) == nil) {
+            
+            hammerSprite = Player.sHammerSprite.copy() as! SKSpriteNode
+            hammerSprite.anchorPoint = CGPointZero
+            sprite.addChild(hammerSprite)
+        }
+        
+        let angle = (sprite.xScale > 0 ? -1.0 : 1.0 ) * CGFloat(M_PI_4)
+        hammerSprite.zRotation = angle
+        hammerSprite.hidden = false
+        
+        var xOffset : CGFloat = -CGFloat(round(size.width * 0.5))
+        if (angle > 0) {
+            xOffset *= -1
+        }
+        hammerSprite.position = CGPointMake(xOffset, -CGFloat(round(hammerSprite.size.height * 0.0)))
+        
+        return hammerSprite
+    }
+    
     //MARK: Engine methods
     
     private func createEngine() -> playerDistFlyMapType {
         
         let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks")
         
-        let size = self.texture!.size()
+        let size = self.size
         
         engineEmitter.position = CGPoint(x: size.width * -0.5, y: size.height * -0.3)
         engineEmitter.name = engineNodeName
@@ -247,7 +319,7 @@ class Player: SKSpriteNode {
         size.width *= 0.8
         size.height *= 0.8
         
-        let miniProjectile = SKSpriteNode(texture: texture, size: size)
+        let miniProjectile = SKSpriteNode(texture: texuteProjectile, size: size)
         miniProjectile.anchorPoint = CGPointMake(0.5, 0.5)
         miniProjectile.name = projectileNodeName
         miniProjectile.hidden = true
