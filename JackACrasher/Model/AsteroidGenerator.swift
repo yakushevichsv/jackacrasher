@@ -103,7 +103,7 @@ class AsteroidGenerator: NSObject {
         
         let asteroidSpeed:CGFloat = 30
         
-        let sprite = RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
+        let sprite = size == .Small ? SmallRegularAsteroid(maxLife: 2, needToAnimate: initialAnimation) : RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
         let yMargin = round(1.2 * max(sprite.size.width,sprite.size.height)) + 10
         

@@ -13,7 +13,13 @@ import SpriteKit
 let digitAppearanceSpeed = M_PI_4
 let duration = (M_PI*2)/digitAppearanceSpeed
 
-class RegularAsteroid: SKNode {
+
+@objc protocol ItemDestructable {
+    
+    func tryToDestroyWithForce(forceValue:ForceType) -> Bool
+}
+
+class RegularAsteroid: SKNode, ItemDestructable {
     private let digitNode:DigitNode!
     private let cropNode:ProgressTimerCropNode!
     private let maxLife:Int
@@ -47,6 +53,8 @@ class RegularAsteroid: SKNode {
         var w_r:CGFloat
         var f_size:CGFloat
         
+        var isLittle:Bool = false
+        
         switch (asteroid) {
         case .Medium:
             partName = "medium"
@@ -62,7 +70,7 @@ class RegularAsteroid: SKNode {
             w_R = 5
             w_r = 2
             f_size = 10
-            
+            isLittle = true
             break
         case .Big:
             partName = "large"
@@ -93,14 +101,18 @@ class RegularAsteroid: SKNode {
         
         self.addChild(bgImageNode)
         
-        self.cropNode.addChild(self.digitNode)
-        addChild(self.cropNode)
+        if (!isLittle) {
+            self.cropNode.addChild(self.digitNode)
+            addChild(self.cropNode)
+        }
         
         let physBody = SKPhysicsBody(texture: texture, size: texture.size())
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         
+       
         physBody.collisionBitMask = 0
+        
         
         self.physicsBody = physBody
         
@@ -123,6 +135,7 @@ class RegularAsteroid: SKNode {
     internal func setProgress(progress:CGFloat) {
         self.cropNode.setProgress(min(1,max(0,progress)))
     }
+    
     
     internal func startAnimation() {
         
@@ -157,5 +170,85 @@ class RegularAsteroid: SKNode {
         return result == 0
     }
     
+}
+
+class SmallRegularAsteroid:RegularAsteroid {
     
+    private static let sFireEmitterNode = "FireEmitterNode"
+    
+    private static var sContext:dispatch_once_t = 0
+    private static var sFireEmitter:SKEmitterNode!
+    private var firing = false
+    
+    
+    internal var isFiring:Bool {
+        return firing
+    }
+    
+    internal class func loadAssets() {
+        
+        dispatch_once(&sContext, { () -> Void in
+            self.sFireEmitter = SKEmitterNode(fileNamed: "Fire.sks")
+            self.sFireEmitter.name = self.sFireEmitterNode
+        })
+    }
+    
+    init(maxLife: Int, needToAnimate: Bool) {
+        super.init(asteroid: .Small, maxLife: maxLife, needToAnimate: needToAnimate)
+        setupPhysicsBody()
+    }
+    
+    private func setupPhysicsBody(){
+        let texture = self.mainSprite.texture
+        
+        let physBody = SKPhysicsBody(texture: texture, size: texture!.size())
+        physBody.categoryBitMask = EntityCategory.RegularAsteroid
+        physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
+        
+        
+        physBody.collisionBitMask = 0
+        
+        
+        self.physicsBody = physBody
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    override func startAnimation() {
+        return
+    }
+    
+    //MARK: Fire Node
+    internal func startFiringAtDirection(direction:CGVector, point:CGPoint) {
+        
+        let len = point.length()
+        let angle = point.angle + π
+        
+        let x  = len * cos(angle)
+        let y  = len * sin(angle)
+        
+        let p1 = CGPointMake(x, y)
+        
+        let fireEmitter = SmallRegularAsteroid.sFireEmitter.copy() as! SKEmitterNode
+        
+        fireEmitter.position = p1
+        fireEmitter.targetNode = self.scene
+        fireEmitter.particleRotation = shortestAngleBetween(self.zRotation, direction.angle)
+        
+        addChild(fireEmitter)
+        
+        self.firing = true
+        
+    }
+}
+
+class RegularAsteroids {
+    
+    internal class func loadAssets() {
+        
+        SmallRegularAsteroid.loadAssets()
+        
+    }
 }

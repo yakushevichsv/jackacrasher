@@ -15,6 +15,7 @@
 		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
 		2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0A1AFFE88100067348 /* GameMainViewController.swift */; };
 		2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */; };
+		211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211C4C6F1B16FFA4005F50B8 /* Fire.sks */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
@@ -78,6 +79,7 @@
 		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
 		2118AD0A1AFFE88100067348 /* GameMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameMainViewController.swift; path = ViewControllers/GameMainViewController.swift; sourceTree = "<group>"; };
 		2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundCornerButton.swift; path = Views/RoundCornerButton.swift; sourceTree = "<group>"; };
+		211C4C6F1B16FFA4005F50B8 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
@@ -245,6 +247,7 @@
 		21E56B301ADA93C10071A217 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
+				211C4C6F1B16FFA4005F50B8 /* Fire.sks */,
 				2192CCE11AF6574800518F97 /* realStar.png */,
 				2192CCDF1AF6567E00518F97 /* Spawn.sks */,
 				211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */,
@@ -447,6 +450,7 @@
 				210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */,
 				211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */,
 				21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */,
+				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
 				217341041AFE5674009E934A /* lose.wav in Resources */,
 				2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */,
 				21DC553D1AF42DB60083210D /* Sparky.sks in Resources */,

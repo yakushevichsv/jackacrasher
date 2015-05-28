@@ -47,7 +47,7 @@ private let hammerNodeName = "throwHammer"
 
 private let playerNode = "playerNode"
 
-class Player: SKNode {
+class Player: SKNode, ItemDestructable {
     private let engineNodeName = "engineEmitter"
     private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
@@ -423,5 +423,9 @@ class Player: SKNode {
         return projectile
     }
     
-    
+    func tryToDestroyWithForce(forceValue: ForceType) -> Bool {
+        
+        //TODO: add Health value..
+        return false
+    }
 }

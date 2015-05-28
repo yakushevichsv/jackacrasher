@@ -175,7 +175,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     override func didMoveToView(view: SKView) {
         
+        //TODO: Move into loadAssets  methods
         Player.loadAssets()
+        RegularAsteroids.loadAssets()
         
         self.definePlayableRect()
         
@@ -406,13 +408,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                             pointer.memory = true
                         }
                 })
-
-                
-                
             }
         }
     }
-
+    
     override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
         self.moving = false
     }
@@ -566,24 +565,109 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     
     //MARK: Contact methods
     
-    func didPlayerContactWithRegularAsteroid(contact: SKPhysicsContact) -> Bool
+    func playerContactingWithSmallRegulaAsteroid(regAsteroid:RegularAsteroid!,contact: SKPhysicsContact) -> Bool {
+        
+        if let asteroid = regAsteroid as? SmallRegularAsteroid {
+            
+            if (asteroid.isFiring) {
+                
+                //TODO: decrease life from player & play sound file
+                
+                //asteroid.removeFromParent()
+                
+                return true
+            }
+            
+            asteroid.removeAllActions()
+            asteroid.physicsBody!.contactTestBitMask = UInt32.max // contacts with all objects...
+            var impulse = contact.contactNormal
+            
+            asteroid.physicsBody!.applyImpulse(impulse, atPoint: contact.contactPoint)
+        
+            asteroid.startFiringAtDirection(impulse, point: self.convertPoint(contact.contactPoint, toNode: asteroid))
+            
+            
+            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: asteroid, withType: .Regular)
+            
+            return true
+        }
+        
+        //eeee did Move out asteroid from the screen.....  so generator can work more....
+        
+        return false
+    }
+    
+    
+    func didEntityContactWithRegularAsteroid(contact: SKPhysicsContact) -> Bool
     {
         let bodyA = contact.bodyA
         let bodyB = contact.bodyB
         
         var asteroidBody:SKPhysicsBody? = nil
+        var entityBody:SKPhysicsBody? = nil
         
         if (bodyA.categoryBitMask == EntityCategory.RegularAsteroid) {
             asteroidBody = bodyA
+            entityBody = bodyB
         } else if (bodyB.categoryBitMask == EntityCategory.RegularAsteroid) {
             asteroidBody = bodyB
+            entityBody = bodyA
         }
 
         if let regularBody = asteroidBody  {
             
             let pNode = regularBody.node as! RegularAsteroid
-            var normal = contact.contactNormal
+            let secondNode = entityBody?.node
             
+            if ((secondNode is Player) &&  playerContactingWithSmallRegulaAsteroid(pNode, contact :contact)) {
+                return true
+            } else if (pNode is SmallRegularAsteroid) {
+                let smallAster = pNode as! SmallRegularAsteroid
+                
+                createRocksExplosion(smallAster.position, scale: 2)
+                displayScoreAdditionLabel(smallAster.position, scoreAddition: 10)
+                
+                smallAster.removeFromParent()
+                
+                if let regAster = secondNode as? RegularAsteroid {
+                    
+                    if (regAster.tryToDestroyWithForce(self.player.punchForce * 2)) {
+                        
+                        let location  = regAster.position
+                        
+                        self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                        
+                        var scale:CGFloat
+                        
+                        switch (regAster.asteroidSize){
+                        case .Big:
+                            scale = 4.0
+                            break;
+                        case .Medium:
+                            scale = 2.0
+                            break;
+                        case .Small:
+                            scale = 1.0
+                            break;
+                        default:
+                            scale = 1.0
+                            break;
+                        }
+                        
+                        //MARK: Continue here, create crystal, with score addition.
+                        
+                        self.createRocksExplosion(location,scale:scale)
+                        
+                        self.displayScoreAdditionLabel(location, scoreAddition: 20)
+                    }
+                    else {
+                        self.shakeCamera(regAster, duration: 0.8)
+                    }
+                    
+                }
+            }
+            
+            var normal = contact.contactNormal
             //normal.dx *= CGFloat(-1.0)
             //normal.dy *= CGFloat(-1.0)
             
@@ -645,7 +729,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             bomb = bodyB
         }
         
-        if (didPlayerContactWithRegularAsteroid(contact)) {
+        if (didEntityContactWithRegularAsteroid(contact)) {
             return
         }
         
