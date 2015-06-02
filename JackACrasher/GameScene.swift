@@ -34,6 +34,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
     weak var gameSceneDelegate:GameSceneDelegate?
+    var prevPlayerPosition:CGPoint = CGPointZero
     
     private var currentGameScore:Int64 = 0
     private var totalGameScore:UInt64 = 0 {
@@ -66,6 +67,21 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     private var playableArea:CGRect = CGRectZero
     private var gameScoreNode:ScoreNode!
     
+    
+    private static var sProjectileEmitter:SKEmitterNode!
+    
+    internal class func loadAssets() {
+    
+        let projectileEmitter = SKEmitterNode(fileNamed: "ProjectileSplat")
+        projectileEmitter.name = "ProjectileSplat"
+        GameScene.sProjectileEmitter = projectileEmitter
+        
+        //TODO: Move into loadAssets  methods
+        Player.loadAssets()
+        RegularAsteroids.loadAssets()
+    
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
@@ -82,22 +98,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         self.totalGameScore = totalScore + UInt64(self.currentGameScore);
     }
     
-    internal func defineStartingRect(rect:CGRect,alpha:CGFloat) {
+    internal func defineHUD(height:CGFloat,alpha:CGFloat) {
         
         if (childNodeWithName("HUD") != nil) {
             return
         }
-        
-        
-        let height = CGRectGetHeight(rect)
-        
+    
         let inSize = CGSizeMake(CGFloat(round(self.playableArea.size.width/6.0)), height)
         
         println("IN size \(inSize)")
+        //TODO: correct here if user bought extra lifes, set them here!
+        let hudNode = HUDNode(inSize: inSize)
         
-        let hudNode = HUDNode(inSize: inSize, maxLife: self.maxLifesCount)
         hudNode.name = "HUD"
-        hudNode.position = CGPointMake(CGRectGetMaxX(self.playableArea) - inSize.width*0.5 - 10, CGRectGetMaxY(self.playableArea) - inSize.height*0.5 - 100.0)
+        hudNode.position = CGPointMake(CGRectGetWidth(self.playableArea) - inSize.width - 10, CGRectGetMaxY(self.playableArea) /*+ CGRectGetMinY(self.playableArea)*/ - inSize.height)
         hudNode.alpha = alpha
         hudNode.zPosition = self.fgZPosition + 1
         addChild(hudNode)
@@ -152,6 +166,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     func createPlayer() {
         let player = Player(position: CGPointMake(CGRectGetMidX(self.playableArea), CGRectGetMidY(self.playableArea)))
         player.alpha = 0.0
+        self.prevPlayerPosition = player.position
         
         player.zPosition = fgZPosition
         self.addChild(player)
@@ -172,15 +187,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         self.player.hidden = false
     }
     
-    
     override func didMoveToView(view: SKView) {
-        
-        //TODO: Move into loadAssets  methods
-        Player.loadAssets()
-        RegularAsteroids.loadAssets()
         
         self.definePlayableRect()
         
+        self.defineHUD(30, alpha: 0.7)
         self.fillInBackgroundLayer()
         self.createPlayer()
         self.createAsteroidGenerator()
@@ -351,9 +362,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             
             if (isPlayerVisible && self.player.containsPoint(location)) {
                 
-                self.hudNode.decreaseLife()
-                
-                if (self.hudNode.isDead()) {
+                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(10))
+                if (self.player.tryToDestroyWithForce(10)) {
                     
                     self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore)
                     
@@ -366,6 +376,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 self.player.throwProjectileToLocation(location)
             } else if (isPlayerVisible && self.player.parent == self.player.scene) {
                 if (!self.needToIgnore(location)) {
+                    self.prevPlayerPosition = self.player.position
                     self.player.moveToPoint(location)
                 }
             } else  if (!isPlayerVisible) {
@@ -457,10 +468,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     }
    
     override func update(currentTime: CFTimeInterval) {
-        /* Called before each frame is rendered */
-    
-        println("Players  \(self.player)")
-        println("Players parent \(self.player.parent!)") //- strange position is changed somewhere!ß
     }
     
     func returnPlayerToScene(sprite:SKNode) -> Bool {
@@ -562,6 +569,32 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         }
     }
     
+    func emulateImpulse(forAsteroid asteroid:RegularAsteroid!,direction:CGVector)  {
+        
+        let vector = vectorFromPoint(asteroid.position, usingDirection: direction, inRect: self.playableArea)
+        
+        let speed = 1.5 * AsteroidGenerator.regularAsteroidSpeed
+        
+        let duration = NSTimeInterval(vector.length()/speed)
+        
+        let moveToAction = SKAction.moveByX(vector.dx, y: vector.dy, duration: duration)
+        
+        let durMin = min(duration+0.2,2.0)
+        
+        let seg2 = SKAction.sequence([SKAction.waitForDuration(durMin),SKAction.runBlock({ () -> Void in
+            if (asteroid.parent != nil && asteroid.physicsBody != nil) {
+                asteroid.physicsBody!.categoryBitMask = EntityCategory.RegularAsteroid
+                asteroid.physicsBody!.contactTestBitMask = UInt32.max
+                
+            }
+        })])
+        
+        let seg1 = SKAction.sequence([moveToAction,SKAction.removeFromParent()])
+        
+        let group = SKAction.group([seg1,seg2])
+        
+        asteroid.runAction(group)
+    }
     
     //MARK: Contact methods
     
@@ -573,16 +606,35 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 
                 //TODO: decrease life from player & play sound file
                 
-                //asteroid.removeFromParent()
+                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(asteroid.damageForce))
+                if (self.player.tryToDestroyWithForce(asteroid.damageForce)) {
+                    
+                    self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore)
+                    
+                    return true
+                }
+                
+                createRocksExplosion(asteroid.position, scale: 1.0)
+                
+                asteroid.removeFromParent()
                 
                 return true
             }
             
             asteroid.removeAllActions()
-            asteroid.physicsBody!.contactTestBitMask = UInt32.max // contacts with all objects...
+            asteroid.physicsBody!.categoryBitMask = 0
+            asteroid.physicsBody!.contactTestBitMask = 0 //UInt32.max // contacts with all objects...
             var impulse = contact.contactNormal
             
-            asteroid.physicsBody!.applyImpulse(impulse, atPoint: contact.contactPoint)
+            if (CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
+                emulateImpulse(forAsteroid: asteroid, direction: impulse)
+            } else {
+                let posNormalized = (self.player.position - self.prevPlayerPosition)
+                self.player.placeAtPoint(contact.contactPoint)
+                emulateImpulse(forAsteroid: asteroid, direction: CGVector(dx: posNormalized.x, dy: posNormalized.y))
+            }
+            
+            //asteroid.physicsBody!.applyImpulse(impulse, atPoint: contact.contactPoint)
         
             asteroid.startFiringAtDirection(impulse, point: self.convertPoint(contact.contactPoint, toNode: asteroid))
             
@@ -592,9 +644,54 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             return true
         }
         
-        //eeee did Move out asteroid from the screen.....  so generator can work more....
-        
         return false
+    }
+    
+    
+    func didSmallAsteroidCollidedWithRegulaOne(secondNode:SKNode?) -> Bool {
+     
+        if (!((secondNode is RegularAsteroid) || (secondNode is SmallRegularAsteroid))) {
+            return false
+        }
+        
+        let regAster = secondNode as! RegularAsteroid
+        
+            
+            if (regAster.tryToDestroyWithForce(self.player.punchForce * 2)) {
+                
+                let location  = regAster.position
+                
+                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                
+                var scale:CGFloat
+                
+                switch (regAster.asteroidSize){
+                case .Big:
+                    scale = 4.0
+                    break;
+                case .Medium:
+                    scale = 2.0
+                    break;
+                case .Small:
+                    scale = 1.0
+                    break;
+                default:
+                    scale = 1.0
+                    break;
+                }
+                
+                //MARK: Continue here, create crystal, with score addition.
+                
+                self.createRocksExplosion(location,scale:scale)
+                
+                self.displayScoreAdditionLabel(location, scoreAddition: 20)
+            }
+            else {
+                self.shakeCamera(regAster, duration: 0.8)
+            }
+        
+        return true
+        
     }
     
     
@@ -629,44 +726,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 
                 smallAster.removeFromParent()
                 
-                if let regAster = secondNode as? RegularAsteroid {
-                    
-                    if (regAster.tryToDestroyWithForce(self.player.punchForce * 2)) {
-                        
-                        let location  = regAster.position
-                        
-                        self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
-                        
-                        var scale:CGFloat
-                        
-                        switch (regAster.asteroidSize){
-                        case .Big:
-                            scale = 4.0
-                            break;
-                        case .Medium:
-                            scale = 2.0
-                            break;
-                        case .Small:
-                            scale = 1.0
-                            break;
-                        default:
-                            scale = 1.0
-                            break;
-                        }
-                        
-                        //MARK: Continue here, create crystal, with score addition.
-                        
-                        self.createRocksExplosion(location,scale:scale)
-                        
-                        self.displayScoreAdditionLabel(location, scoreAddition: 20)
-                    }
-                    else {
-                        self.shakeCamera(regAster, duration: 0.8)
-                    }
-                    
+                if (didSmallAsteroidCollidedWithRegulaOne(secondNode)) {
+                    return true
                 }
+                
+                //TODO: if second item is not regular asteroid - recalculate....
+                return true
             }
             
+            //TODO: consider player here... Not a player is bad!!!
             var normal = contact.contactNormal
             //normal.dx *= CGFloat(-1.0)
             //normal.dy *= CGFloat(-1.0)
@@ -815,6 +883,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             }
             else {
                 createExplosion(expType, position: scenePoint)
+                
+                let emitterNode =  GameScene.sProjectileEmitter.copy() as! SKEmitterNode
+                emitterNode.position = laser!.node!.position
+                addChild(emitterNode)
+                emitterNode.zPosition = self.fgZPosition + 1
+                
+                runOneShortEmitter(emitterNode, 0.15)
             }
         }
         

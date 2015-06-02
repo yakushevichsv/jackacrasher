@@ -86,6 +86,7 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
                 vc.needToDisplayAnimation = true
             }
         }
-        
+        else if (sender == self.btnReplay) {
+        }
     }
 }

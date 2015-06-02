@@ -18,7 +18,7 @@ class DigitNode: SKNode {
     private let lineWidth_r:CGFloat
     private let labelFont_Size:CGFloat
     
-    internal var digit:Int {
+    internal var digit:ForceType {
         didSet {
             if (oldValue != self.digit) {
                 updateLabel()
@@ -26,12 +26,12 @@ class DigitNode: SKNode {
         }
     }
     
-    convenience init(size:CGSize,digit:Int){
+    convenience init(size:CGSize,digit:ForceType){
         let array:[CGFloat] = [CGFloat]()
         self.init(size: size,digit:digit,params:array)
     }
     
-    init(size:CGSize, digit:Int,params:[CGFloat]!) {
+    init(size:CGSize, digit:ForceType,params:[CGFloat]!) {
         
         self.digit = digit
         self.size = size

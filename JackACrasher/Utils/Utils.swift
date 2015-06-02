@@ -130,3 +130,64 @@ func shortestAngleBetween(angle1: CGFloat,
         return angle
 }
 
+
+func vectorFromPoint(point:CGPoint, usingDirection direction:CGVector, inRect rect:CGRect) -> CGVector {
+    
+        let pointOne = point
+        
+        let isU = direction.dy > 0
+        let isR = direction.dx > 0
+        var angle = CGVector(dx: fabs(direction.dx), dy: fabs(direction.dy)).angle
+    
+        /*let pHalf =  π * 0.5
+    
+        if (angle > pHalf) {
+            angle -= pHalf
+        } else if (angle < -pHalf) {
+            angle += pHalf
+        } else if (angle >= 0 && angle < pHalf){
+            angle = pHalf - angle
+        } else if (angle < 0 && angle > -pHalf) {
+            angle = angle + pHalf
+        }*/
+    
+        var yPosDist = isU ? (CGRectGetHeight(rect) - pointOne.y) : (pointOne.y)
+        
+        var xPosDist = isR ? (CGRectGetWidth(rect) - pointOne.x) : (pointOne.x)
+        
+        let aAngle = fabs(angle)
+        
+        if (aAngle != π * 0.5) {
+            
+            let tanVal = tan(aAngle)
+            
+            let xPosDist2 = yPosDist * tanVal
+            
+            let xPosDistMin = min(xPosDist2,xPosDist)
+            
+            xPosDist = xPosDistMin
+            
+            if (tanVal != 0) {
+                yPosDist = xPosDist/tanVal
+            }
+            
+        } else {
+            yPosDist = 0
+            
+        }
+    
+    if (!isU && yPosDist >= 0) {
+        //assert(yPosDist >= 0 , "yPostDist")
+        
+        yPosDist *= -1
+    }
+    
+    if (!isR && xPosDist >= 0) {
+        //assert(xPosDist>=0, "xPostDist")
+        xPosDist *= -1
+    }
+    
+    println("Result vector x:\(xPosDist) y:\(yPosDist). Initial Position \(point). Direction \(direction)")
+    return CGVector(dx: xPosDist, dy: yPosDist)
+}
+

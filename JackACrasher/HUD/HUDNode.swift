@@ -9,121 +9,184 @@
 import UIKit
 import SpriteKit
 
-class HUDNode: SKCropNode {
-    private let progressNode:SKSpriteNode!
-    private let maxLife:Int
-    private var life:Int = 0
-    private let duration:NSTimeInterval
-    private let maskShape:SKShapeNode! = SKShapeNode()
+class HUDNode: SKNode {
     
-    init(inSize:CGSize, maxLife:Int,duration:NSTimeInterval = 0.5) {
-        
-        self.maxLife = maxLife
-        self.duration = duration
-        self.progressNode = SKSpriteNode(color: SKColor.greenColor(), size: inSize)
+    typealias lifeType = Int
     
-        super.init()
-     
-        self.maskShape.antialiased = false
-        self.maskShape.lineWidth = inSize.width
-        //self.maskShape.fillColor = UIColor.whiteColor()
-        self.maskShape.path = UIBezierPath(roundedRect: CGRectMake(0, 0, progressNode.size.width, progressNode.size.height), cornerRadius: 2).CGPath
-        
-        maskNode = self.maskShape
-        
+    private let lifeCurPercentNode = SKShapeNode()
+    private let lifeLabelNode = SKLabelNode(fontNamed: "gamerobot")
+    private let bgNode = SKShapeNode()
     
-        
-        addChild(progressNode)
-        
-        setLife(maxLife)
+    private static let sLifePercentMax = lifeType(100)
+    private static let sLifePercentMin = lifeType(0)
+    
+    private static let sLifeOne = lifeType(1)
+    
+    private let size:CGSize
+    private let animDuration:NSTimeInterval
+    
+    internal var life:lifeType = HUDNode.sLifeOne {
+        didSet {
+            self.updateLifeNode()
+        }
     }
     
+    internal var curLifePercent: lifeType = sLifePercentMax
+    
+    init(inSize:CGSize,life:lifeType = HUDNode.sLifeOne, duration:NSTimeInterval = 3 ) {
+        self.life = life
+        self.animDuration = duration
+        self.size = inSize
+        
+        super.init()
+    
+        createBGBorder()
+        createOtherNodes()
+        
+        updateLifeCurPercentNode(animated: true)
+        updateLifeNode()
+    }
+    
+    private func updateLifeNode() {
+        
+        if (self.life != HUDNode.sLifeOne) {
+            
+            
+            self.lifeLabelNode.text = "\(Int(life))"
+            
+            self.lifeLabelNode.hidden = false
+        } else {
+            self.lifeLabelNode.hidden = true
+        }
+    }
+    
+    private func updateLifeCurPercentNode(animated:Bool = true, prevValue:lifeType = HUDNode.sLifePercentMin) {
+
+         let w =  CGFloat(Double(self.size.width) * Double(self.curLifePercent)/Double(HUDNode.sLifePercentMax))
+        
+        if (!animated) {
+            updateLifeCurPercentNodeWithValue(self.curLifePercent,width:w)
+        }
+        else {
+        
+            let newDuration = fabs(self.animDuration * Double(self.curLifePercent - prevValue)/Double(HUDNode.sLifePercentMax -  HUDNode.sLifePercentMin))
+            
+        let b = CGFloat(Double(self.size.width) * Double(prevValue)/Double(HUDNode.sLifePercentMax))
+        let b1 = CGFloat(prevValue)
+        
+        let k = w - b
+        let k1 = CGFloat(self.curLifePercent) - b1
+            
+            let blockAction = SKAction.customActionWithDuration(newDuration){ (node, time) -> Void in
+                
+                let x = time/CGFloat(newDuration)
+                
+                let width = k * x + b
+                let value = k1 * x + b1
+                
+                self.updateLifeCurPercentNodeWithValue(lifeType(value), width: width)
+                println("Current value \(value)")
+            }
+            
+            
+            if (self.actionForKey("scaleAction") != nil) {
+                self.removeActionForKey("scaleAction")
+            }
+            self.runAction(blockAction, withKey: "scaleAction")
+        }
+    }
+    
+    private func updateLifeCurPercentNodeWithValue(value:lifeType,width w:CGFloat) {
+        
+        
+        let path = UIBezierPath(roundedRect: CGRectMake(0, 0, w, self.size.height), cornerRadius: 5)
+        
+        var color:SKColor? = nil
+        
+        if (value > lifeType(75)) {
+            color = SKColor.greenColor()
+        } else if (value > lifeType(25)) {
+            color = SKColor.yellowColor()
+        } else if (value > HUDNode.sLifePercentMin) {
+            color = SKColor.redColor()
+        }
+        
+        if let colorVal = color {
+            
+            self.lifeCurPercentNode.fillColor = colorVal
+            
+            let path = UIBezierPath(roundedRect: CGRectMake(0, 0, w, self.size.height), cornerRadius: 5)
+                
+            self.lifeCurPercentNode.path = path.CGPath
+        }
+    }
+    
+    private func createBGBorder() {
+        
+        let path = UIBezierPath(roundedRect: CGRectMake(0, 0, self.size.width, self.size.height), cornerRadius: 5)
+        path.lineWidth = 2
+        
+        bgNode.path = path.CGPath
+        bgNode.strokeColor = SKColor.blackColor()
+        bgNode.fillColor = SKColor.lightGrayColor()
+        
+        addChild(bgNode)
+    }
+    
+    private func createOtherNodes() {
+        
+        
+        
+        addChild(lifeCurPercentNode)
+        
+        let midX = CGFloat(round(self.size.width  * 0.5))
+        let midY = CGFloat(round(self.size.height * 0.5))
+        
+        lifeLabelNode.position = CGPointMake(midX, midY)
+        lifeLabelNode.fontColor = SKColor.blackColor()
+        lifeLabelNode.fontSize = 20
+        
+        addChild(lifeLabelNode)
+    }
+
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var normalizedLife:Float {
-        get {return self.maxLife != 0 ? Float(life)/Float(self.maxLife) : 0.0 }
-    }
-    
-    internal func isDead() -> Bool {
-        return self.life == 0
-    }
-    
-    internal func decreaseLife() -> Int {
-        if (self.life > 0) {
-            setLife(self.life - 1)
+    private func decreaseLife() -> lifeType {
+        if (self.life > HUDNode.sLifePercentMin) {
+            self.life = self.life - lifeType(1)
         }
         else {
-            self.life = 0
+            self.life = HUDNode.sLifePercentMin
         }
+        
+        updateLifeNode()
+        
         return self.life
     }
     
-    internal func setLife(life:Int) {
-        assert(life <= self.maxLife, "Life shouldn't be bigger than maxLife")
-        if (life == self.life) {
-            return
+    
+    //MARK: Internal methods
+    internal func reduceCurrentLifePercent(lifeDamage:lifeType) {
+        
+        var prevLifePercent = self.curLifePercent
+        
+        self.curLifePercent -= lifeDamage
+        
+        if (self.curLifePercent <= HUDNode.sLifePercentMin) {
+            self.curLifePercent = HUDNode.sLifePercentMin
+            
+            if (self.decreaseLife() != HUDNode.sLifePercentMin) {
+                self.curLifePercent = HUDNode.sLifePercentMax
+                prevLifePercent = HUDNode.sLifePercentMin
+            }
+            else {
+                updateLifeCurPercentNode(animated: false, prevValue: self.curLifePercent)
+            }
         }
         
-        let oldLife = self.life
-        self.life = life
-        
-        let normLife = self.normalizedLife
-        
-        assert(normLife <= 1 && normLife >= 0, "Normalized life is not in range")
-        
-        if (self.maskShape?.actionForKey("scaleAction") != nil) {
-            self.maskShape?.removeActionForKey("scaleAction")
-        }
-        
-        let corLife = CGFloat(max(0,min(1,normLife)))
-        
-        let b = self.progressNode.size.width * CGFloat(oldLife)/CGFloat(self.maxLife)
-        let k = self.progressNode.size.width * CGFloat(normLife) - b
-        
-        let newDuration = NSTimeInterval(self.duration*Double(self.life)/Double(self.maxLife))
-        
-        if newDuration == 0 {
-            progressNode.color = SKColor.grayColor()
-            self.maskShape.path = UIBezierPath(roundedRect: CGRectMake(0, 0, self.progressNode.size.width, self.progressNode.size.height), cornerRadius: 2).CGPath
-            self.maskShape.lineWidth = self.progressNode.size.width
-            self.maskShape.lineCap = kCGLineCapRound
-            return
-        }
-        
-        let blockAction = SKAction.customActionWithDuration(newDuration){ (node, time) -> Void in
-            
-            let x = time/CGFloat(newDuration)
-            
-            let width:CGFloat = k * x + b
-            
-            let rect = CGRectMake(0, 0, width, self.progressNode.size.height)
-            println("New rect: \(rect)")
-            
-            //let bezier = UIBezierPath(roundedRect: rect, cornerRadius: 2)
-            
-            //self.maskNode = SKShapeNode(rectOfSize: rect.size)
-            
-            self.maskShape.path = UIBezierPath(roundedRect: rect, cornerRadius: 2).CGPath
-            
-            self.maskShape.lineWidth = width*0.5
-        }
-        
-        
-        
-        self.maskShape.runAction(blockAction, withKey: "scaleAction")
-        
-        var color: SKColor!
-        
-        if (corLife <= 0.25) {
-            color = SKColor.redColor()
-        } else if (corLife <= 0.75){
-            color = SKColor.yellowColor()
-        } else {
-            color = SKColor.greenColor()
-        }
-        
-        progressNode.color = color
+        updateLifeCurPercentNode(animated: true, prevValue: prevLifePercent)
     }
+    
 }

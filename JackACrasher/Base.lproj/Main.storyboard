@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekw-zd-0cC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekw-zd-0cC">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
@@ -117,7 +117,7 @@
                         <outlet property="btnGameCenter" destination="2BG-Lf-P00" id="6Qb-NM-u8O"/>
                         <outlet property="btnHelp" destination="12G-JR-etf" id="QU8-aL-hj3"/>
                         <outlet property="btnStrategy" destination="fjR-H4-NMu" id="PY8-HJ-0yd"/>
-                        <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" id="Mr1-T7-vMj"/>
+                        <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xd0-7l-Lt6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -193,7 +193,7 @@
                     <connections>
                         <outlet property="analogControl" destination="cGI-gP-2Pi" id="jfo-PD-FA6"/>
                         <outlet property="btnPlay" destination="TGW-Qx-yrp" id="5lZ-0X-taa"/>
-                        <segue destination="qda-7r-HQm" kind="show" identifier="gameOver" id="wt1-xR-t9Y"/>
+                        <segue destination="qda-7r-HQm" kind="custom" identifier="gameOver" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="wt1-xR-t9Y"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>
@@ -227,7 +227,7 @@
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
-                                            <action selector="btnPressed:" destination="qda-7r-HQm" eventType="touchUpInside" id="O7M-BA-eTB"/>
+                                            <segue destination="0GO-4n-zFX" kind="unwind" unwindAction="unwindToReplay:" id="Plg-oS-MIj"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-Zo-ova" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
@@ -261,7 +261,6 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <color key="backgroundColor" red="1" green="1" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="top" secondItem="hIE-rY-cmt" secondAttribute="top" id="88D-Gg-l8I"/>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="leading" secondItem="qMM-Zo-ova" secondAttribute="trailing" constant="-2" id="JMl-gl-nH3"/>
@@ -287,6 +286,7 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jBV-ct-fKg" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="0GO-4n-zFX" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="818" y="423"/>
         </scene>

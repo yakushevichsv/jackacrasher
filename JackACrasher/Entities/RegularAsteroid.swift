@@ -15,17 +15,27 @@ let duration = (M_PI*2)/digitAppearanceSpeed
 
 
 @objc protocol ItemDestructable {
-    
     func tryToDestroyWithForce(forceValue:ForceType) -> Bool
 }
 
-class RegularAsteroid: SKNode, ItemDestructable {
+@objc protocol ItemDamaging {
+    var damageForce:ForceType {get}
+}
+
+
+class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     private let digitNode:DigitNode!
     private let cropNode:ProgressTimerCropNode!
-    private let maxLife:Int
+    private let maxLife:ForceType
     private let displayAction = "displayAction"
     private let asterSize:RegularAsteroidSize
     private let bgImageNode:SKSpriteNode! = SKSpriteNode()
+    
+    
+    internal var damageForce:ForceType {
+        return self.asteroidSize == .Big ? 5 : 4
+    }
+    
     
     internal var mainSprite:SKSpriteNode! {
         return bgImageNode
@@ -35,7 +45,7 @@ class RegularAsteroid: SKNode, ItemDestructable {
         return bgImageNode != nil ? bgImageNode.size : CGSizeZero
     }
     
-    internal var healthState:Int {
+    internal var healthState:ForceType {
         return self.digitNode.digit
     }
     
@@ -45,7 +55,7 @@ class RegularAsteroid: SKNode, ItemDestructable {
         return asterSize
     }
     
-    init(asteroid:RegularAsteroidSize,maxLife:Int, needToAnimate:Bool) {
+    init(asteroid:RegularAsteroidSize,maxLife:ForceType, needToAnimate:Bool) {
         var nodeName:String! = "asteroid-"
         var partName:String! = ""
         
@@ -160,7 +170,7 @@ class RegularAsteroid: SKNode, ItemDestructable {
             self.removeActionForKey(self.displayAction)
         }
         
-        var result = self.digitNode.digit - forceValue
+        var result = ForceType(self.digitNode.digit) - forceValue
         
         if (result < 0) {
             result = 0
@@ -180,9 +190,12 @@ class SmallRegularAsteroid:RegularAsteroid {
     private static var sFireEmitter:SKEmitterNode!
     private var firing = false
     
-    
     internal var isFiring:Bool {
         return firing
+    }
+    
+    override internal var damageForce:ForceType {
+        return ForceType(1.0)
     }
     
     internal class func loadAssets() {
@@ -193,7 +206,7 @@ class SmallRegularAsteroid:RegularAsteroid {
         })
     }
     
-    init(maxLife: Int, needToAnimate: Bool) {
+    init(maxLife: ForceType, needToAnimate: Bool) {
         super.init(asteroid: .Small, maxLife: maxLife, needToAnimate: needToAnimate)
         setupPhysicsBody()
     }
@@ -236,6 +249,7 @@ class SmallRegularAsteroid:RegularAsteroid {
         fireEmitter.position = p1
         fireEmitter.targetNode = self.scene
         fireEmitter.particleRotation = shortestAngleBetween(self.zRotation, direction.angle)
+        fireEmitter.zPosition = 2
         
         addChild(fireEmitter)
         

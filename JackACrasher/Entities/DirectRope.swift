@@ -13,6 +13,8 @@ class DirectRope: Rope {
    
     private var direction : CGVector = CGVector.zeroVector
     private var numberOfSteps:Int = 0
+    /*private let con1:RopeConnection!
+    private let con2:RopeConnection!*/
     
     internal class func directRope(connection1: RopeConnection, connection2: RopeConnection) ->DirectRope {
         
@@ -23,6 +25,8 @@ class DirectRope: Rope {
     }
     
     override init(connection1: RopeConnection, connection2: RopeConnection) {
+        
+        //MARK : TODO find how to calculate wherether dx, dy should be negative or positive for detecting rope length
         
         super.init(connection1: connection1, connection2: connection2)
         
@@ -64,12 +68,14 @@ class DirectRope: Rope {
         
         var jointPos = self.connectionA.position //self.connectionA.node.parent!.convertPoint(self.connectionA.position, toNode: curScene)
         
+        let ringDiff = CGPointMake(self.direction.dx * self.ringLength,self.direction.dy * self.ringLength)
+        
         if let nodeA = self.connectionA.node as? SKSpriteNode {
-            jointPos += CGPointMake(self.direction.dx * nodeA.size.width*0.5, self.direction.dy * nodeA.size.height*0.5)
+            jointPos += ringDiff * 0.5
         }
         
         var refNode = self.connectionA.node
-        let ringDiff = CGPointMake(self.direction.dx * self.ringLength,self.direction.dy * self.ringLength)
+        
         var xPos = -(CGFloat(self.numberOfSteps) - 1 ) * ringDiff.x * 0.5
         
         
@@ -82,6 +88,7 @@ class DirectRope: Rope {
             body.categoryBitMask = EntityCategory.Rope
             //sprite.zRotation = CGFloat(M_PI_2)
             sprite.physicsBody = body
+            sprite.zPosition = -1
             sprite.position = CGPointMake(xPos, 0)
             addChild(sprite)
             
@@ -102,7 +109,7 @@ class DirectRope: Rope {
                 
                 var jointPos = self.connectionB.position
                 if let nodeB = self.connectionB.node as? SKSpriteNode {
-                    jointPos -= CGPointMake(self.direction.dx * nodeB.size.width*0.5, self.direction.dy * nodeB.size.height*0.5)
+                    jointPos -= ringDiff * 0.5
                 }
                 
                 let fixedJoint = SKPhysicsJointFixed.jointWithBodyA(refNode.physicsBody!, bodyB: self.connectionB.node.physicsBody!, anchor: jointPos)

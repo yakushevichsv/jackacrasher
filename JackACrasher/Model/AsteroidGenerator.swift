@@ -50,7 +50,7 @@ class AsteroidGenerator: NSObject {
                 }
             }
             else {
-                if (didChange) {
+                if (didChange || !paused) {
                     self.start()
                 }
             }
@@ -99,9 +99,13 @@ class AsteroidGenerator: NSObject {
         return sequence
     }
     
+    internal class var regularAsteroidSpeed:CGFloat {
+        get { return 30  }
+    }
+    
     private func produceRegularAsteroidPrivate(size:RegularAsteroidSize,initialAnimation:Bool) -> (asteroid:RegularAsteroid,actions:SKAction)  {
         
-        let asteroidSpeed:CGFloat = 30
+        let asteroidSpeed = AsteroidGenerator.regularAsteroidSpeed
         
         let sprite = size == .Small ? SmallRegularAsteroid(maxLife: 2, needToAnimate: initialAnimation) : RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
@@ -437,7 +441,7 @@ class AsteroidGenerator: NSObject {
         //HACK: warning
         
         self.prevAsteroidType = .None
-        currentAstType = .Regular
+        currentAstType = .RopeBased
         
         self.prevAsteroidType = currentAstType
         

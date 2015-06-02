@@ -69,9 +69,14 @@ class GameViewController: UIViewController,GameSceneDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        restartGame()
+    }
+    
+    //MARK: - Public function
+    func restartGame(isNew:Bool = true) {
+        
         if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
             
-            scene.defineStartingRect(self.btnPlay.frame,alpha: self.btnPlay.alpha)
             // Configure the view.
             let skView = self.view as! SKView
             
@@ -85,7 +90,12 @@ class GameViewController: UIViewController,GameSceneDelegate {
             scene.scaleMode = .AspectFill
             
             scene.gameSceneDelegate = self
-            skView.presentScene(scene)
+            if (isNew) {
+                skView.presentScene(scene)
+            }
+            else {
+                skView.presentScene(scene, transition: SKTransition.pushWithDirection(.Down, duration: 1))
+            }
             
             btnPlay.superview?.bringSubviewToFront(btnPlay)
             
@@ -151,7 +161,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
             if identifier == "gameOver" {
                 let dVC = segue.destinationViewController as! GameOverViewController
                 let sVC = segue.sourceViewController as! GameViewController
-                
+                self.skView.scene?.paused = true
                dVC.didWin = false
                 
             }
@@ -161,15 +171,23 @@ class GameViewController: UIViewController,GameSceneDelegate {
     //MARK : GameScene delegate 
     
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64) {
-        self.skView.scene?.paused = true
         
         self.logicManager.storeSurvivalScores([UInt64(currentScore),totalScore], completionHandler: { (success, error) -> Void in
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                self.skView.scene?.paused = true
                 self.performSegueWithIdentifier("gameOver", sender: self)
             })
         })
         
         
+    }
+    
+    //MARK: Unwind to replay
+    @IBAction func unwindToReplay(sender: UIStoryboardSegue)
+    {
+        if let vc = sender.destinationViewController as? GameViewController {
+            vc.restartGame(isNew: false)
+        }
     }
     
 }

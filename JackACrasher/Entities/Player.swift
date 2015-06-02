@@ -20,7 +20,7 @@ struct EntityCategory {
     static var Rope:UInt32 = 1 << 7
 }
 
-typealias ForceType = Int
+typealias ForceType = CGFloat
 
 enum PlayerMovement {
     case Fly
@@ -45,6 +45,9 @@ private let playerImageName = "player"
 private let hammerImageName = "throw_hammer"
 private let hammerNodeName = "throwHammer"
 
+private let damageEmitterNode = "Damage"
+private let damageEmitterNodeName = "damageNode"
+
 private let playerNode = "playerNode"
 
 class Player: SKNode, ItemDestructable {
@@ -58,7 +61,11 @@ class Player: SKNode, ItemDestructable {
     
     private static var sBGSprite:SKSpriteNode!
     private static var sHammerSprite:SKSpriteNode!
+    private static var sDamageEmitter:SKEmitterNode!
+    
     private static var sContext:dispatch_once_t = 0
+    
+    private var health: ForceType = 100
     
     private var playerBGSprite:SKSpriteNode! {
         return self.childNodeWithName(playerBGNodeName) as! SKSpriteNode
@@ -78,6 +85,10 @@ class Player: SKNode, ItemDestructable {
             let hammerSprite = SKSpriteNode(imageNamed: hammerImageName)
             hammerSprite.name = hammerNodeName
             Player.sHammerSprite = hammerSprite
+            
+            let emitter = SKEmitterNode(fileNamed: damageEmitterNode)
+            emitter.name = damageEmitterNodeName
+            Player.sDamageEmitter = emitter
         }
     }
     
@@ -232,6 +243,14 @@ class Player: SKNode, ItemDestructable {
     }
     
     //MARK: Movement methods
+    
+    internal func placeAtPoint(point:CGPoint) {
+        if self.actionForKey("flyToPoint") != nil {
+            self.removeActionForKey("flyToPoint")
+        }
+        self.position = point
+        disableEngine()
+    }
     
     private func flyToPoint(point:CGPoint) {
         
@@ -424,8 +443,24 @@ class Player: SKNode, ItemDestructable {
     }
     
     func tryToDestroyWithForce(forceValue: ForceType) -> Bool {
+        self.health -= forceValue
         
-        //TODO: add Health value..
-        return false
+        if (self.health > 0) {
+            
+            let damage = Player.sDamageEmitter.copy() as! SKEmitterNode
+            damage.position = self.position
+            damage.zPosition = self.zPosition + 1
+            self.scene?.addChild(damage)
+            
+            runOneShortEmitter(damage, 0.2)
+            
+            return false
+        }
+        else {
+            
+            //TODO: Perform death action....
+            
+            return true
+        }
     }
 }

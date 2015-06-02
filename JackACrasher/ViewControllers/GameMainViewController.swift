@@ -38,28 +38,12 @@ class GameMainViewController: UIViewController {
     private func shiftXButton(button:UIButton!, isLeft:Bool) {
         
         button.frame = CGRectOffset(button.frame, (isLeft ? -1 : 1 ) *  CGRectGetWidth(button.frame), 0)
-        
     }
-    
     
     private func shiftYButton(button:UIButton!, isUp:Bool) {
         
         button.frame = CGRectOffset(button.frame, 0, (isUp ? 1 : -1) * CGRectGetHeight(button.frame) )
     }
-    
-    
-    private func prepareCustomPushSegue() {
-        
-        let vc = self.storyboard?.instantiateViewControllerWithIdentifier("GameViewControllerID") as? GameViewController
-        
-        custPushSegue = UIStoryboardSegue(identifier: "startSurvival", source: self, destination: vc!) { () -> Void in
-          println("Push view")
-         GameLogicManager.sharedInstance.selectSurvival()
-          self.navigationController?.pushViewController(self.custPushSegue.destinationViewController as! UIViewController, animated: false)
-        }
-        
-    }
-
     
     private func disableButtons() {
         setButtonsState(false)
@@ -88,15 +72,34 @@ class GameMainViewController: UIViewController {
         
         shiftOutButtons()
         disableButtons()
+        var didLoadAssets:Bool = false
+        var didAnimated:Bool = false
+        
+        dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), { () -> Void in
+           GameScene.loadAssets()
+            
+            dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                if (didAnimated) {
+                    didLoadAssets = false
+                    self.performSegueWithIdentifier("startSurvival", sender: self)
+                }else {
+                    didLoadAssets = true
+                }
+            });
+        });
         
         UIView.animateWithDuration(2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 8, options: .CurveEaseOut, animations: { () -> Void  in
                 self.shiftInButtons()
             }, completion: { (finished) -> Void in
                 self.enableButtons()
+                
+                if (didLoadAssets) {
+                    didAnimated = false
+                    self.performSegueWithIdentifier("startSurvival", sender: self)
+                }else {
+                    didAnimated = true
+                }
         })
-        
-        self.prepareCustomPushSegue()
-        
     }
     
     //MARK: eee  Why it is not called?
