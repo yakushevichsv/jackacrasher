@@ -21,6 +21,8 @@ let SurvivalTotalScoreLbId = "com.sygamefun.survival_total_score"
 let GameCenterManagerViewController = "GameCenterManagerViewController"
 let singleton = GameCenterManager()
 
+let kGameCenterManagerNeedToAuthPlayer = "kGameCenterManagerNeedToAuthPlayer"
+
 class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
    
     var authenticationViewController: UIViewController?
@@ -37,6 +39,13 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     
     class var sharedInstance: GameCenterManager {
         return singleton
+    }
+    
+    
+    //MARK: Authentification methods
+    
+    internal var isLocalUserAuthentificated:Bool {
+        get { return self.gameCenterEnabled  && GKLocalPlayer.localPlayer().authenticated }
     }
     
     internal func authenticateLocalPlayer() {
@@ -63,6 +72,8 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
                 } else {
                     //5
                     self.gameCenterEnabled = false
+                    
+                    NSNotificationCenter.defaultCenter().postNotificationName(kGameCenterManagerNeedToAuthPlayer, object: self)
                 }
 
             }
@@ -90,6 +101,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
             animated: true, completion: nil)
     }
     
+    //MARK: Achievements
     func reportAchievements(achievements: [GKAchievement]) {
         if !gameCenterEnabled {
             println("Local player is not authenticated")
@@ -178,11 +190,96 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
         })
     }
     
+    //MARK : Player's info access
+    
+    internal func getSmallPhotoForLocalPlayerWithHandler(handler:(UIImage?, NSError!) -> Void) {
+        self.getSmallPhotoForPlayer(GKLocalPlayer.localPlayer(), handler: handler)
+    }
+    
+    internal func getNormalPhotoForLocalPlayerWithHandler(handler:(UIImage?, NSError!) -> Void) {
+        self.getNormalPhotoForPlayer(GKLocalPlayer.localPlayer(), handler: handler)
+    }
+    
+    internal func getSmallPhotoForPlayer(player:AnyObject, handler :(UIImage?, NSError!) -> Void) {
+        self.getPhotoForPlayer(player, andSize: GKPhotoSizeSmall, handler: handler)
+    }
+    
+    internal func getNormalPhotoForPlayer(player:AnyObject, handler :(UIImage?, NSError!) -> Void) {
+        self.getPhotoForPlayer(player, andSize: GKPhotoSizeNormal, handler: handler)
+    }
+    
+    private func getPhotoForPlayer(playerObj:AnyObject?, andSize size:GKPhotoSize, handler:(UIImage?, NSError!) -> Void) {
+    
+        if (!self.gameCenterEnabled) {
+            println("Local player is not authentificated")
+            return
+        }
+        
+        let localPlayer = GKLocalPlayer.localPlayer()
+        if let playerAnyObj: AnyObject = playerObj {
+            
+            if (playerAnyObj is GKPlayer) {
+                
+                let player = playerAnyObj as! GKPlayer
+                
+                player.loadPhotoForSize(size, withCompletionHandler: { (image, error) -> Void in
+                  
+                    if (error != nil) {
+                        println("Error \(error)")
+                        
+                        handler(nil,error)
+                        return
+                    }
+
+                    handler(image,error)
+                    return
+                })
+            } else if (playerAnyObj is String) {
+                
+                let playerStr = playerAnyObj as! String
+                
+                if (playerStr == localPlayer.playerID) {
+                    
+                    getPhotoForPlayer(localPlayer, andSize: size, handler:handler)
+                    return
+                }
+                
+                
+                GKPlayer.loadPlayersForIdentifiers([playerStr], withCompletionHandler: { (players, error) -> Void in
+                    
+                    if (error != nil) {
+                        println("Error \(error)")
+                        
+                        handler(nil,error)
+                        return
+                    }
+                    
+                    let rPlayers =  players as! [GKPlayer]
+                    
+                    if (rPlayers.isEmpty) {
+                        return
+                    }
+                    
+                    let rPlayer = rPlayers.last!
+                    
+                    self.getPhotoForPlayer(rPlayer, andSize: size, handler: handler)
+                    
+                })
+            }
+            else {
+                handler(nil,nil)
+            }
+        }
+        else {
+            getPhotoForPlayer(localPlayer, andSize: size, handler: handler)
+        }
+        
+    }
+    
+    
     // MARK: GKGameCenterControllerDelegate methods
     func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
         
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
     }
-    
-    
 }

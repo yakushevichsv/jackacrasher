@@ -7,18 +7,21 @@
 //
 
 import UIKit
+import GameKit
 
 class GameMainViewController: UIViewController {
 
     internal var needToDisplayAnimation:Bool = false
+    private let gcManager = GameCenterManager.sharedInstance
+    private var needToAuthGC:Bool = true
     
     @IBOutlet weak var btnCompany:UIButton!
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
     @IBOutlet weak var btnGameCenter:UIButton!
-    
-    private var custPushSegue:UIStoryboardSegue!
 
+    
+    
     private func shiftOutButtons() {
         
         shiftXButton(self.btnCompany, isLeft: true)
@@ -51,6 +54,12 @@ class GameMainViewController: UIViewController {
     
     private func enableButtons() {
         setButtonsState(true)
+        self.correctGameCenterButtonState()
+    }
+    
+    private func correctGameCenterButtonState() {
+        if (self.btnGameCenter == nil) { return }
+        self.btnGameCenter.enabled = self.gcManager.isLocalUserAuthentificated
     }
     
     private func setButtonsState(enabled:Bool) {
@@ -59,15 +68,70 @@ class GameMainViewController: UIViewController {
         }
     }
     
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        authDidChange(nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        self.correctGameCenterButtonState()
         
         if (!self.needToDisplayAnimation) {
             self.scheduleAnimation()
             self.needToDisplayAnimation = true
         }
+        
+        if (!self.gcManager.isLocalUserAuthentificated) {
+            
+            if let error = self.gcManager.lastError {
+                
+                if error.domain == GKErrorDomain  && error.code == GKErrorCode.UserDenied.rawValue {
+                    needToAuthPlayer()
+                }
+            }
+        }
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToAuthPlayer", name: kGameCenterManagerNeedToAuthPlayer, object: self.gcManager)
+        
     }
     
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: kGameCenterManagerNeedToAuthPlayer, object: self.gcManager)
+    }
+    
+    //MARK: Authefication's related methods
+    func authDidChange(notification:NSNotification!) {
+        self.needToAuthGC = !self.gcManager.isLocalUserAuthentificated
+        self.correctGameCenterButtonState()
+    }
+    
+    func needToAuthPlayer() {
+        if self.gcManager.isLocalUserAuthentificated {
+            return
+        }
+        else if (self.needToAuthGC){
+            self.needToAuthGC = false
+            let alertVC = UIAlertController(title: "Game Center is disabled", message: "To participate in Leaderboard\nPlease enable it", preferredStyle: .Alert)
+            
+            self.presentViewController(alertVC, animated: true, completion: nil)
+            
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                Int64(3 * Double(NSEC_PER_SEC)))
+            
+            dispatch_after(delayTime, dispatch_get_main_queue(), { () -> Void in
+                alertVC.dismissViewControllerAnimated(true, completion: nil)
+            })
+        }
+    }
+    
+    //MARK: -
     private func scheduleAnimation() {
         
         shiftOutButtons()
@@ -80,9 +144,9 @@ class GameMainViewController: UIViewController {
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 if (didAnimated) {
-                    didLoadAssets = false
-                    self.performSegueWithIdentifier("startSurvival", sender: self)
-                }else {
+                    self.enableButtons()
+                }
+                else {
                     didLoadAssets = true
                 }
             });
@@ -91,12 +155,10 @@ class GameMainViewController: UIViewController {
         UIView.animateWithDuration(2, delay: 0.0, usingSpringWithDamping: 0.7, initialSpringVelocity: 8, options: .CurveEaseOut, animations: { () -> Void  in
                 self.shiftInButtons()
             }, completion: { (finished) -> Void in
-                self.enableButtons()
-                
                 if (didLoadAssets) {
-                    didAnimated = false
-                    self.performSegueWithIdentifier("startSurvival", sender: self)
-                }else {
+                    self.enableButtons()
+                }
+                else {
                     didAnimated = true
                 }
         })
@@ -115,7 +177,7 @@ class GameMainViewController: UIViewController {
     @IBAction func btnPressed(sender: UIButton) {
         if sender == self.btnStrategy {
             playBtnPressedSound()
-            self.custPushSegue.perform()
+            self.performSegueWithIdentifier("startSurvival", sender: self)
             sender.enabled = true
         } else if (sender == self.btnGameCenter) {
             playBtnPressedSound()
@@ -125,6 +187,10 @@ class GameMainViewController: UIViewController {
     
     func playBtnPressedSound() {
         SoundManager.sharedInstance.playSoundEffect("button_press.wav")
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
 }

@@ -135,13 +135,18 @@ class GameLogicManager: NSObject {
                     return
                 }
                 
-                let bScore = bestScore as! GKScore
+                if let bScore = bestScore as? GKScore {
                 
-                let survivalBestScore = bScore.value
+                    let survivalBestScore = bScore.value
                 
-                self.storeInDefaultsSurvivalBestScore(survivalBestScore)
+                    self.storeInDefaultsSurvivalBestScore(survivalBestScore)
                 
-                completionHandler(survivalBestScore,nil)
+                    completionHandler(survivalBestScore,nil)
+                }
+                else {
+                    completionHandler(0,error)
+                }
+                
             })
         }
         else {
