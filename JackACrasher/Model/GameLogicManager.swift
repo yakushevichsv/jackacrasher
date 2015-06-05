@@ -88,6 +88,7 @@ class GameLogicManager: NSObject {
         }
     }
     
+    //MARK: Public methods
     internal var isSurvival:Bool {
         get {
             return self.state == .Survival
@@ -96,78 +97,90 @@ class GameLogicManager: NSObject {
     
     internal func getTotalSurvivalScoreWithCompletionHandler(completionHandler: ((UInt64, NSError?) -> Void)!)
     {
-        let totalScore = getFromDefaultsTotalSurvivalScore()
         
-        if (totalScore == 0 ) {
-            
-            self.centerManager.getSurvivalTotalScoreWithCompletionHandler({ (totalScore, error) -> Void in
-                println("GK : Total score : \(totalScore)")
+        let total = self.getFromDefaultsTotalSurvivalScore()
+        
+        if  (total != 0){
+            completionHandler(total,nil)
+            return
+        }
+        
+            self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
+                println("GK :  Score : \(scores)")
+                if (error != nil) {
+                    completionHandler(UInt64.min,error)
+                    return
+                }
+                
+                let totalScore = scores[0] as UInt64
+                let bestScore = Int64(scores[1] as UInt64)
+                
+                self.storeInDefaultsSurvivalBestScore(bestScore,synch: false)
+                self.storeInDefaultsSurvivalTotalScore(totalScore)
+                
+                completionHandler(totalScore,nil)
+                
+            })
+    }
+    
+    internal func getBestTimeScoreWithCompletionHandler(completionHandler: ((Int64, NSError?) -> Void)!)
+    {
+        
+        let bestTime = self.getFromDefaultsLongestGameTimeSurvivalScore()
+        
+        if  (bestTime != 0){
+            completionHandler(bestTime,nil)
+            return
+        }
+            self.centerManager.getSurvivalBestTimeScoreWithCompletionHandler({ (time, error) -> Void in
+                println("GK : Best time : \(time)")
                 if (error != nil) {
                     completionHandler(0,error)
                     return
                 }
                 
-                let tScore = totalScore as! GKScore
-                
-                let survivalTotalScore = tScore.context != 0 ?  tScore.context * UInt64(Int64.max) + UInt64(tScore.value) :  UInt64(tScore.value)
-                
-                self.storeInDefaultsSurvivalTotalScore(survivalTotalScore)
-                
-                completionHandler(survivalTotalScore,nil)
-                
+                self.storeInDefaultsLongesTimeScore(time)
+                completionHandler(time,error)
             })
-        }
-        else {
-            completionHandler(totalScore,nil)
-        }
+        
     }
     
     internal func getBestSurvivalScoreWithCompletionHandler(completionHandler: ((Int64, NSError?) -> Void)!)
     {
-        let bestScore = getFromDefaultsBestSurvivalScore()
         
-        if (bestScore == 0 ) {
-            
-            self.centerManager.getSurvivalBestScoreWithCompletionHandler({ (bestScore, error) -> Void in
-                println("GK : Best score : \(bestScore)")
+        let best = self.getFromDefaultsBestSurvivalScore()
+        
+        if  (best != 0){
+            completionHandler(best,nil)
+            return
+        }
+        self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
+                println("GK : Scores : \(scores)")
                 if (error != nil) {
                     completionHandler(0,error)
                     return
                 }
                 
-                if let bScore = bestScore as? GKScore {
-                
-                    let survivalBestScore = bScore.value
-                
-                    self.storeInDefaultsSurvivalBestScore(survivalBestScore)
-                
-                    completionHandler(survivalBestScore,nil)
-                }
-                else {
-                    completionHandler(0,error)
-                }
-                
+                let totalScore = scores[0] as UInt64
+                let bestScore = Int64(scores[1] as UInt64)
+            
+                self.storeInDefaultsSurvivalBestScore(bestScore,synch: false)
+                self.storeInDefaultsSurvivalTotalScore(totalScore)
+            
+                completionHandler(bestScore,error)
             })
-        }
-        else {
-            completionHandler(bestScore,nil)
-        }
     }
 
     internal func storeSurvivalScores(info:[UInt64], completionHandler:((Bool ,NSError?)->Void)!) {
         
         let bestScore = Int64(info[0])
         let totalScore = info[1]
+        let bestTime = NSTimeInterval(info.last!)
         
-        storeInDefaultsSurvivalBestScore(bestScore)
-        storeInDefaultsSurvivalTotalScore(totalScore)
-        
-       let res = NSUserDefaults.standardUserDefaults().synchronize()
-        
+        let res = storeInDefaultsSurvivalBestScore(bestScore, synch:false) || storeInDefaultsSurvivalTotalScore(totalScore, synch:false) || storeInDefaultsLongesTimeScore(Int64(bestTime))
         
         self.centerManager.reportSurvivalBestScore(bestScore)
-        self.centerManager.reportSurvivalTotalScore(totalScore)
-        
+        self.centerManager.reportSurvivalGameTime(bestTime)
         
         completionHandler(res,self.centerManager.lastError)
     }
@@ -178,23 +191,36 @@ class GameLogicManager: NSObject {
 extension GameLogicManager
 {
     private struct Constants {
-        static var  SurvivalTotalScore = "SurvivalTotalScore"
+        static var  SurvivalLongestGame = "SurvivalLongestGameScore"
         static var  SurvivalBestScore = "SurvivalBestScore"
+        static var SurvivalTotalScore = "SurvivalTotalScore"
     }
     
     //MARK: Survival
-    private func storeInDefaultsSurvivalTotalScore(score:UInt64) -> Bool {
+    private func storeInDefaultsSurvivalTotalScore(score:UInt64,synch:Bool = true) -> Bool {
         NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: Constants.SurvivalTotalScore)
-        return NSUserDefaults.standardUserDefaults().synchronize()
+        if (synch) {
+            return NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        return true
     }
     
-    private func storeInDefaultsSurvivalBestScore(score:Int64) -> Bool {
+    private func storeInDefaultsSurvivalBestScore(score:Int64,synch:Bool = true) -> Bool {
         NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: Constants.SurvivalBestScore)
-        return NSUserDefaults.standardUserDefaults().synchronize()
+        if (synch) {
+            return NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        return true
     }
     
-    
-    
+    private func storeInDefaultsLongesTimeScore(score:Int64,synch:Bool = true) -> Bool {
+        NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: Constants.SurvivalLongestGame)
+        if (synch) {
+            return NSUserDefaults.standardUserDefaults().synchronize()
+        }
+        return true
+    }
+
     private func storeInDefaultsSurvivalInfo(info:[UInt64]) ->Bool {
         assert(info.count == 2, "not all items are presented!")
         let bestScore  = Int64(info[0])
@@ -206,15 +232,16 @@ extension GameLogicManager
     
     private func getFromDefautsSurvivalInfo() -> [UInt64] {
         
-        let total = getFromDefaultsTotalSurvivalScore()
+        let time = getFromDefaultsLongestGameTimeSurvivalScore()
         let best = getFromDefaultsBestSurvivalScore()
+        let total = getFromDefaultsTotalSurvivalScore()
         
-        return [total,UInt64(best)]
+        return [total,UInt64(best),UInt64(time)]
     }
     
-    private func getFromDefaultsTotalSurvivalScore() -> UInt64 {
+    private func getFromDefaultsLongestGameTimeSurvivalScore() -> Int64 {
         
-        let total = UInt64(NSUserDefaults.standardUserDefaults().doubleForKey(Constants.SurvivalTotalScore))
+        let total = Int64(NSUserDefaults.standardUserDefaults().doubleForKey(Constants.SurvivalLongestGame))
         
         return total
     }
@@ -226,4 +253,10 @@ extension GameLogicManager
         return best
     }
     
+    private func getFromDefaultsTotalSurvivalScore() -> UInt64 {
+        
+        let total = UInt64(NSUserDefaults.standardUserDefaults().doubleForKey(Constants.SurvivalTotalScore))
+        
+        return total
+    }
 }

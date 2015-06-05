@@ -10,7 +10,7 @@ import SpriteKit
 
 @objc protocol GameSceneDelegate
 {
-    func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64)
+    func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64,playedTime:NSTimeInterval,needToContinue:Bool)
 }
 
 extension GameScene {
@@ -67,6 +67,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     private var playableArea:CGRect = CGRectZero
     private var gameScoreNode:ScoreNode!
     
+    private var startPlayTime:NSTimeInterval = 0
+    private var playedTime:NSTimeInterval = 0
     
     private static var sProjectileEmitter:SKEmitterNode!
     
@@ -86,7 +88,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         super.init(coder: aDecoder)
         
         
-        
         self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         self.physicsWorld.contactDelegate = self
         
@@ -97,6 +98,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     internal func setTotalScore(totalScore:UInt64) {
         self.totalGameScore = totalScore + UInt64(self.currentGameScore);
     }
+    
+    internal func pauseGame(pause:Bool = true) {
+        if (!pause) {
+            self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
+        }
+        else {
+            let diff = NSDate.timeIntervalSinceReferenceDate() - self.startPlayTime
+            self.playedTime += diff
+            
+            self.startPlayTime = 0
+        }
+    }
+    
+    
     
     internal func defineHUD(height:CGFloat,alpha:CGFloat) {
         
@@ -186,8 +201,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         println("Z rotation \(self.player.zRotation)")
         self.player.hidden = false
     }
+
     
     override func didMoveToView(view: SKView) {
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willTerminateApp", name: UIApplicationWillTerminateNotification, object: UIApplication.sharedApplication())
+        
+        self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
+        self.playedTime = 0
         
         self.definePlayableRect()
         
@@ -224,7 +245,22 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             node.name  = asterName
             
         }
+    }
+    
+    func willTerminateApp() {
+        terminateGame(needToContinue:false)
+    }
+    
+    private func terminateGame(needToContinue:Bool = true) {
         
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillTerminateNotification, object: UIApplication.sharedApplication())
+        
+        let playedTime = self.calculateGameTime()
+        assert(self.totalGameScore >= UInt64(self.currentGameScore))
+        if (self.currentGameScore != 0 && playedTime != 0 ) {
+            assert(self.totalGameScore > 0)
+            self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore, playedTime: playedTime, needToContinue: needToContinue)
+        }
     }
     
     private func setTotalScoreLabelValue() {
@@ -365,7 +401,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(10))
                 if (self.player.tryToDestroyWithForce(10)) {
                     
-                    self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore)
+                    terminateGame()
                     
                     return
                 }
@@ -421,6 +457,17 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 })
             }
         }
+    }
+    
+    private func calculateGameTime() -> NSTimeInterval {
+        
+        if (self.startPlayTime != 0) {
+            let spentTime = NSDate.timeIntervalSinceReferenceDate() - self.startPlayTime
+            
+            return spentTime + self.playedTime
+        }
+        
+        return self.playedTime
     }
     
     override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
@@ -609,7 +656,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(asteroid.damageForce))
                 if (self.player.tryToDestroyWithForce(asteroid.damageForce)) {
                     
-                    self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore)
+                    terminateGame()
                     
                     return true
                 }

@@ -26,8 +26,8 @@ class JackACrasherNavigationController: UINavigationController {
         if let authenticationViewController = gameKitHelper.authenticationViewController {
             
             if let view = self.topViewController.view as? SKView {
-                if let scene = view.scene {
-                    scene.paused = true
+                if let scene = view.scene as? GameScene {
+                    scene.pauseGame(pause: true)
                 }
             }
             

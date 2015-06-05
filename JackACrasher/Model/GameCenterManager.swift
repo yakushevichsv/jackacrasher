@@ -16,7 +16,7 @@ import GameKit
 }
 
 let SurvivalBestScoreLbId  = "com.sygamefun.survival_best_score"
-let SurvivalTotalScoreLbId = "com.sygamefun.survival_total_score"
+let SurvivalLongestTimeLbId = "sygame.com.survival_longest_game_time"
 
 let GameCenterManagerViewController = "GameCenterManagerViewController"
 let singleton = GameCenterManager()
@@ -113,6 +113,8 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     }
     
     //MARK: Score
+    
+    
     private func reportScore(score:Int64,context:UInt64 = 0, leaderboardId: String) {
         
         if (!gameCenterEnabled) {
@@ -149,44 +151,68 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     
     
     //MARK: Survival part
-    internal func reportSurvivalTotalScore(score:UInt64) {
+    internal func reportSurvivalGameTime(timeInterval: NSTimeInterval ) {
         
-        let context = score/UInt64(Int64.max)
-        let scoreDiff = Int64(score - context*UInt64(Int64.max))
+        assert(timeInterval <= NSTimeInterval(Int64.max), "Out of range!")
+       let score = GKScore(leaderboardIdentifier: SurvivalLongestTimeLbId)
+        score.value = Int64(timeInterval)
         
-        reportScore(scoreDiff,context:context, leaderboardId: SurvivalTotalScoreLbId)
+        GKScore.reportScores([score], withCompletionHandler: { (error) -> Void in
+            self.lastError = error
+        })
+        
     }
     
     internal func reportSurvivalBestScore(score:Int64) {
         reportScore(score, leaderboardId: SurvivalBestScoreLbId)
     }
     
-    internal func getSurvivalBestScoreWithCompletionHandler(handler: (AnyObject!, NSError!) -> Void) {
+    internal func getSurvivalScoresWithCompletionHandler(handler: ([UInt64], NSError!) -> Void) {
         
         getScoresFromLeaderboard(SurvivalBestScoreLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
-            handler(localPlayerScore,error)
-        })
-    }
-    
-    internal func getSurvivalTotalScoreWithCompletionHandler(handler: (AnyObject!, NSError!) -> Void) {
-        
-        getScoresFromLeaderboard(SurvivalTotalScoreLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
+            
             var totalScore:UInt64 = 0
+            var maxScore:Int64 = 0
+            
+            
             for scoreAny in scores {
                 let score = scoreAny as! GKScore
-                totalScore += UInt64(score.value)
+                
+                if (maxScore < score.value ) {
+                    maxScore = score.value
+                }
             }
             
-            let context:UInt64 = UInt64(Float(totalScore)/Float(Int64.max))
-            let reminder:Int64 = Int64(totalScore -  UInt64(Int64.max) * context)
             
             println("Local score \(localPlayerScore)")
             
-            let score = GKScore(leaderboardIdentifier: SurvivalBestScoreLbId)
-            score.value = reminder
-            score.context = context
+            if (maxScore < localPlayerScore.value ) {
+                maxScore = localPlayerScore.value
+            }
+            handler([totalScore,UInt64(maxScore)],error)
+        })
+    }
+    
+    internal func getSurvivalBestTimeScoreWithCompletionHandler(handler:(Int64, NSError!) -> Void) {
+        
+        getScoresFromLeaderboard(SurvivalLongestTimeLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
+            var maxScorePtr:GKScore? = nil
+            for scoreAny in scores {
+                let score = scoreAny as! GKScore
+                if let maxScore = maxScorePtr {
+                    if (maxScore.value < score.value ) {
+                        maxScorePtr = score
+                    }
+                }
+            }
             
-            handler(score,error)
+            println("Local score \(localPlayerScore)")
+            
+            if (maxScorePtr == nil) {
+                maxScorePtr = localPlayerScore as? GKScore
+            }
+            
+            handler(maxScorePtr != nil ? maxScorePtr!.value : Int64(0),error)
         })
     }
     

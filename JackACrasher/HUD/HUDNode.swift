@@ -79,12 +79,13 @@ class HUDNode: SKNode {
             
             let blockAction = SKAction.customActionWithDuration(newDuration){ (node, time) -> Void in
                 
-                let x = time/CGFloat(newDuration)
+                
+                let x = newDuration != 0 ? time/CGFloat(newDuration) : CGFloat(0)
                 
                 let width = k * x + b
                 let value = k1 * x + b1
                 
-                self.updateLifeCurPercentNodeWithValue(lifeType(value), width: width)
+                self.updateLifeCurPercentNodeWithValue(max(lifeType(0),lifeType(value)), width: width)
                 println("Current value \(value)")
             }
             
@@ -109,6 +110,8 @@ class HUDNode: SKNode {
             color = SKColor.yellowColor()
         } else if (value > HUDNode.sLifePercentMin) {
             color = SKColor.redColor()
+        } else {
+            color = SKColor.clearColor()
         }
         
         if let colorVal = color {
