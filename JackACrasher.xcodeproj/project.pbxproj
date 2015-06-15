@@ -7,9 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */; };
 		21068A3A1AE555DB007398B5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21068A391AE555DB007398B5 /* Utils.swift */; };
 		210DD8141AE3CAF90092DD39 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 210DD8131AE3CAF90092DD39 /* sprites.atlas */; };
 		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
+		210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210EA9C81B26D54100C69D29 /* PurchaseManager.swift */; };
+		210EA9CD1B26E00400C69D29 /* ProductIds.plist in Resources */ = {isa = PBXBuildFile; fileRef = 210EA9CC1B26E00400C69D29 /* ProductIds.plist */; };
+		21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21103F811B289A39007D8649 /* ShopDetailsViewController.swift */; };
 		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
 		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
 		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
@@ -18,11 +22,13 @@
 		211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211C4C6F1B16FFA4005F50B8 /* Fire.sks */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
+		216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217340FD1AFE5267009E934A /* GameOverViewController.swift */; };
 		217341001AFE54AB009E934A /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 217340FF1AFE54AB009E934A /* GameOverScene.sks */; };
 		217341021AFE54C1009E934A /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217341011AFE54C1009E934A /* GameOverScene.swift */; };
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
+		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
 		2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCDF1AF6567E00518F97 /* Spawn.sks */; };
 		2192CCE21AF6574800518F97 /* realStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCE11AF6574800518F97 /* realStar.png */; };
@@ -50,6 +56,8 @@
 		21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B341ADA9D8F0071A217 /* Images.xcassets */; };
 		21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */; };
 		21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */; };
+		21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FA22A21B2AE9A7002539A6 /* StoreKit.framework */; };
+		21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FA22A41B2B026E002539A6 /* PopupAnimator.swift */; };
 		21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FC6D7B1AEC0457001D99B6 /* Rope.swift */; };
 		21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */; };
 		21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */; };
@@ -74,9 +82,14 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsCollectionViewCell.swift; path = Views/ShopDetailsCollectionViewCell.swift; sourceTree = "<group>"; };
 		21068A391AE555DB007398B5 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utils.swift; path = Utils/Utils.swift; sourceTree = "<group>"; };
 		210DD8131AE3CAF90092DD39 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
 		210DD8151AE3CBAA0092DD39 /* Explosion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Explosion.swift; path = Entities/Explosion.swift; sourceTree = "<group>"; };
+		210EA9C81B26D54100C69D29 /* PurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PurchaseManager.swift; path = Model/PurchaseManager.swift; sourceTree = "<group>"; };
+		210EA9CC1B26E00400C69D29 /* ProductIds.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductIds.plist; sourceTree = "<group>"; };
+		210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasher-Bridging-Header.h"; sourceTree = "<group>"; };
+		21103F811B289A39007D8649 /* ShopDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsViewController.swift; path = ViewControllers/ShopDetailsViewController.swift; sourceTree = "<group>"; };
 		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
 		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
 		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
@@ -85,11 +98,13 @@
 		211C4C6F1B16FFA4005F50B8 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
+		216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupPresentationController.swift; path = ViewControllers/PopupPresentationController.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		217340FD1AFE5267009E934A /* GameOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverViewController.swift; path = ViewControllers/GameOverViewController.swift; sourceTree = "<group>"; };
 		217340FF1AFE54AB009E934A /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = GameOverScene.sks; path = Scenes/GameOverScene.sks; sourceTree = "<group>"; };
 		217341011AFE54C1009E934A /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverScene.swift; path = Scenes/GameOverScene.swift; sourceTree = "<group>"; };
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
+		217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopUpTransitioningDelegate.swift; path = ViewControllers/PopUpTransitioningDelegate.swift; sourceTree = "<group>"; };
 		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
 		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
 		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
@@ -117,6 +132,8 @@
 		21E56B341ADA9D8F0071A217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectRope.swift; path = Entities/DirectRope.swift; sourceTree = "<group>"; };
 		21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RopeJointAsteroids.swift; path = Entities/RopeJointAsteroids.swift; sourceTree = "<group>"; };
+		21FA22A21B2AE9A7002539A6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
+		21FA22A41B2B026E002539A6 /* PopupAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAnimator.swift; path = ViewControllers/PopupAnimator.swift; sourceTree = "<group>"; };
 		21FC6D7B1AEC0457001D99B6 /* Rope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rope.swift; path = Entities/Rope.swift; sourceTree = "<group>"; };
 		21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressTimerNode.swift; path = Entities/ProgressTimerNode.swift; sourceTree = "<group>"; };
 		21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DigitNode.swift; path = Entities/DigitNode.swift; sourceTree = "<group>"; };
@@ -140,6 +157,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
+				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -178,7 +196,8 @@
 				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
 				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
-				21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */,
+				210EA9C81B26D54100C69D29 /* PurchaseManager.swift */,
+				210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -197,11 +216,23 @@
 		217340FC1AFE5211009E934A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */,
 				21FFEAEE1AD5E216000115F6 /* GameViewController.swift */,
 				217340FD1AFE5267009E934A /* GameOverViewController.swift */,
 				2118AD0A1AFFE88100067348 /* GameMainViewController.swift */,
+				21103F811B289A39007D8649 /* ShopDetailsViewController.swift */,
 			);
 			name = ViewControllers;
+			sourceTree = "<group>";
+		};
+		217CF4DF1B285BD500F67D33 /* Transitions&Presentations */ = {
+			isa = PBXGroup;
+			children = (
+				217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */,
+				21FA22A41B2B026E002539A6 /* PopupAnimator.swift */,
+				216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */,
+			);
+			name = "Transitions&Presentations";
 			sourceTree = "<group>";
 		};
 		2199B6801AE3FC9500DDDB9F /* Atlases */ = {
@@ -247,6 +278,7 @@
 			children = (
 				21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */,
 				2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */,
+				210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -334,6 +366,7 @@
 				21E56B331ADA9C2E0071A217 /* Entities */,
 				2199B6801AE3FC9500DDDB9F /* Atlases */,
 				217340FC1AFE5211009E934A /* ViewControllers */,
+				217CF4DF1B285BD500F67D33 /* Transitions&Presentations */,
 				21FFEAE81AD5E216000115F6 /* AppDelegate.swift */,
 				21FFEAF01AD5E216000115F6 /* Main.storyboard */,
 				21FFEAF51AD5E216000115F6 /* LaunchScreen.xib */,
@@ -346,6 +379,8 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				210EA9CC1B26E00400C69D29 /* ProductIds.plist */,
+				21FA22A21B2AE9A7002539A6 /* StoreKit.framework */,
 				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
 				21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */,
 				21FFEAE71AD5E216000115F6 /* Info.plist */,
@@ -424,6 +459,9 @@
 							com.apple.GameCenter = {
 								enabled = 1;
 							};
+							com.apple.InAppPurchase = {
+								enabled = 1;
+							};
 						};
 					};
 					21FFEAFB1AD5E216000115F6 = {
@@ -481,6 +519,7 @@
 				21A74E511AE0F6E00005334D /* trash.atlas in Resources */,
 				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
 				21689F651ADAD696001456D6 /* BGStarts.sks in Resources */,
+				210EA9CD1B26E00400C69D29 /* ProductIds.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -511,7 +550,9 @@
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
+				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */,
+				216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */,
 				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
@@ -520,10 +561,14 @@
 				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,
 				219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */,
 				2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */,
+				210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */,
 				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
+				217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */,
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
+				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,
+				210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */,
 				21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -649,12 +694,15 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: Siarhei Yakushevich (5U66D79D3A)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Siarhei Yakushevich (5U66D79D3A)";
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "67011a2f-3f03-48d0-bb86-c2a483ab51db";
+				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
@@ -662,12 +710,14 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Siarhei Yakushevich (44P2L32FL4)";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Siarhei Yakushevich (44P2L32FL4)";
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE = "67011a2f-3f03-48d0-bb86-c2a483ab51db";
+				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
 			};
 			name = Release;
 		};

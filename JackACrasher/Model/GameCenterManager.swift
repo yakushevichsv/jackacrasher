@@ -41,6 +41,18 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
         return singleton
     }
     
+    internal var playerID:String? {
+        get {
+            let player = GKLocalPlayer.localPlayer()
+            
+            if (player.authenticated) {
+                return player.playerID
+            }
+            else {
+                return player.displayName
+            }
+        }
+    }
     
     //MARK: Authentification methods
     
@@ -169,6 +181,13 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     
     internal func getSurvivalScoresWithCompletionHandler(handler: ([UInt64], NSError!) -> Void) {
         
+        if (!self.gameCenterEnabled) {
+            
+            
+            
+            return
+        }
+        
         getScoresFromLeaderboard(SurvivalBestScoreLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
             
             var totalScore:UInt64 = 0
@@ -194,6 +213,11 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     }
     
     internal func getSurvivalBestTimeScoreWithCompletionHandler(handler:(Int64, NSError!) -> Void) {
+        
+        if (!self.gameCenterEnabled) {
+            
+            return
+        }
         
         getScoresFromLeaderboard(SurvivalLongestTimeLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
             var maxScorePtr:GKScore? = nil

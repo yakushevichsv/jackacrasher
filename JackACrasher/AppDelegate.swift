@@ -30,6 +30,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
+        PurchaseManager.sharedInstance.prepare()
+        
         return true
     }
     

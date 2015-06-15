@@ -43,6 +43,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         }
     }
     
+    private var needToReflect:Bool = false
+    
     let asterName:String! = "TestAster"
     let bgStarsName:String! = "bgStars"
     let bgZPosition:CGFloat = 1
@@ -287,15 +289,17 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         }
     }
     
+        
     //MARK: Touch system
     override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
         /* Called when a touch begins */
         self.moving = false
+        let touch = (touches.first as! UITouch)
+        let point = touch.locationInNode(self)
         
         if self.canCutRope(touches) {
-            self.startPoint = (touches.first as! UITouch).locationInNode(self)
+            self.startPoint = point
         }
-        
     }
     
     override  func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
@@ -305,11 +309,61 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             if let touch = touches.first as? UITouch {
             
                 let position = touch.locationInNode(self)
-                self.createSparks(position)
+                let prevPosition = touch.previousLocationInNode(self)
                 
-                self.moving = true
+                if (touchIntersectAsteroid(touch)){
+                    let emitterNode = self.createSparks(position, needToRemove:false)
+                    self.moving = false
+                    
+                    
+                    let p = (prevPosition - position).normalized()
+                    
+                    let pBody = SKPhysicsBody(rectangleOfSize: emitterNode.particleTexture!.size())
+                    emitterNode.physicsBody = pBody
+                    
+                    emitterNode.physicsBody!.applyImpulse(CGVectorMake(p.x * 100, -p.y * 100), atPoint: position)
+                    emitterNode.physicsBody!.contactTestBitMask = 0
+                    emitterNode.physicsBody!.categoryBitMask = 0
+                    
+                    let particleTime1 = 2 * NSTimeInterval(emitterNode.particleLifetime + emitterNode.particleLifetimeRange)
+                    emitterNode.runAction(SKAction.sequence([SKAction.group([SKAction.waitForDuration(particleTime1),SKAction.scaleTo(0.5, duration: particleTime1)]),SKAction.removeFromParent()]))
+                    
+                    addChild(emitterNode)
+                    
+                }
+                else {
+                    self.createSparks(position)
+                    self.moving = true
+                }
             }
         }
+    }
+    
+    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+        self.moving = false
+        self.needToReflect = false
+    }
+    
+    private func touchIntersectAsteroid(touch:UITouch) -> Bool  {
+        
+        if (self.needToReflect) {
+            return false
+        }
+        
+        let point = touch.locationInNode(self)
+        let prevPoint = touch.previousLocationInNode(self)
+        
+        for curNode in self.scene!.nodesAtPoint(point) as! [SKNode] {
+            
+            if (curNode is RegularAsteroid ||
+                curNode is SmallRegularAsteroid) {
+                
+                self.needToReflect = true
+                
+                return true
+            }
+        }
+        return false
     }
     
     
@@ -339,6 +393,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        if (self.needToReflect) {
+            self.needToReflect = false
+            return
+        }
         
         if self.canCutRope(touches) &&  self.moving {
             
@@ -470,18 +529,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         return self.playedTime
     }
     
-    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
-        self.moving = false
-    }
-    
-    func createSparks(point:CGPoint) {
+    func createSparks(point:CGPoint, needToRemove:Bool = true) -> SKEmitterNode {
+        let emitter = SKEmitterNode(fileNamed: "Sparky")
+        emitter.position = point
+        emitter.name = "PARTICLE"
         
-        let particlePath = NSBundle.mainBundle().pathForResource("Sparky", ofType:"sks")
-        var sparky = NSKeyedUnarchiver.unarchiveObjectWithFile(particlePath!) as! SKNode
+        if (needToRemove) {
+            let particleTime = NSTimeInterval(emitter.particleLifetime + emitter.particleLifetimeRange)
+            emitter.runAction(SKAction.sequence([SKAction.waitForDuration(particleTime),SKAction.removeFromParent()]))
+            
+            addChild(emitter)
+        }
         
-        sparky.position = point
-        sparky.name = "PARTICLE"
-        addChild(sparky)
+        return emitter
     }
     
     func createRocksExplosion(point:CGPoint,scale:CGFloat) {

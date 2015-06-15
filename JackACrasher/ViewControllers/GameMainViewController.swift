@@ -19,8 +19,9 @@ class GameMainViewController: UIViewController {
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
     @IBOutlet weak var btnGameCenter:UIButton!
-
+    @IBOutlet weak var btnShop:UIButton!
     
+    private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
     private func shiftOutButtons() {
         
@@ -63,13 +64,15 @@ class GameMainViewController: UIViewController {
     }
     
     private func setButtonsState(enabled:Bool) {
-        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp,self.btnGameCenter] {
+        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp,self.btnGameCenter,self.btnShop] {
             btn.enabled = enabled
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
         
         authDidChange(nil)
         
@@ -166,27 +169,97 @@ class GameMainViewController: UIViewController {
     
     //MARK: eee  Why it is not called?
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        super.prepareForSegue(segue, sender: sender)
+        
         if let identifier = segue.identifier {
             if (identifier == "startSurvival") {
                 GameLogicManager.sharedInstance.selectSurvival()
+                SoundManager.sharedInstance.cancelPlayingEffect(nil)
+            } else if (identifier == "displayShop") {
+                ///TODO: prepare before displaying...
+                let dVC = segue.destinationViewController as! ShopDetailsViewController
+                
+                
+                if let productsArray = PurchaseManager.sharedInstance.validProducstsArray {
+                    dVC.products = productsArray
+                }
+                
+                dVC.modalPresentationStyle = UIModalPresentationStyle.Custom
+                
+                
+                let isPortrait = CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame)
+                
+                self.transitionDelegate.isPortrait = isPortrait
+                self.transitionDelegate.rect = self.view.frame
+                
+                dVC.transitioningDelegate = self.transitionDelegate
             }
         }
     }
     
-    
-    @IBAction func btnPressed(sender: UIButton) {
-        if sender == self.btnStrategy {
-            playBtnPressedSound()
-            self.performSegueWithIdentifier("startSurvival", sender: self)
-            sender.enabled = true
-        } else if (sender == self.btnGameCenter) {
-            playBtnPressedSound()
-            GameCenterManager.sharedInstance.showGKGameCenterViewController(self)
+    override func shouldPerformSegueWithIdentifier(identifierObj: String?, sender: AnyObject?) -> Bool {
+        
+        if let identifier = identifierObj {
+            if (identifier == "displayShop") {
+                
+                return PurchaseManager.canPurchase() && PurchaseManager.sharedInstance.hasValidated
+            }
         }
+        return super.shouldPerformSegueWithIdentifier(identifierObj, sender: sender)
     }
     
-    func playBtnPressedSound() {
-        SoundManager.sharedInstance.playSoundEffect("button_press.wav")
+    
+    func displayAlertAboutImpossiblePayments() ->Bool {
+        
+        let canPurhase = PurchaseManager.canPurchase()
+        let isValid = PurchaseManager.sharedInstance.hasValidated
+        
+        var title:String!
+        var message:String!
+        
+        if (!canPurhase) {
+            title = "Please enable In-App-Purchases"
+            message = "For purchasing things please enable IAP"
+        } else if (!isValid) {
+            title = "Error"
+            message = "Couldn't access iTunes Store"
+        }
+        else {
+            return false
+        }
+        
+
+        let alert = UIAlertController(title: title , message: message, preferredStyle: .Alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .Default) { (_) -> Void in
+            
+            alert.dismissViewControllerAnimated(false, completion: nil)
+        }
+        
+        alert.addAction(okAction)
+        
+        self.presentViewController(alert, animated: true, completion: nil)
+        
+        return true
+    }
+    
+    @IBAction  func btnPressed(sender: UIButton) {
+        if sender == self.btnStrategy {
+            SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
+                self.performSegueWithIdentifier("startSurvival", sender: self)
+                sender.enabled = true
+            })
+        } else if (sender == self.btnGameCenter) {
+            SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (url, successfully) -> Void in
+                GameCenterManager.sharedInstance.showGKGameCenterViewController(self)
+            })
+        } else if (sender == self.btnShop) {
+            SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
+                
+                self.displayAlertAboutImpossiblePayments()
+                
+            })
+        }
     }
     
     deinit {
