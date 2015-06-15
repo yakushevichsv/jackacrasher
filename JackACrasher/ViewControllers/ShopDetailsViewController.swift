@@ -13,6 +13,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var closeButton:UIButton!
+    private var initialRect:CGRect = CGRectZero
     
     internal var products:[SKProduct] = [] {
         didSet {
@@ -24,6 +25,13 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        initialRect = self.collectionView.frame
+        
+        if CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame) {
+            rotatePrivateForSize(self.view.frame.size)
+        }
+    
     }
     
     @IBAction func closeButtonPressed(sender:UIButton!) {
@@ -87,6 +95,34 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         collectionViewCell.setNeedsLayout()
         
         return collectionViewCell
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
+        
+        coordinator.animateAlongsideTransition({(context: UIViewControllerTransitionCoordinatorContext!) -> Void in
+            self.rotatePrivateForSize(size)
+            }, completion:nil)
+    }
+    
+    
+    private func rotatePrivateForSize(size:CGSize,animated:Bool = false) {
+    
+        let flowLayout:UICollectionViewFlowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        
+        let isVertic = size.height > size.width
+        if isVertic {
+            flowLayout.scrollDirection = .Vertical
+        }
+        else {
+            flowLayout.scrollDirection = .Horizontal
+        }
+        self.collectionView.setCollectionViewLayout(flowLayout, animated: animated)
+    
+        let frame = self.initialRect
+    
+        self.collectionView.frame = isVertic ? CGRectMake(CGRectGetMinY(frame), CGRectGetMinX(frame), CGRectGetHeight(frame), CGRectGetWidth(frame)) : frame
+        self.collectionView.setNeedsLayout()
     }
     
 }

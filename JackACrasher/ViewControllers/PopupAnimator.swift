@@ -81,7 +81,15 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             let oX = round(0.2*tW)
             let oY = round(0.2*tH)
             
-            let toViewFrame = CGRectMake(oX, oY, w, h)
+            var toViewFrame:CGRect
+            
+            if (self.isPortrait) {
+                toViewFrame = CGRectMake(oY, oX, h, w)
+            }
+            else {
+                toViewFrame = CGRectMake(oX, oY, w, h)
+            }
+            
             toViewInternal.frame = toViewFrame
             toViewInternal.transform = CGAffineTransformMakeScale(1e-1, 1e-1)
             
