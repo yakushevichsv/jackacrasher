@@ -193,7 +193,8 @@ extension GameLogicManager
     private struct Constants {
         static var  SurvivalLongestGame = "SurvivalLongestGameScore"
         static var  SurvivalBestScore = "SurvivalBestScore"
-        static var SurvivalTotalScore = "SurvivalTotalScore"
+        static var  SurvivalTotalScore = "SurvivalTotalScore"
+        static var  AppState = "AppState"
     }
     
     //MARK: Survival
@@ -259,4 +260,69 @@ extension GameLogicManager
         
         return total
     }
+    
+    //MARK: App Manager
+    
+    internal func performPurchasesRestorationOnNeed() -> Bool {
+        
+        let fTime = !NSUserDefaults.standardUserDefaults().boolForKey(Constants.AppState)
+        
+        if (fTime) {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePurchasesNotification:", name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
+            PurchaseManager.sharedInstance.restore()
+            return true
+        }
+        return false
+    }
+    
+    // Update the UI according to the purchase request notification result
+    func handlePurchasesNotification(aNotification:NSNotification!)
+    {
+        let pManager = aNotification.object as! PurchaseManager
+        
+        let userInfo = aNotification.userInfo
+        
+        switch (pManager.status)
+        {
+        case .IAPPurchaseFailed:
+            break
+            // Switch to the iOSPurchasesList view controller when receiving a successful restore notification
+        case .IAPRestoredFailed:
+            break
+        case .IAPDownloadFailed:
+            break
+        case .IAPDownloadStarted:
+            // Notify the user that downloading is about to start when receiving a download started notification
+            //self.hasDownloadContent = YES;
+            //[self.view addSubview:self.statusMessage];
+            break
+            // Display a status message showing the download progress
+        case .IAPDownloadInProgress:
+            
+            //self.hasDownloadContent = YES;
+            //NSString *title = [[StoreManager sharedInstance] titleMatchingProductIdentifier:purchasesNotification.purchasedID];
+            //NSString *displayedTitle = (title.length > 0) ? title : purchasesNotification.purchasedID;
+            //self.statusMessage.text = [NSString stringWithFormat:@" Downloading %@   %.2f%%",displayedTitle, purchasesNotification.downloadProgress];
+            //}
+            break
+            // Downloading is done, remove the status message
+        case .IAPPurchaseSucceeded:
+            break
+        case .IAPRestoredSucceeded:
+            
+            NSNotificationCenter.defaultCenter().removeObserver(PurchaseManager.sharedInstance, name: IAPPurchaseNotification, object: self)
+            
+            NSUserDefaults.standardUserDefaults().setBool(true, forKey: Constants.AppState)
+            NSUserDefaults.standardUserDefaults().synchronize()
+            
+            break
+        case .IAPDownloadSucceeded:
+            break
+        case .IAPPurchaseCancelled:
+            break
+        default:
+            break
+        }
+    }
+    
 }

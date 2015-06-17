@@ -30,6 +30,7 @@
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
 		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
+		218D5A831B317C7F007ABE63 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */; };
 		2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCDF1AF6567E00518F97 /* Spawn.sks */; };
 		2192CCE21AF6574800518F97 /* realStar.png in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCE11AF6574800518F97 /* realStar.png */; };
 		21948BBE1B1DBAE000C438F6 /* Damage.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21948BBD1B1DBAE000C438F6 /* Damage.sks */; };
@@ -106,6 +107,7 @@
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
 		217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopUpTransitioningDelegate.swift; path = ViewControllers/PopUpTransitioningDelegate.swift; sourceTree = "<group>"; };
 		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
+		218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtensions.swift; path = ViewControllers/UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
 		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
 		21948BBD1B1DBAE000C438F6 /* Damage.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Damage.sks; sourceTree = "<group>"; };
@@ -221,6 +223,7 @@
 				217340FD1AFE5267009E934A /* GameOverViewController.swift */,
 				2118AD0A1AFFE88100067348 /* GameMainViewController.swift */,
 				21103F811B289A39007D8649 /* ShopDetailsViewController.swift */,
+				218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -233,6 +236,13 @@
 				216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */,
 			);
 			name = "Transitions&Presentations";
+			sourceTree = "<group>";
+		};
+		218D5A811B317C5B007ABE63 /* Categories */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Categories;
 			sourceTree = "<group>";
 		};
 		2199B6801AE3FC9500DDDB9F /* Atlases */ = {
@@ -356,6 +366,7 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				218D5A811B317C5B007ABE63 /* Categories */,
 				214007A51B0D2D1A00072C9F /* Nodes */,
 				217340FB1AFE5124009E934A /* Scenes */,
 				21DEA0CF1AFD1761004FF5D7 /* Views */,
@@ -555,6 +566,7 @@
 				216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */,
 				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
+				218D5A831B317C7F007ABE63 /* UIViewControllerExtensions.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
 				214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,

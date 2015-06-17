@@ -30,9 +30,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        PurchaseManager.sharedInstance.prepare()
+        appWillStart()
         
         return true
+    }
+    
+    private func appWillStart() {
+        PurchaseManager.sharedInstance.prepare()
+        GameLogicManager.sharedInstance.performPurchasesRestorationOnNeed()
     }
     
     func applicationWillTerminate(application: UIApplication) {

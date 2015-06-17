@@ -22,16 +22,21 @@ enum IAPPurchaseNotificationStatus: Int {
     case IAPPurchaseNone
     case IAPPurchaseFailed // Indicates that the purchase was unsuccessful
     case IAPPurchaseSucceeded // Indicates that the purchase was successful
+    case IAPPurchaseCancelled
     case IAPRestoredFailed // Indicates that restoring products was unsuccessful
     case IAPRestoredSucceeded // Indicates that restoring products was successful
+    case IAPRestoredCancelled
     case IAPDownloadStarted // Indicates that downloading a hosted content has started
     case IAPDownloadInProgress // Indicates that a hosted content is currently being downloaded
     case IAPDownloadFailed  // Indicates that downloading a hosted content failed
     case IAPDownloadSucceeded // Indicates that a hosted content was successfully downloaded
+    case IAPDownloadCancelled
 }
 
 let kPurchaseManagerDidFailedProductsValidationNotification = "kPurchaseManagerDidFailedProductsValidationNotification"
 let kPurchaseManagerValidatedProductsNotification = "kPurchaseManagerValidatedProductsNotification"
+
+let IAPPurchaseNotification = "IAPPurchaseNotification"
 
 private  let sPurchaseManagerSandBox:Bool = true
 
@@ -49,9 +54,10 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     }
     
     internal var purchaseId:String!
-    internal var purchasedItems:[AnyObject]!
-    internal var restored:[AnyObject]!
+    internal var purchasedItems:[AnyObject]! = []
+    internal var restored:[AnyObject]! = []
     internal var message:String!
+    internal var downloadProgress:Float = 0
     
     internal var status:IAPPurchaseNotificationStatus = IAPPurchaseNotificationStatus.IAPPurchaseNone
     
@@ -81,13 +87,13 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     override init() {
         super.init()
-        
         accumulateProductIdentifiers()
     }
     
     internal func prepare() {
-        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
         
+        SKPaymentQueue.defaultQueue().removeTransactionObserver(self)
+        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
         //SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
     }
     
@@ -187,6 +193,17 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
     }
     
+    private func userNameForPurchases() -> String? {
+        if let playerID = GameCenterManager.sharedInstance.playerID {
+            
+            if let hash = PurchaseManager.hashedValueForPlayerID(playerID) {
+                
+                return hash
+            }
+        }
+        return nil
+    }
+    
     private func getProduct(productId:String) -> SKProduct? {
     
         if self.managerState != .Validated {
@@ -209,12 +226,8 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         payment.simulatesAskToBuyInSandbox = sPurchaseManagerSandBox
         
         
-        if let playerID = GameCenterManager.sharedInstance.playerID {
-            
-            if let hash = PurchaseManager.hashedValueForPlayerID(playerID) {
-                
-                payment.applicationUsername = hash
-            }
+        if let userName = userNameForPurchases() {
+            payment.applicationUsername = userName
         }
         
         SKPaymentQueue.defaultQueue().addPayment(payment)
@@ -266,12 +279,30 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         return hexString.substringToIndex(index)
     }
     
+    //MARK: Restore products 
+    internal func restore() {
+        restored.removeAll(keepCapacity: false)
+        let defQueue = SKPaymentQueue.defaultQueue()
+        
+        if let userName = userNameForPurchases() {
+            defQueue.restoreCompletedTransactionsWithApplicationUsername(userName as String)
+        }
+        else {
+            defQueue.restoreCompletedTransactions()
+        }
+        
+    }
+    
     //MARK: SKPaymentTransactionObserver
     
     func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!)
     {
         
         for transaction in transactions as! [SKPaymentTransaction] {
+            
+            var userInfo:[NSObject:AnyObject]? = ["id":transaction.payment.productIdentifier]
+            
+            
             switch (transaction.transactionState )
             {
             case .Purchasing:
@@ -289,12 +320,14 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     
                     println("Deliver content for \(transaction.payment.productIdentifier)")
                     // Check whether the purchased product has content hosted with Apple.
+                    
+                    //TODO: Transaction identifier & receipt validation....
+                    
                     if(transaction.downloads != nil && transaction.downloads!.count > 0) {
-                        //TODO: Process downloads...
-                        completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted)
+                        completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted, userInfo:userInfo)
                     }
                     else {
-                        completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPPurchaseSucceeded)
+                        completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPPurchaseSucceeded,userInfo:userInfo)
                     }
                 
                 break
@@ -303,16 +336,22 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                     self.purchaseId = transaction.payment.productIdentifier;
                     self.restored.append(transaction)
-                    //[self.productsRestored addObject:transaction];
                     
                     println("Restore content for \(transaction.payment.productIdentifier)")
                     // Send a IAPDownloadStarted notification if it has
+                    var statusInter:IAPPurchaseNotificationStatus
+                    
                     if(transaction.downloads != nil && transaction.downloads.count > 0) {
-                       completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted)
+                        statusInter = .IAPDownloadStarted
                     }
                     else {
-                        completeTransaction(transaction, status:IAPPurchaseNotificationStatus.IAPPurchaseSucceeded)
+                        
+                        self.status = .IAPRestoredSucceeded
+                        NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo: userInfo)
+                        
+                        statusInter = .IAPPurchaseSucceeded
                     }
+                    completeTransaction(transaction, status:statusInter,userInfo:userInfo)
                 
                 break
                 // The transaction failed
@@ -320,7 +359,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                 self.message = "Purchase of \(transaction.payment.productIdentifier) failed."
                 
-                 completeTransaction(transaction, status:IAPPurchaseNotificationStatus.IAPPurchaseFailed)
+                completeTransaction(transaction, status:transaction.error.code != SKErrorPaymentCancelled ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
                 
                 break;
             default:
@@ -330,23 +369,147 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
     }
     
+    // Called when the payment queue has downloaded content
+    func paymentQueue(queue: SKPaymentQueue!, updatedDownloads downloads: [AnyObject]!) {
+        
+        for download in downloads as! [SKDownload!]
+        {
+            var userInfo:[NSObject:AnyObject]? = ["id":download.transaction.payment.productIdentifier]
+            switch (download.downloadState)
+            {
+                // The content is being downloaded. Let's provide a download progress to the user
+            case .Active:
+                
+                    self.status = .IAPDownloadInProgress;
+                    self.purchaseId = download.transaction.payment.productIdentifier;
+                    self.downloadProgress = download.progress*100;
+                    NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self,userInfo:userInfo)
+                    
+                break;
+                
+            case .Cancelled:
+                fallthrough
+            case .Failed:
+                // StoreKit saves your downloaded content in the Caches directory. Let's remove it
+                // before finishing the transaction.
+                
+                finishDownloadTransaction(download.transaction)
+                
+                var error:NSError? = nil
+                if (!NSFileManager.defaultManager().removeItemAtURL(download.contentURL, error: &error) && error != nil) {
+                    println("Error deleting file \(error)")
+                }
+            
+                break;
+                
+            case .Paused:
+                println("Download was paused")
+                break;
+                
+            case .Finished:
+                // Download is complete. StoreKit saves the downloaded content in the Caches directory.
+                println("Location of downloaded file \(download.contentURL)");
+               finishDownloadTransaction(download.transaction)
+                break;
+                
+            case .Waiting:
+                println("Download Waiting");
+                SKPaymentQueue.defaultQueue().startDownloads([download])
+                break;
+                
+            default:
+                break;
+            }
+        }
+    }
+    
+    
+    // Logs all transactions that have been removed from the payment queue
+    func paymentQueue(queue: SKPaymentQueue!, removedTransactions transactions: [AnyObject]!) {
+        for transaction in transactions as! [SKPaymentTransaction!] {
+            println("\(transaction.payment.productIdentifier) was removed from the payment queue.");
+        }
+    }
+   
+    func paymentQueue(queue: SKPaymentQueue!, restoreCompletedTransactionsFailedWithError error: NSError!) {
+        
+        if (error.code != SKErrorPaymentCancelled) {
+            self.status = .IAPRestoredFailed
+        }
+        else {
+            self.status = .IAPRestoredCancelled
+        }
+            
+        NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self)
+        
+    }
+   
+    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
+        println("All restorable transactions have been processed by the payment queue.");
+        if (self.status != .IAPDownloadStarted) {
+            self.status = .IAPRestoredSucceeded
+            NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self)
+        }
+    }
+    
     //MARK:  Complete transaction
     
     // Notify the user about the purchase process. Start the download process if status is
     // IAPDownloadStarted. Finish all transactions, otherwise.
-    private func completeTransaction(transaction:SKPaymentTransaction, status:IAPPurchaseNotificationStatus)
+    private func completeTransaction(transaction:SKPaymentTransaction, status:IAPPurchaseNotificationStatus,userInfo:[NSObject:AnyObject]? = nil)
     {
         self.status = status
         
-        if (transaction.error.code != SKErrorPaymentCancelled) {
-            //MARK: Notify the user
-            //[[NSNotificationCenter defaultCenter] postNotificationName:IAPPurchaseNotification object:self];
-        }
+        NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo: userInfo)
         
         if status == .IAPDownloadStarted {
             SKPaymentQueue.defaultQueue().startDownloads(transaction.downloads)
         } else {
             SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+        }
+    }
+    
+    func finishDownloadTransaction(transaction:SKPaymentTransaction,userInfo:[NSObject:AnyObject]? = nil) {
+        
+        //allAssetsDownloaded indicates whether all content associated with the transaction were downloaded.
+        var allAssetsDownloaded:Bool = true
+        
+        // A download is complete if its state is SKDownloadStateCancelled, SKDownloadStateFailed, or SKDownloadStateFinished
+        // and pending, otherwise. We finish a transaction if and only if all its associated downloads are complete.
+        // For the SKDownloadStateFailed case, it is recommended to try downloading the content again before finishing the transaction.
+        for download in transaction.downloads as! [SKDownload!]
+        {
+            if (download.downloadState != .Cancelled &&
+                download.downloadState != .Failed &&
+                download.downloadState != .Finished )
+            {
+                //Let's break. We found an ongoing download. Therefore, there are still pending downloads.
+                allAssetsDownloaded = false
+                break
+            }
+        }
+        
+        // Finish the transaction and post a IAPDownloadSucceeded notification if all downloads are complete
+        if (allAssetsDownloaded)
+        {
+            self.status = .IAPDownloadSucceeded;
+            SKPaymentQueue.defaultQueue().finishTransaction(transaction)
+            
+            NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self,userInfo:userInfo)
+            
+           let array = self.restored.filter({ (item) -> Bool in
+                if item as! NSObject == transaction {
+                    return true
+                }
+                else {
+                    return false
+                }
+            })
+            
+            if (!array.isEmpty) {
+                self.status = .IAPRestoredSucceeded;
+                NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self,userInfo:userInfo)
+            }
         }
     }
 }
