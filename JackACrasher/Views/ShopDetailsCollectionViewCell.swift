@@ -58,11 +58,31 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         }
     }
     
+    internal func displayActivityIndicatorWhileDownloading() {
+        
+        self.hideActivityIndicatorAfterDonwloading()
+        
+        let activity = UIActivityIndicatorView(activityIndicatorStyle: .White)
+        activity.center = CGPointMake(CGRectGetMidX(self.productImageView.bounds), CGRectGetMidY(self.productImageView.bounds))
+        activity.hidesWhenStopped = true
+        activity.startAnimating()
+        self.productImageView.addSubview(activity)
+    }
+    
+    internal func hideActivityIndicatorAfterDonwloading() {
+        
+        if let activity = self.productImageView.subviews.last as? UIActivityIndicatorView {
+            activity.stopAnimating()
+            activity.removeFromSuperview()
+        }
+    }
+    
     override func prepareForReuse() {
         super.prepareForReuse()
         
         self.delegate = nil
         self.productImageView?.hidden = false
+        self.hideActivityIndicatorAfterDonwloading()
         self.imageWConstraint.constant = ShopDetailsCollectionViewCell.originImageW
         self.imageHConstraint.constant = ShopDetailsCollectionViewCell.originImageH
     }

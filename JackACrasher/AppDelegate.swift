@@ -36,8 +36,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     private func appWillStart() {
-        PurchaseManager.sharedInstance.prepare()
-        GameLogicManager.sharedInstance.performPurchasesRestorationOnNeed()
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
+            PurchaseManager.sharedInstance.prepare()
+            GameLogicManager.sharedInstance.performPurchasesRestorationOnNeed()
+        })
     }
     
     func applicationWillTerminate(application: UIApplication) {
@@ -86,6 +88,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         notification.applicationIconBadgeNumber  = 0
         
+    }
+    
+    func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
+        
+        NetworkManager.sharedManager.saveCompletionHandler(completionHandler, forSessionId: identifier)
     }
 
     func applicationWillResignActive(application: UIApplication) {

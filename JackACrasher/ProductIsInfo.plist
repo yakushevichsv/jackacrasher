@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>listVersion</key>
+		<integer>1</integer>
+	</dict>
+	<dict>
+		<key>productIdentifier</key>
+		<string>sy.gamefun.jackACrasher.ExtraLife</string>
+		<key>icon</key>
+		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/medkit.png</string>
+		<key>consumable</key>
+		<true/>
+		<key>consumableAmount</key>
+		<integer>10</integer>
+	</dict>
+	<dict>
+		<key>productIdentifier</key>
+		<string>sy.gamefun.jackACrasher.NoAds</string>
+		<key>icon</key>
+		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/NoAds.jpg</string>
+		<key>consumable</key>
+		<false/>
+	</dict>
+	<dict>
+		<key>productIdentifier</key>
+		<string>sy.gamefun.jackACrasher.Laser</string>
+		<key>icon</key>
+		<string>https://www.dropbox.com/s/sp3powfa9begfrz/Ion_laser_weapon_icon.png
+http://www.razeware.com/clients/hangman3/IAPInfo/icon_10hints.png
+</string>
+		<key>consumable</key>
+		<false/>
+		<key>bundleDir</key>
+		<string>Laser</string>
+	</dict>
+</array>
+</plist>

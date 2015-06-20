@@ -15,13 +15,14 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     @IBOutlet weak var closeButton:UIButton!
     private var initialRect:CGRect = CGRectZero
     private var processingCells:Set<NSIndexPath> = Set()
+    private var processingCellsImages:[NSIndexPath:Int] = [NSIndexPath:Int]()
     
-    internal var products:[SKProduct] = [] {
+    internal var products:[IAPProduct] = [] {
         didSet {
             if self.isViewLoaded() {
                 self.collectionView?.reloadData()
             }
-         }
+        }
     }
     
     override func viewDidLoad() {
@@ -96,7 +97,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     }
     
     private func disposeActivityInficationUsingNofitication(aNotification:NSNotification!) {
-    
+        
         let userInfo = aNotification.userInfo
         
         if let productId = userInfo?["id"] as? String {
@@ -131,6 +132,13 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(PurchaseManager.sharedInstance)
+        
+        for taskIdKey in self.processingCellsImages.keys.array {
+            if let taskId = self.processingCellsImages[taskIdKey] {
+                NetworkManager.sharedManager.cancelTask(taskId)
+            }
+        }
+        self.processingCellsImages.removeAll(keepCapacity: false)
     }
     
     @IBAction func closeButtonPressed(sender:UIButton!) {
@@ -158,7 +166,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     }
     
     private func changeActitivyIndicatorStateForCell(cell: ShopDetailsCollectionViewCell!, isEnabled enabled:Bool,indexPath:NSIndexPath!) {
-    
+        
         cell.buyButton.enabled = !enabled
         
         if ((cell.contentView.subviews.last as? UIActivityIndicatorView) == nil && enabled) {
@@ -207,18 +215,85 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         return self.products.count
     }
     
+    func collectionView(collectionView: UICollectionView, didEndDisplayingCell cell: UICollectionViewCell, forItemAtIndexPath indexPath: NSIndexPath) {
+        
+        if let value = self.processingCellsImages[indexPath] {
+            if NetworkManager.sharedManager.isValidTask(value){
+                NetworkManager.sharedManager.suspendTask(value)
+            }
+        }
+    }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let collectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("productCell", forIndexPath: indexPath) as! ShopDetailsCollectionViewCell
         let product =  self.products[indexPath.row]
-    
-        println("Product downloadable: \(product.downloadable)")
+        
+        println("Product downloadable: \(product.skProduct.downloadable)")
         
         //collectionViewCell.productImageView.image =
         
-        if (!product.downloadable) {
+        
+        if (product.productInfo?.icon == nil || product.productInfo!.icon!.isEmpty) {
             collectionViewCell.setImage(nil)
         } else {
-            assert(false)
+            let icon = product.productInfo!.icon!
+            if (!NSFileManager.defaultManager().jacHasItemInCache(icon)) {
+                
+                collectionViewCell.displayActivityIndicatorWhileDownloading()
+                
+                if processingCellsImages[indexPath] == nil {
+                    
+                    let taskId = NetworkManager.sharedManager.downloadFileFromPath(icon) {
+                        path,error in
+                        
+                        if (error == nil && path != nil) {
+                            let (path,error) = NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:icon.lastPathComponent)
+                            
+                            
+                            var image :UIImage?
+                            if (error != nil || path == nil) {
+                                image = nil
+                            }
+                            else {
+                                image = UIImage(contentsOfFile: path!)!
+                            }
+                            
+                            dispatch_async(dispatch_get_main_queue()) {
+                                [unowned self] in
+                                
+                                self.processingCellsImages.removeValueForKey(indexPath)
+                                
+                                
+                                for vIndexPath in collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
+                                    if (vIndexPath == indexPath && collectionViewCell == collectionView.cellForItemAtIndexPath(indexPath)) {
+                                        collectionViewCell.hideActivityIndicatorAfterDonwloading()
+                                        
+                                        collectionViewCell.setImage(image)
+                                        
+                                        return
+                                    }
+                                }
+                            }
+                            
+                        }
+                    }
+                    
+                    if NetworkManager.sharedManager.isValidTask(taskId) {
+                        processingCellsImages[indexPath] = taskId
+                    }
+                    
+                }
+                else {
+                    if let taskId = processingCellsImages[indexPath] {
+                        NetworkManager.sharedManager.resumeSuspendedTask(taskId)
+                    }
+                }
+                
+            }
+            else {
+                collectionViewCell.setImage(NSFileManager.defaultManager().jacGetImageFromCache(icon))
+            }
+            
         }
         
         let present:Bool = processingCells.contains(indexPath)
@@ -231,13 +306,13 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         
         
         
-        collectionViewCell.productTitle.text = product.localizedTitle
-        collectionViewCell.productDescription.text = product.localizedDescription
+        collectionViewCell.productTitle.text = product.skProduct.localizedTitle
+        collectionViewCell.productDescription.text = product.skProduct.localizedDescription
         collectionViewCell.productDescription.sizeToFit()
-    
+        
         var title:String! = nil
-        var curSymbol = product.priceLocale.objectForKey(NSLocaleCurrencySymbol) as? String
-        var titleStr : String! = "Price \(product.price)"
+        var curSymbol = product.skProduct.priceLocale.objectForKey(NSLocaleCurrencySymbol) as? String
+        var titleStr : String! = "Price \(product.skProduct.price)"
         
         if let cur = curSymbol {
             titleStr = titleStr.stringByAppendingFormat(" %@",cur)
@@ -246,7 +321,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         collectionViewCell.buyButton.setTitle(titleStr, forState: .Normal)
         collectionViewCell.buyButton.setTitle(titleStr, forState: .Selected)
         collectionViewCell.delegate = self
-    
+        
         collectionViewCell.setNeedsLayout()
         
         return collectionViewCell
@@ -262,7 +337,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     
     
     private func rotatePrivateForSize(size:CGSize,animated:Bool = false) {
-    
+        
         let flowLayout:UICollectionViewFlowLayout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
         
         let isVertic = size.height > size.width
@@ -273,9 +348,9 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             flowLayout.scrollDirection = .Horizontal
         }
         self.collectionView.setCollectionViewLayout(flowLayout, animated: animated)
-    
+        
         let frame = self.initialRect
-    
+        
         self.collectionView.frame = isVertic ? CGRectMake(CGRectGetMinY(frame), CGRectGetMinX(frame), CGRectGetHeight(frame), CGRectGetWidth(frame)) : frame
         self.collectionView.setNeedsLayout()
     }

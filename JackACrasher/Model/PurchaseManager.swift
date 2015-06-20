@@ -42,10 +42,30 @@ private  let sPurchaseManagerSandBox:Bool = true
 
 class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionObserver {
 
-    private static let sInstance = PurchaseManager()
+    
+    private static let ProductsListPath = "https://dl.dropboxusercontent.com/u/106064832/JackACrasher/ProductIsInfo.plist"
+    
+    internal static let sharedInstance = PurchaseManager()
     private var sContext:dispatch_once_t = 0
-    private var validProducs:[String:SKProduct] = [:]
-    private var productsIds:[String]? = nil
+    private var validProducs:[String:IAPProduct] = [:]
+    private var productsIdsInternal:[String]? = nil
+    private var products:[IAPProduct]? = nil
+    
+    private var productsIds:[String]! {
+        get {
+        
+            if (productsIdsInternal == nil) {
+            
+                var productIds = [String]()
+            
+                for product in self.products! {
+                    productIds.append(product.productIdentifier)
+                }
+                self.productsIdsInternal = productIds
+            }
+            return self.productsIdsInternal!
+        }
+    }
     
     internal var managerState:ManagerState = .None
     
@@ -64,11 +84,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     internal var hasValidated: Bool {
         get {return self.managerState == .Validated}
     }
-    
-    internal class var sharedInstance:PurchaseManager {
-        get {return sInstance }
-    }
-    
+
     internal var validProductsIds:[String]?{
         get {
             if self.managerState != .Validated { return nil }
@@ -77,7 +93,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         }
     }
     
-    internal var validProducstsArray:[SKProduct]? {
+    internal var validProducstsArray:[IAPProduct]? {
         get {
             if self.managerState != .Validated { return nil }
             
@@ -106,14 +122,31 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         if PurchaseManager.canPurchase(){
             dispatch_once(&sContext, { () -> Void in
                 
-                if let url = NSBundle.mainBundle().URLForResource("ProductIds", withExtension: "plist") {
-                
-                    if let idents = NSArray(contentsOfURL: url) {
-                        self.productsIds = (idents as! [String])
-                        self.validateProductIdentifiers(idents)
+                if NSFileManager.defaultManager().jacHasValidPropertiesList() {
+                    self.validateProducts()
+                } else {
+                    
+                    NetworkManager.sharedManager.downloadFileFromPath(PurchaseManager.ProductsListPath) {
+                        path, error in
+                        if error == nil && path != nil {
+                            
+                           let (path,error) =  NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:NSFileManager.defaultManager().jacProductsInfo)
+                            
+                            if (error == nil && path != nil) {
+                                self.validateProducts()
+                            }
+                        }
                     }
                 }
             })
+        }
+        
+    }
+    
+    private func validateProducts() {
+        self.products = NSFileManager.defaultManager().jacGetPropertiesInfoFromPropertiesList()
+        if let productsVal = self.products  {
+            self.validateProductIdentifiers(productsVal)
         }
     }
     
@@ -123,8 +156,8 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
         var products = Set<NSObject>()
         
-        for identifier in identifiers as! [String!] {
-            products.insert(identifier)
+        for identifier in identifiers as! [IAPProduct] {
+            products.insert(identifier.productIdentifier)
         }
         
         
@@ -156,12 +189,19 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             }
         }
         
-        for product in products as! [SKProduct] {
-            self.validProducs[product.productIdentifier] = product
+        for skProduct in products as! [SKProduct] {
+            for iapProduct in self.products! {
+                
+                if skProduct.productIdentifier == iapProduct.productIdentifier {
+                    self.validProducs[iapProduct.productIdentifier] = iapProduct
+                    iapProduct.skProduct = skProduct
+                }
+            }
+            
         }
         
         self.managerState = .Validated
-        self.productsIds = nil
+        self.productsIdsInternal = nil
         
         NSNotificationCenter.defaultCenter().postNotificationName(kPurchaseManagerValidatedProductsNotification, object: self)
     }
@@ -204,7 +244,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         return nil
     }
     
-    private func getProduct(productId:String) -> SKProduct? {
+    private func getProduct(productId:String) -> IAPProduct? {
     
         if self.managerState != .Validated {
             return nil
@@ -215,13 +255,13 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     //MARK: Payment request 
     
-    internal func schedulePaymentWithProduct(product:SKProduct?) -> Bool {
+    internal func schedulePaymentWithProduct(product:IAPProduct?) -> Bool {
         
-        if product == nil {
+        if product == nil || product!.skProduct == nil {
             return false
         }
         
-        let payment = SKMutablePayment(product: product!)
+        let payment = SKMutablePayment(product: product!.skProduct)
         payment.quantity = 1
         payment.simulatesAskToBuyInSandbox = sPurchaseManagerSandBox
         
