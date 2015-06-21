@@ -10,6 +10,7 @@ import UIKit
 import StoreKit
 import Swift
 
+
 enum ManagerState:Int {
     case None
     case Validating
@@ -50,6 +51,9 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     private var validProducs:[String:IAPProduct] = [:]
     private var productsIdsInternal:[String]? = nil
     private var products:[IAPProduct]? = nil
+    
+    private lazy var receiptValidator:IAPReceiptValidator! = IAPReceiptValidator()
+    
     
     private var productsIds:[String]! {
         get {
@@ -367,7 +371,14 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted, userInfo:userInfo)
                     }
                     else {
-                        completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPPurchaseSucceeded,userInfo:userInfo)
+                        //TODO: support other styles...
+                        self.receiptValidator.checkReceiptWithCompletionHandler{
+                            [unowned self]
+                            arrayAny,error in
+                            println("\(arrayAny)")
+                            //TODO: process transaction here...
+                            self.completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPPurchaseSucceeded,userInfo:userInfo)
+                        }
                     }
                 
                 break
@@ -552,4 +563,5 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             }
         }
     }
+    
 }

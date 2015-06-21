@@ -3,3 +3,5 @@
 //
 
 #import <CommonCrypto/CommonCrypto.h>
+
+#import "IAPReceiptValidator.h"

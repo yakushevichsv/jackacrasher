@@ -22,6 +22,13 @@
 		2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */; };
 		211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211BFC901B34872A0053ED9A /* FileManagerExtensions.swift */; };
 		211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211C4C6F1B16FFA4005F50B8 /* Fire.sks */; };
+		212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
+		212A2F231B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
+		212A2F241B36F24400B31482 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F211B36F24400B31482 /* libssl.a */; };
+		212A2F251B36F24400B31482 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F211B36F24400B31482 /* libssl.a */; };
+		212A2F2B1B36F98700B31482 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */; };
+		212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
+		212A2F401B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */; };
@@ -103,6 +110,12 @@
 		2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundCornerButton.swift; path = Views/RoundCornerButton.swift; sourceTree = "<group>"; };
 		211BFC901B34872A0053ED9A /* FileManagerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileManagerExtensions.swift; path = ViewControllers/FileManagerExtensions.swift; sourceTree = "<group>"; };
 		211C4C6F1B16FFA4005F50B8 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
+		212A2F201B36F24400B31482 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = OpenSSL/lib/libcrypto.a; sourceTree = SOURCE_ROOT; };
+		212A2F211B36F24400B31482 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = OpenSSL/lib/libssl.a; sourceTree = SOURCE_ROOT; };
+		212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasherTests-Bridging-Header.h"; sourceTree = "<group>"; };
+		212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
+		212A2F3D1B37317600B31482 /* IAPReceiptValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPReceiptValidator.h; sourceTree = "<group>"; };
+		212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPReceiptValidator.m; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupPresentationController.swift; path = ViewControllers/PopupPresentationController.swift; sourceTree = "<group>"; };
@@ -165,8 +178,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				212A2F241B36F24400B31482 /* libssl.a in Frameworks */,
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
+				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,6 +189,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				212A2F251B36F24400B31482 /* libssl.a in Frameworks */,
+				212A2F231B36F24400B31482 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +200,8 @@
 		210C0B4C1B3577D100759382 /* IAP */ = {
 			isa = PBXGroup;
 			children = (
+				212A2F3D1B37317600B31482 /* IAPReceiptValidator.h */,
+				212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */,
 				210C0B4D1B357ABF00759382 /* IAPProduct.swift */,
 				210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */,
 			);
@@ -216,6 +235,7 @@
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
 				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
 				210EA9C81B26D54100C69D29 /* PurchaseManager.swift */,
+				212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */,
 				210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */,
 				218F24B21B35AF56008C085F /* NetworkManager.swift */,
 			);
@@ -409,6 +429,9 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */,
+				212A2F201B36F24400B31482 /* libcrypto.a */,
+				212A2F211B36F24400B31482 /* libssl.a */,
 				210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */,
 				21FA22A21B2AE9A7002539A6 /* StoreKit.framework */,
 				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
@@ -548,6 +571,7 @@
 				2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */,
 				21A74E511AE0F6E00005334D /* trash.atlas in Resources */,
 				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
+				212A2F2B1B36F98700B31482 /* AppleIncRootCertificate.cer in Resources */,
 				21689F651ADAD696001456D6 /* BGStarts.sks in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -580,6 +604,7 @@
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
+				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */,
@@ -611,6 +636,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				212A2F401B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				21FFEB031AD5E216000115F6 /* JackACrasherTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -731,12 +757,22 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: Siarhei Yakushevich (5U66D79D3A)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Siarhei Yakushevich (5U66D79D3A)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include,
+				);
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					./OpenSSL/lib,
+					"$(PROJECT_DIR)/OpenSSL/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "67011a2f-3f03-48d0-bb86-c2a483ab51db";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				USER_HEADER_SEARCH_PATHS = /Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include;
 			};
 			name = Debug;
 		};
@@ -747,11 +783,21 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: Siarhei Yakushevich (44P2L32FL4)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Siarhei Yakushevich (44P2L32FL4)";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					/Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include,
+				);
 				INFOPLIST_FILE = JackACrasher/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					./OpenSSL/lib,
+					"$(PROJECT_DIR)/OpenSSL/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "67011a2f-3f03-48d0-bb86-c2a483ab51db";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
+				USER_HEADER_SEARCH_PATHS = /Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include;
 			};
 			name = Release;
 		};
@@ -759,6 +805,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -769,7 +816,13 @@
 				);
 				INFOPLIST_FILE = JackACrasherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenSSL/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasherTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JackACrasher.app/JackACrasher";
 			};
 			name = Debug;
@@ -778,13 +831,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = JackACrasherTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/OpenSSL/lib",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasherTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JackACrasher.app/JackACrasher";
 			};
 			name = Release;
