@@ -172,4 +172,15 @@ extension NSFileManager {
         
         return result
     }
+    
+    //MARK: iCloud 
+    
+    /* Checks if the user has logged into her iCloud account or not */
+    func jacIsIcloudAvailable() -> Bool{
+        if let _ = NSFileManager.defaultManager().ubiquityIdentityToken{
+            return true
+        } else {
+            return false
+        }
+    }
 }

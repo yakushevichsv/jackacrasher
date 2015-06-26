@@ -13,6 +13,8 @@ class GameMainViewController: UIViewController {
 
     internal var needToDisplayAnimation:Bool = false
     private let gcManager = GameCenterManager.sharedInstance
+    private let ckManager = CloudManager.sharedInstance
+    
     private var needToAuthGC:Bool = true
     
     @IBOutlet weak var btnCompany:UIButton!
@@ -89,30 +91,61 @@ class GameMainViewController: UIViewController {
             self.needToDisplayAnimation = true
         }
         
+        displayOrScheduleGameKitAuthStatus()
+        
+        displayCloudKitAuthStatus()
+    }
+    
+    private func displayOrScheduleGameKitAuthStatus() {
         if (!self.gcManager.isLocalUserAuthentificated) {
             
             if let error = self.gcManager.lastError {
                 
                 if error.domain == GKErrorDomain  && error.code == GKErrorCode.UserDenied.rawValue {
                     needToAuthPlayer()
+                    return
                 }
             }
         }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToAuthPlayer", name: kGameCenterManagerNeedToAuthPlayer, object: self.gcManager)
+    }
+    
+    private func displayCloudKitAuthStatus() {
         
+        if (!self.ckManager.simulateAlertAboutPermissionGrant()) {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToEnableCloudKit", name: SYLoggingToCloudNotification, object: self.ckManager)
+        }
+        else {
+            needToEnableCloudKit()
+        }
     }
     
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
         NSNotificationCenter.defaultCenter().removeObserver(self, name: kGameCenterManagerNeedToAuthPlayer, object: self.gcManager)
+        NSNotificationCenter.defaultCenter().removeObserver(self,name:SYLoggingToCloudNotification, object:self.ckManager)
     }
     
     //MARK: Authefication's related methods
     func authDidChange(notification:NSNotification!) {
         self.needToAuthGC = !self.gcManager.isLocalUserAuthentificated
         self.correctGameCenterButtonState()
+    }
+    
+    func needToEnableCloudKit() {
+        
+        let alertVC = UIAlertController(title: "iCloud is disabled", message: "Please log in to iCloud or create account for keeping purchases' information", preferredStyle: .Alert)
+        
+        self.presentViewController(alertVC, animated: true, completion: nil)
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(3 * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_main_queue(), { () -> Void in
+            alertVC.dismissViewControllerAnimated(true, completion: nil)
+        })
     }
     
     func needToAuthPlayer() {

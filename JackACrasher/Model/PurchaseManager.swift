@@ -372,12 +372,45 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     }
                     else {
                         //TODO: support other styles...
+                        let productId = transaction.payment.productIdentifier
                         self.receiptValidator.checkReceiptWithCompletionHandler{
                             [unowned self]
                             arrayAny,error in
                             println("\(arrayAny)")
+                            
+                            var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
+                            var found:Bool = false
+                            
+                            for item in arrayAny {
+                                let dic = item as! [NSObject:AnyObject]
+                                if let dicProductId = dic["productIdentifier"] as? String {
+                                    if (!found) {
+                                        if dicProductId == productId {
+                                            purchaseStatus = .IAPPurchaseSucceeded
+                                            found = true
+                                            
+                                            if let fProduct = self.validProducs[dicProductId] {
+                                                fProduct.purchaseInProgress = false
+                                                fProduct.purchase = false
+                                                
+                                                if let prodInfo = fProduct.productInfo {
+                                                    
+                                                    if !prodInfo.consumable {
+                                                        fProduct.availableForPurchase = false
+                                                    }
+                                                    
+                                                    GameLogicManager.sharedInstance.purchasedProduct(fProduct)
+                                                }
+                                            }
+                                            
+                                        } else {
+                                            purchaseStatus = .IAPPurchaseFailed
+                                        }
+                                    }
+                                }
+                            }
                             //TODO: process transaction here...
-                            self.completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPPurchaseSucceeded,userInfo:userInfo)
+                            self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
                         }
                     }
                 

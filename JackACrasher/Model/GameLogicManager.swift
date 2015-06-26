@@ -16,6 +16,9 @@ enum GameLogicSelectedStrategy : Int {
 
 class GameLogicManager: NSObject {
     
+    private static let sNoAdProductId = "sy.gamefun.jackACrasher.NoAds"
+    private static let sNumberOfLives = "sy.gamefun.jackACrasher.NumberOfLives"
+    
     private var state:GameLogicSelectedStrategy = .None
     private var scoreValue:Float = 0
     private static var gSharedController:GameLogicManager!
@@ -325,4 +328,55 @@ extension GameLogicManager
         }
     }
     
+    //MARK: Consumable & non - Consumable purchases....
+    
+    func purchasedProduct(product:IAPProduct) {
+        
+            if let productInfo = product.productInfo {
+                CloudManager.sharedInstance.userLoggedIn() {
+                    loggedIn in
+                    
+                    if !loggedIn {
+                        
+                        //MARK: TODO use another way to store info about IAP...
+                        //Use ID from Gamekit
+                        //if there is an ID then set as default player....
+                        // NSUserDefaults - setKeyFor "Default Playr ID"
+                        
+                        return
+                    }
+                    
+                    CloudManager.sharedInstance.createAIPProductInfoOnNeed(product) {
+                        record,error in
+                    
+                        println("Error \(error)")
+                    }
+                }
+            }
+    }
+    
+    
+    
+    
+    
+}
+
+extension GameLogicManager {
+    //MARK: Todo detect correct way to get ID, and access item locally of from CloudKit...
+    
+    internal var needToDisplayAdv:Bool {
+        get { return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.sNoAdProductId) }
+    }
+    
+    internal var numberOfLives:Int {
+        get {return NSUserDefaults.standardUserDefaults().integerForKey("")}
+    }
+        
+    internal func increaseNumberOfLives(amount:Int) {
+        
+    }
+        
+    internal func decreaseNumberOfLives(amount:Int){
+        
+    }
 }

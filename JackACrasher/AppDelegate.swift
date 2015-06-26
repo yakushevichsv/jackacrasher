@@ -38,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             PurchaseManager.sharedInstance.prepare()
             GameLogicManager.sharedInstance.performPurchasesRestorationOnNeed()
         })
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), { () -> Void in
+            CloudManager.sharedInstance.prepare()
+        })
     }
     
     func applicationWillTerminate(application: UIApplication) {

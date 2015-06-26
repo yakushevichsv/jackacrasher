@@ -31,6 +31,9 @@
 		212A2F401B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
+		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
+		2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */; };
+		2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C71B3BFF39003253C5 /* CloudManager.swift */; };
 		216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217340FD1AFE5267009E934A /* GameOverViewController.swift */; };
@@ -118,6 +121,10 @@
 		212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPReceiptValidator.m; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
+		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
+		2163A8C21B3BE6C5003253C5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudUserInfo.swift; path = Model/iCloud/CloudUserInfo.swift; sourceTree = "<group>"; };
+		2163A8C71B3BFF39003253C5 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudManager.swift; path = Model/iCloud/CloudManager.swift; sourceTree = "<group>"; };
 		216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupPresentationController.swift; path = ViewControllers/PopupPresentationController.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		217340FD1AFE5267009E934A /* GameOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverViewController.swift; path = ViewControllers/GameOverViewController.swift; sourceTree = "<group>"; };
@@ -178,6 +185,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */,
 				212A2F241B36F24400B31482 /* libssl.a in Frameworks */,
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
@@ -228,6 +236,7 @@
 		215A5D211AD6792B00F136D3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2163A8C41B3BEA60003253C5 /* iCloud */,
 				210C0B4C1B3577D100759382 /* IAP */,
 				218B375B1B02959A00B9085C /* GameLogicManager.swift */,
 				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
@@ -240,6 +249,15 @@
 				218F24B21B35AF56008C085F /* NetworkManager.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		2163A8C41B3BEA60003253C5 /* iCloud */ = {
+			isa = PBXGroup;
+			children = (
+				2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */,
+				2163A8C71B3BFF39003253C5 /* CloudManager.swift */,
+			);
+			name = iCloud;
 			sourceTree = "<group>";
 		};
 		217340FB1AFE5124009E934A /* Scenes */ = {
@@ -405,6 +423,7 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */,
 				218D5A811B317C5B007ABE63 /* Categories */,
 				214007A51B0D2D1A00072C9F /* Nodes */,
 				217340FB1AFE5124009E934A /* Scenes */,
@@ -433,6 +452,7 @@
 				212A2F201B36F24400B31482 /* libcrypto.a */,
 				212A2F211B36F24400B31482 /* libssl.a */,
 				210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */,
+				2163A8C21B3BE6C5003253C5 /* CloudKit.framework */,
 				21FA22A21B2AE9A7002539A6 /* StoreKit.framework */,
 				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
 				21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */,
@@ -515,6 +535,9 @@
 							com.apple.InAppPurchase = {
 								enabled = 1;
 							};
+							com.apple.iCloud = {
+								enabled = 1;
+							};
 						};
 					};
 					21FFEAFB1AD5E216000115F6 = {
@@ -595,9 +618,11 @@
 				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
 				217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */,
 				21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */,
+				2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */,
 				2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */,
 				21DEA0D11AFD1893004FF5D7 /* AnalogControl.swift in Sources */,
 				210C0B4E1B357ABF00759382 /* IAPProduct.swift in Sources */,
+				2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */,
 				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,
 				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
@@ -755,8 +780,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer: Siarhei Yakushevich (5U66D79D3A)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: Siarhei Yakushevich (5U66D79D3A)";
+				CODE_SIGN_ENTITLEMENTS = JackACrasher/JackACrasher.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -769,7 +795,7 @@
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "67011a2f-3f03-48d0-bb86-c2a483ab51db";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				USER_HEADER_SEARCH_PATHS = /Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include;
@@ -781,8 +807,9 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Distribution: Siarhei Yakushevich (44P2L32FL4)";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: Siarhei Yakushevich (44P2L32FL4)";
+				CODE_SIGN_ENTITLEMENTS = JackACrasher/JackACrasher.entitlements;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
@@ -795,7 +822,7 @@
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "67011a2f-3f03-48d0-bb86-c2a483ab51db";
+				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
 				USER_HEADER_SEARCH_PATHS = /Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include;
 			};
