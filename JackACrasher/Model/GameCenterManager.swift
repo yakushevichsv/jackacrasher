@@ -193,21 +193,25 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
             var totalScore:UInt64 = 0
             var maxScore:Int64 = 0
             
-            
-            for scoreAny in scores {
-                let score = scoreAny as! GKScore
+            if (scores != nil) {
+                for scoreAny in scores {
+                    let score = scoreAny as! GKScore
                 
-                if (maxScore < score.value ) {
-                    maxScore = score.value
+                    if (maxScore < score.value ) {
+                        maxScore = score.value
+                    }
                 }
             }
             
             
-            println("Local score \(localPlayerScore)")
+            if (localPlayerScore != nil) {
+                println("Local score \(localPlayerScore)")
             
-            if (maxScore < localPlayerScore.value ) {
-                maxScore = localPlayerScore.value
+                if (maxScore < localPlayerScore.value ) {
+                    maxScore = localPlayerScore.value
+                }
             }
+            
             handler([totalScore,UInt64(maxScore)],error)
         })
     }
