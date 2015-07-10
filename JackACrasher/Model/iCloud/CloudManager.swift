@@ -36,6 +36,9 @@ class CloudManager: NSObject {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "cloudChanged:", name: NSUbiquityIdentityDidChangeNotification, object: nil)
     }
     
+    internal var recordID:CKRecordID? {
+        get { return recID != nil ? recID : self.userInfo.userRecordID }
+    }
     
     class var sharedInstance: CloudManager {
         return CloudManager.singleton
@@ -309,4 +312,117 @@ extension CloudManager {
         }
         return res
     }
+}
+
+extension CloudManager {
+    
+    private struct GameConstants {
+        static let TimeRecord = "Time"
+        static let TimeRecordTimeKey = "Time"
+        static let ScoreRecord = "Score"
+        static let ScoreRecordScoreKey = "Score"
+    }
+    
+    private static let gameConstantsLock = GameConstants.TimeRecord
+    
+    // Save values
+    func submitValues(valuesObj:AnyObject,recordType:String,recordKey:String,completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
+        
+        let values = valuesObj as! [AnyObject]
+        let db = self.container.privateCloudDatabase
+        var result = [Int:NSTimeInterval]()
+        var count = values.count
+        
+        for index in 0...count - 1 {
+            
+            let record = CKRecord(recordType: recordType)
+            record.setValue(values[index], forKey: recordKey)
+            
+            db.saveRecord(record) {
+                savedRecord,error in
+                
+                if (error != nil) {
+                    var pauseVal:NSTimeInterval = 0
+                    println("Error for index \(index). Error : \(error)")
+                    
+                    if error.code == CKErrorCode.RequestRateLimited.rawValue ||
+                        error.code == CKErrorCode.ServiceUnavailable.rawValue {
+                            
+                            let retryAfter = error.userInfo![CKErrorRetryAfterKey] as! NSNumber
+                            pauseVal = retryAfter.doubleValue
+                    }
+                    
+                    objc_sync_enter(result)
+                    
+                    result[index] = pauseVal
+                    count--
+                    objc_sync_exit(result)
+                }
+                else {
+                    
+                    objc_sync_enter(result)
+                    count--
+                    objc_sync_exit(result)
+                }
+                
+                if count == 0 {
+                    completionHandler(result)
+                }
+            }
+        }
+    }
+    
+    // Save time scores
+    func submitTimes(times:[NSTimeInterval],completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
+        
+        submitValues(times, recordType: GameConstants.TimeRecord, recordKey: GameConstants.TimeRecordTimeKey, completionHandler: completionHandler)
+    }
+    
+    // Save game scores
+    func submitScores(scores:[Int64],completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
+        
+        let values = scores
+        let db = self.container.privateCloudDatabase
+        var result = [Int:NSTimeInterval]()
+        var count = values.count
+        
+        for index in 0...count - 1 {
+            
+            let record = CKRecord(recordType: GameConstants.ScoreRecord)
+            record.setObject(NSNumber(longLong: values[index]), forKey: GameConstants.ScoreRecordScoreKey)
+            
+            db.saveRecord(record) {
+                savedRecord,error in
+                
+                if (error != nil) {
+                    var pauseVal:NSTimeInterval = 0
+                    println("Error for index \(index). Error : \(error)")
+                    
+                    if error.code == CKErrorCode.RequestRateLimited.rawValue ||
+                        error.code == CKErrorCode.ServiceUnavailable.rawValue {
+                            
+                            let retryAfter = error.userInfo![CKErrorRetryAfterKey] as! NSNumber
+                            pauseVal = retryAfter.doubleValue
+                    }
+                    
+                    objc_sync_enter(result)
+                    
+                    result[index] = pauseVal
+                    count--
+                    objc_sync_exit(result)
+                }
+                else {
+                    
+                    objc_sync_enter(result)
+                    count--
+                    objc_sync_exit(result)
+                }
+                
+                if count == 0 {
+                    completionHandler(result)
+                }
+            }
+        }
+    }
+    
 }

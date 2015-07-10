@@ -171,14 +171,38 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64, playedTime:NSTimeInterval,needToContinue:Bool) {
         
-        self.logicManager.storeSurvivalScores([UInt64(currentScore),totalScore, UInt64(playedTime)], completionHandler: { (success, error) -> Void in
-            if (needToContinue) {
+        
+        let needToReport = playedTime != 0  && currentScore != 0
+        
+         if !needToReport {
+            
+            if (needToContinue && self.view.window != nil) {
                 dispatch_async(dispatch_get_main_queue(), { () -> Void in
                     self.skView.scene?.paused = true
                     self.performSegueWithIdentifier("gameOver", sender: self)
                 })
             }
-        })
+            return
+        }
+        
+        if self.logicManager.appendSurvivalGameValuesToDefaults(currentScore, time: playedTime) {
+        
+            self.logicManager.submitSurvivalGameValues{
+                [unowned self]
+                isError in
+            }
+        }
+    
+        self.logicManager.storeSurvivalScores([UInt64(currentScore),totalScore, UInt64(playedTime)]){
+            [unowned self]
+            success, error in
+            if (needToContinue && self.view.window != nil) {
+                dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                    self.skView.scene?.paused = true
+                    self.performSegueWithIdentifier("gameOver", sender: self)
+                })
+            }
+        }
     }
     
     //MARK: Unwind to replay

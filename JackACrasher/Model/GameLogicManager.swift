@@ -18,6 +18,10 @@ class GameLogicManager: NSObject {
     
     private static let sNoAdProductId = "sy.gamefun.jackACrasher.NoAds"
     private static let sNumberOfLives = "sy.gamefun.jackACrasher.NumberOfLives"
+    private static let sCurrentUserNameKey = "currentUser.sy.gamefun.jackACrasher"
+    
+    private static let sCurrentUserTimePartKey  = "timePart.sy.gamefun.jackACrasher"
+    private static let sCurrentUserScorePartKey = "scorePart.sy.gamefun.jackACrasher"
     
     private var state:GameLogicSelectedStrategy = .None
     private var scoreValue:Float = 0
@@ -27,6 +31,7 @@ class GameLogicManager: NSObject {
     internal var survivalBestScore:Int64 = 0
     
     private let centerManager:GameCenterManager! = GameCenterManager.sharedInstance
+    private let cloudManager:CloudManager! = CloudManager.sharedInstance
     
     dynamic internal var isLoading:Bool = false
     
@@ -37,7 +42,7 @@ class GameLogicManager: NSObject {
     
     
     internal static var sharedInstance:GameLogicManager
-    {
+        {
         get {
             if (GameLogicManager.gSharedController == nil) {
                 var sharedPredicate:dispatch_once_t = 0
@@ -108,22 +113,22 @@ class GameLogicManager: NSObject {
             return
         }
         
-            self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
-                println("GK :  Score : \(scores)")
-                if (error != nil) {
-                    completionHandler(UInt64.min,error)
-                    return
-                }
-                
-                let totalScore = scores[0] as UInt64
-                let bestScore = Int64(scores[1] as UInt64)
-                
-                self.storeInDefaultsSurvivalBestScore(bestScore,synch: false)
-                self.storeInDefaultsSurvivalTotalScore(totalScore)
-                
-                completionHandler(totalScore,nil)
-                
-            })
+        self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
+            println("GK :  Score : \(scores)")
+            if (error != nil) {
+                completionHandler(UInt64.min,error)
+                return
+            }
+            
+            let totalScore = scores[0] as UInt64
+            let bestScore = Int64(scores[1] as UInt64)
+            
+            self.storeInDefaultsSurvivalBestScore(bestScore,synch: false)
+            self.storeInDefaultsSurvivalTotalScore(totalScore)
+            
+            completionHandler(totalScore,nil)
+            
+        })
     }
     
     internal func getBestTimeScoreWithCompletionHandler(completionHandler: ((Int64, NSError?) -> Void)!)
@@ -135,16 +140,16 @@ class GameLogicManager: NSObject {
             completionHandler(bestTime,nil)
             return
         }
-            self.centerManager.getSurvivalBestTimeScoreWithCompletionHandler({ (time, error) -> Void in
-                println("GK : Best time : \(time)")
-                if (error != nil) {
-                    completionHandler(0,error)
-                    return
-                }
-                
-                self.storeInDefaultsLongesTimeScore(time)
-                completionHandler(time,error)
-            })
+        self.centerManager.getSurvivalBestTimeScoreWithCompletionHandler({ (time, error) -> Void in
+            println("GK : Best time : \(time)")
+            if (error != nil) {
+                completionHandler(0,error)
+                return
+            }
+            
+            self.storeInDefaultsLongesTimeScore(time)
+            completionHandler(time,error)
+        })
         
     }
     
@@ -158,22 +163,22 @@ class GameLogicManager: NSObject {
             return
         }
         self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
-                println("GK : Scores : \(scores)")
-                if (error != nil) {
-                    completionHandler(0,error)
-                    return
-                }
-                
-                let totalScore = scores[0] as UInt64
-                let bestScore = Int64(scores[1] as UInt64)
+            println("GK : Scores : \(scores)")
+            if (error != nil) {
+                completionHandler(0,error)
+                return
+            }
             
-                self.storeInDefaultsSurvivalBestScore(bestScore,synch: false)
-                self.storeInDefaultsSurvivalTotalScore(totalScore)
+            let totalScore = scores[0] as UInt64
+            let bestScore = Int64(scores[1] as UInt64)
             
-                completionHandler(bestScore,error)
-            })
+            self.storeInDefaultsSurvivalBestScore(bestScore,synch: false)
+            self.storeInDefaultsSurvivalTotalScore(totalScore)
+            
+            completionHandler(bestScore,error)
+        })
     }
-
+    
     internal func storeSurvivalScores(info:[UInt64], completionHandler:((Bool ,NSError?)->Void)!) {
         
         let bestScore = Int64(info[0])
@@ -224,14 +229,14 @@ extension GameLogicManager
         }
         return true
     }
-
+    
     private func storeInDefaultsSurvivalInfo(info:[UInt64]) ->Bool {
         assert(info.count == 2, "not all items are presented!")
         let bestScore  = Int64(info[0])
         let totalScore = info[1]
         
         return storeInDefaultsSurvivalTotalScore(totalScore)
-         && storeInDefaultsSurvivalBestScore(bestScore)
+            && storeInDefaultsSurvivalBestScore(bestScore)
     }
     
     private func getFromDefautsSurvivalInfo() -> [UInt64] {
@@ -332,27 +337,27 @@ extension GameLogicManager
     
     func purchasedProduct(product:IAPProduct) {
         
-            if let productInfo = product.productInfo {
-                CloudManager.sharedInstance.userLoggedIn() {
-                    loggedIn in
+        if let productInfo = product.productInfo {
+            CloudManager.sharedInstance.userLoggedIn() {
+                loggedIn in
+                
+                if !loggedIn {
                     
-                    if !loggedIn {
-                        
-                        //MARK: TODO use another way to store info about IAP...
-                        //Use ID from Gamekit
-                        //if there is an ID then set as default player....
-                        // NSUserDefaults - setKeyFor "Default Playr ID"
-                        
-                        return
-                    }
+                    //MARK: TODO use another way to store info about IAP...
+                    //Use ID from Gamekit
+                    //if there is an ID then set as default player....
+                    // NSUserDefaults - setKeyFor "Default Playr ID"
                     
-                    CloudManager.sharedInstance.createAIPProductInfoOnNeed(product) {
-                        record,error in
+                    return
+                }
+                
+                CloudManager.sharedInstance.createAIPProductInfoOnNeed(product) {
+                    record,error in
                     
-                        println("Error \(error)")
-                    }
+                    println("Error \(error)")
                 }
             }
+        }
     }
     
     
@@ -364,6 +369,278 @@ extension GameLogicManager
 extension GameLogicManager {
     //MARK: Todo detect correct way to get ID, and access item locally of from CloudKit...
     
+    internal func getPlayerId() -> String! {
+        
+        var playerId:String! = nil
+        
+        if let recName = self.cloudManager.recordID?.recordName {
+            playerId = recName
+        } else if let playerID = GameCenterManager.sharedInstance.playerID {
+            playerId = playerID
+        } else {
+            playerId = "guest"
+        }
+        return playerId
+    }
+    
+    internal func submitTimes(times:[NSTimeInterval],completionHandler:((isError:Bool,delayInTime:UInt64)->Void)!) {
+        
+        self.cloudManager.submitTimes(times) {
+            failedIndexesDic  in
+            
+            var maxDelayInterval:NSTimeInterval = 0
+            var newTimes:[NSTimeInterval] = [NSTimeInterval]()
+            
+            for failedIndex in failedIndexesDic {
+                let index = failedIndex.0
+                let delayInterval = failedIndex.1
+                
+                if maxDelayInterval > delayInterval {
+                    maxDelayInterval = delayInterval
+                }
+                
+                newTimes.append(times[index])
+            }
+            
+            let curPlayerId = self.getPlayerId()
+            let newTimeKey = curPlayerId.stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
+            
+            
+            if failedIndexesDic.isEmpty {
+                NSUserDefaults.standardUserDefaults().removeObjectForKey(newTimeKey)
+                if (NSUserDefaults.standardUserDefaults().synchronize()) {
+                    completionHandler(isError:false,delayInTime:0)
+                }
+            } else {
+                NSUserDefaults.standardUserDefaults().setObject(newTimes, forKey: newTimeKey)
+                if (NSUserDefaults.standardUserDefaults().synchronize()) {
+                    
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                        Int64(maxDelayInterval * Double(NSEC_PER_SEC)))
+                    
+                    completionHandler(isError: true, delayInTime: delayTime)
+                }
+            }
+        }
+    }
+    
+    internal func submitScores(scores:[Int64],completionHandler:((isError:Bool,delayInTime:UInt64)->Void)!) {
+        
+        self.cloudManager.submitScores(scores) {
+            failedIndexesDic  in
+            
+            var maxDelayInterval:NSTimeInterval = 0
+            var newScores:NSMutableArray = NSMutableArray()
+            
+            for failedIndex in failedIndexesDic {
+                let index = failedIndex.0
+                let delayInterval = failedIndex.1
+                
+                if maxDelayInterval > delayInterval {
+                    maxDelayInterval = delayInterval
+                }
+                newScores.addObject(NSNumber(longLong: scores[index]))
+            }
+            
+            let curPlayerId = self.getPlayerId()
+            let newScoreKey = curPlayerId.stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+            
+            if failedIndexesDic.isEmpty {
+                NSUserDefaults.standardUserDefaults().removeObjectForKey(newScoreKey)
+                if (NSUserDefaults.standardUserDefaults().synchronize()) {
+                    completionHandler(isError:false,delayInTime:0)
+                }
+            } else {
+                
+                NSUserDefaults.standardUserDefaults().setObject(newScores, forKey: newScoreKey)
+                if (NSUserDefaults.standardUserDefaults().synchronize()) {
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                        Int64(maxDelayInterval * Double(NSEC_PER_SEC)))
+                    
+                    completionHandler(isError: true, delayInTime: delayTime)
+                }
+            }
+        }
+    }
+    
+    internal func appendSurvivalGameValuesToDefaults(score:Int64,time:NSTimeInterval) -> Bool {
+        
+        let newTimeKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
+        var times = NSUserDefaults.standardUserDefaults().arrayForKey(newTimeKey) as? [NSTimeInterval]
+        
+        let newScoreKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+        var scoresPrivate = NSUserDefaults.standardUserDefaults().objectForKey(newScoreKey) as? NSArray
+        
+        var scores = scoresPrivate != nil ? NSMutableArray(array: scoresPrivate!) : NSMutableArray()
+        
+        if times == nil {
+            times = [NSTimeInterval]()
+        }
+        
+        
+        times!.append(time)
+        scores.addObject(NSNumber(longLong: score))
+        
+        
+        NSUserDefaults.standardUserDefaults().setObject(scores, forKey: newScoreKey)
+        NSUserDefaults.standardUserDefaults().setObject(times, forKey: newTimeKey)
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    internal func submitSurvivalGameValues(completionHandler:((isError:Bool)->Void)!) {
+        
+        let newTimeKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
+        let times = NSUserDefaults.standardUserDefaults().arrayForKey(newTimeKey) as? [NSTimeInterval]
+        
+        let newScoreKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+        let scores = NSUserDefaults.standardUserDefaults().objectForKey(newScoreKey) as? [Int64]
+        
+        var doneTimes:Bool = false
+        var doneScores:Bool = false
+        
+        var scoreError:Bool = false
+        var timeError:Bool = false
+        
+        if let times = times {
+            
+            self.submitTimes(times) {
+                isError,delayInTime in
+                
+                timeError = isError
+                
+                if isError {
+                    
+                    dispatch_after(delayInTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                        [unowned self] in
+                        
+                        let newTimeKey = self.getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
+                        if let times2 = NSUserDefaults.standardUserDefaults().arrayForKey(newTimeKey) as? [NSTimeInterval] {
+                            
+                            self.submitTimes(times2) {
+                                isError, delayInTime   in
+                                
+                                timeError = isError
+                                doneTimes = true
+                                if (doneScores){
+                                    doneTimes = false
+                                    completionHandler(isError: timeError || scoreError)
+                                }
+                                
+                            }
+                            return
+                        }
+                    }
+                }
+                
+                    doneTimes = true
+                    if (doneScores){
+                        doneTimes = false
+                        completionHandler(isError: timeError || scoreError)
+                    }
+                
+            }
+        }
+        
+        if let scores = scores {
+            
+            self.submitScores(scores) {
+                isError,delayInTime in
+                
+                scoreError = isError
+                
+                if isError {
+                    
+                    dispatch_after(delayInTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+                        [unowned self] in
+                        
+                        let newKey = self.getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+                        if let score2 = NSUserDefaults.standardUserDefaults().objectForKey(newKey) as? [Int64] {
+                            
+                            self.submitScores(score2)
+                                { isError, delayInTime   in
+                                    
+                                    scoreError = isError
+                                    
+                                    doneScores = true
+                                    if (doneTimes){
+                                        doneScores = false
+                                        completionHandler(isError: timeError || scoreError)
+                                    }
+                            }
+                            return
+                        }
+                    }
+                }
+                
+                    doneScores = true
+                    if (doneTimes){
+                        doneScores = false
+                        completionHandler(isError: timeError || scoreError)
+                    }
+                
+            }
+            
+        }
+        
+        if scores == nil && times == nil {
+            completionHandler(isError:scoreError || timeError)
+        }
+
+    }
+    
+    internal func reSchedulePlayedGamesInfoBasedOnId(completionHandler:((isError:Bool)->Void)!) -> Bool {
+        
+        let storedPlayerId = storedUserId()
+        let curPlayerId = getPlayerId()
+        
+        if storedPlayerId != curPlayerId {
+            
+            if convertStoredValues(oldUserId: storedPlayerId, currentUserId: curPlayerId) {
+                
+                self.submitSurvivalGameValues(completionHandler)
+                
+                return true
+            }
+        }
+        return false
+    }
+    
+    internal func storedUserId() -> String! {
+        return NSUserDefaults.standardUserDefaults().stringForKey(GameLogicManager.sCurrentUserNameKey)
+    }
+    
+    internal func saveUserId(userId:String!) -> Bool {
+        
+        NSUserDefaults.standardUserDefaults().setObject(userId, forKey: GameLogicManager.sCurrentUserNameKey)
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    internal func convertStoredValues(oldUserId prevUserId:String!, currentUserId userId:String!) -> Bool {
+        
+        let oldTimeKey = prevUserId.stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
+        var flag:Bool = false
+        if let times = NSUserDefaults.standardUserDefaults().arrayForKey(oldTimeKey) as? [NSTimeInterval] {
+            
+            let newTimeKey = userId.stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
+            
+            NSUserDefaults.standardUserDefaults().setObject(times, forKey: newTimeKey)
+            flag = true
+        }
+        
+        let oldScoreKey = prevUserId.stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+        
+        if let scores = NSUserDefaults.standardUserDefaults().arrayForKey(oldScoreKey) as? [UInt] {
+            
+            let newKey = userId.stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+            
+            NSUserDefaults.standardUserDefaults().setObject(scores, forKey: newKey)
+            flag = true
+        }
+        
+        return flag && saveUserId(userId)
+    }
+    
     internal var needToDisplayAdv:Bool {
         get { return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.sNoAdProductId) }
     }
@@ -371,11 +648,11 @@ extension GameLogicManager {
     internal var numberOfLives:Int {
         get {return NSUserDefaults.standardUserDefaults().integerForKey("")}
     }
-        
+    
     internal func increaseNumberOfLives(amount:Int) {
         
     }
-        
+    
     internal func decreaseNumberOfLives(amount:Int){
         
     }
