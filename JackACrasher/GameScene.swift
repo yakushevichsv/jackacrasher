@@ -83,7 +83,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         //TODO: Move into loadAssets  methods
         Player.loadAssets()
         RegularAsteroids.loadAssets()
-    
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -104,12 +103,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     internal func pauseGame(pause:Bool = true) {
         if (!pause) {
             self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
+            SoundManager.sharedInstance.playBGMusic()
         }
         else {
             let diff = NSDate.timeIntervalSinceReferenceDate() - self.startPlayTime
             self.playedTime += diff
             
             self.startPlayTime = 0
+            SoundManager.sharedInstance.pauseBGMusic()
         }
     }
     
@@ -206,10 +207,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
 
     
     override func didMoveToView(view: SKView) {
-        
+        SoundManager.sharedInstance.prepareToPlayBGMusic()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willTerminateApp", name: UIApplicationWillTerminateNotification, object: UIApplication.sharedApplication())
         
         self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
+        SoundManager.sharedInstance.playBGMusic()
         self.playedTime = 0
         
         self.definePlayableRect()

@@ -75,7 +75,6 @@ class GameMainViewController: UIViewController {
         super.viewDidLoad()
         
         SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
-        
         authDidChange(nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)

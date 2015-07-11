@@ -23,9 +23,14 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
     private var noSound:Bool = false
     
     internal var soundEffectPlayer: AVAudioPlayer?
+    internal var backgroundMusicPlayer: AVAudioPlayer?
     
     internal static var sharedInstance:SoundManager!{
         return manager
+    }
+    
+    private struct Constants {
+        static let bgFileName = "backgroundMusic.mp3"
     }
     
     //MARK: Enable & Disable sound
@@ -47,6 +52,48 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
         else {
             noSound = false
         }
+    }
+    
+    //MARK: Background player's methods
+    internal func prepareToPlayBGMusic() -> Bool {
+        
+        let (prepared,player) = self.prepareToPlayEffect(Constants.bgFileName, useSoundEffectPlayer: false)
+        
+        if prepared && player != nil {
+            self.backgroundMusicPlayer = player
+        }
+        
+        return prepared
+    }
+    
+    internal func pauseBGMusic() {
+        
+        if self.noSound {
+            return
+        }
+        
+        if let bgPlayer = self.backgroundMusicPlayer {
+            if bgPlayer.playing {
+                bgPlayer.pause()
+            }
+        }
+    }
+    
+    internal func playBGMusic() {
+        
+        if self.noSound {
+            return
+        }
+        
+        if let bgPlayer = self.backgroundMusicPlayer {
+            if !bgPlayer.playing {
+                bgPlayer.play()
+            }
+        }
+    }
+    
+    internal func cancelPlayingBGMusic() {
+        cancelPlayingEffect(Constants.bgFileName, player: self.backgroundMusicPlayer, resetCompletionHandler: false)
     }
     
     //MARK: Play & stop audio
@@ -82,57 +129,81 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
     
     internal func cancelPlayingEffect(fileName:String?) {
         
-        if (self.noSound && self.soundEffectPlayer == nil) {
+        cancelPlayingEffect(fileName, player: self.soundEffectPlayer)
+    }
+    
+    private func cancelPlayingEffect(fileName:String?,player:AVAudioPlayer?,resetCompletionHandler:Bool = true) {
+        
+        if (self.noSound && player == nil) {
             return
         }
         
-        var url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : self.soundEffectPlayer?.url
+        var url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : player?.url
         if (url == nil) {
             println("Could not find file: \(fileName) or there is nothing to cancel")
             return
         }
         
         
-        if let curPlayer = self.soundEffectPlayer {
+        if let curPlayer = player {
             if !curPlayer.url.isEqual(url) {
                 return
             }
             if (curPlayer.playing) {
                 curPlayer.stop()
             }
-            self.completionHandler = nil
+            
+            if resetCompletionHandler {
+                self.completionHandler = nil
+            }
+        }
+    }
+    
+    private func prepareToPlayEffect(fileName:String?,useSoundEffectPlayer:Bool = true) -> (prepared:Bool,player:AVAudioPlayer?) {
+        
+        if (self.noSound) {
+            return (true,nil)
+        }
+        
+        let url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : (useSoundEffectPlayer ? self.soundEffectPlayer?.url : nil)
+        if (url == nil) {
+            println("Could not find file: \(fileName) or there is nothing to cancel")
+            return (false,nil)
+        }
+        
+        if useSoundEffectPlayer {
+            if let curPlayer = self.soundEffectPlayer {
+                if curPlayer.url.isEqual(url) {
+                    return (true,curPlayer)
+                }
+            }
+        }
+        
+        var error: NSError? = nil
+        let player = AVAudioPlayer(contentsOfURL: url, error: &error)
+        if let cPlayer = player {
+            if useSoundEffectPlayer {
+                cPlayer.delegate = self
+            }
+            cPlayer.numberOfLoops = 0
+            let res = cPlayer.prepareToPlay()
+            return (res,player)
+            
+        } else {
+            println("Could not create audio player: \(error!)")
+            return (false,nil)
         }
     }
     
     internal func prepareToPlayEffect(fileName:String?) -> Bool {
         
-        if (self.noSound) {
-            return true
+        let (prepared,player) = prepareToPlayEffect(fileName)
+        
+        if player != nil {
+            self.soundEffectPlayer = player
         }
         
-        let url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : self.soundEffectPlayer?.url
-        if (url == nil) {
-            println("Could not find file: \(fileName) or there is nothing to cancel")
-            return false
-        }
-        
-        if let curPlayer = self.soundEffectPlayer {
-            if curPlayer.url.isEqual(url) {
-                return true
-            }
-        }
-        
-        var error: NSError? = nil
-        self.soundEffectPlayer = AVAudioPlayer(contentsOfURL: url, error: &error)
-        if let player = soundEffectPlayer {
-            player.delegate = self
-            player.numberOfLoops = 0
-            return player.prepareToPlay()
-            
-        } else {
-            println("Could not create audio player: \(error!)")
-            return false
-        }
+        return prepared
     }
     
     //MARK: AVAudioPlayerDelegate

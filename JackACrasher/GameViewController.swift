@@ -159,6 +159,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         if let identifier = segue.identifier {
             if identifier == "gameOver" {
+                SoundManager.sharedInstance.cancelPlayingBGMusic()
                 let dVC = segue.destinationViewController as! GameOverViewController
                 let sVC = segue.sourceViewController as! GameViewController
                dVC.didWin = false

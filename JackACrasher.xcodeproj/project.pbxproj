@@ -73,6 +73,7 @@
 		21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FA22A21B2AE9A7002539A6 /* StoreKit.framework */; };
 		21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FA22A41B2B026E002539A6 /* PopupAnimator.swift */; };
 		21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FC6D7B1AEC0457001D99B6 /* Rope.swift */; };
+		21FF6C121B51724F00256A63 /* backgroundMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 21FF6C111B51724F00256A63 /* backgroundMusic.mp3 */; };
 		21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */; };
 		21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */; };
 		21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */; };
@@ -164,6 +165,7 @@
 		21FA22A21B2AE9A7002539A6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21FA22A41B2B026E002539A6 /* PopupAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAnimator.swift; path = ViewControllers/PopupAnimator.swift; sourceTree = "<group>"; };
 		21FC6D7B1AEC0457001D99B6 /* Rope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rope.swift; path = Entities/Rope.swift; sourceTree = "<group>"; };
+		21FF6C111B51724F00256A63 /* backgroundMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundMusic.mp3; sourceTree = "<group>"; };
 		21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressTimerNode.swift; path = Entities/ProgressTimerNode.swift; sourceTree = "<group>"; };
 		21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DigitNode.swift; path = Entities/DigitNode.swift; sourceTree = "<group>"; };
 		21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RegularAsteroid.swift; path = Entities/RegularAsteroid.swift; sourceTree = "<group>"; };
@@ -314,6 +316,7 @@
 		2199B6821AE3FEF100DDDB9F /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				21FF6C111B51724F00256A63 /* backgroundMusic.mp3 */,
 				21CFBCA61B10A1B1009EDA3E /* button_press.wav */,
 				217341031AFE5674009E934A /* lose.wav */,
 				2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */,
@@ -590,6 +593,7 @@
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
 				21FFEAEB1AD5E216000115F6 /* GameScene.sks in Resources */,
 				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
+				21FF6C121B51724F00256A63 /* backgroundMusic.mp3 in Resources */,
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
 				2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */,
 				21A74E511AE0F6E00005334D /* trash.atlas in Resources */,

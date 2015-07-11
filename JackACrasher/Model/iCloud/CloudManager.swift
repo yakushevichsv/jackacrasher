@@ -321,22 +321,30 @@ extension CloudManager {
         static let TimeRecordTimeKey = "Time"
         static let ScoreRecord = "Score"
         static let ScoreRecordScoreKey = "Score"
+        static let SurvivalRecord = "SurvivalRecord"
+        static let ScoreKey = "Score"
+        static let TimeKey = "Time"
     }
     
-    private static let gameConstantsLock = GameConstants.TimeRecord
-    
-    // Save values
-    func submitValues(valuesObj:AnyObject,recordType:String,recordKey:String,completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
+    // Save survival values
+    func submitSurvivalValues(items:[[String:AnyObject]], completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
         
-        let values = valuesObj as! [AnyObject]
+        let values = items
         let db = self.container.privateCloudDatabase
         var result = [Int:NSTimeInterval]()
         var count = values.count
         
+        
+        
         for index in 0...count - 1 {
             
-            let record = CKRecord(recordType: recordType)
-            record.setValue(values[index], forKey: recordKey)
+            let record = CKRecord(recordType: GameConstants.SurvivalRecord)
+            let curItem = values[index]
+            let playedTime = curItem["time"] as! NSTimeInterval
+            let score = (curItem["score"] as! NSNumber)
+            
+            record.setValue(score, forKey: GameConstants.ScoreKey)
+            record.setValue(playedTime, forKey: GameConstants.TimeKey)
             
             db.saveRecord(record) {
                 savedRecord,error in
@@ -371,58 +379,4 @@ extension CloudManager {
             }
         }
     }
-    
-    // Save time scores
-    func submitTimes(times:[NSTimeInterval],completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
-        
-        submitValues(times, recordType: GameConstants.TimeRecord, recordKey: GameConstants.TimeRecordTimeKey, completionHandler: completionHandler)
-    }
-    
-    // Save game scores
-    func submitScores(scores:[Int64],completionHandler:(([Int:NSTimeInterval]) -> Void)!) {
-        
-        let values = scores
-        let db = self.container.privateCloudDatabase
-        var result = [Int:NSTimeInterval]()
-        var count = values.count
-        
-        for index in 0...count - 1 {
-            
-            let record = CKRecord(recordType: GameConstants.ScoreRecord)
-            record.setObject(NSNumber(longLong: values[index]), forKey: GameConstants.ScoreRecordScoreKey)
-            
-            db.saveRecord(record) {
-                savedRecord,error in
-                
-                if (error != nil) {
-                    var pauseVal:NSTimeInterval = 0
-                    println("Error for index \(index). Error : \(error)")
-                    
-                    if error.code == CKErrorCode.RequestRateLimited.rawValue ||
-                        error.code == CKErrorCode.ServiceUnavailable.rawValue {
-                            
-                            let retryAfter = error.userInfo![CKErrorRetryAfterKey] as! NSNumber
-                            pauseVal = retryAfter.doubleValue
-                    }
-                    
-                    objc_sync_enter(result)
-                    
-                    result[index] = pauseVal
-                    count--
-                    objc_sync_exit(result)
-                }
-                else {
-                    
-                    objc_sync_enter(result)
-                    count--
-                    objc_sync_exit(result)
-                }
-                
-                if count == 0 {
-                    completionHandler(result)
-                }
-            }
-        }
-    }
-    
 }

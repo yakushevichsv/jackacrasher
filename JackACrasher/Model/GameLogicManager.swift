@@ -20,9 +20,6 @@ class GameLogicManager: NSObject {
     private static let sNumberOfLives = "sy.gamefun.jackACrasher.NumberOfLives"
     private static let sCurrentUserNameKey = "currentUser.sy.gamefun.jackACrasher"
     
-    private static let sCurrentUserTimePartKey  = "timePart.sy.gamefun.jackACrasher"
-    private static let sCurrentUserScorePartKey = "scorePart.sy.gamefun.jackACrasher"
-    
     private var state:GameLogicSelectedStrategy = .None
     private var scoreValue:Float = 0
     private static var gSharedController:GameLogicManager!
@@ -201,6 +198,7 @@ extension GameLogicManager
     private struct Constants {
         static var  SurvivalLongestGame = "SurvivalLongestGameScore"
         static var  SurvivalBestScore = "SurvivalBestScore"
+        static var  SurvivalScores = "SurvivalScores"
         static var  SurvivalTotalScore = "SurvivalTotalScore"
         static var  AppState = "AppState"
     }
@@ -383,13 +381,15 @@ extension GameLogicManager {
         return playerId
     }
     
-    internal func submitTimes(times:[NSTimeInterval],completionHandler:((isError:Bool,delayInTime:UInt64)->Void)!) {
+
         
-        self.cloudManager.submitTimes(times) {
+    private func submitSurvivalItems(items:[[String:AnyObject]],completionHandler:((isError:Bool,delayInTime:UInt64)->Void)!) {
+        
+        self.cloudManager.submitSurvivalValues(items){
             failedIndexesDic  in
             
             var maxDelayInterval:NSTimeInterval = 0
-            var newTimes:[NSTimeInterval] = [NSTimeInterval]()
+            var newItems = [[String:AnyObject]]()
             
             for failedIndex in failedIndexesDic {
                 let index = failedIndex.0
@@ -398,61 +398,20 @@ extension GameLogicManager {
                 if maxDelayInterval > delayInterval {
                     maxDelayInterval = delayInterval
                 }
-                
-                newTimes.append(times[index])
+                newItems.append(items[index])
             }
             
             let curPlayerId = self.getPlayerId()
-            let newTimeKey = curPlayerId.stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
-            
-            
-            if failedIndexesDic.isEmpty {
-                NSUserDefaults.standardUserDefaults().removeObjectForKey(newTimeKey)
-                if (NSUserDefaults.standardUserDefaults().synchronize()) {
-                    completionHandler(isError:false,delayInTime:0)
-                }
-            } else {
-                NSUserDefaults.standardUserDefaults().setObject(newTimes, forKey: newTimeKey)
-                if (NSUserDefaults.standardUserDefaults().synchronize()) {
-                    
-                    let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-                        Int64(maxDelayInterval * Double(NSEC_PER_SEC)))
-                    
-                    completionHandler(isError: true, delayInTime: delayTime)
-                }
-            }
-        }
-    }
-    
-    internal func submitScores(scores:[Int64],completionHandler:((isError:Bool,delayInTime:UInt64)->Void)!) {
-        
-        self.cloudManager.submitScores(scores) {
-            failedIndexesDic  in
-            
-            var maxDelayInterval:NSTimeInterval = 0
-            var newScores:NSMutableArray = NSMutableArray()
-            
-            for failedIndex in failedIndexesDic {
-                let index = failedIndex.0
-                let delayInterval = failedIndex.1
-                
-                if maxDelayInterval > delayInterval {
-                    maxDelayInterval = delayInterval
-                }
-                newScores.addObject(NSNumber(longLong: scores[index]))
-            }
-            
-            let curPlayerId = self.getPlayerId()
-            let newScoreKey = curPlayerId.stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
+            let newKey = curPlayerId.stringByAppendingString(Constants.SurvivalScores)
             
             if failedIndexesDic.isEmpty {
-                NSUserDefaults.standardUserDefaults().removeObjectForKey(newScoreKey)
+                NSUserDefaults.standardUserDefaults().removeObjectForKey(newKey)
                 if (NSUserDefaults.standardUserDefaults().synchronize()) {
                     completionHandler(isError:false,delayInTime:0)
                 }
             } else {
                 
-                NSUserDefaults.standardUserDefaults().setObject(newScores, forKey: newScoreKey)
+                NSUserDefaults.standardUserDefaults().setObject(newItems, forKey: newKey)
                 if (NSUserDefaults.standardUserDefaults().synchronize()) {
                     let delayTime = dispatch_time(DISPATCH_TIME_NOW,
                         Int64(maxDelayInterval * Double(NSEC_PER_SEC)))
@@ -465,127 +424,57 @@ extension GameLogicManager {
     
     internal func appendSurvivalGameValuesToDefaults(score:Int64,time:NSTimeInterval) -> Bool {
         
-        let newTimeKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
-        var times = NSUserDefaults.standardUserDefaults().arrayForKey(newTimeKey) as? [NSTimeInterval]
+        let key = getPlayerId().stringByAppendingString(Constants.SurvivalScores)
         
-        let newScoreKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
-        var scoresPrivate = NSUserDefaults.standardUserDefaults().objectForKey(newScoreKey) as? NSArray
+        var array:[AnyObject]! = NSUserDefaults.standardUserDefaults().arrayForKey(key)
         
-        var scores = scoresPrivate != nil ? NSMutableArray(array: scoresPrivate!) : NSMutableArray()
-        
-        if times == nil {
-            times = [NSTimeInterval]()
+        if array == nil  {
+            array = [AnyObject]()
         }
         
-        
-        times!.append(time)
-        scores.addObject(NSNumber(longLong: score))
+        array.append(["score":NSNumber(longLong: score),"time":time])
         
         
-        NSUserDefaults.standardUserDefaults().setObject(scores, forKey: newScoreKey)
-        NSUserDefaults.standardUserDefaults().setObject(times, forKey: newTimeKey)
+        NSUserDefaults.standardUserDefaults().setObject(array, forKey: key)
         return NSUserDefaults.standardUserDefaults().synchronize()
     }
     
     internal func submitSurvivalGameValues(completionHandler:((isError:Bool)->Void)!) {
         
-        let newTimeKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
-        let times = NSUserDefaults.standardUserDefaults().arrayForKey(newTimeKey) as? [NSTimeInterval]
+        let newKey = getPlayerId().stringByAppendingString(Constants.SurvivalScores)
         
-        let newScoreKey = getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
-        let scores = NSUserDefaults.standardUserDefaults().objectForKey(newScoreKey) as? [Int64]
+        let items = NSUserDefaults.standardUserDefaults().arrayForKey(newKey) as? [[String:AnyObject]]
         
-        var doneTimes:Bool = false
-        var doneScores:Bool = false
-        
-        var scoreError:Bool = false
-        var timeError:Bool = false
-        
-        if let times = times {
+        if let items = items {
             
-            self.submitTimes(times) {
+            self.submitSurvivalItems(items) {
                 isError,delayInTime in
-                
-                timeError = isError
                 
                 if isError {
                     
                     dispatch_after(delayInTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
                         [unowned self] in
                         
-                        let newTimeKey = self.getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
-                        if let times2 = NSUserDefaults.standardUserDefaults().arrayForKey(newTimeKey) as? [NSTimeInterval] {
+                        let newKey2 = self.getPlayerId().stringByAppendingString(Constants.SurvivalScores)
+                        if let items2 = NSUserDefaults.standardUserDefaults().arrayForKey(newKey2) as? [[String:AnyObject]] {
                             
-                            self.submitTimes(times2) {
+                            self.submitSurvivalItems(items2) {
                                 isError, delayInTime   in
                                 
-                                timeError = isError
-                                doneTimes = true
-                                if (doneScores){
-                                    doneTimes = false
-                                    completionHandler(isError: timeError || scoreError)
-                                }
-                                
+                                completionHandler(isError: isError)
                             }
-                            return
                         }
                     }
                 }
-                
-                    doneTimes = true
-                    if (doneScores){
-                        doneTimes = false
-                        completionHandler(isError: timeError || scoreError)
-                    }
-                
-            }
-        }
-        
-        if let scores = scores {
-            
-            self.submitScores(scores) {
-                isError,delayInTime in
-                
-                scoreError = isError
-                
-                if isError {
-                    
-                    dispatch_after(delayInTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
-                        [unowned self] in
-                        
-                        let newKey = self.getPlayerId().stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
-                        if let score2 = NSUserDefaults.standardUserDefaults().objectForKey(newKey) as? [Int64] {
-                            
-                            self.submitScores(score2)
-                                { isError, delayInTime   in
-                                    
-                                    scoreError = isError
-                                    
-                                    doneScores = true
-                                    if (doneTimes){
-                                        doneScores = false
-                                        completionHandler(isError: timeError || scoreError)
-                                    }
-                            }
-                            return
-                        }
-                    }
+                else {
+                   completionHandler(isError: false)
                 }
                 
-                    doneScores = true
-                    if (doneTimes){
-                        doneScores = false
-                        completionHandler(isError: timeError || scoreError)
-                    }
-                
             }
-            
         }
-        
-        if scores == nil && times == nil {
-            completionHandler(isError:scoreError || timeError)
+        else {
+            completionHandler(isError: false)
         }
-
     }
     
     internal func reSchedulePlayedGamesInfoBasedOnId(completionHandler:((isError:Bool)->Void)!) -> Bool {
@@ -618,27 +507,15 @@ extension GameLogicManager {
     
     internal func convertStoredValues(oldUserId prevUserId:String!, currentUserId userId:String!) -> Bool {
         
-        let oldTimeKey = prevUserId.stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
-        var flag:Bool = false
-        if let times = NSUserDefaults.standardUserDefaults().arrayForKey(oldTimeKey) as? [NSTimeInterval] {
+        let oldKey = prevUserId.stringByAppendingString(Constants.SurvivalScores)
+        
+        if let itemsArray = NSUserDefaults.standardUserDefaults().arrayForKey(oldKey) {
             
-            let newTimeKey = userId.stringByAppendingString(GameLogicManager.sCurrentUserTimePartKey)
-            
-            NSUserDefaults.standardUserDefaults().setObject(times, forKey: newTimeKey)
-            flag = true
+            let newKey = userId.stringByAppendingString(Constants.SurvivalScores)
+            NSUserDefaults.standardUserDefaults().setObject(itemsArray, forKey: newKey)
+            return saveUserId(userId)
         }
-        
-        let oldScoreKey = prevUserId.stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
-        
-        if let scores = NSUserDefaults.standardUserDefaults().arrayForKey(oldScoreKey) as? [UInt] {
-            
-            let newKey = userId.stringByAppendingString(GameLogicManager.sCurrentUserScorePartKey)
-            
-            NSUserDefaults.standardUserDefaults().setObject(scores, forKey: newKey)
-            flag = true
-        }
-        
-        return flag && saveUserId(userId)
+        return true
     }
     
     internal var needToDisplayAdv:Bool {
