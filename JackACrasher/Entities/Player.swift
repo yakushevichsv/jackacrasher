@@ -65,7 +65,7 @@ class Player: SKNode, ItemDestructable {
     
     private static var sContext:dispatch_once_t = 0
     
-    private var health: ForceType = 100
+    var health: ForceType = 100
     
     private var playerBGSprite:SKSpriteNode! {
         return self.childNodeWithName(playerBGNodeName) as! SKSpriteNode
@@ -372,6 +372,11 @@ class Player: SKNode, ItemDestructable {
                 self.playerMode = .CanFire
             }
         }
+    }
+    
+    internal func updateNumberOfLives(extraLives numberOfLives:Int) {
+        
+        self.health += ForceType(numberOfLives * 100)
     }
     
     

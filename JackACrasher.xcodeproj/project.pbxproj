@@ -210,6 +210,7 @@
 		210C0B4C1B3577D100759382 /* IAP */ = {
 			isa = PBXGroup;
 			children = (
+				210EA9C81B26D54100C69D29 /* PurchaseManager.swift */,
 				212A2F3D1B37317600B31482 /* IAPReceiptValidator.h */,
 				212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */,
 				210C0B4D1B357ABF00759382 /* IAPProduct.swift */,
@@ -245,7 +246,6 @@
 				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
 				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
-				210EA9C81B26D54100C69D29 /* PurchaseManager.swift */,
 				212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */,
 				210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */,
 				218F24B21B35AF56008C085F /* NetworkManager.swift */,

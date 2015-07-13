@@ -16,7 +16,7 @@ class CloudManager: NSObject {
     private static let singleton = CloudManager()
     
     private  struct Contants {
-         private static let CloudIAPProductInfo = "CloudIAPProductInfo"
+         private static let SurvivalCurrentGame = "SurvivalCurrentGame"
     }
     
     private let container:CKContainer!
@@ -73,7 +73,8 @@ class CloudManager: NSObject {
     //MARK: Other methods
     func cloudChanged(aNotification:NSNotification!) {
         let (token: AnyObject?,isPresent) = CloudManager.jacIsICloudAvailable()
-        self.userLoggedIn = isPresent
+        //MARK: HaCK
+        self.userLoggedIn = isPresent || true
         //TODO: transfer ownership to or from CloudKit to User Defaults...
         if let tokenProtocol  = token as? NSObjectProtocol {
             if !tokenProtocol.isEqual(self.prevToken) {
@@ -156,63 +157,178 @@ class CloudManager: NSObject {
         }
     }
     
-    //MARK: IAPProductInfo
+     //MARK: Survival Current Game Record
     
-    private func addIAPProductInfo(product:IAPProduct,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    private func addSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
         
-        let noteRecord = CKRecord(recordType: Contants.CloudIAPProductInfo)
-        noteRecord.setValue(product.productInfo!.consumable ? 1 :0, forKey: "consumable")
-        noteRecord.setValue(product.productInfo!.consumableAmount, forKey: "consumableAmount")
-        noteRecord.setValue(product.productIdentifier, forKey: "productID")
+        let noteRecordID = CKRecordID(recordName: product.productIdentifier)
+        let noteRecord = CKRecord(recordType: Contants.SurvivalCurrentGame,recordID:noteRecordID)
         
-        
-        self.privateDB.saveRecord(noteRecord, completionHandler: completionHandler)
+        updateSurvivalCurrentGameRecord(noteRecord, score: score, numberOfLives: numberOfLives, playedTime: playedTime, ratio: ratio, completionHandler: completionHandler)
     }
-
-    //MARK: IAPProductInfo Public
-    internal func getIAPProductInfo(productId:String!,completion:((CKRecord!,NSError!) -> Void)!) {
+    
+    private func getSurvivalCurrentGameRecord(productId:String!,completion:((CKRecord?,NSError!) -> Void)!) {
         
-       let query = CKQuery(recordType: Contants.CloudIAPProductInfo, predicate: NSPredicate(format: "productID = %@", productId))
+        let noteRecordID = CKRecordID(recordName: productId)
+        self.container.privateCloudDatabase.fetchRecordWithID(noteRecordID){
+                [unowned self]
+                record,error in
+                
+                if (error != nil ) {
+                    
+                    println("Error \(error)")
+                    
+                    
+                    if  CKErrorCode(rawValue: error.code) == CKErrorCode.UnknownItem  && error.domain == CKErrorDomain {
+                        completion(nil,nil)
+                    }
+                    else {
+                        completion(nil,error)
+                    }
+                }
+                else {
+                    completion(record, nil)
+                }
+        }
+    }
+    
+    internal func getSurvivalCurrentGameLastRecord(completion:((CKRecord?,NSError!) -> Void)!) {
         
-        self.privateDB.performQuery(query, inZoneWithID: nil){
-            [unowned self]
-            array,error in
-            
-            if error != nil {
-                println("Error \(error)")
-                completion(nil,error)
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: Contants.SurvivalCurrentGame, predicate: predicate)
+        self.privateDB.performQuery(query, inZoneWithID: nil) { results, error in
+            //println("\(error.code == CKErrorCode.InvalidArguments.rawValue) -   InvalidArguments")
+            if (error == nil) {
+                
+                if let lastRecord = results.last as? CKRecord {
+                    completion(lastRecord,nil)
+                }
             }
             else {
                 
-                if let lastItem = array.last as? CKRecord  {
-                    completion(lastItem, nil)
+                if  CKErrorCode(rawValue: error.code) == CKErrorCode.UnknownItem  && error.domain == CKErrorDomain {
+                    completion(nil,nil)
                 }
                 else {
-                    completion(nil,nil)
+                    completion(nil,error)
                 }
             }
         }
     }
     
-    internal func createAIPProductInfoOnNeed(product:IAPProduct,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    private func updateSurvivalCurrentGameRecord(noteRecord:CKRecord!,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+        
+        noteRecord.setSurvivalCurrentGameScore(score)
+        noteRecord.setSurvivalCurrentGameNumberOfLives(numberOfLives)
+        noteRecord.setValue(NSNumber(double: playedTime), forKey: "playedTime")
+        noteRecord.setValue(NSNumber(float:ratio), forKey: "ratio")
+        
+        self.privateDB.saveRecord(noteRecord, completionHandler: completionHandler)
+    }
     
-        self.getIAPProductInfo(product.productIdentifier) {
+   
+    internal func updateSurvivalCurrentGameLastRecord(score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+        
+        let predicate = NSPredicate(value: true)
+        let query = CKQuery(recordType: Contants.SurvivalCurrentGame, predicate: predicate)
+        self.privateDB.performQuery(query, inZoneWithID: nil) { results, error in
+            
+            if (error == nil) {
+                
+                if let lastRecord = results.last as? CKRecord {
+                    
+                    if (numberOfLives == 0 && ratio == 0) {
+                        let curRecID = lastRecord.recordID
+                        self.privateDB.deleteRecordWithID(curRecID) {
+                            item,error in
+                            completionHandler(nil,error)
+                        }
+                    }
+                    else {
+                        self.updateSurvivalCurrentGameRecord(lastRecord, score: score, numberOfLives: numberOfLives, playedTime: playedTime, ratio: ratio, completionHandler: completionHandler)
+                    }
+                }
+            }
+            else {
+                completionHandler(nil,error)
+            }
+        }
+    }
+
+    //eeeeee ratio:1
+    internal func createSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    
+        self.getSurvivalCurrentGameRecord(product.productIdentifier) {
             [unowned self]
             record,error  in
             
             if record != nil {
-                completionHandler(record,nil)
+                self.updateSurvivalCurrentGameRecord(record, score: score, numberOfLives: numberOfLives, playedTime: playedTime, ratio: ratio, completionHandler: completionHandler)
             }
             else  if error != nil{
                 completionHandler(nil,error)
             }
             else {
-                self.addIAPProductInfo(product, completionHandler: completionHandler)
+                self.addSurvivalCurrentGameRecord(product,score:score,numberOfLives:numberOfLives,playedTime:playedTime,ratio:ratio, completionHandler: completionHandler)
             }
         }
     }
     
+}
+
+extension CKRecord {
     
+    var survivalCurrentGameScore:Int64 {
+        get {
+            if let number =  self.objectForKey("score") as? NSNumber {
+                return number.longLongValue
+            }
+            else {
+                return 0
+            }
+        }
+    }
+    
+    func setSurvivalCurrentGameScore(score:Int64) {
+        setValue(NSNumber(longLong: score) , forKey: "score")
+    }
+    
+    var survivalCurrentGameNumberOfLives:Int {
+        get {
+            if let number =  self.objectForKey("numberOfLives") as? NSNumber {
+                return number.longValue
+            }
+            else {
+                return 0
+            }
+        }
+    }
+    
+    func setSurvivalCurrentGameNumberOfLives(lives:Int) {
+        setValue(NSNumber(long: lives) , forKey: "numberOfLives")
+    }
+    
+    var survivalPlayedTime:NSTimeInterval {
+        get {
+            if let playedTimeObj = objectForKey("playedTime") as? NSNumber {
+                return playedTimeObj.doubleValue
+            }
+            else {
+                return 0
+            }
+        }
+    }
+    
+    var survivalRatio:Float {
+        get {
+            if let ratio = objectForKey("ratio") as? NSNumber {
+                return ratio.floatValue
+            }
+            else {
+                return 0
+            }
+        }
+    }
 }
 
 extension CloudManager {

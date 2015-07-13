@@ -433,9 +433,50 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         self.status = .IAPRestoredSucceeded
                         NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo: userInfo)
                         
-                        statusInter = .IAPPurchaseSucceeded
+                        //statusInter = .IAPPurchaseSucceeded
+                        
+                        let productId = transaction.payment.productIdentifier
+                        self.receiptValidator.checkReceiptWithCompletionHandler{
+                            [unowned self]
+                            arrayAny,error in
+                            println("\(arrayAny)")
+                            
+                            var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
+                            var found:Bool = false
+                            
+                            for item in arrayAny {
+                                let dic = item as! [NSObject:AnyObject]
+                                if let dicProductId = dic["productIdentifier"] as? String {
+                                    if (!found) {
+                                        if dicProductId == productId {
+                                            purchaseStatus = .IAPPurchaseSucceeded
+                                            found = true
+                                            
+                                            if let fProduct = self.validProducs[dicProductId] {
+                                                fProduct.purchaseInProgress = false
+                                                fProduct.purchase = false
+                                                
+                                                if let prodInfo = fProduct.productInfo {
+                                                    
+                                                    if !prodInfo.consumable {
+                                                        fProduct.availableForPurchase = false
+                                                    }
+                                                    
+                                                    GameLogicManager.sharedInstance.purchasedProduct(fProduct)
+                                                }
+                                            }
+                                            
+                                        } else {
+                                            purchaseStatus = .IAPPurchaseFailed
+                                        }
+                                    }
+                                }
+                            }
+                            //TODO: process transaction here...
+                            self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
+                        }
                     }
-                    completeTransaction(transaction, status:statusInter,userInfo:userInfo)
+                    //completeTransaction(transaction, status:statusInter,userInfo:userInfo)
                 
                 break
                 // The transaction failed
@@ -493,7 +534,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             case .Finished:
                 // Download is complete. StoreKit saves the downloaded content in the Caches directory.
                 println("Location of downloaded file \(download.contentURL)");
-               finishDownloadTransaction(download.transaction)
+                finishDownloadTransaction(download.transaction,userInfo:userInfo)
                 break;
                 
             case .Waiting:

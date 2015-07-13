@@ -17,7 +17,7 @@ enum GameLogicSelectedStrategy : Int {
 class GameLogicManager: NSObject {
     
     private static let sNoAdProductId = "sy.gamefun.jackACrasher.NoAds"
-    private static let sNumberOfLives = "sy.gamefun.jackACrasher.NumberOfLives"
+    private static let sNumberOfLives = "sy.gamefun.jackACrasher.ExtraLife"
     private static let sCurrentUserNameKey = "currentUser.sy.gamefun.jackACrasher"
     
     private var state:GameLogicSelectedStrategy = .None
@@ -313,6 +313,7 @@ extension GameLogicManager
             break
             // Downloading is done, remove the status message
         case .IAPPurchaseSucceeded:
+            
             break
         case .IAPRestoredSucceeded:
             
@@ -336,31 +337,62 @@ extension GameLogicManager
     func purchasedProduct(product:IAPProduct) {
         
         if let productInfo = product.productInfo {
-            CloudManager.sharedInstance.userLoggedIn() {
-                loggedIn in
-                
-                if !loggedIn {
+            
+            if productInfo.consumable {
+                if productInfo.productIdentifier == GameLogicManager.sNumberOfLives {
                     
-                    //MARK: TODO use another way to store info about IAP...
-                    //Use ID from Gamekit
-                    //if there is an ID then set as default player....
-                    // NSUserDefaults - setKeyFor "Default Playr ID"
+                    var amount = max(self.numberOfLivesFromDefaults,1)
+                    amount += productInfo.consumableAmount
                     
-                    return
-                }
-                
-                CloudManager.sharedInstance.createAIPProductInfoOnNeed(product) {
-                    record,error in
-                    
-                    println("Error \(error)")
+                    if self.setNumberOfLivesInDefaults(amount) {
+                        //TODO: dispatch notification about new amount of lives to VC
+                       
+                        CloudManager.sharedInstance.userLoggedIn() {
+                            loggedIn in
+                            
+                            if !loggedIn {
+                                
+                                dispatch_async(dispatch_get_main_queue()) {
+                                    if let navVC = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UINavigationController {
+                                        if let mainVC = navVC.topViewController {
+                                            mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK")
+                                        }
+                                    }
+                                }
+                                return
+                            }
+                            
+                            var playedTime:NSTimeInterval = 0
+                            var score:Int64 = 0
+                            var ratio:Float = 0
+                            
+                            if let navVC = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UINavigationController {
+                                if let mainVC = navVC.topViewController as? GameViewController {
+                                    if let gameScene = mainVC.skView.scene as? GameScene {
+                                        playedTime = gameScene.playedTime
+                                        score = gameScene.currentGameScore
+                                        ratio = gameScene.healthRatio
+                                        gameScene.updatePlayerLives(extraLives: GameLogicManager.sharedInstance.numberOfLivesFromDefaults)
+                                    }
+                                }
+                            }
+                            
+                            //MARK: HACK?
+                            if (ratio == 0 && playedTime == 0) {
+                                ratio = 1
+                            }
+                            
+                            CloudManager.sharedInstance.createSurvivalCurrentGameRecord(product, score: score, numberOfLives: amount, playedTime: playedTime, ratio: ratio) {
+                                record,error in
+                                
+                                println("Error \(error)")
+                            }
+                        }
+                    }
                 }
             }
         }
     }
-    
-    
-    
-    
     
 }
 
@@ -522,15 +554,28 @@ extension GameLogicManager {
         get { return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.sNoAdProductId) }
     }
     
-    internal var numberOfLives:Int {
-        get {return NSUserDefaults.standardUserDefaults().integerForKey("")}
+    internal var numberOfLivesFromDefaults:Int {
+        get {
+            let key = getPlayerId().stringByAppendingString(GameLogicManager.sNumberOfLives)
+            return NSUserDefaults.standardUserDefaults().integerForKey(key)
+        }
     }
     
-    internal func increaseNumberOfLives(amount:Int) {
+    internal func setNumberOfLivesInDefaults(amount:Int) -> Bool {
+        let key = getPlayerId().stringByAppendingString(GameLogicManager.sNumberOfLives)
         
+        if amount > 0 {
+            NSUserDefaults.standardUserDefaults().setInteger(amount, forKey: key)
+        }
+        else {
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(key);
+        }
+        return NSUserDefaults.standardUserDefaults().synchronize();
     }
     
-    internal func decreaseNumberOfLives(amount:Int){
+    internal func decreaseNumberOfLives(amount:Int) -> Bool {
+        let newAmount = self.numberOfLivesFromDefaults - amount
         
+        return setNumberOfLivesInDefaults(newAmount)
     }
 }

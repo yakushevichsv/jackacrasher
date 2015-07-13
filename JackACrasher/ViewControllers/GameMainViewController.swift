@@ -116,7 +116,7 @@ class GameMainViewController: UIViewController {
             NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToEnableCloudKit", name: SYLoggingToCloudNotification, object: self.ckManager)
         }
         else {
-            needToEnableCloudKit()
+            //needToEnableCloudKit()
         }
     }
     

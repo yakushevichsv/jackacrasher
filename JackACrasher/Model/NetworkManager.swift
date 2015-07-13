@@ -103,8 +103,9 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
         
-        self.tasksDic.removeValueForKey(downloadTask.taskIdentifier)
-        
+        if (self.tasksDic[downloadTask.taskIdentifier] != nil) {
+            self.tasksDic.removeValueForKey(downloadTask.taskIdentifier)
+        }
         
         if let completion = self.tasksCompletions.removeValueForKey(downloadTask.taskIdentifier){
             completion(path: location.path, error:nil)

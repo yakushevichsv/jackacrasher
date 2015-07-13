@@ -53,9 +53,10 @@ class GameViewController: UIViewController,GameSceneDelegate {
         }
     }
     
-    private var skView:SKView! {
+    internal var skView:SKView! {
         get { return self.view as! SKView}
     }
+    
     
     @IBAction func btnPressed(sender: UIButton) {
         

@@ -20,7 +20,7 @@ class HUDNode: SKNode {
     private static let sLifePercentMax = lifeType(100)
     private static let sLifePercentMin = lifeType(0)
     
-    private static let sLifeOne = lifeType(1)
+    internal static let sLifeOne = lifeType(1)
     
     private let size:CGSize
     private let animDuration:NSTimeInterval
@@ -192,4 +192,18 @@ class HUDNode: SKNode {
         updateLifeCurPercentNode(animated: true, prevValue: prevLifePercent)
     }
     
+    internal func setLifePercentUsingRatio(ratio:Float){
+        assert(ratio >= 0 && ratio <= 1)
+        
+        let prevValue = self.curLifePercent
+        
+        self.curLifePercent += lifeType(ratio*100)
+        
+        if (self.curLifePercent > HUDNode.sLifePercentMax) {
+            self.curLifePercent = HUDNode.sLifePercentMax
+        }
+        if (prevValue != self.curLifePercent) {
+            updateLifeCurPercentNode(animated: true, prevValue: prevValue)
+        }
+    }
 }
