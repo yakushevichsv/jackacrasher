@@ -201,6 +201,7 @@ extension GameLogicManager
         static var  SurvivalScores = "SurvivalScores"
         static var  SurvivalTotalScore = "SurvivalTotalScore"
         static var  AppState = "AppState"
+        static var  SurvivalCurrentGameInfoAdditionKey = "SurvivalCurrentGameInfoAdditionKey"
     }
     
     //MARK: Survival
@@ -341,10 +342,10 @@ extension GameLogicManager
             if productInfo.consumable {
                 if productInfo.productIdentifier == GameLogicManager.sNumberOfLives {
                     
-                    var amount = max(self.numberOfLivesFromDefaults,1)
+                    var amount = max(self.numberOfLivesForSurvivalGameFromDefaults(),1)
                     amount += productInfo.consumableAmount
                     
-                    if self.setNumberOfLivesInDefaults(amount) {
+                    if self.setNumberOfLivesInDefaultsForSurvivalGame(amount) {
                         //TODO: dispatch notification about new amount of lives to VC
                        
                         CloudManager.sharedInstance.userLoggedIn() {
@@ -372,7 +373,7 @@ extension GameLogicManager
                                         playedTime = gameScene.playedTime
                                         score = gameScene.currentGameScore
                                         ratio = gameScene.healthRatio
-                                        gameScene.updatePlayerLives(extraLives: GameLogicManager.sharedInstance.numberOfLivesFromDefaults)
+                                        gameScene.updatePlayerLives(extraLives: self.numberOfLivesForSurvivalGameFromDefaults())
                                     }
                                 }
                             }
@@ -553,29 +554,157 @@ extension GameLogicManager {
     internal var needToDisplayAdv:Bool {
         get { return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.sNoAdProductId) }
     }
+}
+
+//MARK: Current Survival Game Logic 
+
+extension GameLogicManager {
     
-    internal var numberOfLivesFromDefaults:Int {
-        get {
-            let key = getPlayerId().stringByAppendingString(GameLogicManager.sNumberOfLives)
-            return NSUserDefaults.standardUserDefaults().integerForKey(key)
+    private struct ConstantsSurvivalGameLogic {
+        
+        static let scoreKey = "score"
+        static let playedTimeKey = "playedTime"
+        static let ratioKey = "ratio"
+        static let liveKey = "live"
+    }
+    
+    internal func setNumberOfLivesInDefaultsForSurvivalGame(lives:SurvivalGameInfo.survivalNumberOfLives) -> Bool {
+        
+        var gameInfo = getCurrentSurvivalGameInfoFromDefaults()
+        
+        if gameInfo == nil {
+            gameInfo = SurvivalGameInfo()
+        }
+        
+        gameInfo!.numberOfLives = lives
+        
+        return storeCurrentSurvivalGameInfoInDefaults(gameInfo!)
+    }
+    
+    internal func numberOfLivesForSurvivalGameFromDefaults() -> SurvivalGameInfo.survivalNumberOfLives {
+        
+        if let info = getCurrentSurvivalGameInfoFromDefaults() {
+            return info.numberOfLives
+        }
+        return 0
+    }
+    
+    internal func storeCurrentSurvivalGameInfoInDefaults(info:SurvivalGameInfo!) -> Bool {
+        
+        var resultDic = [String:AnyObject]()
+        
+        resultDic[ConstantsSurvivalGameLogic.scoreKey] = NSNumber(longLong: info.currentScore)
+        resultDic[ConstantsSurvivalGameLogic.playedTimeKey] = NSNumber(double: info.playedTime)
+        resultDic[ConstantsSurvivalGameLogic.ratioKey] = NSNumber(float: info.ratio)
+        resultDic[ConstantsSurvivalGameLogic.liveKey] = info.numberOfLives
+        
+        let key = getPlayerId().stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
+        NSUserDefaults.standardUserDefaults().setObject(resultDic, forKey: key)
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    internal func updateCurrentSurvivalGameInfo(info:SurvivalGameInfo!,completion:((Bool)->Void)!) {
+        
+        if storeCurrentSurvivalGameInfoInDefaults(info) {
+            
+            CloudManager.sharedInstance.userLoggedIn() {
+                loggedIn in
+                
+                if loggedIn {
+                    
+                    CloudManager.sharedInstance.updateSurvivalCurrentGameLastRecord(info.currentScore, numberOfLives: info.numberOfLives, playedTime: info.playedTime, ratio: info.ratio) {
+                        record,error in
+                        
+                        if (error == 0 && record != nil) {
+                            completion(true)
+                        }
+                        else  {
+                            completion(false)
+                        }
+                    }
+                }
+                else {
+                    completion(false)
+                }
+            }
         }
     }
     
-    internal func setNumberOfLivesInDefaults(amount:Int) -> Bool {
-        let key = getPlayerId().stringByAppendingString(GameLogicManager.sNumberOfLives)
+    internal func getCurrentSurvivalGameInfoFromDefaults() -> SurvivalGameInfo? {
         
-        if amount > 0 {
-            NSUserDefaults.standardUserDefaults().setInteger(amount, forKey: key)
+        let key = getPlayerId().stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
+        
+        if let resultDic = NSUserDefaults.standardUserDefaults().objectForKey(key) as? [String:AnyObject] {
+            
+            let gameInfo = SurvivalGameInfo()
+            var foundOne = false
+            
+            if let number = resultDic[ConstantsSurvivalGameLogic.scoreKey] as? NSNumber {
+                gameInfo.currentScore = number.longLongValue
+                foundOne = true
+            }else {
+                gameInfo.currentScore = 0
+            }
+            
+            if let number = resultDic[ConstantsSurvivalGameLogic.playedTimeKey] as? NSNumber {
+                gameInfo.playedTime = number.doubleValue
+                foundOne = true
+            }else {
+                gameInfo.playedTime = 0
+            }
+            
+            if let number = resultDic[ConstantsSurvivalGameLogic.ratioKey] as? NSNumber {
+                gameInfo.ratio = number.floatValue
+                foundOne = true
+            }else {
+                gameInfo.ratio = 0
+            }
+            
+            if let number = resultDic[ConstantsSurvivalGameLogic.liveKey] as? NSNumber {
+                gameInfo.numberOfLives = number.integerValue
+                foundOne = true
+            }else {
+                gameInfo.numberOfLives = 0
+            }
+            
+            if foundOne { return gameInfo }
         }
-        else {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(key);
-        }
-        return NSUserDefaults.standardUserDefaults().synchronize();
+        return nil
     }
     
-    internal func decreaseNumberOfLives(amount:Int) -> Bool {
-        let newAmount = self.numberOfLivesFromDefaults - amount
+    internal func accessSurvivalGameScores(completion:((SurvivalGameInfo?)->Void)!) {
         
-        return setNumberOfLivesInDefaults(newAmount)
+        if let gameInfo = getCurrentSurvivalGameInfoFromDefaults() {
+            
+            completion(gameInfo)
+            return
+        }
+        
+            CloudManager.sharedInstance.getSurvivalCurrentGameLastRecord{
+                [unowned self]
+                record, error in
+                
+                if let record = record {
+                    
+                    let lives = record.survivalCurrentGameNumberOfLives
+                    let score = record.survivalCurrentGameScore
+                    let ratio = record.survivalRatio
+                    let playedTime = record.survivalPlayedTime
+                    
+                    let info = SurvivalGameInfo()
+                    info.numberOfLives = lives
+                    info.playedTime = playedTime
+                    info.ratio = ratio
+                    info.currentScore = score
+                    self.storeCurrentSurvivalGameInfoInDefaults(info)
+                    
+                    completion(info)
+                }
+                else {
+                    println("accessSurvivalGameScores. Error \(error)")
+                    completion(nil)
+                }
+            }
     }
 }

@@ -70,6 +70,7 @@
 		21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B341ADA9D8F0071A217 /* Images.xcassets */; };
 		21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */; };
 		21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */; };
+		21F7956A1B555788003464BF /* SurvivalGameInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F795691B555788003464BF /* SurvivalGameInfo.swift */; };
 		21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FA22A21B2AE9A7002539A6 /* StoreKit.framework */; };
 		21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FA22A41B2B026E002539A6 /* PopupAnimator.swift */; };
 		21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FC6D7B1AEC0457001D99B6 /* Rope.swift */; };
@@ -162,6 +163,7 @@
 		21E56B341ADA9D8F0071A217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectRope.swift; path = Entities/DirectRope.swift; sourceTree = "<group>"; };
 		21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RopeJointAsteroids.swift; path = Entities/RopeJointAsteroids.swift; sourceTree = "<group>"; };
+		21F795691B555788003464BF /* SurvivalGameInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SurvivalGameInfo.swift; path = Model/SurvivalGameInfo.swift; sourceTree = "<group>"; };
 		21FA22A21B2AE9A7002539A6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21FA22A41B2B026E002539A6 /* PopupAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAnimator.swift; path = ViewControllers/PopupAnimator.swift; sourceTree = "<group>"; };
 		21FC6D7B1AEC0457001D99B6 /* Rope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rope.swift; path = Entities/Rope.swift; sourceTree = "<group>"; };
@@ -249,6 +251,7 @@
 				212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */,
 				210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */,
 				218F24B21B35AF56008C085F /* NetworkManager.swift */,
+				21F795691B555788003464BF /* SurvivalGameInfo.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -620,6 +623,7 @@
 				218F24B31B35AF56008C085F /* NetworkManager.swift in Sources */,
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
+				21F7956A1B555788003464BF /* SurvivalGameInfo.swift in Sources */,
 				217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */,
 				21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */,
 				2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */,

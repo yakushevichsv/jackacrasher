@@ -254,8 +254,7 @@ class CloudManager: NSObject {
             }
         }
     }
-
-    //eeeeee ratio:1
+    
     internal func createSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
     
         self.getSurvivalCurrentGameRecord(product.productIdentifier) {
@@ -269,7 +268,7 @@ class CloudManager: NSObject {
                 completionHandler(nil,error)
             }
             else {
-                self.addSurvivalCurrentGameRecord(product,score:score,numberOfLives:numberOfLives,playedTime:playedTime,ratio:ratio, completionHandler: completionHandler)
+                self.addSurvivalCurrentGameRecord(product,score:score,numberOfLives:numberOfLives,playedTime:playedTime,ratio: ratio == 0  ? 1 : ratio, completionHandler: completionHandler)
             }
         }
     }

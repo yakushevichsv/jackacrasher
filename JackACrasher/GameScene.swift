@@ -133,45 +133,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         }
     
         let inSize = CGSizeMake(CGFloat(round(self.playableArea.size.width/6.0)), height)
-        
         println("IN size \(inSize)")
         
-        var lives = GameLogicManager.sharedInstance.numberOfLivesFromDefaults
-        
-        if lives == 0 {
-            
-            //MARK: TODO move this logic into GameLogicManager...
-            CloudManager.sharedInstance.getSurvivalCurrentGameLastRecord{
-                [unowned self]
-                record, error in
-                
-                if let record = record {
-                    
-                    let lives = record.survivalCurrentGameNumberOfLives
-                    let score = record.survivalCurrentGameScore
-                    let ratio = record.survivalRatio
-                    let playedTime = record.survivalPlayedTime
-                    dispatch_async(dispatch_get_main_queue()) {
-                        [unowned self] in
-                        
-                        self.playedTime += playedTime
-                        self.currentGameScore += score
-                        
-                        self.setTotalScore(self.totalGameScore)
-                        self.updatePlayerLives(extraLives: lives)
-                        self.hudNode.setLifePercentUsingRatio(ratio)
-                        
-                        GameLogicManager.sharedInstance.setNumberOfLivesInDefaults(lives)
-                        //MARK: eee TODO: should I store other values....
-                    }
-                }
-            }
-            lives = HUDNode.sLifeOne
-        }
         
         let hudNode = HUDNode(inSize: inSize)
-        hudNode.life = lives
-        
+        hudNode.life = HUDNode.sLifeOne
         hudNode.name = "HUD"
         hudNode.position = CGPointMake(CGRectGetWidth(self.playableArea) - inSize.width - 10, CGRectGetMaxY(self.playableArea) /*+ CGRectGetMinY(self.playableArea)*/ - inSize.height)
         hudNode.alpha = alpha
@@ -179,6 +145,27 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         addChild(hudNode)
         self.hudNode = hudNode
         println("HUD node position \(hudNode.position)")
+        
+        
+        GameLogicManager.sharedInstance.accessSurvivalGameScores{
+            [unowned self]
+            info in
+            
+            if let gameInfo = info {
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    [unowned self] in
+                    
+                    self.playedTime += gameInfo.playedTime
+                    self.currentGameScore += gameInfo.currentScore
+                    
+                    self.setTotalScore(self.totalGameScore)
+                    self.updatePlayerLives(extraLives: gameInfo.numberOfLives)
+                    self.hudNode.setLifePercentUsingRatio(gameInfo.ratio)
+                    
+                }
+            }
+        }
         
     }
     
@@ -504,29 +491,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             if (isPlayerVisible && self.player.containsPoint(location)) {
                 
                 let prevNumberOfLives = self.hudNode.life
-                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(10))
+                let damageForce = 10
+                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(damageForce))
                 let curNumberOfLives = self.hudNode.life
                 
-                let destroed = self.player.tryToDestroyWithForce(10)
+                let destroyed = self.player.tryToDestroyWithForce(ForceType(damageForce))
                 
                 if (prevNumberOfLives != curNumberOfLives) {
                     
-                    GameLogicManager.sharedInstance.decreaseNumberOfLives(prevNumberOfLives - curNumberOfLives)
+                    let info = SurvivalGameInfo()
+                    info.numberOfLives = destroyed ? 0 :curNumberOfLives
+                    info.ratio = destroyed ? 0 : self.healthRatio
+                    info.currentScore = self.currentGameScore
+                    info.playedTime = self.playedTime
                     
-                    
-                    CloudManager.sharedInstance.userLoggedIn() {
-                        loggedIn in
-                        
-                        if loggedIn {
-                            
-                            CloudManager.sharedInstance.updateSurvivalCurrentGameLastRecord(self.currentGameScore, numberOfLives: destroed ? 0 : curNumberOfLives, playedTime: self.playedTime, ratio: destroed ? 0 :  self.healthRatio) {
-                                record,error in
-                            }
-                        }
+                    GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
+                        updated in
+                        println("UPdated \(updated)")
                     }
                 }
                 
-                if (destroed) {
+                
+                if (destroyed) {
                     
                     terminateGame()
                     
@@ -780,25 +766,22 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             if (asteroid.isFiring) {
                 
                 let prevNumberOfLives = self.hudNode.life
-                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(10))
+                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(asteroid.damageForce))
                 let curNumberOfLives = self.hudNode.life
                 
                 let destroed = self.player.tryToDestroyWithForce(asteroid.damageForce)
                 
                 if (prevNumberOfLives != curNumberOfLives) {
                     
-                    GameLogicManager.sharedInstance.decreaseNumberOfLives(prevNumberOfLives - curNumberOfLives)
+                    let info = SurvivalGameInfo()
+                    info.numberOfLives = destroed ? 0 :curNumberOfLives
+                    info.ratio = destroed ? 0 : self.healthRatio
+                    info.currentScore = self.currentGameScore
+                    info.playedTime = self.playedTime
                     
-                    
-                    CloudManager.sharedInstance.userLoggedIn() {
-                        loggedIn in
-                        
-                        if loggedIn {
-                            
-                            CloudManager.sharedInstance.updateSurvivalCurrentGameLastRecord(self.currentGameScore, numberOfLives: destroed ? 0 :curNumberOfLives, playedTime: self.playedTime, ratio: destroed ? 0 : self.healthRatio) {
-                                record,error in
-                            }
-                        }
+                    GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
+                        updated in
+                        println("UPdated \(updated)")
                     }
                 }
 
