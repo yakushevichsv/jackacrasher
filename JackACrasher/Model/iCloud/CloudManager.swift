@@ -31,9 +31,11 @@ class CloudManager: NSObject {
         self.privateDB = container.privateCloudDatabase
         self.userInfo = CloudUserInfo(container: container)
         super.init()
-    
         cloudChanged(nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "cloudChanged:", name: NSUbiquityIdentityDidChangeNotification, object: nil)
+        self.userInfo.getUserId(){
+            recordID,error in
+        }
     }
     
     internal var recordID:CKRecordID? {

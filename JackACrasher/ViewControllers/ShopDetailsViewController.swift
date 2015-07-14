@@ -140,15 +140,14 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                         
                         if let info = curProduct.productInfo {
                             if !info.consumable && (!curProduct.availableForPurchase || GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
-                                GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
-                                self.products.removeAtIndex(index)
+                                removeNonConsumableItemFromLocal(indexPath)
                                 //self.collectionView.deleteItemsAtIndexPaths([vIndexPath])
                                 return
                             }
                         }
                         else {
                             if (GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
-                                self.products.removeAtIndex(index)
+                                removeNonConsumableItemFromLocal(indexPath)
                                 //self.collectionView.deleteItemsAtIndexPaths([vIndexPath])
                                 return
                             }
@@ -156,11 +155,24 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                     }
                 }
                 }
-                GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
-                self.products.removeAtIndex(index)
+                removeNonConsumableItemFromLocal(index)
                 return
             }
             index++
+        }
+    }
+    
+    private func removeNonConsumableItemFromLocal(index:Int) {
+    
+        let indexPath = NSIndexPath(forRow: index, inSection: 0)
+        removeNonConsumableItemFromLocal(indexPath)
+    }
+    
+    private func removeNonConsumableItemFromLocal(indexPath:NSIndexPath!) {
+        self.products.removeAtIndex(indexPath.row)
+        if let taskId = self.processingCellsImages[indexPath] {
+            NetworkManager.sharedManager.cancelTask(taskId)
+            self.processingCellsImages.removeValueForKey(indexPath)
         }
     }
     

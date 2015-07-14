@@ -398,20 +398,17 @@ extension GameLogicManager
 }
 
 extension GameLogicManager {
-    //MARK: Todo detect correct way to get ID, and access item locally of from CloudKit...
+    //TODO: Sometimes cloud kit returns record name latter than needed, therefore once playerId == recName, then == playerID
     
     internal func getPlayerId() -> String! {
         
-        var playerId:String! = nil
-        
         if let recName = self.cloudManager.recordID?.recordName {
-            playerId = recName
+            return recName
         } else if let playerID = GameCenterManager.sharedInstance.playerID {
-            playerId = playerID
+            return playerID
         } else {
-            playerId = "guest"
+            return "guest"
         }
-        return playerId
     }
     
 

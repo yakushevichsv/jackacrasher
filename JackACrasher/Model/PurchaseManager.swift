@@ -254,7 +254,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     }
     
     private func userNameForPurchases() -> String? {
-        if let playerID = GameCenterManager.sharedInstance.playerID {
+        if let playerID = GameLogicManager.sharedInstance.getPlayerId() {
             
             if let hash = PurchaseManager.hashedValueForPlayerID(playerID) {
                 
@@ -415,6 +415,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                                                     
                                                     if !prodInfo.consumable {
                                                         fProduct.availableForPurchase = false
+                                                        GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
                                                     }
                                                     
                                                     GameLogicManager.sharedInstance.purchasedProduct(fProduct)
@@ -477,6 +478,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                                                     
                                                     if !prodInfo.consumable {
                                                         fProduct.availableForPurchase = false
+                                                        GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
                                                     }
                                                     
                                                     GameLogicManager.sharedInstance.purchasedProduct(fProduct)
