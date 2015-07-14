@@ -18,7 +18,27 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     private var processingCellsImages:[NSIndexPath:Int] = [NSIndexPath:Int]()
     
     internal var products:[IAPProduct] = [] {
+        
         didSet {
+            
+            var procesed = [IAPProduct]()
+            
+            for curProduct in self.products {
+                
+                if GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(curProduct.productIdentifier) {
+                    continue
+                }
+                
+                if let info = curProduct.productInfo {
+                    if info.consumable || curProduct.availableForPurchase {
+                        procesed.append(curProduct)
+                    }
+                }
+            }
+            if (self.products.count != procesed.count) {
+                products = procesed
+            }
+            
             if self.isViewLoaded() {
                 self.collectionView?.reloadData()
             }
@@ -33,7 +53,6 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         if CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame) {
             rotatePrivateForSize(self.view.frame.size)
         }
-        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePurchasesNotification:", name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
     }
     
@@ -73,12 +92,23 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             //self.statusMessage.text = [NSString stringWithFormat:@" Downloading %@   %.2f%%",displayedTitle, purchasesNotification.downloadProgress];
             //}
             break
+        case .IAPPurchaseInProgress:
+            
+            if let productId = userInfo?["id"] as? String {
+                self.markPurchaseInProgressOnNeed(productId)
+            }
+            break
             // Downloading is done, remove the status message
         case .IAPPurchaseSucceeded:
-            disposeActivityInficationUsingNofitication(aNotification)
-            break
+            fallthrough
         case .IAPRestoredSucceeded:
-            disposeActivityInficationUsingNofitication(aNotification)
+                dispatch_async(dispatch_get_main_queue()) {
+                    [unowned self] in
+                    self.disposeActivityInficationUsingNofitication(aNotification)
+                    if let productId = userInfo?["id"] as? String {
+                        self.removeNonConsumableItemOnNeed(productId)
+                    }
+                }
             break
         case .IAPDownloadSucceeded:
             //self.hasDownloadContent = NO;
@@ -93,6 +123,82 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             break
         default:
             break
+        }
+    }
+    
+    
+    private func removeNonConsumableItemOnNeed(productId:String) {
+        
+        var index = 0
+        for curProduct in self.products {
+            if curProduct.productIdentifier == productId {
+                let indexPath = NSIndexPath(forRow: index, inSection: 0)
+            
+                if self.isViewLoaded() {
+                for vIndexPath in self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
+                    if vIndexPath == indexPath! {
+                        
+                        if let info = curProduct.productInfo {
+                            if !info.consumable && (!curProduct.availableForPurchase || GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
+                                GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
+                                self.products.removeAtIndex(index)
+                                //self.collectionView.deleteItemsAtIndexPaths([vIndexPath])
+                                return
+                            }
+                        }
+                        else {
+                            if (GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
+                                self.products.removeAtIndex(index)
+                                //self.collectionView.deleteItemsAtIndexPaths([vIndexPath])
+                                return
+                            }
+                        }
+                    }
+                }
+                }
+                GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
+                self.products.removeAtIndex(index)
+                return
+            }
+            index++
+        }
+    }
+    
+    private func markPurchaseInProgressOnNeed(productId:String) {
+        
+        if PurchaseManager.sharedInstance.purchaseInProgress(productId) {
+            
+            var index = 0
+            for curProduct in self.products {
+                
+                if curProduct.productIdentifier == productId {
+                    let indexPath = NSIndexPath(forRow: index, inSection: 0)
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [unowned self] in
+                        
+                        //self.processingCellsImages.removeValueForKey(indexPath)
+                        
+                        
+                        for vIndexPath in self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
+                            if vIndexPath == indexPath {
+                                
+                                if let collectionViewCell = self.collectionView.cellForItemAtIndexPath(indexPath) as? ShopDetailsCollectionViewCell {
+                                    self.activateIndicatorForCell(collectionViewCell, atIndexPath: indexPath)
+                                    return
+                                }
+                            }
+                        }
+                        
+                        if !self.processingCells.contains(indexPath) {
+                            self.processingCells.insert(indexPath)
+                        }
+                    }
+                    
+                    break
+                }
+                index++
+            }
         }
     }
     
@@ -174,28 +280,28 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             activityIndicator.center = CGPointMake(CGRectGetMidX(cell.contentView.bounds), CGRectGetMidY(cell.contentView.bounds))
             cell.contentView.addSubview(activityIndicator)
         }
+        var appendOnNeed:Bool = false
         
         if let lastChildView = cell.contentView.subviews.last as? UIActivityIndicatorView {
             if (enabled) {
                 if !lastChildView.isAnimating() {
                     lastChildView.startAnimating()
                 }
-                if !self.processingCells.contains(indexPath) {
-                    self.processingCells.insert(indexPath)
-                }
+                appendOnNeed = true
             }
             else {
                 if lastChildView.isAnimating() {
                     lastChildView.stopAnimating()
                     lastChildView.removeFromSuperview()
                 }
-                if self.processingCells.contains(indexPath) {
-                    self.processingCells.remove(indexPath)
-                }
             }
         }
-        else {
-            assert(enabled == false)
+        
+        if (appendOnNeed) {
+            if !self.processingCells.contains(indexPath) {
+                self.processingCells.insert(indexPath)
+            }
+        } else {
             if self.processingCells.contains(indexPath) {
                 self.processingCells.remove(indexPath)
             }
@@ -295,6 +401,9 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             }
             
         }
+        
+        markPurchaseInProgressOnNeed(product.productIdentifier)
+        
         
         let present:Bool = processingCells.contains(indexPath)
         

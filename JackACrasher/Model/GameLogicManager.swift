@@ -554,6 +554,17 @@ extension GameLogicManager {
     internal var needToDisplayAdv:Bool {
         get { return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.sNoAdProductId) }
     }
+    
+    internal func hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId:String) -> Bool {
+        let key = getPlayerId().stringByAppendingString(productId)
+        return NSUserDefaults.standardUserDefaults().boolForKey(key)
+    }
+    
+    internal func storePurchaseInDefaultsForNonConsumableWithID(productId:String) -> Bool {
+        let key = getPlayerId().stringByAppendingString(productId)
+        NSUserDefaults.standardUserDefaults().setBool(true, forKey: key)
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
 }
 
 //MARK: Current Survival Game Logic 
@@ -616,7 +627,7 @@ extension GameLogicManager {
                     CloudManager.sharedInstance.updateSurvivalCurrentGameLastRecord(info.currentScore, numberOfLives: info.numberOfLives, playedTime: info.playedTime, ratio: info.ratio) {
                         record,error in
                         
-                        if (error == 0 && record != nil) {
+                        if (error == nil && record != nil) {
                             completion(true)
                         }
                         else  {

@@ -22,6 +22,7 @@ enum ManagerState:Int {
 enum IAPPurchaseNotificationStatus: Int {
     case IAPPurchaseNone
     case IAPPurchaseFailed // Indicates that the purchase was unsuccessful
+    case IAPPurchaseInProgress //Indicates that there is a purchasing activity
     case IAPPurchaseSucceeded // Indicates that the purchase was successful
     case IAPPurchaseCancelled
     case IAPRestoredFailed // Indicates that restoring products was unsuccessful
@@ -115,6 +116,21 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         SKPaymentQueue.defaultQueue().removeTransactionObserver(self)
         SKPaymentQueue.defaultQueue().addTransactionObserver(self)
         //SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+    }
+    
+    internal func purchaseInProgress(productId:String) -> Bool {
+        
+        if let product = self.validProducs[productId] {
+            return product.purchaseInProgress
+        }
+        return false
+    }
+    
+    internal func setPurchaseProgressState(productId:String,inProgress:Bool) {
+        
+        if let product = self.validProducs[productId] {
+            product.purchaseInProgress = inProgress
+        }
     }
     
     deinit {
@@ -350,6 +366,10 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             switch (transaction.transactionState )
             {
             case .Purchasing:
+                self.purchaseId = transaction.payment.productIdentifier
+                setPurchaseProgressState(self.purchaseId,inProgress: true)
+                self.status = .IAPPurchaseInProgress
+                NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo: userInfo)
                 break
                 
             case .Deferred:
@@ -364,8 +384,6 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     
                     println("Deliver content for \(transaction.payment.productIdentifier)")
                     // Check whether the purchased product has content hosted with Apple.
-                    
-                    //TODO: Transaction identifier & receipt validation....
                     
                     if(transaction.downloads != nil && transaction.downloads!.count > 0) {
                         completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted, userInfo:userInfo)
@@ -409,7 +427,6 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                                     }
                                 }
                             }
-                            //TODO: process transaction here...
                             self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
                         }
                     }
@@ -472,17 +489,17 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                                     }
                                 }
                             }
-                            //TODO: process transaction here...
                             self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
                         }
                     }
-                    //completeTransaction(transaction, status:statusInter,userInfo:userInfo)
-                
+                    
                 break
                 // The transaction failed
             case .Failed:
                 
                 self.message = "Purchase of \(transaction.payment.productIdentifier) failed."
+                
+                setPurchaseProgressState(transaction.payment.productIdentifier,inProgress: false)
                 
                 completeTransaction(transaction, status:transaction.error.code != SKErrorPaymentCancelled ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
                 
