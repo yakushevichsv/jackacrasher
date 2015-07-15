@@ -75,30 +75,29 @@ class CloudManager: NSObject {
     //MARK: Other methods
     func cloudChanged(aNotification:NSNotification!) {
         let (token: AnyObject?,isPresent) = CloudManager.jacIsICloudAvailable()
-        //MARK: HaCK
-        self.userLoggedIn = isPresent || true
+        self.userLoggedIn = isPresent
         //TODO: transfer ownership to or from CloudKit to User Defaults...
         if let tokenProtocol  = token as? NSObjectProtocol {
-            if !tokenProtocol.isEqual(self.prevToken) {
+            if !tokenProtocol.isEqual(self.curToken) {
                 serializeAsPreviousCloudToken(self.curToken)
                 serializeAsCurrentCloudToken(token)
-                //user loggeed in and could change...
+                //TODO: transfer ownership to new user, or refresh purchases....
             }
-        } else if let prevToken = self.prevToken as? NSObjectProtocol {
+        } else if let curToken = self.curToken as? NSObjectProtocol {
             serializeAsPreviousCloudToken(self.curToken)
             serializeAsCurrentCloudToken(nil)
-            
             //user is not logged in.
+            //TODO: transfer purhases of the previous user....
+        } else {
+            serializeAsCurrentCloudToken(nil)
         }
     }
     
     /* Checks if the user has logged into her iCloud account or not */
     private class func jacIsICloudAvailable() -> (AnyObject?,Bool) {
-        if let token = NSFileManager.defaultManager().ubiquityIdentityToken{
-            return (token,true)
-        } else {
-            return (nil,false)
-        }
+        let tokenObj = NSFileManager.defaultManager().ubiquityIdentityToken
+        
+        return (tokenObj,tokenObj != nil)
     }
     
     private func alertAboutPermissionGrant(accountStatus:CKAccountStatus = .NoAccount) {
