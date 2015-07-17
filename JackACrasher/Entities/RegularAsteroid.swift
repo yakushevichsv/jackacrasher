@@ -119,17 +119,67 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         let physBody = SKPhysicsBody(texture: texture, size: texture.size())
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
-        
-       
         physBody.collisionBitMask = 0
         
         
         self.physicsBody = physBody
+        self.physicsBody!.fieldBitMask = 0
         
+        self.appendRadialGravityToAsteroid()
         
         if (needToAnimate) {
             self.startRotation()
         }
+    }
+    
+    private func appendRadialGravityToAsteroid() {
+        
+        let field = SKFieldNode.radialGravityField()
+        
+        
+        let mRadius = min(self.bgImageNode.texture!.size().width,self.bgImageNode.texture!.size().height)
+        
+        field.name = "field"
+        //field.physicsBody  = SKPhysicsBody(circleOfRadius: mRadius)
+        field.categoryBitMask = EntityCategory.RadialField
+        
+        var falloff:Float = 0
+        var animSpeed:Float = 0
+        
+        var region:SKRegion! = nil
+        
+        switch (self.asterSize) {
+            case .Big:
+                falloff = 0.8
+                animSpeed = 0.4
+                
+                region = SKRegion(radius: Float(mRadius)*1.5)
+                
+                break
+            case .Medium:
+                falloff = 0.4
+                animSpeed = 0.6
+                region = SKRegion(radius: Float(mRadius)*1.8)
+                break
+            case .Small:
+            fallthrough
+            default:
+                falloff = 0.2
+                animSpeed = 1
+                region = SKRegion(radius: Float(mRadius)*2.0)
+                break
+        }
+        
+        
+        field.falloff = falloff
+        field.animationSpeed = animSpeed
+        field.region = region
+        
+        //self.bgImageNode.addChild(field)
+        
+        self.insertChild(field, atIndex: 0)
+        
+        //lself.bgImageNode.addChild(field)
     }
     
     private func startRotation() {
@@ -217,7 +267,7 @@ class SmallRegularAsteroid:RegularAsteroid {
         let physBody = SKPhysicsBody(texture: texture, size: texture!.size())
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
-        
+        physBody.fieldBitMask = 0
         
         physBody.collisionBitMask = 0
         

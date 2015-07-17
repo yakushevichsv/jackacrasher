@@ -18,6 +18,7 @@ struct EntityCategory {
     static var Bomb : UInt32 = 1 << 5
     static var RegularAsteroid:UInt32 = 1 << 6
     static var Rope:UInt32 = 1 << 7
+    static var RadialField:UInt32 = 1 << 8
 }
 
 typealias ForceType = CGFloat
@@ -136,6 +137,7 @@ class Player: SKNode, ItemDestructable {
         aPhysBody.categoryBitMask = EntityCategory.Player
         aPhysBody.contactTestBitMask = 0
         aPhysBody.collisionBitMask = 0
+        aPhysBody.fieldBitMask = EntityCategory.RadialField
         self.physicsBody = aPhysBody
     }
     
