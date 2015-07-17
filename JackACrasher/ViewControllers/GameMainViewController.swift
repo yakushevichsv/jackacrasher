@@ -22,6 +22,10 @@ class GameMainViewController: UIViewController {
     @IBOutlet weak var btnHelp:UIButton!
     @IBOutlet weak var btnGameCenter:UIButton!
     @IBOutlet weak var btnShop:UIButton!
+    @IBOutlet weak var btnRUpCorner:UIButton!
+    @IBOutlet weak var btnSound:UIButton!
+    
+    weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
     
     private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
@@ -78,6 +82,8 @@ class GameMainViewController: UIViewController {
         authDidChange(nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
+        
+        self.performActionOnRMainButton(self.btnSound,animated:false)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -275,6 +281,74 @@ class GameMainViewController: UIViewController {
         return true
     }
     
+    @IBAction func btnRightUpCornerPressed(sender:UIButton) {
+        
+        sender.selected = sender.selected ? false : true
+        performActionOnRMainButton(sender)
+    }
+    
+    
+    private func performActionOnRMainButton(sender:UIButton,animated:Bool = true) {
+        
+        if sender.selected {
+            //TODO: Animate button appearance
+            
+            let yMargin:CGFloat = 40
+            let origin = sender.frame.origin
+            
+            let oFrame = CGRect(origin:origin,size:self.btnSound.bounds.size)
+            
+            self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
+            self.btnSound.hidden = false
+            sender.superview?.bringSubviewToFront(sender)
+            
+            println("Original center \(self.btnSound.center)")
+            
+            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { () -> Void in
+                
+                self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnSound.center.y + yMargin)
+                
+                println("Final 1 center \(self.btnSound.center)")
+                
+                }){
+                    [unowned self]
+                    finished in
+                    
+                    self.btnSound.superview?.bringSubviewToFront(self.btnSound)
+                    
+                    let attr = NSLayoutConstraint(item: self.btnSound, attribute: .CenterY, relatedBy: .Equal, toItem: self.btnRUpCorner, attribute: .CenterY, multiplier: 1, constant: yMargin)
+                    self.btnRSoundCornerYConstraitnt = attr
+                    NSLayoutConstraint.activateConstraints([attr])
+                    
+                    println("Final 2 center \(self.btnSound.center)")
+                    
+            }
+        }
+        else {
+            
+            println("Original center \(self.btnSound.center)")
+            
+            
+            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { () -> Void in
+                
+                self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
+                    println("Final 1 center \(self.btnSound.center)")
+                
+                }){
+                    [unowned self]
+                    finished in
+                    self.btnRUpCorner.superview?.bringSubviewToFront(self.btnRUpCorner)
+                    self.btnSound.hidden = true
+                    
+                    if self.btnRSoundCornerYConstraitnt != nil {
+                        NSLayoutConstraint.deactivateConstraints([self.btnRSoundCornerYConstraitnt])
+                        self.btnRSoundCornerYConstraitnt = nil
+                    }
+                    println("Final 2 center \(self.btnSound.center)")
+            }
+        }
+    }
+    
     @IBAction  func btnPressed(sender: UIButton) {
         if sender == self.btnStrategy {
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
@@ -291,6 +365,15 @@ class GameMainViewController: UIViewController {
                 self.displayAlertAboutImpossiblePayments()
                 
             })
+        } else if (sender == self.btnSound) {
+            sender.selected = sender.selected ? false : true
+            
+            //selected = no sound 
+            if sender.selected {
+                SoundManager.sharedInstance.disableSound()
+            } else {
+                SoundManager.sharedInstance.enableSound()
+            }
         }
     }
     

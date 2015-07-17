@@ -258,28 +258,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         
         self.setTotalScoreLabelValue()
         
-        let texture1 = SKTexture(imageNamed: "Asteroid1_Part1")
-        let size1 = texture1.size()
-        
-        let aInfo = AsteroidInfo()
-        aInfo.itemType = AsteroidItemType.TextureName(texture: texture1)
-        aInfo.position = CGPointMake(size1.width*0.5,size1.height*0.5)
-        
-        
-        let texture2 = SKTexture(imageNamed: "Asteroid1_Part2")
-        let size2 = texture2.size()
-        
-        let aInfo2 = AsteroidInfo()
-        aInfo2.itemType = AsteroidItemType.TextureName(texture: texture2)
-        aInfo2.position = CGPointMake(aInfo.position.x + size1.width*0.5, size2.height*0.5)
-        
-        
-        let jointInfo = JointInfo(type: JointType.Fixed, position: CGPointMake(300 + size1.width*0.5, 200))
-        
-        if let node = self.asteroidManager.createCompositeAsteroid(atPosition: CGPointMake(300,200 - max(size1.height,size2.height)*0.5), usingAsteroidsInfo: [aInfo,aInfo2], andJointsInfo: [jointInfo]) {
-            node.name  = asterName
-            
-        }
     }
     
     func willTerminateApp() {

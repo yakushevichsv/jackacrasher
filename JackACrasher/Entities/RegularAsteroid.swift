@@ -120,7 +120,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         physBody.collisionBitMask = 0
-        
+        physBody.fieldBitMask = 0
         
         self.physicsBody = physBody
         self.physicsBody!.fieldBitMask = 0
@@ -132,12 +132,18 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         }
     }
     
+    override func removeFromParent() {
+        if let field = self.childNodeWithName("field") as? SKFieldNode {
+            field.removeFromParent()
+        }
+        super.removeFromParent()
+    }
+    
     private func appendRadialGravityToAsteroid() {
         
         let field = SKFieldNode.radialGravityField()
         
-        
-        let mRadius = min(self.bgImageNode.texture!.size().width,self.bgImageNode.texture!.size().height)
+        let mRadius = round(0.5*min(self.bgImageNode.texture!.size().width,self.bgImageNode.texture!.size().height))
         
         field.name = "field"
         //field.physicsBody  = SKPhysicsBody(circleOfRadius: mRadius)
