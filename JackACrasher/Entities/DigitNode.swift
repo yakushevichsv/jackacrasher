@@ -94,14 +94,7 @@ class DigitNode: SKNode {
             label = labelPtr!
         }
         
-        label.text = "\(self.digit)"
-        /*while (!label.calculateAccumulatedFrame().contains(CGRectMake(0, 0, self.size.width, self.size.height)) ) {
-            label.fontSize--
-        }*/
-        
-        
-        
-        
+        label.text = "\(Int(self.digit))"
     }
     
 }

@@ -623,7 +623,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
     }
     
     func removePlayerFromRegularAsteroidToScene() {
-        self.player.physicsBody!.contactTestBitMask != EntityCategory.Player
+        self.player.physicsBody!.contactTestBitMask &= ~EntityCategory.Player
         self.player.zRotation = 0
         self.player.zPosition = self.fgZPosition
             
@@ -635,7 +635,25 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             self.player.position.y = CGFloat(self.player.size.height*0.5)
         }
         
+        if (self.player.position.y >= CGRectGetHeight(self.playableArea)) {
+            self.player.position.y = CGRectGetHeight(self.playableArea) - CGFloat(self.player.size.height*0.5)
+        }
+        
+        if (self.player.position.x >= CGRectGetWidth(self.playableArea)) {
+            self.player.position.x = CGRectGetWidth(self.playableArea) - CGFloat(self.player.size.width*0.5)
+        }
+        
         self.player.hidden = false
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(2 * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_main_queue()){
+            [unowned self] in
+            if (self.view != nil) {
+                self.player?.enableGravityReceptivity()
+            }
+        }
     }
     
     //MARK: Asteroid Generator's delegate methods
@@ -676,6 +694,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             addChild(node)
             
             //assert(CGRectGetHeight(self.playableArea) > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > CGRectGetMinY(self.playableArea), "Doesn't contain frame!")
+            
+            println("Asteroid position \(node.position)")
+            println("Scene size \(self.size)")
         }
         generator.paused = true
         
@@ -896,17 +917,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             //normal.dx *= CGFloat(-1.0)
             //normal.dy *= CGFloat(-1.0)
             
+            println("Normal dx \(normal.dx),Normal dyØ \(normal.dy) . Angle \(normal.angle)")
+            
+            /*let arrow = SKSpriteNode(imageNamed: "debug_arrow")
+            arrow.zRotation = π/2 -  normal.angle
+            arrow.zPosition = self.player.zPosition
+            let curNode = regularBody.node!
+            let nPoint = curNode.convertPoint(contact.contactPoint, fromNode: self)
+            arrow.position = nPoint
+            curNode.addChild(arrow)*/
+            //regularBody.node?.removeAllActions()
+            
             let playerNode:SKSpriteNode! = SKSpriteNode(imageNamed: "player")
             
             let angle = self.player.zRotation
             playerNode.zRotation = angle
             
-            let angel2 =  normal.angle
+            let angel2 =  3*π/2 - normal.angle
         
             
             println("Player's z (before) rotation \(angle.degree), Angle \(angel2.degree)")
-            let delta = shortestAngleBetween(angle, angel2)
-            playerNode.zRotation += delta
+            //let delta = shortestAngleBetween(angle, angel2)
+            playerNode.zRotation = angel2 //+= delta
             
             println("Player's z (after) rotation \(playerNode.zRotation.degree)")
             
@@ -915,10 +947,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             playerNode.position = pointInternal
             
             println("placing player at position \(pointInternal)")
+            self.player.disableGravityReceptivity()
             self.player.hidden = true
             
             regularBody.contactTestBitMask &= ~EntityCategory.Player
             regularBody.categoryBitMask = 0
+            
+            if let bNode = regularBody.node as? RegularAsteroid {
+                bNode.removeField()
+            }
             
             pNode.addChild(playerNode)
             

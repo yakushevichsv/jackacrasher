@@ -166,17 +166,17 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     private func validateProducts() {
         self.products = NSFileManager.defaultManager().jacGetPropertiesInfoFromPropertiesList()
         if let productsVal = self.products  {
-            self.validateProductIdentifiers(productsVal)
+            self.validateProductsInternal(productsVal)
         }
     }
     
-    private func validateProductIdentifiers(identifiers:NSArray!) {
+    private func validateProductsInternal(array:NSArray!) {
        
         self.managerState = .Validating
         
         var products = Set<NSObject>()
         
-        for identifier in identifiers as! [IAPProduct] {
+        for identifier in array as! [IAPProduct] {
             products.insert(identifier.productIdentifier)
         }
         
@@ -247,7 +247,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         dispatch_after(delayTime, dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
             [unowned self] in
             if (self.managerState != .Validating && self.managerState != .Validated) {
-                self.validateProductIdentifiers(self.productsIds)
+                self.validateProducts()
             }
         }
         

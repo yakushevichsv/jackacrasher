@@ -441,7 +441,7 @@ class AsteroidGenerator: NSObject {
         //HACK: warning
         
         self.prevAsteroidType = .None
-        currentAstType = .RopeBased
+        currentAstType = .Regular
         
         self.prevAsteroidType = currentAstType
         

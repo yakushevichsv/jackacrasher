@@ -137,8 +137,21 @@ class Player: SKNode, ItemDestructable {
         aPhysBody.categoryBitMask = EntityCategory.Player
         aPhysBody.contactTestBitMask = 0
         aPhysBody.collisionBitMask = 0
-        aPhysBody.fieldBitMask = EntityCategory.RadialField
+        enableGravityReceptivity()
         self.physicsBody = aPhysBody
+    }
+    
+    //MARK:Player's gravity receptivity
+    internal func disableGravityReceptivity() {
+        setGravityReceptivity(false)
+    }
+    
+    internal func enableGravityReceptivity() {
+        setGravityReceptivity(true)
+    }
+    
+    private func setGravityReceptivity(enabled:Bool) {
+        self.physicsBody?.fieldBitMask = enabled ? EntityCategory.RadialField : 0
     }
     
     //MARK: Hammer  methods

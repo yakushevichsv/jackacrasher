@@ -83,7 +83,12 @@ class GameMainViewController: UIViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
         
-        self.performActionOnRMainButton(self.btnSound,animated:false)
+        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
+        
+        self.btnSound.selected = !disabled
+        self.btnPressed(self.btnSound)
+        
+        self.performActionOnRMainButton(nil,animated:false)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -284,23 +289,24 @@ class GameMainViewController: UIViewController {
     @IBAction func btnRightUpCornerPressed(sender:UIButton) {
         
         sender.selected = sender.selected ? false : true
+        
         performActionOnRMainButton(sender)
     }
     
     
-    private func performActionOnRMainButton(sender:UIButton,animated:Bool = true) {
+    private func performActionOnRMainButton(sender:UIButton?,animated:Bool = true) {
         
-        if sender.selected {
+        if sender != nil && sender!.selected {
             //TODO: Animate button appearance
             
             let yMargin:CGFloat = 40
-            let origin = sender.frame.origin
+            let origin = sender!.frame.origin
             
             let oFrame = CGRect(origin:origin,size:self.btnSound.bounds.size)
             
             self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
             self.btnSound.hidden = false
-            sender.superview?.bringSubviewToFront(sender)
+            sender!.superview?.bringSubviewToFront(sender!)
             
             println("Original center \(self.btnSound.center)")
             
@@ -368,12 +374,16 @@ class GameMainViewController: UIViewController {
         } else if (sender == self.btnSound) {
             sender.selected = sender.selected ? false : true
             
+            let disabled = sender.selected
+            
             //selected = no sound 
-            if sender.selected {
+            if disabled {
                 SoundManager.sharedInstance.disableSound()
             } else {
                 SoundManager.sharedInstance.enableSound()
             }
+            
+            GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
         }
     }
     

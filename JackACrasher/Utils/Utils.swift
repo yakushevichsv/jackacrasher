@@ -151,7 +151,7 @@ func vectorFromPoint(point:CGPoint, usingDirection direction:CGVector, inRect re
             angle = angle + pHalf
         }*/
     
-        var yPosDist = isU ? (CGRectGetHeight(rect) - pointOne.y) : (pointOne.y)
+        var yPosDist = isU ? (CGRectGetHeight(rect) + CGRectGetMinY(rect) - pointOne.y) : (pointOne.y)
         
         var xPosDist = isR ? (CGRectGetWidth(rect) - pointOne.x) : (pointOne.x)
         

@@ -132,10 +132,15 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         }
     }
     
-    override func removeFromParent() {
+    internal func removeField() {
         if let field = self.childNodeWithName("field") as? SKFieldNode {
+            field.falloff = Float(Int.max)
             field.removeFromParent()
         }
+    }
+    
+    override func removeFromParent() {
+        self.removeField()
         super.removeFromParent()
     }
     
