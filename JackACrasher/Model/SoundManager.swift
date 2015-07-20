@@ -15,9 +15,17 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
    
     typealias completionHandlerType = ((url:NSURL?, successfully:Bool) ->Void)
     
-    internal static let explosionSmall = SKAction.playSoundFileNamed("explosion_small.wav", waitForCompletion: false)
+    internal static let eSmallInternal = SKAction.playSoundFileNamed("explosion_small.wav", waitForCompletion: false)
+    internal static let eLargeInternal = SKAction.playSoundFileNamed("explosion_large.wav", waitForCompletion: false)
+    internal static let emptyAction = SKAction.waitForDuration(0)
     
-    internal static let explosionLarge = SKAction.playSoundFileNamed("explosion_large.wav", waitForCompletion: false)
+    internal static var explosionSmall:SKAction! {
+        get { return !SoundManager.sharedInstance.noSound ? eSmallInternal : emptyAction }
+    }
+    
+    internal static var explosionLarge:SKAction! {
+        get { return !SoundManager.sharedInstance.noSound ? eLargeInternal : emptyAction }
+    }
     
     private var completionHandler:completionHandlerType? = nil
     private var noSound:Bool = false

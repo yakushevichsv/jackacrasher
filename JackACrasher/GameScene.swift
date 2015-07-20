@@ -114,6 +114,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         if (!pause) {
             self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
             SoundManager.sharedInstance.playBGMusic()
+            self.paused = false
         }
         else {
             let diff = NSDate.timeIntervalSinceReferenceDate() - self.startPlayTime
@@ -121,6 +122,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             
             self.startPlayTime = 0
             SoundManager.sharedInstance.pauseBGMusic()
+            self.paused = true
         }
     }
     
@@ -1067,7 +1069,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             let expType = self.trashAsteroidsCount == 0 ? ExplosionType.Large : ExplosionType.Small
             
             trashAster!.node?.removeFromParent()
-            laser?.node?.removeFromParent()
+            laser?.node?.removeAllActions()
             
             if 0 == self.trashAsteroidsCount {
                 createExplosion(expType, position: scenePoint,withScore: 10)
@@ -1085,6 +1087,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
                 
                 runOneShortEmitter(emitterNode, 0.15)
             }
+            laser?.node?.removeFromParent()
         }
         
         
