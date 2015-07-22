@@ -19,6 +19,8 @@ struct EntityCategory {
     static var RegularAsteroid:UInt32 = 1 << 6
     static var Rope:UInt32 = 1 << 7
     static var RadialField:UInt32 = 1 << 8
+    static var BlakHoleField:UInt32 = 1 << 8
+    static var BlackHole:UInt32 = 1 << 10
 }
 
 typealias ForceType = CGFloat
@@ -151,7 +153,7 @@ class Player: SKNode, ItemDestructable {
     }
     
     private func setGravityReceptivity(enabled:Bool) {
-        self.physicsBody?.fieldBitMask = enabled ? EntityCategory.RadialField : 0
+        self.physicsBody?.fieldBitMask = enabled ? (EntityCategory.RadialField & EntityCategory.BlakHoleField)  : EntityCategory.BlakHoleField
     }
     
     //MARK: Hammer  methods

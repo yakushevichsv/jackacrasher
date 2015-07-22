@@ -29,10 +29,12 @@ extension GameScene {
     }
 }
 
-class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,AnalogControlPositionChange {
+class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate,AnalogControlPositionChange {
     
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
+    var enemyGenerator:EnemiesGenerator!
+    
     weak var gameSceneDelegate:GameSceneDelegate?
     var prevPlayerPosition:CGPoint = CGPointZero
     
@@ -214,6 +216,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         self.asteroidGenerator.start()
     }
     
+    func createEnemiesGenerator() {
+        self.enemyGenerator = EnemiesGenerator(playableRect: self.playableArea, andDelegate: self)
+        self.enemyGenerator.start()
+    }
+    
     func createPlayer() {
         let player = Player(position: CGPointMake(CGRectGetMidX(self.playableArea), CGRectGetMidY(self.playableArea)))
         player.alpha = 0.0
@@ -253,6 +260,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         self.fillInBackgroundLayer()
         self.createPlayer()
         self.createAsteroidGenerator()
+        self.createEnemiesGenerator()
         
         self.gameScoreNode = ScoreNode(point: CGPointMake(CGRectGetMinX(self.playableArea) + 40, CGRectGetMaxY(self.playableArea) - 30 ), score: self.totalGameScore)
         self.gameScoreNode.zPosition = self.fgZPosition
@@ -747,6 +755,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             if (asteroid.parent != nil && asteroid.physicsBody != nil) {
                 asteroid.physicsBody!.categoryBitMask = EntityCategory.RegularAsteroid
                 asteroid.physicsBody!.contactTestBitMask = UInt32.max
+                asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
                 
             }
         })])
@@ -756,6 +765,27 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
         let group = SKAction.group([seg1,seg2])
         
         asteroid.runAction(group)
+    }
+    
+    //MARK: Enemies Generator's methods
+    func enemiesGenerator(generator: EnemiesGenerator, didProduceItems: [SKNode], type: EnemyType) {
+        
+        for node in didProduceItems {
+            node.zPosition = self.bgZPosition + 1
+            addChild(node)
+            
+            generator.signalItemAppearance(node, type: type)
+            //assert(CGRectGetHeight(self.playableArea) > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > CGRectGetMinY(self.playableArea), "Doesn't contain frame!")
+            
+            println("Enemy position \(node.position)")
+            println("Scene size \(self.size)")
+        }
+        generator.paused = true
+        
+    }
+    
+    func didDissappearItemForEnemiesGenerator(generator: EnemiesGenerator, item: SKNode, type: EnemyType) {
+        generator.paused = false
     }
     
     //MARK: Contact methods
@@ -804,6 +834,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             asteroid.removeAllActions()
             asteroid.physicsBody!.categoryBitMask = 0
             asteroid.physicsBody!.contactTestBitMask = 0 //UInt32.max // contacts with all objects...
+            asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
             var impulse = contact.contactNormal
             
             if (CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
@@ -1080,12 +1111,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,SKPhysicsContactDelegate,Ana
             else {
                 createExplosion(expType, position: scenePoint)
                 
-                let emitterNode =  GameScene.sProjectileEmitter.copy() as! SKEmitterNode
-                emitterNode.position = laser!.node!.position
-                addChild(emitterNode)
-                emitterNode.zPosition = self.fgZPosition + 1
-                
-                runOneShortEmitter(emitterNode, 0.15)
+                if let lNode = laser?.node  {
+                    
+                    let emitterNode =  GameScene.sProjectileEmitter.copy() as! SKEmitterNode
+                    emitterNode.position = lNode.position
+                    addChild(emitterNode)
+                    emitterNode.zPosition = self.fgZPosition + 1
+                    
+                    runOneShortEmitter(emitterNode, 0.15)
+                }
             }
             laser?.node?.removeFromParent()
         }

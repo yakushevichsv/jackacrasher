@@ -120,7 +120,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         physBody.collisionBitMask = 0
-        physBody.fieldBitMask = 0
+        physBody.fieldBitMask = EntityCategory.BlakHoleField
         
         self.physicsBody = physBody
         self.physicsBody!.fieldBitMask = 0
@@ -134,7 +134,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     
     internal func removeField() {
         if let field = self.childNodeWithName("field") as? SKFieldNode {
-            field.falloff = Float(Int.max)
+            field.enabled = false
             field.removeFromParent()
         }
     }

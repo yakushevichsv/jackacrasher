@@ -36,6 +36,7 @@ class AsteroidGenerator: NSObject {
     private weak var delegate:AsteroidGeneratorDelegate!
     private var timer:NSTimer!
     private var prevAsteroidType: AsteroidType = .None
+    private var curAsteroidType: AsteroidType = .None
     private var trashAtlas:SKTextureAtlas! = SKTextureAtlas(named: "trash")
     private var spriteAtlas:SKTextureAtlas! = SKTextureAtlas(named: "sprites")
     private let trashAvg:CGFloat   = 80.0
@@ -109,15 +110,21 @@ class AsteroidGenerator: NSObject {
         
         let sprite = size == .Small ? SmallRegularAsteroid(maxLife: 2, needToAnimate: initialAnimation) : RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
-        let yMargin = round(1.2 * max(sprite.size.width,sprite.size.height)) + 10
+        let maxParam = max(sprite.size.width,sprite.size.height)
+        
+        let yMargin = round(1.2 * maxParam) + 10
         
         let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/asteroidSpeed)
         
         let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
         
-        let yPos = CGFloat(arc4random() % divisor) + yMargin
+         var yPos = CGFloat(arc4random() % divisor) + yMargin
         
         let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
+        
+        if (yPos < maxParam) {
+            yPos = maxParam
+        }
         
         sprite.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
         
@@ -164,6 +171,7 @@ class AsteroidGenerator: NSObject {
         sprite.physicsBody!.collisionBitMask = 0
         sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         sprite.physicsBody!.categoryBitMask = EntityCategory.Bomb
+        sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
         sprite.userData = ["radius":50]
         
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
@@ -182,13 +190,14 @@ class AsteroidGenerator: NSObject {
         
         var (asteroid2, _) = self.produceRegularAsteroidPrivate(AsteroidGenerator.generateRegularAsteroidSize(),initialAnimation:false)
      
-        let isR = true
-        let isL = false
-        
-        let isU = false
-        let isD = false
+        let isR = true//rand()%2 == 1
+        let isL = false//rand()%2 == 1
+        let isU = false//rand()%2 == 1
+        let isD = false//rand()%2 == 1
         
         let hRand = CGFloat(arc4random()%200 + 10) + (asteroid1.size.width + asteroid2.size.width)*0.5
+        
+        println("isR \(isR) isL \(isL) isU \(isU) isD \(isD) hRand \(hRand)")
         
         if (isR) {
            asteroid2.position.x = asteroid1.position.x + hRand
@@ -398,6 +407,7 @@ class AsteroidGenerator: NSObject {
             
             sprite.name = textName
             sprite.physicsBody = SKPhysicsBody(texture: texture!, size: texture!.size())
+            sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
             sprite.physicsBody!.categoryBitMask = EntityCategory.TrashAsteroid
             sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
             sprite.physicsBody!.collisionBitMask = EntityCategory.TrashAsteroid | EntityCategory.Asteroid
@@ -428,7 +438,8 @@ class AsteroidGenerator: NSObject {
             } else if (randValue < 4) {
                 currentAstType = .Bomb
             } else if (randValue < 6) {
-                currentAstType = .Joint
+                //currentAstType = .Joint
+                //TODO: add Joint based item...
             }else if (randValue < 8) {
                 currentAstType = .Regular
             } else {
@@ -436,31 +447,34 @@ class AsteroidGenerator: NSObject {
             }
             
             
-        } while (currentAstType == self.prevAsteroidType )
+        } while (currentAstType == .None )
+    
+        self.prevAsteroidType = self.curAsteroidType
+        self.curAsteroidType = currentAstType
         
-        //HACK: warning
-        
-        self.prevAsteroidType = .None
-        currentAstType = .Regular
-        
-        self.prevAsteroidType = currentAstType
+        println("=== Produced current type \(self.curAsteroidType) === ")
         
         switch currentAstType {
         case .Trash:
+            println("=== Produced current type .Trash === ")
             self.produceTrashSprites()
             break
         case .RopeBased:
+            println("=== Produced current type .RopeBased === ")
             self.produceRopeJointAsteroids()
             break
         case .Bomb:
+            println("=== Produced current type .Bomb === ")
             self.produceBombSprite()
             break
         case .Regular:
-            
+            println("=== Produced current type .Regular === ")
             let regSize = AsteroidGenerator.generateRegularAsteroidSize()
             
             self.produceRegularAsteroid(regSize)
         default:
+            println("=== Produced current type .Default === ")
+            
             break
         }
         

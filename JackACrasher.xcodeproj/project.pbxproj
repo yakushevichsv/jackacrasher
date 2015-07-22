@@ -36,6 +36,9 @@
 		2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C71B3BFF39003253C5 /* CloudManager.swift */; };
 		216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
+		216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A433B1B5FA4F7003B1035 /* BlackHole.swift */; };
+		216A433E1B5FB294003B1035 /* blackhole.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 216A433D1B5FB294003B1035 /* blackhole.atlas */; };
+		216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A43411B5FB820003B1035 /* EnemiesGenerator.swift */; };
 		217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217340FD1AFE5267009E934A /* GameOverViewController.swift */; };
 		217341001AFE54AB009E934A /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 217340FF1AFE54AB009E934A /* GameOverScene.sks */; };
 		217341021AFE54C1009E934A /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217341011AFE54C1009E934A /* GameOverScene.swift */; };
@@ -129,6 +132,9 @@
 		2163A8C71B3BFF39003253C5 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudManager.swift; path = Model/iCloud/CloudManager.swift; sourceTree = "<group>"; };
 		216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupPresentationController.swift; path = ViewControllers/PopupPresentationController.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
+		216A433B1B5FA4F7003B1035 /* BlackHole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlackHole.swift; path = Entities/BlackHole.swift; sourceTree = "<group>"; };
+		216A433D1B5FB294003B1035 /* blackhole.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = blackhole.atlas; sourceTree = "<group>"; };
+		216A43411B5FB820003B1035 /* EnemiesGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemiesGenerator.swift; path = Model/EnemiesGenerator.swift; sourceTree = "<group>"; };
 		217340FD1AFE5267009E934A /* GameOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverViewController.swift; path = ViewControllers/GameOverViewController.swift; sourceTree = "<group>"; };
 		217340FF1AFE54AB009E934A /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = GameOverScene.sks; path = Scenes/GameOverScene.sks; sourceTree = "<group>"; };
 		217341011AFE54C1009E934A /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverScene.swift; path = Scenes/GameOverScene.swift; sourceTree = "<group>"; };
@@ -243,14 +249,10 @@
 			children = (
 				2163A8C41B3BEA60003253C5 /* iCloud */,
 				210C0B4C1B3577D100759382 /* IAP */,
-				218B375B1B02959A00B9085C /* GameLogicManager.swift */,
-				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
-				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
-				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
-				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
+				216A433F1B5FB7D6003B1035 /* Generators */,
+				216A43401B5FB7E1003B1035 /* Managers */,
 				212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */,
 				210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */,
-				218F24B21B35AF56008C085F /* NetworkManager.swift */,
 				21F795691B555788003464BF /* SurvivalGameInfo.swift */,
 			);
 			name = Model;
@@ -263,6 +265,27 @@
 				2163A8C71B3BFF39003253C5 /* CloudManager.swift */,
 			);
 			name = iCloud;
+			sourceTree = "<group>";
+		};
+		216A433F1B5FB7D6003B1035 /* Generators */ = {
+			isa = PBXGroup;
+			children = (
+				21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */,
+				216A43411B5FB820003B1035 /* EnemiesGenerator.swift */,
+			);
+			name = Generators;
+			sourceTree = "<group>";
+		};
+		216A43401B5FB7E1003B1035 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				218F24B21B35AF56008C085F /* NetworkManager.swift */,
+				218B375B1B02959A00B9085C /* GameLogicManager.swift */,
+				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
+				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
+				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
+			);
+			name = Managers;
 			sourceTree = "<group>";
 		};
 		217340FB1AFE5124009E934A /* Scenes */ = {
@@ -310,6 +333,7 @@
 		2199B6801AE3FC9500DDDB9F /* Atlases */ = {
 			isa = PBXGroup;
 			children = (
+				216A433D1B5FB294003B1035 /* blackhole.atlas */,
 				21A74E501AE0F6E00005334D /* trash.atlas */,
 				210DD8131AE3CAF90092DD39 /* sprites.atlas */,
 			);
@@ -380,6 +404,7 @@
 		21E56B331ADA9C2E0071A217 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				216A433B1B5FA4F7003B1035 /* BlackHole.swift */,
 				21E56B311ADA9C2A0071A217 /* Player.swift */,
 				210DD8151AE3CBAA0092DD39 /* Explosion.swift */,
 				21F0FFA91AED1A9C00C2BDB6 /* TextOnAsteroid */,
@@ -591,6 +616,7 @@
 				21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */,
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
 				2192CCE21AF6574800518F97 /* realStar.png in Resources */,
+				216A433E1B5FB294003B1035 /* blackhole.atlas in Resources */,
 				211243611AEAE070006B5487 /* Rock.png in Resources */,
 				211243631AEAE07A006B5487 /* Explosion.sks in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
@@ -633,6 +659,7 @@
 				2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */,
 				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,
 				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
+				216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
@@ -645,6 +672,7 @@
 				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
 				210C0B501B357AFB00759382 /* IAPProductInfo.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
+				216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */,
 				218D5A831B317C7F007ABE63 /* UIViewControllerExtensions.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
 				214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */,
