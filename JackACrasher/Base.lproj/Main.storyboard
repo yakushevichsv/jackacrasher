@@ -122,7 +122,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJb-8H-lOJ">
-                                <rect key="frame" x="549" y="15" width="35" height="33"/>
+                                <rect key="frame" x="549" y="0.0" width="35" height="33"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
                                 <state key="normal" title="BTN">
                                     <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
@@ -133,7 +133,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTq-DP-qnf">
-                                <rect key="frame" x="531" y="55" width="53" height="34"/>
+                                <rect key="frame" x="531" y="40" width="53" height="34"/>
                                 <state key="normal" title="Sound">
                                     <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -152,7 +152,7 @@
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="5vs-8M-X8t" secondAttribute="trailingMargin" id="CU3-2b-yf3"/>
                             <constraint firstItem="2BG-Lf-P00" firstAttribute="centerX" secondItem="12G-JR-etf" secondAttribute="centerX" id="Jo2-6R-xeR"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" id="LmO-pu-8R1"/>
-                            <constraint firstItem="FJb-8H-lOJ" firstAttribute="top" secondItem="VOQ-0L-H4x" secondAttribute="bottom" constant="15" id="MUV-dg-Xbs"/>
+                            <constraint firstItem="FJb-8H-lOJ" firstAttribute="top" secondItem="VOQ-0L-H4x" secondAttribute="bottom" id="MUV-dg-Xbs"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="top" id="XMC-Aq-LR5"/>
                             <constraint firstItem="nd9-3T-vrx" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" multiplier="0.5" id="acR-bQ-l5K">
                                 <variation key="widthClass=compact" constant="-15.5"/>
@@ -322,36 +322,6 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="cGI-gP-2Pi" customClass="AnalogControl" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="16" y="460" width="120" height="120"/>
-                                <subviews>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="base" translatesAutoresizingMaskIntoConstraints="NO" id="PKy-PE-TfA">
-                                        <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
-                                    </imageView>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="knob" translatesAutoresizingMaskIntoConstraints="NO" id="fNz-UV-CkH">
-                                        <rect key="frame" x="32" y="32" width="56" height="56"/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" secondItem="fNz-UV-CkH" secondAttribute="height" id="ilR-mu-uOp"/>
-                                        </constraints>
-                                    </imageView>
-                                </subviews>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" secondItem="cGI-gP-2Pi" secondAttribute="height" id="63z-UH-Gna"/>
-                                    <constraint firstItem="PKy-PE-TfA" firstAttribute="leading" secondItem="cGI-gP-2Pi" secondAttribute="leading" id="7u0-E5-wGv"/>
-                                    <constraint firstAttribute="centerY" secondItem="fNz-UV-CkH" secondAttribute="centerY" id="9pf-ED-6Kn"/>
-                                    <constraint firstItem="fNz-UV-CkH" firstAttribute="height" secondItem="PKy-PE-TfA" secondAttribute="height" multiplier="0.46" id="AWd-Pq-U33"/>
-                                    <constraint firstAttribute="centerX" secondItem="fNz-UV-CkH" secondAttribute="centerX" id="Owu-4x-pws"/>
-                                    <constraint firstItem="PKy-PE-TfA" firstAttribute="top" secondItem="cGI-gP-2Pi" secondAttribute="top" id="iIJ-Sl-0ml"/>
-                                    <constraint firstItem="fNz-UV-CkH" firstAttribute="centerX" secondItem="PKy-PE-TfA" secondAttribute="centerX" id="iry-Ia-0RS"/>
-                                    <constraint firstAttribute="bottom" secondItem="PKy-PE-TfA" secondAttribute="bottom" id="m3d-dz-qQw"/>
-                                    <constraint firstAttribute="trailing" secondItem="PKy-PE-TfA" secondAttribute="trailing" id="uEo-z5-l6q"/>
-                                    <constraint firstItem="fNz-UV-CkH" firstAttribute="centerY" secondItem="PKy-PE-TfA" secondAttribute="centerY" id="ykZ-7I-cFN"/>
-                                </constraints>
-                                <connections>
-                                    <outlet property="knobImageView" destination="fNz-UV-CkH" id="pTj-bR-ugp"/>
-                                </connections>
-                            </view>
                             <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGW-Qx-yrp">
                                 <rect key="frame" x="16" y="0.0" width="15" height="22"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -369,15 +339,11 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="cGI-gP-2Pi" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="2xA-lp-ldx"/>
-                            <constraint firstItem="cGI-gP-2Pi" firstAttribute="width" secondItem="3se-qz-xqx" secondAttribute="width" multiplier="0.2" id="FLB-i0-Ihc"/>
                             <constraint firstItem="TGW-Qx-yrp" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" id="W31-Nt-ZiH"/>
                             <constraint firstItem="TGW-Qx-yrp" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="WGf-Jd-HlL"/>
-                            <constraint firstAttribute="bottom" secondItem="cGI-gP-2Pi" secondAttribute="bottom" constant="20" symbolic="YES" id="lJE-mr-Ap0"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="analogControl" destination="cGI-gP-2Pi" id="jfo-PD-FA6"/>
                         <outlet property="btnPlay" destination="TGW-Qx-yrp" id="5lZ-0X-taa"/>
                         <segue destination="qda-7r-HQm" kind="custom" identifier="gameOver" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="wt1-xR-t9Y"/>
                     </connections>
@@ -482,6 +448,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="ekw-zd-0cC" customClass="JackACrasherNavigationController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
                     <toolbarItems/>
                     <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="q52-qH-w94">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -497,8 +464,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="base" width="256" height="256"/>
-        <image name="knob" width="128" height="128"/>
         <image name="pause" width="14" height="18"/>
         <image name="play" width="15" height="17"/>
     </resources>

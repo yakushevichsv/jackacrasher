@@ -191,3 +191,48 @@ func vectorFromPoint(point:CGPoint, usingDirection direction:CGVector, inRect re
     return CGVector(dx: xPosDist, dy: yPosDist)
 }
 
+extension CGRect {
+    var center:CGPoint {
+        return CGPointMake(CGRectGetMidX(self), CGRectGetMidY(self))
+    }
+}
+
+extension CGPoint {
+    func rectWithSize(size:CGSize) -> CGRect {
+        
+        let dx = size.halfWidth()
+        let dy = size.halfHeight()
+        
+        let oX = self.x - dx
+        let oY = self.y - dy
+        
+        return CGRectMake(oX, oY, dx, dy)
+    }
+    
+    func integralPoint() -> CGPoint {
+        return CGPoint(x: round(self.x),y: round(self.y))
+    }
+}
+
+extension CGSize {
+    func rectAtPoint(point:CGPoint) -> CGRect {
+        return point.rectWithSize(self)
+    }
+    
+    func maxSizeParam() -> CGFloat {
+        return max(self.width,self.height)
+    }
+    
+    func halfMaxSizeParam() -> CGFloat {
+        return 0.5*maxSizeParam()
+    }
+    
+    func halfWidth() -> CGFloat {
+        return width * 0.5
+    }
+    
+    func halfHeight() -> CGFloat {
+        return height * 0.5
+    }
+}
+

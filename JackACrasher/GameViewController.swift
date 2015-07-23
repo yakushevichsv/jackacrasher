@@ -10,10 +10,7 @@ import UIKit
 import SpriteKit
 
 class GameViewController: UIViewController,GameSceneDelegate {
-
     @IBOutlet weak var btnPlay: UIButton!
-    @IBOutlet weak var analogControl: AnalogControl!
-    
     private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
     
     private var myContext = 0
@@ -100,8 +97,6 @@ class GameViewController: UIViewController,GameSceneDelegate {
             
             btnPlay.superview?.bringSubviewToFront(btnPlay)
             
-            analogControl.delegate = scene
-            analogControl.superview?.bringSubviewToFront(analogControl)
             
             waitUntilNotLoadedItem()
         }
@@ -171,19 +166,24 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     //MARK : GameScene delegate 
     
+    private func segueToGameOverSrceen(needToContinue:Bool) {
+        
+        if (needToContinue && self.view.window != nil) {
+            dispatch_async(dispatch_get_main_queue()){
+                [unowned self] in
+                self.skView.scene?.paused = true
+                self.performSegueWithIdentifier("gameOver", sender: self)
+            }
+        }
+    }
+    
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64, playedTime:NSTimeInterval,needToContinue:Bool) {
         
         
         let needToReport = playedTime != 0  && currentScore != 0
         
          if !needToReport {
-            
-            if (needToContinue && self.view.window != nil) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.skView.scene?.paused = true
-                    self.performSegueWithIdentifier("gameOver", sender: self)
-                })
-            }
+            segueToGameOverSrceen(needToContinue)
             return
         }
         
@@ -198,12 +198,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         self.logicManager.storeSurvivalScores([UInt64(currentScore),totalScore, UInt64(playedTime)]){
             [unowned self]
             success, error in
-            if (needToContinue && self.view.window != nil) {
-                dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                    self.skView.scene?.paused = true
-                    self.performSegueWithIdentifier("gameOver", sender: self)
-                })
-            }
+            self.segueToGameOverSrceen(needToContinue)
         }
     }
     

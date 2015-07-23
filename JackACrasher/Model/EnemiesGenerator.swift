@@ -19,8 +19,8 @@ enum EnemyType {
 }
 
 protocol EnemiesGeneratorDelegate:NSObjectProtocol {
-    func enemiesGenerator(generator:EnemiesGenerator, didProduceItems:[SKNode], type:EnemyType)
-    func didDissappearItemForEnemiesGenerator(generator:EnemiesGenerator, item:SKNode, type:EnemyType)
+    func enemiesGenerator(generator:EnemiesGenerator, didProduceItems:[SKNode!], type:EnemyType)
+    func didDissappearItemForEnemiesGenerator(generator:EnemiesGenerator, item:SKNode!, type:EnemyType)
 }
 
 class EnemiesGenerator: NSObject {
@@ -35,6 +35,7 @@ class EnemiesGenerator: NSObject {
         self.delegate = delegate
         super.init()
         self.redifineTimer()
+        self.stop()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -109,13 +110,15 @@ class EnemiesGenerator: NSObject {
         
         let hole = BlackHole()
         
-        let r = CGFloat(roundf(Float(0.5*max(hole.frame.size.width,hole.frame.size.height))))
+        let r = round(hole.size.halfMaxSizeParam())
+        
         let nRect = CGRectInset(self.playableRect, r, r)
         
-        let x = arc4random() % UInt32(CGRectGetWidth(nRect))
-        let y = arc4random() % UInt32(CGRectGetHeight(nRect))
+        let x = CGFloat(arc4random() % UInt32(CGRectGetWidth(nRect))) + CGRectGetMinX(nRect)
+        let y = CGFloat(arc4random() % UInt32(CGRectGetHeight(nRect))) + CGRectGetMinY(nRect)
         
-        let position = CGPointMake(CGFloat(x), CGFloat(y))
+        let position = CGPointMake(x, y)
+        println("!!nRect \(nRect) Position \(position)")
         hole.position = position
         
         return hole
@@ -127,12 +130,9 @@ class EnemiesGenerator: NSObject {
             
             if let hole = node as? BlackHole {
             
-                hole.signalAppearance(){
+                hole.presentHole(){
                     [unowned self] in
-                    let seq = SKAction.sequence([SKAction.waitForDuration(4),SKAction.runBlock(){
-                        self.delegate?.didDissappearItemForEnemiesGenerator(self,item:hole,type:.BlackHole)
-                        },SKAction.removeFromParent()])
-                    hole.runAction(seq)
+                    self.delegate?.didDissappearItemForEnemiesGenerator(self,item:hole,type:.BlackHole)
                 }
                 
             }

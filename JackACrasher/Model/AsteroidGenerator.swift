@@ -66,6 +66,7 @@ class AsteroidGenerator: NSObject {
         super.init()
         
         redifineTimer()
+        stop()
     }
     
     internal func start() {
@@ -181,6 +182,8 @@ class AsteroidGenerator: NSObject {
         sprite.runAction(sequence)
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Bomb)
+        
+        //TODO: eeeee yPos is not right! 
         
         println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size)")
     }

@@ -78,6 +78,10 @@ class Player: SKNode, ItemDestructable {
         return Player.sBGSprite.size
     }
     
+    internal class var backgroundPlayerSprite:SKSpriteNode! {
+        return Player.sBGSprite
+    }
+    
     internal class func loadAssets() {
        
         dispatch_once(&sContext) { () -> Void in
@@ -137,7 +141,7 @@ class Player: SKNode, ItemDestructable {
     
         let aPhysBody = SKPhysicsBody(rectangleOfSize: self.size)
         aPhysBody.categoryBitMask = EntityCategory.Player
-        aPhysBody.contactTestBitMask = 0
+        aPhysBody.contactTestBitMask =  EntityCategory.BlackHole
         aPhysBody.collisionBitMask = 0
         enableGravityReceptivity()
         self.physicsBody = aPhysBody

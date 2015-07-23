@@ -16,10 +16,12 @@ let duration = (M_PI*2)/digitAppearanceSpeed
 
 @objc protocol ItemDestructable {
     func tryToDestroyWithForce(forceValue:ForceType) -> Bool
+     var health:ForceType {get set}
 }
 
 @objc protocol ItemDamaging {
     var damageForce:ForceType {get}
+    func destroyItem(item:ItemDestructable) -> Bool
 }
 
 
@@ -32,10 +34,6 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     private let bgImageNode:SKSpriteNode! = SKSpriteNode()
     
     
-    internal var damageForce:ForceType {
-        return self.asteroidSize == .Big ? 5 : 4
-    }
-    
     
     internal var mainSprite:SKSpriteNode! {
         return bgImageNode
@@ -45,11 +43,10 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         return bgImageNode != nil ? bgImageNode.size : CGSizeZero
     }
     
-    internal var healthState:ForceType {
-        return self.digitNode.digit
+    internal var health:ForceType {
+        get { return self.digitNode.digit }
+        set { self.digitNode.digit = newValue}
     }
-    
-    
     
     internal var asteroidSize:RegularAsteroidSize {
         return asterSize
@@ -231,16 +228,25 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
             self.removeActionForKey(self.displayAction)
         }
         
-        var result = ForceType(self.digitNode.digit) - forceValue
+        var result = self.health - forceValue
         
         if (result < 0) {
             result = 0
         }
-        self.digitNode.digit = result
+        self.health = result
         
         return result == 0
     }
     
+    //MARK: ItemDamaging protocol
+    
+    internal var damageForce:ForceType {
+        return self.asteroidSize == .Big ? 5 : 4
+    }
+
+    func destroyItem(item:ItemDestructable) ->Bool {
+        return item.tryToDestroyWithForce(self.damageForce)
+    }
 }
 
 class SmallRegularAsteroid:RegularAsteroid {

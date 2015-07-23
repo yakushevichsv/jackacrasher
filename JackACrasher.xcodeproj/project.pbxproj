@@ -65,7 +65,6 @@
 		21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA61B10A1B1009EDA3E /* button_press.wav */; };
 		21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA81B10AAB6009EDA3E /* star_small.png */; };
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
-		21DEA0D11AFD1893004FF5D7 /* AnalogControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
 		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
@@ -161,7 +160,6 @@
 		21CFBCA61B10A1B1009EDA3E /* button_press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_press.wav; sourceTree = "<group>"; };
 		21CFBCA81B10AAB6009EDA3E /* star_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_small.png; sourceTree = "<group>"; };
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
-		21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AnalogControl.swift; path = Views/AnalogControl.swift; sourceTree = "<group>"; };
 		21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Game_Robot.ttf; sourceTree = "<group>"; };
 		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
 		21E56B2D1ADA93BB0071A217 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = JackACrasher/Particles/spark.png; sourceTree = "<group>"; };
@@ -373,7 +371,6 @@
 		21DEA0CF1AFD1761004FF5D7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				21DEA0D01AFD1893004FF5D7 /* AnalogControl.swift */,
 				2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */,
 				210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */,
 			);
@@ -654,7 +651,6 @@
 				21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */,
 				2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */,
 				2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */,
-				21DEA0D11AFD1893004FF5D7 /* AnalogControl.swift in Sources */,
 				210C0B4E1B357ABF00759382 /* IAPProduct.swift in Sources */,
 				2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */,
 				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,

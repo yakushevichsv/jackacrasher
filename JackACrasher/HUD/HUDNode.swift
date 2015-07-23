@@ -86,7 +86,7 @@ class HUDNode: SKNode {
                 let value = k1 * x + b1
                 
                 self.updateLifeCurPercentNodeWithValue(max(lifeType(0),lifeType(value)), width: width)
-                println("Current value \(value)")
+                //println("Current value \(value)")
             }
             
             
@@ -169,6 +169,12 @@ class HUDNode: SKNode {
         return self.life
     }
     
+    internal func reduceCurrentLifePercent(forceType lifeDamage:ForceType) {
+        
+        let damage:HUDNode.lifeType = lifeDamage > ForceType(HUDNode.sLifePercentMax) ? HUDNode.sLifePercentMax : HUDNode.lifeType(lifeDamage)
+        
+        reduceCurrentLifePercent(damage)
+    }
     
     //MARK: Internal methods
     internal func reduceCurrentLifePercent(lifeDamage:lifeType) {
@@ -176,6 +182,7 @@ class HUDNode: SKNode {
         var prevLifePercent = self.curLifePercent
         
         self.curLifePercent -= lifeDamage
+        
         
         if (self.curLifePercent <= HUDNode.sLifePercentMin) {
             self.curLifePercent = HUDNode.sLifePercentMin
@@ -186,6 +193,7 @@ class HUDNode: SKNode {
             }
             else {
                 updateLifeCurPercentNode(animated: false, prevValue: self.curLifePercent)
+                return
             }
         }
         

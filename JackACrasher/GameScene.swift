@@ -29,7 +29,7 @@ extension GameScene {
     }
 }
 
-class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate,AnalogControlPositionChange {
+class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate {
     
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
@@ -221,8 +221,53 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.enemyGenerator.start()
     }
     
+    func findNewInitialPositionForPlayer() -> CGPoint {
+        
+        var position =  self.playableArea.center
+        
+        for node in self.nodesAtPoint(position) {
+            
+            if node.categoryBitMask == EntityCategory.BlackHole {
+                let blackHole = node as! BlackHole
+                
+                let size = blackHole.size
+                
+                let blackHoleRect = size.rectAtPoint(blackHole.position)
+                
+                var playerRect = Player.backgroundPlayerSprite.size.rectAtPoint(position)
+                
+                if CGRectIntersectsRect(playerRect, blackHoleRect) {
+                    let intersect = CGRectIntersection(playerRect, blackHoleRect)
+                    
+                    let pOX = CGRectGetMinX(playerRect)
+                    let pOY = CGRectGetMinY(playerRect)
+                    
+                    let hOX = CGRectGetMinX(blackHoleRect)
+                    let hOY = CGRectGetMinY(blackHoleRect)
+                    
+                    var dx:CGFloat = intersect.width
+                    var dy:CGFloat = intersect.height
+                    
+                    if (pOX < hOX) {
+                        dx *= -1
+                    }
+                    
+                    if (pOY < hOY) {
+                        dy *= -1
+                    }
+                    
+                    playerRect = CGRectOffset(playerRect, dx, dy)
+                    position = playerRect.center
+                
+                }
+                break
+            }
+        }
+        return position
+    }
+    
     func createPlayer() {
-        let player = Player(position: CGPointMake(CGRectGetMidX(self.playableArea), CGRectGetMidY(self.playableArea)))
+        let player = Player(position: self.findNewInitialPositionForPlayer())
         player.alpha = 0.0
         self.prevPlayerPosition = player.position
         
@@ -280,10 +325,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         let playedTime = self.calculateGameTime()
         assert(self.totalGameScore >= UInt64(self.currentGameScore))
-        if (self.currentGameScore != 0 && playedTime != 0 ) {
-            assert(self.totalGameScore > 0)
-            self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore, playedTime: playedTime, needToContinue: needToContinue)
-        }
+        
+        self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore, playedTime: playedTime, needToContinue: needToContinue)
     }
     
     private func setTotalScoreLabelValue() {
@@ -413,6 +456,33 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return false
     }
     
+    
+    private func tryToDestroyPlayer(damageForce:ForceType) -> Bool {
+        
+        let prevNumberOfLives = self.hudNode.life
+        
+        self.hudNode.reduceCurrentLifePercent(forceType: damageForce)
+        let curNumberOfLives = self.hudNode.life
+        
+        let destroyed = self.player.tryToDestroyWithForce(damageForce)
+        println("!!! Destroyed \(destroyed) prevNumberOfLives \(prevNumberOfLives) curNumberOfLives \(curNumberOfLives)")
+        if (prevNumberOfLives != curNumberOfLives) {
+            
+            let info = SurvivalGameInfo()
+            info.numberOfLives = destroyed ? 0 :curNumberOfLives
+            info.ratio = destroyed ? 0 : self.healthRatio
+            info.currentScore = self.currentGameScore
+            info.playedTime = self.playedTime
+            
+            GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
+                updated in
+                println("UPdated \(updated)")
+            }
+        }
+    
+        return destroyed
+    }
+    
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         
         if (self.needToReflect) {
@@ -478,32 +548,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if (isPlayerVisible && self.player.containsPoint(location)) {
                 
-                let prevNumberOfLives = self.hudNode.life
-                let damageForce = 10
-                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(damageForce))
-                let curNumberOfLives = self.hudNode.life
+                let damageForce = ForceType(10)
                 
-                let destroyed = self.player.tryToDestroyWithForce(ForceType(damageForce))
-                
-                if (prevNumberOfLives != curNumberOfLives) {
-                    
-                    let info = SurvivalGameInfo()
-                    info.numberOfLives = destroyed ? 0 :curNumberOfLives
-                    info.ratio = destroyed ? 0 : self.healthRatio
-                    info.currentScore = self.currentGameScore
-                    info.playedTime = self.playedTime
-                    
-                    GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
-                        updated in
-                        println("UPdated \(updated)")
-                    }
-                }
-                
-                
-                if (destroyed) {
+                if self.tryToDestroyPlayer(damageForce) {
                     
                     terminateGame()
-                    
                     return
                 }
             }
@@ -676,6 +725,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             if (self.trashAsteroidsCount == 0) {
+                self.enemyGenerator.paused = false
                 self.player.disableProjectileGun()
                 generator.paused = self.trashAsteroidsCount != 0
             }
@@ -713,6 +763,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         switch (type) {
         case .Trash:
+            self.enemyGenerator.paused = true
             self.player.removeAllActions()
             self.player.disableEngine()
             self.trashAsteroidsCount += didProduceAsteroids.count
@@ -768,7 +819,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     //MARK: Enemies Generator's methods
-    func enemiesGenerator(generator: EnemiesGenerator, didProduceItems: [SKNode], type: EnemyType) {
+    func enemiesGenerator(generator: EnemiesGenerator, didProduceItems: [SKNode!], type: EnemyType) {
         
         for node in didProduceItems {
             node.zPosition = self.bgZPosition + 1
@@ -784,8 +835,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
     }
     
-    func didDissappearItemForEnemiesGenerator(generator: EnemiesGenerator, item: SKNode, type: EnemyType) {
+    func didDissappearItemForEnemiesGenerator(generator: EnemiesGenerator, item: SKNode!, type: EnemyType) {
         generator.paused = false
+        item.removeFromParent()
     }
     
     //MARK: Contact methods
@@ -796,37 +848,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if (asteroid.isFiring) {
                 
-                let prevNumberOfLives = self.hudNode.life
-                self.hudNode.reduceCurrentLifePercent(HUDNode.lifeType(asteroid.damageForce))
-                let curNumberOfLives = self.hudNode.life
+                let damageForce = asteroid.damageForce
                 
-                let destroed = self.player.tryToDestroyWithForce(asteroid.damageForce)
-                
-                if (prevNumberOfLives != curNumberOfLives) {
-                    
-                    let info = SurvivalGameInfo()
-                    info.numberOfLives = destroed ? 0 :curNumberOfLives
-                    info.ratio = destroed ? 0 : self.healthRatio
-                    info.currentScore = self.currentGameScore
-                    info.playedTime = self.playedTime
-                    
-                    GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
-                        updated in
-                        println("UPdated \(updated)")
-                    }
-                }
-
-                
-                if (destroed) {
-                    
+                if (self.tryToDestroyPlayer(damageForce)) {
                     terminateGame()
-                    
-                    return true
                 }
+                else {
+                    createRocksExplosion(asteroid.position, scale: 1.0)
                 
-                createRocksExplosion(asteroid.position, scale: 1.0)
-                
-                asteroid.removeFromParent()
+                    asteroid.removeFromParent()
+                }
                 
                 return true
             }
@@ -1000,6 +1031,70 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return false
     }
     
+    func didContachHasBlackHole(contact:SKPhysicsContact) -> Bool
+    {
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        var blackHoleNode:BlackHole!
+        var secondNode:SKNode!
+        
+        if (bodyA.categoryBitMask == EntityCategory.BlackHole) {
+            blackHoleNode = bodyA.node as? BlackHole
+            secondNode = bodyB.node
+        } else if (bodyB.categoryBitMask == EntityCategory.BlackHole) {
+            blackHoleNode = bodyB.node as? BlackHole
+            secondNode = bodyA.node
+        } else {
+            blackHoleNode = nil
+            secondNode = nil
+        }
+        
+        if (blackHoleNode == nil || secondNode == nil) {
+            return false
+        }
+        
+        secondNode.physicsBody!.contactTestBitMask &= ~EntityCategory.BlackHole
+    
+        
+        //self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
+        println("blackHoleNode")
+        let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(durationToWait * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_main_queue()){
+            [unowned self] in 
+            self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
+        }
+        
+        return true
+    }
+    
+    private func tryToDestroyDestructableItem(blackHoleNode:BlackHole, secondNode:SKNode!) {
+        
+        if let destNode = secondNode as? ItemDestructable {
+            let damage = blackHoleNode.damageForce
+            if secondNode == self.player {
+                
+                if self.tryToDestroyPlayer(damage) {
+                    self.terminateGame()
+                }
+                else {
+                    self.player.removeFromParent()
+                    self.createPlayer()
+                }
+                return
+            }
+            
+            if destNode.tryToDestroyWithForce(damage) {
+                
+                secondNode.removeFromParent()
+            }
+        }
+    }
+    
     func didBeginContact(contact: SKPhysicsContact)
     {
         let bodyA = contact.bodyA
@@ -1024,9 +1119,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             bomb = bodyB
         }
         
-        if (didEntityContactWithRegularAsteroid(contact)) {
+        if (didEntityContactWithRegularAsteroid(contact) || didContachHasBlackHole(contact)) {
             return
-        }
+        } 
         
         if let bombBody = bomb {
             println("One node is bomb!")
@@ -1185,21 +1280,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if (scoreLabel.parent == nil) {
             addChild(scoreLabel)
         }
-    }
-    
-    //MARK: Processing events 
-    
-    func analogControlPositionChanged(analogControl: AnalogControl,
-        position: CGPoint)  {
-            
-            
-            self.player.physicsBody!.velocity = CGVector(
-                dx: position.x * CGFloat(self.player.flyDurationSpeed),
-                dy: -position.y * CGFloat(self.player.flyDurationSpeed))
-            
-            
-            
-            
     }
 }
  

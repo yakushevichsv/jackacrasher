@@ -114,7 +114,7 @@ class GameOverScene: SKScene {
         
         let seq = SKAction.sequence([group,SKAction.runBlock({ () -> Void in
             self.gameOverDelegate?.gameOverScene(self, didDisplayLabelWithFrame: self.gameOverLabel.frame)
-        }),SKAction.playSoundFileNamed("lose.wav", waitForCompletion: false)])
+        }),SoundManager.gameOverAction])
         
         self.gameOverLabel.runAction(seq, withKey: gameOverActGroup)
     }
