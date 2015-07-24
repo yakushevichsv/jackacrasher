@@ -101,6 +101,19 @@ class AsteroidGenerator: NSObject {
         return sequence
     }
     
+    internal class func damageForce(type:AsteroidType) -> ForceType {
+        var force = ForceType(0)
+        switch (type){
+        case .Bomb:
+            force = 20
+            break
+        default:
+            assert(false, "False")
+            break
+        }
+        return force
+    }
+    
     internal class var regularAsteroidSpeed:CGFloat {
         get { return 30  }
     }
@@ -156,11 +169,13 @@ class AsteroidGenerator: NSObject {
         
         sprite.xScale = 0.25
         
-        let yMargin = round(1 * max(sprite.size.width,sprite.size.height)) + 10
+        let param = sprite.size.halfMaxSizeParam()
+        
+        let yMargin = round(param) + 10
         
         let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/bombSpeed)
         
-        let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
+        let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
         
         let yPos = CGFloat(arc4random() % divisor) + yMargin
         
@@ -182,8 +197,6 @@ class AsteroidGenerator: NSObject {
         sprite.runAction(sequence)
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Bomb)
-        
-        //TODO: eeeee yPos is not right! 
         
         println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size)")
     }
@@ -450,9 +463,12 @@ class AsteroidGenerator: NSObject {
             }
             
             
-        } while (currentAstType == .None )
-    
+        } while (currentAstType == self.prevAsteroidType )
+        
         self.prevAsteroidType = self.curAsteroidType
+        
+        //currentAstType = .Bomb
+        
         self.curAsteroidType = currentAstType
         
         println("=== Produced current type \(self.curAsteroidType) === ")

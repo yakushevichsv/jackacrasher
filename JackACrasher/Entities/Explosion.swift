@@ -16,21 +16,18 @@ enum ExplosionType {
     static let allValues = [Small, Large]
 }
 
-//3333 process here...... Exposion...
-
 
 class Explosion: SKSpriteNode {
     private static var textures:[SKTexture] = []
     private static var  animation:SKAction! = nil
-    
     private static var small:Explosion!
     private static var big:Explosion!
-    
+    private static var sContext:dispatch_once_t = 0
     internal var explosionType:ExplosionType = .Small
     
-    override class func initialize() {
-        super.initialize()        
-        prepare()
+    
+    internal class func loadAssets() {
+        self.prepare()
     }
     
     class func getExplostionForType(type:ExplosionType) -> Explosion {
@@ -49,24 +46,24 @@ class Explosion: SKSpriteNode {
         return exp.copy() as! Explosion
     }
     
-    class func prepare() {
+    private class func prepare() {
         //void for textures initialization...
         
-        if (!textures.isEmpty) {
-            return
-        }
-        var curTextures :[SKTexture] = []
-        for i in 1...3 {
-            let texture = SKTexture(imageNamed: "explosion000\(i)")
-            assert(texture != nil, "Texture is nil")
-            curTextures.append(texture)
-        }
+        dispatch_once(&Explosion.sContext) {
         
-        SKTexture.preloadTextures(curTextures) { () -> Void in
-            self.textures = curTextures
-            self.animation = SKAction.animateWithTextures(curTextures, timePerFrame: 0.2)
-            self.small = Explosion(explosionType: .Small)
-            self.big = Explosion(explosionType: .Large)
+            var curTextures :[SKTexture] = []
+            for i in 1...3 {
+                let texture = SKTexture(imageNamed: "explosion000\(i)")
+                assert(texture != nil, "Texture is nil")
+                curTextures.append(texture)
+            }
+            
+            SKTexture.preloadTextures(curTextures) { () -> Void in
+                self.textures = curTextures
+                self.animation = SKAction.animateWithTextures(curTextures, timePerFrame: 0.2)
+                self.small = Explosion(explosionType: .Small)
+                self.big = Explosion(explosionType: .Large)
+            }
         }
     }
     

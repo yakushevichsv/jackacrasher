@@ -89,6 +89,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         //TODO: Move into loadAssets  methods
         Player.loadAssets()
         RegularAsteroids.loadAssets()
+        Explosion.loadAssets()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -769,7 +770,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.trashAsteroidsCount += didProduceAsteroids.count
             
             println("Trash asteroids count \(self.trashAsteroidsCount) addition" )
-            Explosion.prepare()
             self.player.enableProjectileGun()
             
             //eee Move up if there is a contact...
@@ -1057,7 +1057,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         secondNode.physicsBody!.contactTestBitMask &= ~EntityCategory.BlackHole
     
         
-        //self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
         println("blackHoleNode")
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
         
@@ -1124,6 +1123,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         } 
         
         if let bombBody = bomb {
+            
+            if (bombBody.node == nil){
+                return
+            }
+            
             println("One node is bomb!")
             let bombNode = bombBody.node!
             
@@ -1140,6 +1144,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let node = bombNode
             let scenePoint = contact.contactPoint
             createExplosion(ExplosionType.Large, position: scenePoint,withScore:0)
+            bombNode.physicsBody = nil
             bombNode.removeFromParent()
             
             self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: bombNode as! SKSpriteNode, withType: AsteroidType.Bomb)
@@ -1153,6 +1158,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 } else if (eBody.categoryBitMask == EntityCategory.Player) {
                     //TODO: remove live value...
                     //or GameOver...
+                    let damageForce = AsteroidGenerator.damageForce(.Bomb)
+                    if self.tryToDestroyPlayer(damageForce) {
+                        self.terminateGame()
+                        return
+                    }
                 }
             })
             
