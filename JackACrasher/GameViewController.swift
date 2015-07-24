@@ -73,33 +73,31 @@ class GameViewController: UIViewController,GameSceneDelegate {
     //MARK: - Public function
     func restartGame(isNew:Bool = true) {
         
-        if let scene = GameScene.unarchiveFromFile("GameScene") as? GameScene {
-            
-            // Configure the view.
-            let skView = self.view as! SKView
-            
-            
-            skView.showsFPS = true
-            skView.showsNodeCount = true
-            /* Sprite Kit applies additional optimizations to improve rendering performance */
-            skView.ignoresSiblingOrder = false
-            
-            /* Set the scale mode to scale to fit the window */
-            scene.scaleMode = .AspectFill
-            
-            scene.gameSceneDelegate = self
-            if (isNew) {
-                skView.presentScene(scene)
-            }
-            else {
-                skView.presentScene(scene, transition: SKTransition.pushWithDirection(.Down, duration: 1))
-            }
-            
-            btnPlay.superview?.bringSubviewToFront(btnPlay)
-            
-            
-            waitUntilNotLoadedItem()
+        // Configure the view.
+        let skView = self.view as! SKView
+        let scene = GameScene(size: skView.bounds.size)
+        
+        skView.showsFPS = true
+        skView.showsNodeCount = true
+        /* Sprite Kit applies additional optimizations to improve rendering performance */
+        skView.ignoresSiblingOrder = false
+        
+        /* Set the scale mode to scale to fit the window */
+        scene.scaleMode = .AspectFill
+        
+        scene.gameSceneDelegate = self
+        if (isNew) {
+            skView.presentScene(scene)
         }
+        else {
+            skView.presentScene(scene, transition: SKTransition.doorsCloseHorizontalWithDuration(1))
+        }
+        
+        btnPlay.superview?.bringSubviewToFront(btnPlay)
+        
+        
+        waitUntilNotLoadedItem()
+        
     }
     
     override func viewWillAppear(animated: Bool) {

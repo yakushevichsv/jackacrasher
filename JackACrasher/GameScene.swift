@@ -90,17 +90,24 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         Player.loadAssets()
         RegularAsteroids.loadAssets()
         Explosion.loadAssets()
+        BlackHole.loadAssets()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-        
-        
+    override init(size:CGSize) {
+        super.init(size: size)
+        initPrivate()
+    }
+    
+    
+    private func initPrivate() {
         self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         self.physicsWorld.contactDelegate = self
-        
+        self.backgroundColor = UIColor.lightGrayColor()
         self.asteroidManager = AsteroidManager(scene: self)
-        
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
     
     internal func setTotalScore(totalScore:UInt64) {

@@ -14,19 +14,16 @@ import SpriteKit
 class BlackHole: SKSpriteNode,ItemDamaging {
     private static let gravityNodeName = "gravityNode"
     private weak var springField:SKFieldNode!
-    private var radius:CGFloat = 0
-    private var animAction:SKAction! = nil
+    
+    private static var radius:CGFloat = 0
+    private static var animAction:SKAction! = nil
+    private static var sTextures:[SKTexture]!
+    private static var sContext:dispatch_once_t = 0
     
     init(){
-    //override init() {
-        //super.init()
-        
-        let textureAtlas = SKTextureAtlas(named: blackHoleName)
-        let texture0 = textureAtlas.textureNamed("BlackHole0")
-        
+       let texture0 = BlackHole.sTextures[0]
         super.init(texture:texture0 , color: UIColor.whiteColor(), size: texture0.size())
         
-        self.defineActions(textureAtlas)
         self.definePhysBody()
         self.appendGravity()
         
@@ -40,7 +37,7 @@ class BlackHole: SKSpriteNode,ItemDamaging {
     
     private func definePhysBody() {
         
-        let body = SKPhysicsBody(circleOfRadius: self.radius)
+        let body = SKPhysicsBody(circleOfRadius: BlackHole.radius)
         body.dynamic = false
         body.categoryBitMask = 0
         body.contactTestBitMask = 0
@@ -53,30 +50,10 @@ class BlackHole: SKSpriteNode,ItemDamaging {
     private func appendGravity() {
         let field = SKFieldNode.springField()
         field.categoryBitMask = EntityCategory.BlakHoleField
-        field.region = SKRegion(radius: round(Float(self.radius * 2.0)))
+        field.region = SKRegion(radius: round(Float(BlackHole.radius * 2.0)))
         field.exclusive = true
         addChild(field)
         self.springField = field
-    }
-    
-    private func defineActions(textureAtlas:SKTextureAtlas!) {
-        
-        var frames = [SKTexture]()
-        
-        for i in 0...4 {
-            let frame = textureAtlas.textureNamed("BlackHole".stringByAppendingString("\(i)"))
-            frames.append(frame)
-            
-            let r = round(max(frame.size().height,frame.size().width) * 0.5)
-            
-            if (r > self.radius) {
-                self.radius = r
-            }
-        }
-        
-        let animateAction = SKAction.repeatActionForever(SKAction.animateWithTextures(frames, timePerFrame: NSTimeInterval(0.2)))
-        self.animAction = animateAction
-        //runAction(animateAction)
     }
     
     private func setFieldState(enabled:Bool) {
@@ -92,6 +69,33 @@ class BlackHole: SKSpriteNode,ItemDamaging {
         self.springField.removeFromParent()
         
         super.removeFromParent()
+    }
+    
+    internal class func  loadAssets() {
+    
+        dispatch_once(&BlackHole.sContext) {
+            
+            var frames = [SKTexture]()
+            
+            let textureAtlas = SKTextureAtlas(named: blackHoleName)
+            
+            for i in 0...4 {
+                let frame = textureAtlas.textureNamed("BlackHole".stringByAppendingString("\(i)"))
+                frames.append(frame)
+                
+                let r = round(max(frame.size().height,frame.size().width) * 0.5)
+                
+                if (r > self.radius) {
+                    self.radius = r
+                }
+            }
+            
+            self.sTextures = frames
+            
+            let animateAction = SKAction.repeatActionForever(SKAction.animateWithTextures(frames, timePerFrame: NSTimeInterval(0.2)))
+            self.animAction = animateAction
+            
+        }
     }
     
     internal func presentHole(completion:(()->Void)!) {
@@ -116,11 +120,7 @@ class BlackHole: SKSpriteNode,ItemDamaging {
                 completion()
             }
             
-            },self.animAction]
-        
-        /*for curAction in actions {
-            seqArray.append(curAction)
-        }*/
+            },BlackHole.animAction]
         
         runAction(SKAction.sequence(seqArray))
     }
@@ -133,14 +133,7 @@ class BlackHole: SKSpriteNode,ItemDamaging {
         let move = SKAction.moveTo(self.position, duration: duration)
         let shrink = SKAction.scaleTo(0.2, duration: duration)
         
-        //var seqArray = [SKAction]()
-        //seqArray.append(SKAction.group([rotate,move,shrink]))
-            
-        /*for curAction in actions {
-            seqArray.append(curAction)
-        }*/
-
-        //SKAction.sequence(seqArray))
+        
         item.runAction(SKAction.group([rotate,move,shrink]))
         
         return duration
