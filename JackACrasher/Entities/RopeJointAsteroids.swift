@@ -11,8 +11,8 @@ import SpriteKit
 
 
 class RopeJointAsteroids: SKNode {
-    private let asteroid1:RegularAsteroid!
-    private let asteroid2:RegularAsteroid!
+    private weak var asteroid1:RegularAsteroid!
+    private weak var asteroid2:RegularAsteroid!
     internal var rope:Rope? {
         didSet {
             if let ropeValue = rope {
@@ -33,7 +33,6 @@ class RopeJointAsteroids: SKNode {
         
         addChild(self.asteroid1)
         addChild(self.asteroid2)
-        
     }
     
     internal var asteroids:[RegularAsteroid!] {
@@ -46,6 +45,18 @@ class RopeJointAsteroids: SKNode {
         }
     }
 
+    /*internal func defineBodyForItem() {
+        
+        var bodies = [SKPhysicsBody]()
+        
+        bodies.append(self.asteroid1.physicsBody!)
+        bodies.append(self.asteroid2.physicsBody!)
+        bodies.append(self.rope!.physicsBody!)
+        
+        let body = SKPhysicsBody(bodies: bodies)
+        body.fieldBitMask = EntityCategory.BlakHoleField
+        body.contactTestBitMask = EntityCategory.BlackHole
+    }*/
     
     
     

@@ -20,12 +20,12 @@ class HUDNode: SKNode {
     private static let sLifePercentMax = lifeType(100)
     private static let sLifePercentMin = lifeType(0)
     
-    internal static let sLifeOne = lifeType(1)
+    //internal static let sLifeOne = lifeType(1)
     
     private let size:CGSize
     private let animDuration:NSTimeInterval
     
-    internal var life:lifeType = HUDNode.sLifeOne {
+    internal var life:lifeType = HUDNode.sLifePercentMin {
         didSet {
             self.updateLifeNode()
         }
@@ -33,7 +33,7 @@ class HUDNode: SKNode {
     
     internal var curLifePercent: lifeType = sLifePercentMax
     
-    init(inSize:CGSize,life:lifeType = HUDNode.sLifeOne, duration:NSTimeInterval = 3 ) {
+    init(inSize:CGSize,life:lifeType = HUDNode.sLifePercentMin, duration:NSTimeInterval = 3 ) {
         self.life = life
         self.animDuration = duration
         self.size = inSize
@@ -49,7 +49,7 @@ class HUDNode: SKNode {
     
     private func updateLifeNode() {
         
-        if (self.life != HUDNode.sLifeOne) {
+        if (self.life != HUDNode.sLifePercentMin) {
             
             
             self.lifeLabelNode.text = "\(Int(life))"

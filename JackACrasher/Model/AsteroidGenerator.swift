@@ -124,27 +124,24 @@ class AsteroidGenerator: NSObject {
         
         let sprite = size == .Small ? SmallRegularAsteroid(maxLife: 2, needToAnimate: initialAnimation) : RegularAsteroid(asteroid: size, maxLife: size == .Big ? 5: 3,needToAnimate:initialAnimation)
         
-        let maxParam = max(sprite.size.width,sprite.size.height)
+        let param = sprite.size.halfMaxSizeParam()
         
-        let yMargin = round(1.2 * maxParam) + 10
+        let yMargin = round(param) + 10
         
         let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/asteroidSpeed)
         
-        let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
+        let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
         
-         var yPos = CGFloat(arc4random() % divisor) + yMargin
-        
+        let yPos = CGFloat(arc4random() % divisor) + yMargin
+    
         let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
         
-        if (yPos < maxParam) {
-            yPos = maxParam
-        }
         
         sprite.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
         
         let sequence =  produceSeqActionToAsteroid(sprite, asteroidSpeed: asteroidSpeed)
         
-        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size)")
+        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size). Asteroid Size \(size)")
         
         return (asteroid:sprite,actions:sequence)
     }
@@ -206,32 +203,16 @@ class AsteroidGenerator: NSObject {
         
         var (asteroid2, _) = self.produceRegularAsteroidPrivate(AsteroidGenerator.generateRegularAsteroidSize(),initialAnimation:false)
      
-        let isR = true//rand()%2 == 1
-        let isL = false//rand()%2 == 1
-        let isU = false//rand()%2 == 1
-        let isD = false//rand()%2 == 1
-        
         let hRand = CGFloat(arc4random()%200 + 10) + (asteroid1.size.width + asteroid2.size.width)*0.5
         
-        println("isR \(isR) isL \(isL) isU \(isU) isD \(isD) hRand \(hRand)")
         
-        if (isR) {
-           asteroid2.position.x = asteroid1.position.x + hRand
-        } else if (isL) {
-            asteroid2.position.x = asteroid1.position.x - hRand
-        } else if (!isL && !isR) {
-            asteroid1.position.x = asteroid2.position.x
-        }
+        asteroid2.position.x = asteroid1.position.x + hRand
+       
         
         let vRand = CGFloat(arc4random()%200 + 10) + (asteroid1.size.height + asteroid2.size.height)*0.5
 
-        if (isU) {
-            asteroid2.position.y = asteroid1.position.y + vRand
-        } else if (isD) {
-            asteroid2.position.y = asteroid1.position.y - vRand
-        } else if (!isD  && !isU) {
-            asteroid2.position.y = asteroid1.position.y
-        }
+        asteroid2.position.y = asteroid1.position.y
+        
         
         let center = (asteroid2.position + asteroid1.position)*0.5
         
@@ -239,28 +220,14 @@ class AsteroidGenerator: NSObject {
         let aster2Pos = asteroid2.position - center
         println("Asteroid 1 position \(aster1Pos). Asteroid 2 position \(aster2Pos)")
         
-        let con1 = RopeConnection(position: aster1Pos, node: asteroid1)
-        let con2 = RopeConnection(position: aster2Pos, node: asteroid2)
-        
         let isDirect = true
         var ropePtr:Rope? = nil
         
-        /*if (isDirect) {
-            
-            ropePtr = DirectRope(connection1: con1, connection2: con2)
-        }*/
-        
-        //if let rope = ropePtr {
             let asteroids = RopeJointAsteroids(asteroids: [asteroid1,asteroid2])
         
             if (isDirect) {
                 
                 let rope = DirectRope(connection1: RopeConnection(position: asteroid1.position,node:asteroid1), connection2: RopeConnection(position: asteroid2.position,node:asteroid2))
-                //rope.createRopeRings(self.delegate as! SKScene)
-                //HACK:
-                //rope.position = CGPointMake(500, 500)
-                //(self.delegate as! SKNode).addChild(rope)
-                //end HACK;
                 asteroids.rope = rope
             }
         
@@ -467,7 +434,8 @@ class AsteroidGenerator: NSObject {
         
         self.prevAsteroidType = self.curAsteroidType
         
-        //currentAstType = .Bomb
+        //HACK:Warning
+        currentAstType = .Regular
         
         self.curAsteroidType = currentAstType
         

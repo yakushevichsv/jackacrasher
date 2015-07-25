@@ -138,6 +138,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     
     override func removeFromParent() {
         self.removeField()
+        self.physicsBody = nil
         super.removeFromParent()
     }
     

@@ -191,7 +191,7 @@
                         <viewControllerLayoutGuide type="bottom" id="n54-lp-IOg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" verticalCompressionResistancePriority="250" id="wzo-eb-guZ">
-                        <rect key="frame" x="0.0" y="0.0" width="415" height="314"/>
+                        <rect key="frame" x="1" y="0.0" width="415" height="314"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5o5-OH-fTw">
@@ -441,6 +441,34 @@
                 <exit id="0GO-4n-zFX" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="818" y="423"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="CVj-QA-Bhh">
+            <objects>
+                <viewController id="odW-g4-p7G" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="AuQ-fS-btA"/>
+                        <viewControllerLayoutGuide type="bottom" id="VUm-J1-lIM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="GVr-GX-97x">
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
+                                <rect key="frame" x="129" y="49" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="300" height="300"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IQl-EI-IR5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="614" y="1153"/>
         </scene>
         <!--JackA Crasher Navigation Controller-->
         <scene sceneID="ZKd-cU-x5w">

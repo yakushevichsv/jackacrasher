@@ -149,7 +149,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         
         let hudNode = HUDNode(inSize: inSize)
-        hudNode.life = HUDNode.sLifeOne
         hudNode.name = "HUD"
         hudNode.position = CGPointMake(CGRectGetWidth(self.playableArea) - inSize.width - 10, CGRectGetMaxY(self.playableArea) /*+ CGRectGetMinY(self.playableArea)*/ - inSize.height)
         hudNode.alpha = alpha
