@@ -12,7 +12,7 @@ import SpriteKit
 class GameViewController: UIViewController,GameSceneDelegate {
     @IBOutlet weak var btnPlay: UIButton!
     private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
-    
+    private lazy var returnPauseTransDelegate = ReturnPauseTransitionDelegate()
     private var myContext = 0
     
     required init(coder aDecoder: NSCoder) {
@@ -59,9 +59,19 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         sender.selected = !sender.selected
         
-            if let scene = skView.scene as? GameScene {
-                scene.pauseGame(pause: sender.selected)
-            }
+        if let scene = skView.scene as? GameScene {
+            scene.pauseGame(pause: !sender.selected)
+        }
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+        
+        if identifier == Optional("selectAction") {
+            
+            return !self.btnPlay.selected
+        }
+        
+        return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
     }
     
     override func viewDidLoad() {
@@ -93,8 +103,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
             skView.presentScene(scene, transition: SKTransition.doorsCloseHorizontalWithDuration(1))
         }
         
-        btnPlay.superview?.bringSubviewToFront(btnPlay)
         
+        btnPlay.superview?.bringSubviewToFront(btnPlay)
+        btnPlay.selected = true
         
         waitUntilNotLoadedItem()
         
@@ -103,32 +114,39 @@ class GameViewController: UIViewController,GameSceneDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
+        /*NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationWillEnterForegroundNotification, object: nil)*/
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationWillResignActiveNotification, object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
     }
     
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationDidEnterBackgroundNotification, object: nil)
-    
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     func didMoveToBG(aNotification:NSNotification) {
         
-        self.btnPlay.selected = false
-        
-        self.btnPressed(self.btnPlay)
+        let scene = self.skView.scene as! GameScene
+        scene.pauseGame(pause: true)
     }
     
     func willMoveToFG(aNotification:NSNotification) {
+        var paused = false
+        if self.presentedViewController == nil {
+            paused = !self.btnPlay.selected
+        }
+        else {
+            paused = true
+        }
         
-        self.btnPlay.selected = true
-        
-        self.btnPressed(self.btnPlay)
+        let scene = self.skView.scene as! GameScene
+        scene.pauseGame(pause: paused)
     }
     
 
@@ -158,6 +176,17 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 let sVC = segue.sourceViewController as! GameViewController
                dVC.didWin = false
                 
+            } else if identifier == "selectAction" {
+                
+                let dVC = segue.destinationViewController as! PauseReturnViewController
+                
+                
+                let transDelegate = self.returnPauseTransDelegate
+                transDelegate.rect = self.view.bounds
+                transDelegate.isPortrait = CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame)
+                
+                dVC.modalPresentationStyle = .Custom
+                dVC.transitioningDelegate = transDelegate
             }
         }
     }
@@ -201,11 +230,19 @@ class GameViewController: UIViewController,GameSceneDelegate {
     }
     
     //MARK: Unwind to replay
-    @IBAction func unwindToReplay(sender: UIStoryboardSegue)
-    {
+    @IBAction func unwindToReplay(sender: UIStoryboardSegue) {
+        
+        if sender.identifier == Optional("selectAction") {
+            
+            self.btnPlay.selected = false
+            btnPressed(self.btnPlay)
+                
+            return
+        }
+        
+        
         if let vc = sender.destinationViewController as? GameViewController {
             vc.restartGame(isNew: false)
         }
     }
-    
 }

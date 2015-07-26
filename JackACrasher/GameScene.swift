@@ -125,10 +125,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
             SoundManager.sharedInstance.playBGMusic()
             self.paused = false
+            
+            self.asteroidGenerator.start()
+            self.enemyGenerator.start()
         }
         else {
             let diff = NSDate.timeIntervalSinceReferenceDate() - self.startPlayTime
             self.playedTime += diff
+            
+            self.asteroidGenerator.stop()
+            self.enemyGenerator.stop()
             
             self.startPlayTime = 0
             SoundManager.sharedInstance.pauseBGMusic()
@@ -144,7 +150,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
     
-        let inSize = CGSizeMake(CGFloat(round(self.playableArea.size.width/6.0)), height)
+        let inSize = CGSizeMake(CGFloat(round(self.playableArea.size.width/4.0)), height)
         println("IN size \(inSize)")
         
         
@@ -308,7 +314,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         self.definePlayableRect()
         
-        self.defineHUD(30, alpha: 0.7)
+        self.defineHUD(20, alpha: 0.7)
         self.fillInBackgroundLayer()
         self.createPlayer()
         self.createAsteroidGenerator()
@@ -812,7 +818,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             if (asteroid.parent != nil && asteroid.physicsBody != nil) {
                 asteroid.physicsBody!.categoryBitMask = EntityCategory.RegularAsteroid
                 asteroid.physicsBody!.contactTestBitMask = UInt32.max
-                asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+                //asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
                 
             }
         })])
@@ -871,7 +877,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             asteroid.removeAllActions()
             asteroid.physicsBody!.categoryBitMask = 0
             asteroid.physicsBody!.contactTestBitMask = 0 //UInt32.max // contacts with all objects...
-            asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+            //asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
             var impulse = contact.contactNormal
             
             if (CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
@@ -1058,6 +1064,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         if (blackHoleNode == nil || secondNode == nil) {
             return false
+        }
+        
+        if !(secondNode is Player) {
+            return true
         }
         
         secondNode.physicsBody!.contactTestBitMask &= ~EntityCategory.BlackHole

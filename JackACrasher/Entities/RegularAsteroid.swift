@@ -117,10 +117,10 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         physBody.collisionBitMask = 0
-        physBody.fieldBitMask = EntityCategory.BlakHoleField
+        //physBody.fieldBitMask = EntityCategory.BlakHoleField
         
         self.physicsBody = physBody
-        self.physicsBody!.fieldBitMask = 0
+        //self.physicsBody!.fieldBitMask = 0
         
         self.appendRadialGravityToAsteroid()
         

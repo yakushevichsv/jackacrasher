@@ -86,7 +86,7 @@ class DirectRope: Rope {
             body.collisionBitMask = 0
             body.contactTestBitMask = 0
             body.categoryBitMask = EntityCategory.Rope
-            body.fieldBitMask = EntityCategory.BlakHoleField
+            //body.fieldBitMask = EntityCategory.BlakHoleField
             //sprite.zRotation = CGFloat(M_PI_2)
             sprite.physicsBody = body
             sprite.zPosition = -1

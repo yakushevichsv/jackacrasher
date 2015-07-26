@@ -44,20 +44,4 @@ class RopeJointAsteroids: SKNode {
             ropeValue.createRopeRings()
         }
     }
-
-    /*internal func defineBodyForItem() {
-        
-        var bodies = [SKPhysicsBody]()
-        
-        bodies.append(self.asteroid1.physicsBody!)
-        bodies.append(self.asteroid2.physicsBody!)
-        bodies.append(self.rope!.physicsBody!)
-        
-        let body = SKPhysicsBody(bodies: bodies)
-        body.fieldBitMask = EntityCategory.BlakHoleField
-        body.contactTestBitMask = EntityCategory.BlackHole
-    }*/
-    
-    
-    
 }

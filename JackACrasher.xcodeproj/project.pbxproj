@@ -29,6 +29,9 @@
 		212A2F2B1B36F98700B31482 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */; };
 		212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
 		212A2F401B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
+		2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */; };
+		2138E0BA1B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */; };
+		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
@@ -122,6 +125,9 @@
 		212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		212A2F3D1B37317600B31482 /* IAPReceiptValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPReceiptValidator.h; sourceTree = "<group>"; };
 		212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPReceiptValidator.m; sourceTree = "<group>"; };
+		2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PauseReturnViewController.swift; path = ViewControllers/PauseReturnViewController.swift; sourceTree = "<group>"; };
+		2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPauseTransitionDelegate.swift; path = ViewControllers/ReturnPauseTransitionDelegate.swift; sourceTree = "<group>"; };
+		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
@@ -302,6 +308,7 @@
 				217340FD1AFE5267009E934A /* GameOverViewController.swift */,
 				2118AD0A1AFFE88100067348 /* GameMainViewController.swift */,
 				21103F811B289A39007D8649 /* ShopDetailsViewController.swift */,
+				2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -312,6 +319,8 @@
 				217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */,
 				21FA22A41B2B026E002539A6 /* PopupAnimator.swift */,
 				216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */,
+				2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */,
+				2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */,
 			);
 			name = "Transitions&Presentations";
 			sourceTree = "<group>";
@@ -659,6 +668,8 @@
 				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
+				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,
+				2138E0BA1B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift in Sources */,
 				21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */,
 				216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */,
 				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
@@ -674,6 +685,7 @@
 				2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */,
 				210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */,
 				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
+				2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */,
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
 				211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */,

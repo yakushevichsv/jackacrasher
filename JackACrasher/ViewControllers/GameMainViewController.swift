@@ -355,6 +355,16 @@ class GameMainViewController: UIViewController {
         }
     }
     
+    
+    @IBAction func unwindSegue(segue:UIStoryboardSegue) {
+       
+        if segue.identifier == Optional("selectAction") {
+            
+            self.needToDisplayAnimation = false
+        }
+        
+    }
+    
     @IBAction  func btnPressed(sender: UIButton) {
         if sender == self.btnStrategy {
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
@@ -386,6 +396,7 @@ class GameMainViewController: UIViewController {
             GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
         }
     }
+    
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)

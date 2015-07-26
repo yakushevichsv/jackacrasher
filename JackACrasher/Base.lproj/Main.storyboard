@@ -19,6 +19,9 @@
             <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
+            <string>gamerobot</string>
+            <string>gamerobot</string>
+            <string>gamerobot</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -322,7 +325,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGW-Qx-yrp">
+                            <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGW-Qx-yrp">
                                 <rect key="frame" x="16" y="0.0" width="15" height="22"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
@@ -334,6 +337,7 @@
                                 <state key="selected" image="pause"/>
                                 <connections>
                                     <action selector="btnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="4ld-Rh-1Kh"/>
+                                    <segue destination="odW-g4-p7G" kind="presentation" identifier="selectAction" id="3lf-OP-NJD"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -442,33 +446,95 @@
             </objects>
             <point key="canvasLocation" x="818" y="423"/>
         </scene>
-        <!--View Controller-->
+        <!--Pause Return View Controller-->
         <scene sceneID="CVj-QA-Bhh">
             <objects>
-                <viewController id="odW-g4-p7G" sceneMemberID="viewController">
+                <viewController id="odW-g4-p7G" customClass="PauseReturnViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="AuQ-fS-btA"/>
                         <viewControllerLayoutGuide type="bottom" id="VUm-J1-lIM"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="GVr-GX-97x">
-                        <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="300" height="208"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
-                                <rect key="frame" x="129" y="49" width="42" height="21"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1WM-vX-PYK">
+                                <rect key="frame" x="0.0" y="20" width="284" height="188"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please select the action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
+                                        <rect key="frame" x="-8" y="62" width="300" height="19"/>
+                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="17"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="15" y="109" width="113" height="33"/>
+                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
+                                        <state key="normal" title="Main Screen">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="bGi-7d-QNG"/>
+                                            <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectAction" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="188" y="109" width="51" height="33"/>
+                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
+                                        <state key="normal" title="Pause">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="0.5" id="1T6-Cm-aXW"/>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="28" id="32q-EG-sAu"/>
+                                    <constraint firstAttribute="trailing" secondItem="w7g-AR-pH7" secondAttribute="trailing" constant="-8" id="84V-OI-M2J"/>
+                                    <constraint firstItem="mvV-T3-331" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="1.5" id="FRL-Ow-jQe"/>
+                                    <constraint firstItem="w7g-AR-pH7" firstAttribute="top" secondItem="1WM-vX-PYK" secondAttribute="top" constant="62" id="Kdg-SA-3hl"/>
+                                    <constraint firstItem="w7g-AR-pH7" firstAttribute="leading" secondItem="1WM-vX-PYK" secondAttribute="leading" constant="-8" id="bKz-kx-gs1"/>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerY" secondItem="mvV-T3-331" secondAttribute="centerY" id="jfG-nL-kWx"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gyq-mg-j3U">
+                                <rect key="frame" x="270" y="0.0" width="30" height="34"/>
+                                <state key="normal" title="X">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="gFa-1n-AHE"/>
+                                    <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectAction" unwindAction="unwindToReplay:" id="WPM-nA-YHw"/>
+                                </connections>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="1WM-vX-PYK" firstAttribute="trailing" secondItem="GVr-GX-97x" secondAttribute="trailingMargin" id="6qO-Y6-HJL"/>
+                            <constraint firstItem="1WM-vX-PYK" firstAttribute="leading" secondItem="GVr-GX-97x" secondAttribute="leadingMargin" constant="-16" id="LYx-Ei-uDB"/>
+                            <constraint firstItem="1WM-vX-PYK" firstAttribute="top" secondItem="AuQ-fS-btA" secondAttribute="bottom" constant="20" id="LhF-fE-VjJ"/>
+                            <constraint firstItem="gyq-mg-j3U" firstAttribute="leading" secondItem="1WM-vX-PYK" secondAttribute="trailing" constant="-14" id="NZP-FH-gns"/>
+                            <constraint firstItem="VUm-J1-lIM" firstAttribute="top" secondItem="1WM-vX-PYK" secondAttribute="bottom" id="o0v-tg-Lxe"/>
+                            <constraint firstItem="1WM-vX-PYK" firstAttribute="top" secondItem="gyq-mg-j3U" secondAttribute="bottom" constant="-14" id="yLV-5P-MUy"/>
+                        </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="300" height="300"/>
+                    <size key="freeformSize" width="300" height="208"/>
+                    <connections>
+                        <outlet property="btnClose" destination="gyq-mg-j3U" id="tfv-u9-Iyr"/>
+                        <outlet property="btnExit" destination="JJb-zX-zeW" id="GR9-t1-Ysu"/>
+                        <outlet property="btnPause" destination="mvV-T3-331" id="Vls-ih-iaH"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IQl-EI-IR5" userLabel="First Responder" sceneMemberID="firstResponder"/>
+                <exit id="97K-gZ-yb6" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="614" y="1153"/>
+            <point key="canvasLocation" x="87" y="994"/>
         </scene>
         <!--JackA Crasher Navigation Controller-->
         <scene sceneID="ZKd-cU-x5w">

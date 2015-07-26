@@ -184,7 +184,7 @@ class AsteroidGenerator: NSObject {
         sprite.physicsBody!.collisionBitMask = 0
         sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         sprite.physicsBody!.categoryBitMask = EntityCategory.Bomb
-        sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+        //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
         sprite.userData = ["radius":50]
         
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
@@ -390,7 +390,7 @@ class AsteroidGenerator: NSObject {
             
             sprite.name = textName
             sprite.physicsBody = SKPhysicsBody(texture: texture!, size: texture!.size())
-            sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+            //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
             sprite.physicsBody!.categoryBitMask = EntityCategory.TrashAsteroid
             sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
             sprite.physicsBody!.collisionBitMask = EntityCategory.TrashAsteroid | EntityCategory.Asteroid

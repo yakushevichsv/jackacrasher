@@ -11,7 +11,7 @@ import SpriteKit
 
  let blackHoleName = "blackhole"
 
-class BlackHole: SKSpriteNode,ItemDamaging {
+class BlackHole: SKNode,ItemDamaging {
     private static let gravityNodeName = "gravityNode"
     private weak var springField:SKFieldNode!
     
@@ -20,12 +20,14 @@ class BlackHole: SKSpriteNode,ItemDamaging {
     private static var sTextures:[SKTexture]!
     private static var sContext:dispatch_once_t = 0
     
-    init(){
-       let texture0 = BlackHole.sTextures[0]
-        super.init(texture:texture0 , color: UIColor.whiteColor(), size: texture0.size())
-        
+    private weak var bgNode:SKSpriteNode!
+    
+    override init(){
+        super.init()
+       
         self.definePhysBody()
         self.appendGravity()
+        self.appendBGSprite()
         
         setFieldState(false)
     }
@@ -34,6 +36,22 @@ class BlackHole: SKSpriteNode,ItemDamaging {
         fatalError("init(coder:) has not been implemented")
     }
     
+    internal var size : CGSize {
+        return self.bgNode.size
+    }
+    
+    private func appendBGSprite() {
+        
+        let sprite = SKSpriteNode(texture: BlackHole.sTextures[0])
+        
+        let animateAction = SKAction.repeatActionForever(SKAction.animateWithTextures(BlackHole.sTextures, timePerFrame: NSTimeInterval(0.2)))
+        
+        sprite.runAction(animateAction)
+        
+        self.addChild(sprite)
+        
+        self.bgNode = sprite
+    }
     
     private func definePhysBody() {
         
@@ -91,10 +109,6 @@ class BlackHole: SKSpriteNode,ItemDamaging {
             }
             
             self.sTextures = frames
-            
-            let animateAction = SKAction.repeatActionForever(SKAction.animateWithTextures(frames, timePerFrame: NSTimeInterval(0.2)))
-            self.animAction = animateAction
-            
         }
     }
     
@@ -120,7 +134,7 @@ class BlackHole: SKSpriteNode,ItemDamaging {
                 completion()
             }
             
-            },BlackHole.animAction]
+            }]
         
         runAction(SKAction.sequence(seqArray))
     }
