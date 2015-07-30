@@ -100,7 +100,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
             skView.presentScene(scene)
         }
         else {
-            skView.presentScene(scene, transition: SKTransition.doorsCloseHorizontalWithDuration(1))
+            skView.presentScene(scene, transition: SKTransition.doorwayWithDuration(1))
         }
         
         

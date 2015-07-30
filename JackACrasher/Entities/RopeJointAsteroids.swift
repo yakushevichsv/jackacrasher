@@ -33,6 +33,19 @@ class RopeJointAsteroids: SKNode {
         
         addChild(self.asteroid1)
         addChild(self.asteroid2)
+        
+    }
+    
+    
+    internal func configureBody() {
+        
+        let body = SKPhysicsBody(bodies:[self.asteroid1.physicsBody!,self.asteroid2.physicsBody!,self.rope!.physicsBody!])
+        body.fieldBitMask = 0
+        body.categoryBitMask = 0
+        body.contactTestBitMask = 0
+        
+        self.physicsBody = body
+        
     }
     
     internal var asteroids:[RegularAsteroid!] {
@@ -42,6 +55,8 @@ class RopeJointAsteroids: SKNode {
     internal func prepare() {
         if let ropeValue = rope {
             ropeValue.createRopeRings()
+            //ropeValue.configureBody()
+            //configureBody()
         }
     }
 }

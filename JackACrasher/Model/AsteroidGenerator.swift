@@ -423,6 +423,7 @@ class AsteroidGenerator: NSObject {
             } else if (randValue < 6) {
                 //currentAstType = .Joint
                 //TODO: add Joint based item...
+                currentAstType == self.prevAsteroidType 
             }else if (randValue < 8) {
                 currentAstType = .Regular
             } else {
@@ -430,12 +431,12 @@ class AsteroidGenerator: NSObject {
             }
             
             
-        } while (currentAstType == self.prevAsteroidType )
+        } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         self.prevAsteroidType = self.curAsteroidType
         
         //HACK:Warning
-        currentAstType = .Regular
+        //currentAstType = .Regular
         
         self.curAsteroidType = currentAstType
         
@@ -459,8 +460,9 @@ class AsteroidGenerator: NSObject {
             let regSize = AsteroidGenerator.generateRegularAsteroidSize()
             
             self.produceRegularAsteroid(regSize)
+            break
         default:
-            println("=== Produced current type .Default === ")
+            println("=== Produced current type .Default ===  \(currentAstType) ")
             
             break
         }

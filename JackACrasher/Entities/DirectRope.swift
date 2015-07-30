@@ -11,6 +11,8 @@ import SpriteKit
 
 class DirectRope: Rope {
    
+    private static let sChainName = "Chain"
+    
     private var direction : CGVector = CGVector.zeroVector
     private var numberOfSteps:Int = 0
     /*private let con1:RopeConnection!
@@ -86,11 +88,13 @@ class DirectRope: Rope {
             body.collisionBitMask = 0
             body.contactTestBitMask = 0
             body.categoryBitMask = EntityCategory.Rope
+            body.fieldBitMask = 0;
             //body.fieldBitMask = EntityCategory.BlakHoleField
             //sprite.zRotation = CGFloat(M_PI_2)
             sprite.physicsBody = body
             sprite.zPosition = -1
             sprite.position = CGPointMake(xPos, 0)
+            sprite.name = DirectRope.sChainName
             addChild(sprite)
             
             
@@ -125,5 +129,18 @@ class DirectRope: Rope {
         
         self.zRotation = angle
         
+    }
+    
+    override func configureBody() {
+        var bodies = [SKPhysicsBody]()
+        self.enumerateChildNodesWithName(DirectRope.sChainName, usingBlock: { (node, _) -> Void in
+            bodies.append(node.physicsBody!)
+        })
+        
+        let body = SKPhysicsBody(bodies: bodies)
+        body.categoryBitMask = 0
+        body.fieldBitMask = 0
+        body.contactTestBitMask = 0
+        self.physicsBody = body
     }
 }

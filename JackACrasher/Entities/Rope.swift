@@ -114,6 +114,10 @@ class Rope: SKNode {
         assert(false, "Should be overwritten!")
     }
     
+    internal func configureBody() {
+        assert(false, "configure body")
+    }
+    
     internal var connectionA:RopeConnection {
         get {return con1}
     }

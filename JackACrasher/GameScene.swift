@@ -279,14 +279,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return position
     }
     
+    private func storePrevPlayerPosition() {
+        self.prevPlayerPosition = player.position
+    }
+    
     func createPlayer() {
         let player = Player(position: self.findNewInitialPositionForPlayer())
         player.alpha = 0.0
-        self.prevPlayerPosition = player.position
         
         player.zPosition = fgZPosition
         self.addChild(player)
         self.player = player
+        
+        storePrevPlayerPosition()
         
         let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")
         sparkEmitter.zPosition = player.zPosition
@@ -377,10 +382,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if self.canCutRope(touches) {
             self.startPoint = point
         }
+        
+        if !self.canCutRope(touches) {
+            self.storePrevPlayerPosition()
+        }
     }
     
     override  func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
         if self.canCutRope(touches) {
             
             if let touch = touches.first as? UITouch {
@@ -497,7 +505,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        
         if (self.needToReflect) {
             self.needToReflect = false
             return
@@ -575,7 +582,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 self.player.throwProjectileToLocation(location)
             } else if (isPlayerVisible && self.player.parent == self.player.scene) {
                 if (!self.needToIgnore(location)) {
-                    self.prevPlayerPosition = self.player.position
+                    self.storePrevPlayerPosition()
                     self.player.moveToPoint(location)
                 }
             } else  if (!isPlayerVisible) {
@@ -619,6 +626,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         }
                 })
             }
+        }
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(0.5 * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
+            [unowned self] in
+            self.storePrevPlayerPosition()
         }
     }
     
@@ -687,8 +702,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             self.player.position  = convertNodePosition(sprite, toScene: self)
             self.removePlayerFromRegularAsteroidToScene()
+            sprite.physicsBody = nil
             sprite.removeFromParent()
-            
             return true
         }
         return false
@@ -719,6 +734,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(2 * Double(NSEC_PER_SEC)))
+        
+        self.player.removeAllActions();
         
         dispatch_after(delayTime, dispatch_get_main_queue()){
             [unowned self] in
@@ -967,6 +984,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
 
         if let regularBody = asteroidBody  {
             
+            if regularBody.node == nil {
+                return true
+            }
+            
             let pNode = regularBody.node as! RegularAsteroid
             let secondNode = entityBody?.node
             
@@ -993,7 +1014,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             //normal.dx *= CGFloat(-1.0)
             //normal.dy *= CGFloat(-1.0)
             
-            println("Normal dx \(normal.dx),Normal dyØ \(normal.dy) . Angle \(normal.angle)")
+            println("Normal dx \(normal.dx),Normal dyØ \(normal.dy) . Angle (degree) \(normal.angle.degree)")
             
             /*let arrow = SKSpriteNode(imageNamed: "debug_arrow")
             arrow.zRotation = π/2 -  normal.angle
@@ -1074,6 +1095,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
         
         println("blackHoleNode")
+
+        self.userInteractionEnabled = !(secondNode is Player)
+
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
