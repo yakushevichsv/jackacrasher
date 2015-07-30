@@ -68,6 +68,8 @@
 		21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA61B10A1B1009EDA3E /* button_press.wav */; };
 		21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA81B10AAB6009EDA3E /* star_small.png */; };
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
+		21DDE5491B6A5A6300B41A91 /* Bomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE5481B6A5A6300B41A91 /* Bomb.swift */; };
+		21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE54A1B6A619E00B41A91 /* AIBomb.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
 		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
@@ -165,6 +167,8 @@
 		21CFBCA61B10A1B1009EDA3E /* button_press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_press.wav; sourceTree = "<group>"; };
 		21CFBCA81B10AAB6009EDA3E /* star_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_small.png; sourceTree = "<group>"; };
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
+		21DDE5481B6A5A6300B41A91 /* Bomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bomb.swift; path = Entities/Bomb.swift; sourceTree = "<group>"; };
+		21DDE54A1B6A619E00B41A91 /* AIBomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AIBomb.swift; path = Entities/AIBomb.swift; sourceTree = "<group>"; };
 		21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Game_Robot.ttf; sourceTree = "<group>"; };
 		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
 		21E56B2D1ADA93BB0071A217 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = JackACrasher/Particles/spark.png; sourceTree = "<group>"; };
@@ -374,6 +378,15 @@
 			name = HUD;
 			sourceTree = "<group>";
 		};
+		21DDE5471B6A59AD00B41A91 /* Enemies */ = {
+			isa = PBXGroup;
+			children = (
+				21DDE5481B6A5A6300B41A91 /* Bomb.swift */,
+				21DDE54A1B6A619E00B41A91 /* AIBomb.swift */,
+			);
+			name = Enemies;
+			sourceTree = "<group>";
+		};
 		21DEA0CF1AFD1761004FF5D7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
@@ -407,6 +420,7 @@
 		21E56B331ADA9C2E0071A217 /* Entities */ = {
 			isa = PBXGroup;
 			children = (
+				21DDE5471B6A59AD00B41A91 /* Enemies */,
 				216A433B1B5FA4F7003B1035 /* BlackHole.swift */,
 				21E56B311ADA9C2A0071A217 /* Player.swift */,
 				210DD8151AE3CBAA0092DD39 /* Explosion.swift */,
@@ -666,6 +680,7 @@
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
+				21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */,
 				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
@@ -679,6 +694,7 @@
 				216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */,
 				218D5A831B317C7F007ABE63 /* UIViewControllerExtensions.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
+				21DDE5491B6A5A6300B41A91 /* Bomb.swift in Sources */,
 				214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
 				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,

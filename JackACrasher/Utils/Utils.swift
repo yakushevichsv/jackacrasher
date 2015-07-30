@@ -236,3 +236,54 @@ extension CGSize {
     }
 }
 
+func reflectionAngleFromContact2(contact:SKPhysicsContact!) -> CGFloat {
+    
+    var normal = contact.contactNormal
+    
+    println("Before reflection  Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    
+    normal.dx *= CGFloat(-1.0)
+    normal.dy *= CGFloat(-1.0)
+    
+    println("After reflection Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    
+    var angle:CGFloat = normal.angle
+    
+    if (normal.dx > 0) {
+        
+        angle -= π*0.5
+    }
+    else if (normal.dx == 0){
+        
+        if (normal.dy > 0) {
+            angle = 0
+        }
+        else if (normal.dy == 0) {
+            assert(false, "Normal equal to Zero!")
+        }
+        else {
+            angle = π
+        }
+    }
+    else {
+        angle += π*0.5
+    }
+    
+    return angle
+}
+
+func reflectionAngleFromContact(contact:SKPhysicsContact!) -> CGFloat {
+    
+    var normal = contact.contactNormal
+    
+    var point = contact.contactPoint
+    
+    
+    var point2 = point - CGPointMake(normal.dx*10, normal.dy*10)
+    
+    let extraAngle = shortestAngleBetween(point.angle, point2.angle)
+    
+    return extraAngle
+}
+
+

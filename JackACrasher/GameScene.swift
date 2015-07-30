@@ -91,6 +91,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         RegularAsteroids.loadAssets()
         Explosion.loadAssets()
         BlackHole.loadAssets()
+        Bomb.loadAssets()
     }
     
     override init(size:CGSize) {
@@ -286,12 +287,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createPlayer() {
         let player = Player(position: self.findNewInitialPositionForPlayer())
         player.alpha = 0.0
-        
         player.zPosition = fgZPosition
         self.addChild(player)
         self.player = player
         
         storePrevPlayerPosition()
+        
         
         let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")
         sparkEmitter.zPosition = player.zPosition
@@ -1009,39 +1010,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return true
             }
             
-            //TODO: consider player here... Not a player is bad!!!
-            var normal = contact.contactNormal
-            //normal.dx *= CGFloat(-1.0)
-            //normal.dy *= CGFloat(-1.0)
-            
-            println("Normal dx \(normal.dx),Normal dyØ \(normal.dy) . Angle (degree) \(normal.angle.degree)")
-            
-            /*let arrow = SKSpriteNode(imageNamed: "debug_arrow")
-            arrow.zRotation = π/2 -  normal.angle
-            arrow.zPosition = self.player.zPosition
-            let curNode = regularBody.node!
-            let nPoint = curNode.convertPoint(contact.contactPoint, fromNode: self)
-            arrow.position = nPoint
-            curNode.addChild(arrow)*/
-            //regularBody.node?.removeAllActions()
+            let angle2 = reflectionAngleFromContact(contact)
             
             let playerNode:SKSpriteNode! = SKSpriteNode(imageNamed: "player")
             
-            let angle = self.player.zRotation
-            playerNode.zRotation = angle
-            
-            let angel2 =  3*π/2 - normal.angle
-        
-            
-            println("Player's z (before) rotation \(angle.degree), Angle \(angel2.degree)")
-            //let delta = shortestAngleBetween(angle, angel2)
-            playerNode.zRotation = angel2 //+= delta
-            
-            println("Player's z (after) rotation \(playerNode.zRotation.degree)")
+            println("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
             
             let pointInternal = self.convertPoint(contact.contactPoint, toNode: pNode)
             
-            playerNode.position = pointInternal
+            
+            let group = SKAction.group([SKAction.rotateToAngle(angle2, duration: 0.5),SKAction.moveTo(pointInternal, duration: 0.5)])
+            
+            playerNode.runAction(group)
+            
             
             println("placing player at position \(pointInternal)")
             self.player.disableGravityReceptivity()
@@ -1063,6 +1044,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         return false
     }
+    
     
     func didContachHasBlackHole(contact:SKPhysicsContact) -> Bool
     {

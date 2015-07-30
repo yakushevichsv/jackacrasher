@@ -157,45 +157,33 @@ class AsteroidGenerator: NSObject {
         
     }
     
-    private func produceBombSprite() {
-        let bombSpeed:CGFloat = 200
-        let bombTexture = self.spriteAtlas.textureNamed("cartoon-bomb")
+    private func produceBomb() {
         
-        let sprite = SKSpriteNode(texture: bombTexture)
-        sprite.zRotation = CGFloat(M_PI*0.5)
+        let bomb = arc4random() % 2 == 1 ? Bomb() : AIBomb()
         
-        sprite.xScale = 0.25
-        
-        let param = sprite.size.halfMaxSizeParam()
+        let param = bomb.size.halfMaxSizeParam()
         
         let yMargin = round(param) + 10
         
-        let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/bombSpeed)
+        let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/Bomb.Constants.speed)
         
         let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
         
         let yPos = CGFloat(arc4random() % divisor) + yMargin
         
-        let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
-    
-        sprite.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
+        let xMargin = bomb.zRotation != 0 ? bomb.size.height : bomb.size.width
         
-        sprite.physicsBody = SKPhysicsBody(texture: bombTexture, size: sprite.size)
-        sprite.physicsBody!.collisionBitMask = 0
-        sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
-        sprite.physicsBody!.categoryBitMask = EntityCategory.Bomb
-        //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
-        sprite.userData = ["radius":50]
+        bomb.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
         
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
         let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock({ () -> Void in
-            self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: sprite, withType: .Trash)
+            self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: bomb, withType: .Trash)
         }),SKAction.removeFromParent()])
-        sprite.runAction(sequence)
+        bomb.runAction(sequence)
         
-        self.delegate.asteroidGenerator(self, didProduceAsteroids: [sprite], type: .Bomb)
+        self.delegate.asteroidGenerator(self, didProduceAsteroids: [bomb], type: .Bomb)
         
-        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size)")
+        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(bomb.size)")
     }
     
     private func produceRopeJointAsteroids() {
@@ -436,7 +424,7 @@ class AsteroidGenerator: NSObject {
         self.prevAsteroidType = self.curAsteroidType
         
         //HACK:Warning
-        //currentAstType = .Regular
+        currentAstType = .Bomb
         
         self.curAsteroidType = currentAstType
         
@@ -453,7 +441,7 @@ class AsteroidGenerator: NSObject {
             break
         case .Bomb:
             println("=== Produced current type .Bomb === ")
-            self.produceBombSprite()
+            self.produceBomb()
             break
         case .Regular:
             println("=== Produced current type .Regular === ")
