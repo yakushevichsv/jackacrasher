@@ -286,4 +286,14 @@ func reflectionAngleFromContact(contact:SKPhysicsContact!) -> CGFloat {
     return extraAngle
 }
 
+func distanceBetweenPoints(point1:CGPoint, point2:CGPoint) -> CGFloat {
+    return hypot(CGFloat(point2.x - point1.x), CGFloat(point2.y - point1.x))
+}
+
+func radiansBetweenPoints(first:CGPoint, second:CGPoint) -> CGFloat {
+    let deltaX = second.x - first.x;
+    let deltaY = second.y - first.y;
+    return CGFloat(atan2f(Float(deltaY), Float(deltaX)))
+}
+
 

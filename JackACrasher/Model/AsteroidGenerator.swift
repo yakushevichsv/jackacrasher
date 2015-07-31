@@ -159,13 +159,16 @@ class AsteroidGenerator: NSObject {
     
     private func produceBomb() {
         
-        let bomb = arc4random() % 2 == 1 ? Bomb() : AIBomb()
+        let isAIBomb = arc4random() % 2 == 0
+        let bomb = !isAIBomb ? Bomb() : AIBomb()
         
         let param = bomb.size.halfMaxSizeParam()
         
         let yMargin = round(param) + 10
         
-        let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/Bomb.Constants.speed)
+        var duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/Bomb.Constants.speed)
+        
+        duration *= isAIBomb ? 2 : 1
         
         let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
         
@@ -177,7 +180,7 @@ class AsteroidGenerator: NSObject {
         
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
         let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock({ () -> Void in
-            self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: bomb, withType: .Trash)
+            self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: bomb, withType: .Bomb)
         }),SKAction.removeFromParent()])
         bomb.runAction(sequence)
         

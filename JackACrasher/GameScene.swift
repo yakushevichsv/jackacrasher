@@ -36,7 +36,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     var enemyGenerator:EnemiesGenerator!
     
     weak var gameSceneDelegate:GameSceneDelegate?
-    var prevPlayerPosition:CGPoint = CGPointZero
+    private var prevPlayerPosition:CGPoint = CGPointZero
+    private var lastUpdateTimeInterval:CFTimeInterval
     
      var currentGameScore:Int64 = 0
     private var totalGameScore:UInt64 = 0 {
@@ -45,6 +46,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
 
+    private var bombsCount:UInt = 0
     
     private var needToReflect:Bool = false
     
@@ -95,6 +97,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     override init(size:CGSize) {
+        self.lastUpdateTimeInterval = 0
         super.init(size: size)
         initPrivate()
     }
@@ -695,6 +698,35 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
    
     override func update(currentTime: CFTimeInterval) {
+        
+        var timeSinceLast = currentTime - self.lastUpdateTimeInterval
+        self.lastUpdateTimeInterval = currentTime;
+        if (timeSinceLast > 1) { // more than a second since last update
+            timeSinceLast = CFTimeInterval(1/60)
+        }
+        
+        if self.bombsCount > 0 {
+            
+           let bombs = self.children.filter(){
+                [unowned self]
+                curNode in
+                
+                if let childNode = curNode as? SKNode {
+                    if let body = childNode.physicsBody {
+                        return body.categoryBitMask == EntityCategory.Bomb
+                    }
+                }
+                return false
+            }
+            
+            self.bombsCount = min(self.bombsCount, UInt(bombs.count));
+            
+            for bombObj in bombs {
+                let bomb = bombObj as! Bomb
+                
+                bomb.updateWithTimeSinceLastUpdate(timeSinceLast)
+            }
+        }
     }
     
     func returnPlayerToScene(sprite:SKNode) -> Bool {
@@ -708,6 +740,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return true
         }
         return false
+    }
+    
+    internal var heroes:[Player] {
+        get {
+            return [self.player]
+        }
     }
     
     func removePlayerFromRegularAsteroidToScene() {
@@ -772,6 +810,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             fallthrough
         case .Bomb:
             generator.paused = false
+            if (self.bombsCount != 0) {
+                self.bombsCount -= 1;
+            }
+            
+            let bomb = asteroid as! Bomb
+            
+            if CGRectContainsPoint(self.playableArea, bomb.position) {
+                if (bomb.parent != nil) {
+                    createExplosion(.Small, position: bomb.position, withScore: 0)
+                }
+            }
+            
             break
         default:
             break
@@ -805,6 +855,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             //eee Move up if there is a contact...
             break;
         case .Bomb:
+            self.bombsCount += UInt(didProduceAsteroids.count)
+            
+            for curBombObj in didProduceAsteroids {
+                if let curBomb = curBombObj as? Bomb {
+                    curBomb.target = self.player
+                }
+            }
+            
             break
         case .Regular:
             self.player.disableProjectileGun()

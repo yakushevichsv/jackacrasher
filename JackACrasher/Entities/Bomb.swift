@@ -11,6 +11,8 @@ import SpriteKit
 
 class Bomb: SKSpriteNode {
     
+    internal weak var target:Player?
+    
     internal struct Constants {
         static let speed:CGFloat = 200
         static let name = "Bomb"
