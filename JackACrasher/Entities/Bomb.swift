@@ -54,4 +54,8 @@ class Bomb: SKSpriteNode {
         
     }
     
+    
+    var canAttack:Bool {
+        get {return false}
+    }
 }

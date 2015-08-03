@@ -99,4 +99,8 @@ class AIBomb: Bomb {
         return ang
     }
     
+    override var canAttack:Bool {
+        get {return true}
+    }
+    
 }

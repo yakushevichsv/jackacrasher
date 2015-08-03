@@ -724,6 +724,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             for bombObj in bombs {
                 let bomb = bombObj as! Bomb
                 
+                player.updateWithTimeSinceLastUpdate(timeSinceLast,location: bomb.position)
                 bomb.updateWithTimeSinceLastUpdate(timeSinceLast)
             }
         }
@@ -822,6 +823,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 }
             }
             
+            if self.bombsCount == 0 {
+                self.player.disableProjectileGunDuringMove()
+            }
+            
             break
         default:
             break
@@ -860,6 +865,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             for curBombObj in didProduceAsteroids {
                 if let curBomb = curBombObj as? Bomb {
                     curBomb.target = self.player
+                    
+                    if (curBomb.canAttack) {
+                        self.player.enableProjectileGunDuringMove()
+                    }
                 }
             }
             

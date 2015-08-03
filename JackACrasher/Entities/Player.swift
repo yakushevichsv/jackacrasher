@@ -33,6 +33,7 @@ enum PlayerMovement {
 enum PlayerMode {
     case Idle
     case CanFire
+    case CanFireAndMove
 }
 
 enum PlayerFlyDistance {
@@ -53,6 +54,8 @@ private let damageEmitterNodeName = "damageNode"
 
 private let playerNode = "playerNode"
 
+private let timerNodeName = "timerNodeName"
+
 class Player: SKNode, ItemDestructable {
     private let engineNodeName = "engineEmitter"
     private let projectileNodeName = "projectileNode"
@@ -61,6 +64,7 @@ class Player: SKNode, ItemDestructable {
     private var playerMode:PlayerMode = .Idle
     
     private var hammerSprite:SKSpriteNode! = nil
+    private weak var timeLeftLabel:SKLabelNode! = nil
     
     private static var sBGSprite:SKSpriteNode!
     private static var sHammerSprite:SKSpriteNode!
@@ -68,7 +72,11 @@ class Player: SKNode, ItemDestructable {
     
     private static var sContext:dispatch_once_t = 0
     
+    
     var health: ForceType = 100
+    
+    private var prevTimeInterval:NSTimeInterval = 0
+    private var projectileCount:UInt = 0
     
     private var playerBGSprite:SKSpriteNode! {
         return self.childNodeWithName(playerBGNodeName) as! SKSpriteNode
@@ -283,14 +291,13 @@ class Player: SKNode, ItemDestructable {
         let xDiff = point.x - self.position.x
         let yDiff = point.y - self.position.y
         
-        let dist = sqrt(pow(xDiff,2) + pow(yDiff,2))
+        let dist = distanceBetweenPoints(point, self.position)
 
         if (xDiff > 0 ) {
             self.xScale = 1.0
         } else if (xDiff != 0){
             self.xScale = -1.0
         }
-        
         
         let duration = NSTimeInterval(dist/CGFloat(self.flyDurationSpeed))
         
@@ -371,7 +378,12 @@ class Player: SKNode, ItemDestructable {
     }
     
     internal func canThrowProjectile() -> Bool {
-        return self.playerMode == .CanFire
+        return self.playerMode == .CanFire 
+    }
+    
+    internal func enableProjectileGunDuringMove() {
+        enableProjectileGun()
+        self.playerMode = .CanFireAndMove
     }
     
     internal func enableProjectileGun() {
@@ -380,6 +392,14 @@ class Player: SKNode, ItemDestructable {
     
     internal func disableProjectileGun() {
         defineProjectileGunState(true)
+    }
+    
+    internal func disableProjectileGunDuringMove() {
+        if self.playerMode == .CanFireAndMove {
+            disableProjectileGun()
+            self.prevTimeInterval = 0
+            self.timeLeftLabel.hidden = true
+        }
     }
     
     private func defineProjectileGunState(hidden:Bool) {
@@ -405,7 +425,7 @@ class Player: SKNode, ItemDestructable {
         let xDiff = location.x - self.position.x
         let yDiff = location.y - self.position.y
         
-        let len = sqrt(pow(xDiff, 2) + pow(yDiff, 2))
+        let len = distanceBetweenPoints(location, self.position)
         
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)))
     }
@@ -488,5 +508,64 @@ class Player: SKNode, ItemDestructable {
             
             return true
         }
+    }
+    
+    internal func updateWithTimeSinceLastUpdate(interval:NSTimeInterval,location:CGPoint) {
+        
+        if self.playerMode != .CanFireAndMove {
+            return
+        }
+        
+        
+        let xDiff = location.x - self.position.x
+        let yDiff = location.y - self.position.y
+        
+        var xScale:CGFloat = 0
+        
+        if (xDiff > 0 ) {
+            xScale = 1.0
+        } else if (xDiff != 0){
+            xScale = -1.0
+        }
+        
+        if let lblNode = self.timeLeftLabel {
+            lblNode.xScale = 1.0
+        }
+        
+        
+        let now = NSDate.timeIntervalSinceReferenceDate()
+        
+        if self.prevTimeInterval == 0 {
+            self.prevTimeInterval = now
+            
+            if self.timeLeftLabel == nil {
+                let node = SKLabelNode()
+                node.fontSize = 15
+                node.position = CGPointMake(Player.sBGSprite.size.width*0.5, Player.sBGSprite.size.height*0.5)
+                self.timeLeftLabel = node
+                self.addChild(node)
+            }
+            else {
+                self.timeLeftLabel.hidden = false
+            }
+        }
+        
+        if xScale != 0 {
+            self.xScale = xScale
+        }
+        
+        var margin = now - self.prevTimeInterval
+        
+        if margin >= 4 {
+            self.prevTimeInterval = now
+                throwProjectileToLocation(location)
+                self.projectileCount++
+                margin = 0
+                if (self.projectileCount == 10) {
+                    self.prevTimeInterval += 2
+                }
+        }
+        self.timeLeftLabel.text = "\(UInt(3 - margin + 1))"
+        
     }
 }
