@@ -918,18 +918,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     //MARK: Enemies Generator's methods
     func enemiesGenerator(generator: EnemiesGenerator, didProduceItems: [SKNode!], type: EnemyType) {
         
+        var isTransmitter = didProduceItems.count == 1 && type == .Transmitter
+        
         for node in didProduceItems {
             node.zPosition = self.bgZPosition + 1
             addChild(node)
             
             generator.signalItemAppearance(node, type: type)
-            //assert(CGRectGetHeight(self.playableArea) > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > CGRectGetMinY(self.playableArea), "Doesn't contain frame!")
-            
             println("Enemy position \(node.position)")
             println("Scene size \(self.size)")
         }
         generator.paused = true
         
+        if isTransmitter == true {
+            self.asteroidGenerator.paused = true
+            
+            if let transmitter = didProduceItems.last as? Transmitter {
+                transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + self.player.size.halfWidth(), self.player.position.y)) {
+                    [unowned self] in
+                    self.enemyGenerator.paused = false
+                }
+            }
+        }
     }
     
     func didDissappearItemForEnemiesGenerator(generator: EnemiesGenerator, item: SKNode!, type: EnemyType) {

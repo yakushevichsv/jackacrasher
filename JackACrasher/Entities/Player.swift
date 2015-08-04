@@ -565,7 +565,7 @@ class Player: SKNode, ItemDestructable {
                     self.prevTimeInterval += 2
                 }
         }
-        self.timeLeftLabel.text = "\(UInt(3 - margin + 1))"
+        self.timeLeftLabel.text = "\(UInt(4 - margin + 1))"
         
     }
 }

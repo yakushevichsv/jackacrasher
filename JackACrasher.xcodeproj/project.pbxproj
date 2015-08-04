@@ -58,6 +58,7 @@
 		2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */; };
 		2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B6871AE3FF7700DDDB9F /* SoundManager.swift */; };
 		2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */; };
+		219A68B01B70AFB500CE6F07 /* Transmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A68AF1B70AFB500CE6F07 /* Transmitter.swift */; };
 		219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A6D221AFABCC400A63E7F /* HUDNode.swift */; };
 		21A74E511AE0F6E00005334D /* trash.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21A74E501AE0F6E00005334D /* trash.atlas */; };
 		21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */; };
@@ -157,6 +158,7 @@
 		2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_small.wav; path = Sounds/explosion_small.wav; sourceTree = "<group>"; };
 		2199B6871AE3FF7700DDDB9F /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Model/SoundManager.swift; sourceTree = "<group>"; };
 		2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGVector+Extensions.swift"; path = "Utils/CGVector+Extensions.swift"; sourceTree = "<group>"; };
+		219A68AF1B70AFB500CE6F07 /* Transmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Transmitter.swift; path = Entities/Transmitter.swift; sourceTree = "<group>"; };
 		219A6D221AFABCC400A63E7F /* HUDNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HUDNode.swift; path = HUD/HUDNode.swift; sourceTree = "<group>"; };
 		21A74E501AE0F6E00005334D /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
 		21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTransitionSegue.swift; path = Utils/CustomTransitionSegue.swift; sourceTree = "<group>"; };
@@ -428,6 +430,7 @@
 				21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */,
 				21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */,
 				21F0FFA61AED09B300C2BDB6 /* Rope */,
+				219A68AF1B70AFB500CE6F07 /* Transmitter.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -696,6 +699,7 @@
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,
 				21DDE5491B6A5A6300B41A91 /* Bomb.swift in Sources */,
 				214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */,
+				219A68B01B70AFB500CE6F07 /* Transmitter.swift in Sources */,
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
 				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,
 				219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */,

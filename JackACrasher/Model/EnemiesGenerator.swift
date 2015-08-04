@@ -16,6 +16,7 @@ import SpriteKit
 enum EnemyType {
     case BlackHole
     case SpaceShip
+    case Transmitter
 }
 
 protocol EnemiesGeneratorDelegate:NSObjectProtocol {
@@ -29,6 +30,8 @@ class EnemiesGenerator: NSObject {
     private var canFire:Bool = true
     private var timer:NSTimer!
     weak var delegate:EnemiesGeneratorDelegate?
+    
+    private var isTransmitterPresent:Bool = false
     
     init(playableRect rect:CGRect, andDelegate delegate:EnemiesGeneratorDelegate?) {
         self.playableRect = rect
@@ -91,20 +94,38 @@ class EnemiesGenerator: NSObject {
         
         self.canFire = false
         
-        let isBlackHole = true //arc4random()%2 == 1 //MARK: TODO add support of spaceships
+        if (isTransmitterPresent) {
+            
+            //TODO: generate enemies here.....
+            return
+        }
+        
+        let isBlackHole = arc4random()%2 == 1 //MARK: TODO add support of spaceships
         
         var node:SKNode!
+        var type:EnemyType
         
         if (isBlackHole) {
             node = produceBlackHoleItem()
+            type = .BlackHole
         }
-        else {
-            node = nil
+        else  {
+            node = produceTransmitter()
+            type = .Transmitter
         }
         
-        self.delegate?.enemiesGenerator(self, didProduceItems: [node], type: .BlackHole)
+        self.delegate?.enemiesGenerator(self, didProduceItems: [node], type: type)
     }
     
+    private func produceTransmitter() -> SKNode! {
+        self.isTransmitterPresent  = true
+        let w = CGRectGetWidth(self.playableRect) * 0.2
+        let h = CGRectGetHeight(self.playableRect) * 0.05
+        
+        let transmitter = Transmitter(transmitterSize: CGSizeMake(w, h), beamHeight: CGRectGetHeight(self.playableRect))
+        transmitter.position  = CGPointMake(CGRectGetWidth(self.playableRect), CGRectGetHeight(self.playableRect))
+        return transmitter
+    }
     
     private func produceBlackHoleItem() -> SKNode! {
         
