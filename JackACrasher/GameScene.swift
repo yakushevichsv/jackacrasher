@@ -1265,6 +1265,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         self.terminateGame()
                         return
                     }
+                }  else if (eBody.categoryBitMask == EntityCategory.PlayerLaser) {
+                    if let node = eBody.node {
+                        node.physicsBody = nil
+                        node.removeFromParent();
+                    }
                 }
             })
             
