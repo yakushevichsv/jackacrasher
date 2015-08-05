@@ -29,7 +29,7 @@ extension GameScene {
     }
 }
 
-class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate {
+class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate,AssetsContainer {
     
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
@@ -82,7 +82,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     private static var sProjectileEmitter:SKEmitterNode!
     
-    internal class func loadAssets() {
+    internal static func loadAssets() {
     
         let projectileEmitter = SKEmitterNode(fileNamed: "ProjectileSplat")
         projectileEmitter.name = "ProjectileSplat"
@@ -94,6 +94,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         Explosion.loadAssets()
         BlackHole.loadAssets()
         Bomb.loadAssets()
+        Transmitter.loadAssets()
     }
     
     override init(size:CGSize) {
@@ -284,7 +285,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     private func storePrevPlayerPosition() {
-        self.prevPlayerPosition = player.position
+        
+        self.prevPlayerPosition = convertNodePositionToScene(self.player)
     }
     
     func createPlayer() {
@@ -433,81 +435,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.needToReflect = false
     }
     
-    private func touchIntersectAsteroid(touch:UITouch) -> Bool  {
-        
-        if (self.needToReflect) {
-            return false
-        }
-        
-        let point = touch.locationInNode(self)
-        let prevPoint = touch.previousLocationInNode(self)
-        
-        for curNode in self.scene!.nodesAtPoint(point) as! [SKNode] {
-            
-            if (curNode is RegularAsteroid ||
-                curNode is SmallRegularAsteroid) {
-                
-                self.needToReflect = true
-                
-                return true
-            }
-        }
-        return false
-    }
-    
-    
-    func needToIgnore(location:CGPoint) ->Bool {
-        
-        let date = self.lastProjectileExp.date
-        
-        if NSDate.timeIntervalSinceReferenceDate() - date <= 1 {
-           
-           let diff1 = location - self.player.position
-           let diff2 = self.lastProjectileExp.position - self.player.position
-            
-            if (diff1.length() == 0 || diff2.length() == 0) {
-                return false
-            }
-            
-            let v1 = CGVector(dx: diff1.x, dy: diff1.y)
-            let v2 = CGVector(dx: diff2.x, dy: diff2.y)
-            let len1 = v1.length()
-            let len2 = v2.length()
-            
-            let cosAngle = (v1.dx*v2.dx+v1.dy*v2.dy)/(len1*len2)
-            
-           return cosAngle >= 0 && cosAngle < 1
-        }
-        return false
-    }
-    
-    
-    private func tryToDestroyPlayer(damageForce:ForceType) -> Bool {
-        
-        let prevNumberOfLives = self.hudNode.life
-        
-        self.hudNode.reduceCurrentLifePercent(forceType: damageForce)
-        let curNumberOfLives = self.hudNode.life
-        
-        let destroyed = self.player.tryToDestroyWithForce(damageForce)
-        println("!!! Destroyed \(destroyed) prevNumberOfLives \(prevNumberOfLives) curNumberOfLives \(curNumberOfLives)")
-        if (prevNumberOfLives != curNumberOfLives) {
-            
-            let info = SurvivalGameInfo()
-            info.numberOfLives = destroyed ? 0 :curNumberOfLives
-            info.ratio = destroyed ? 0 : self.healthRatio
-            info.currentScore = self.currentGameScore
-            info.playedTime = self.playedTime
-            
-            GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
-                updated in
-                println("UPdated \(updated)")
-            }
-        }
-    
-        return destroyed
-    }
-    
     override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
         if (self.needToReflect) {
             self.needToReflect = false
@@ -639,6 +566,81 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             [unowned self] in
             self.storePrevPlayerPosition()
         }
+    }
+    
+    private func touchIntersectAsteroid(touch:UITouch) -> Bool  {
+        
+        if (self.needToReflect) {
+            return false
+        }
+        
+        let point = touch.locationInNode(self)
+        let prevPoint = touch.previousLocationInNode(self)
+        
+        for curNode in self.scene!.nodesAtPoint(point) as! [SKNode] {
+            
+            if (curNode is RegularAsteroid ||
+                curNode is SmallRegularAsteroid) {
+                    
+                    self.needToReflect = true
+                    
+                    return true
+            }
+        }
+        return false
+    }
+    
+    
+    func needToIgnore(location:CGPoint) ->Bool {
+        
+        let date = self.lastProjectileExp.date
+        
+        if NSDate.timeIntervalSinceReferenceDate() - date <= 1 {
+            
+            let diff1 = location - self.player.position
+            let diff2 = self.lastProjectileExp.position - self.player.position
+            
+            if (diff1.length() == 0 || diff2.length() == 0) {
+                return false
+            }
+            
+            let v1 = CGVector(dx: diff1.x, dy: diff1.y)
+            let v2 = CGVector(dx: diff2.x, dy: diff2.y)
+            let len1 = v1.length()
+            let len2 = v2.length()
+            
+            let cosAngle = (v1.dx*v2.dx+v1.dy*v2.dy)/(len1*len2)
+            
+            return cosAngle >= 0 && cosAngle < 1
+        }
+        return false
+    }
+    
+    
+    private func tryToDestroyPlayer(damageForce:ForceType) -> Bool {
+        
+        let prevNumberOfLives = self.hudNode.life
+        
+        self.hudNode.reduceCurrentLifePercent(forceType: damageForce)
+        let curNumberOfLives = self.hudNode.life
+        
+        let destroyed = self.player.tryToDestroyWithForce(damageForce)
+        println("!!! Destroyed \(destroyed) prevNumberOfLives \(prevNumberOfLives) curNumberOfLives \(curNumberOfLives)")
+        if (prevNumberOfLives != curNumberOfLives) {
+            
+            let info = SurvivalGameInfo()
+            info.numberOfLives = destroyed ? 0 :curNumberOfLives
+            info.ratio = destroyed ? 0 : self.healthRatio
+            info.currentScore = self.currentGameScore
+            info.playedTime = self.playedTime
+            
+            GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
+                updated in
+                println("UPdated \(updated)")
+            }
+        }
+        
+        return destroyed
     }
     
     private func calculateGameTime() -> NSTimeInterval {
@@ -934,7 +936,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.asteroidGenerator.paused = true
             
             if let transmitter = didProduceItems.last as? Transmitter {
-                transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + self.player.size.halfWidth(), self.player.position.y)) {
+                self.player.enableProjectileGun()
+                transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
                     [unowned self] in
                     self.enemyGenerator.paused = false
                 }

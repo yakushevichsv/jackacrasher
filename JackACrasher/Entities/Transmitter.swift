@@ -9,7 +9,12 @@
 import Foundation
 import SpriteKit
 
-class Transmitter:SKNode {
+protocol AssetsContainer
+{
+    static func loadAssets()
+}
+
+class Transmitter:SKNode,AssetsContainer {
     
     enum State {
         case Capturing
@@ -21,43 +26,87 @@ class Transmitter:SKNode {
         static let bgSpriteName = "bgSpriteName"
         static let movingSpeed:CGFloat = 100.0
         static let beamSpeed:CGFloat = 60.0
+        static let transmitterLaserName = "TransmitterLaser"
     }
     
     private weak var basementNode:SKShapeNode! = nil
     private weak var rayNode:SKShapeNode! = nil
+    private weak var laserNode:SKEmitterNode! = nil
+    private weak var transmitNode:Player! = nil
+    
+    private static var sLaserEmitter:SKEmitterNode!
+    private static var sOne:dispatch_once_t = 0
     
     private let size:CGSize
     private let beamHeight:CGFloat
+    
+    static func loadAssets() {
+        dispatch_once(&sOne) {
+            let laser = SKEmitterNode(fileNamed: Transmitter.Constants.transmitterLaserName)
+            laser.name = self.Constants.transmitterLaserName
+            self.sLaserEmitter = laser
+        }
+    }
+    
+    internal var transmitterSize:CGSize {
+        get {return self.size}
+    }
+    
+    
     
     init(transmitterSize size:CGSize,beamHeight:CGFloat) {
         self.size = size
         self.beamHeight = beamHeight
         
         super.init()
-        self.createBasement(size)
+        self.createItems(size)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func createBasement(size:CGSize) {
+    private func createItems(size:CGSize) {
         
         let node = SKShapeNode(rectOfSize: size)
         node.fillColor = UIColor.redColor()
         node.name = Transmitter.Constants.bgSpriteName
-        self.addChild(node)
+        addChild(node)
         self.basementNode = node
-        
-        
+    
         let shape = SKShapeNode()
         shape.fillColor = UIColor(white: 1, alpha: 0.7)
-        self.addChild(shape)
+        addChild(shape)
+        let hPos = -round(CGRectGetMaxY(self.basementNode.frame)*0.9)
+        shape.position = CGPointMake(0, hPos)
         self.rayNode = shape
+        
+        let laserNode = Transmitter.sLaserEmitter.copy() as! SKEmitterNode
+        laserNode.position = self.rayNode.position
+        laserNode.particlePositionRange = CGVector(dx: round(size.width * 0.8), dy: 0)
+        addChild(laserNode)
+        self.laserNode = laserNode
+        
     }
 
+    private func correctRayPath(time:CGFloat,duration:NSTimeInterval,yDiff:CGFloat,yOffset:CGFloat) {
+        
+        let ratio = time/CGFloat(duration)
+        let h = ratio * yDiff + yOffset
+        
+        let half = self.laserNode.particleSpeedRange * 0.5
+        let lifeTimeMin = h / (self.laserNode.particleSpeed + half)
+        let lifeTimeMax = h / (self.laserNode.particleSpeed - half)
+        
+        self.laserNode.particleLifetimeRange = lifeTimeMax - lifeTimeMin
+        self.laserNode.particleLifetime = 0.5 * (lifeTimeMin + lifeTimeMax )
+        self.laserNode.particleBirthRate = 100
+        self.rayNode.path = UIBezierPath(rect: CGRectMake(-self.size.halfWidth(), 0, self.size.width, -h)).CGPath
+    }
     
-    internal func transmitAnItem(item node:SKNode!,itemSize:CGSize, toPosition destPosition:CGPoint, completion:(()->Void)!) {
+    internal func transmitAnItem(item node:Player!,itemSize:CGSize, toPosition destPosition:CGPoint, completion:(()->Void)!) {
+        
+        self.userInteractionEnabled = true
         
         var array = [SKAction]()
         let position = node.position
@@ -66,7 +115,9 @@ class Transmitter:SKNode {
             array.append(moveAction)
         }
         
-        let yDiff = fabs(self.position.y - position.y - itemSize.halfHeight())
+        self.transmitNode = node
+        
+        let yDiff = fabs(self.position.y - position.y + itemSize.halfHeight())
         
         let duration = NSTimeInterval(yDiff/Transmitter.Constants.beamSpeed)
         
@@ -74,11 +125,7 @@ class Transmitter:SKNode {
             [unowned self]
             node, time in
             
-            let ratio = time/CGFloat(duration)
-            
-            let h = ratio * yDiff
-            
-            self.rayNode.path = UIBezierPath(rect: CGRectMake(-self.size.halfWidth(), 0, self.size.width, -h)).CGPath
+            self.correctRayPath(time, duration: duration, yDiff: yDiff, yOffset:0)
         }
         array.append(custAction)
 
@@ -97,7 +144,7 @@ class Transmitter:SKNode {
         array.append(moveAction)
         
         
-        let yDiff2 = fabs(yDiff -  self.beamHeight)
+        let yDiff2 = fabs(yDiff -  0 * self.beamHeight)
         
         let duration2 = NSTimeInterval(yDiff2/Transmitter.Constants.beamSpeed)
         
@@ -105,15 +152,24 @@ class Transmitter:SKNode {
             [unowned self]
             node, time in
             
-            let ratio = time/CGFloat(duration2)
-            
-            let h = ratio * yDiff2 + yDiff
-            
-            self.rayNode.path = UIBezierPath(rect: CGRectMake(-self.size.halfWidth(), 0, self.size.width, -h)).CGPath
+            self.correctRayPath(time, duration: duration, yDiff: yDiff2,yOffset:yDiff)
         }
         array.append(expandBeamAction)
         
         self.runAction(SKAction.sequence(array), completion: completion)
+    }
+    
+    private func pointInsideBeam(location:CGPoint) -> Bool {
+        return self.rayNode.containsPoint(location)
+    }
+    
+    // MARK: Touches 
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        let touch = (touches.first as! UITouch)
+        let point = touch.locationInNode(self)
+        
+        self.transmitNode.moveToPoint(point)
     }
     
 }

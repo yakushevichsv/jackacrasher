@@ -56,7 +56,7 @@ private let playerNode = "playerNode"
 
 private let timerNodeName = "timerNodeName"
 
-class Player: SKNode, ItemDestructable {
+class Player: SKNode, ItemDestructable, AssetsContainer {
     private let engineNodeName = "engineEmitter"
     private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
@@ -83,14 +83,18 @@ class Player: SKNode, ItemDestructable {
     }
     
     internal var size :CGSize {
-        return Player.sBGSprite.size
+        get {return Player.sBGSprite.size}
+    }
+    
+    internal var isCaptured:Bool {
+        get {return self.parent != self.scene }
     }
     
     internal class var backgroundPlayerSprite:SKSpriteNode! {
         return Player.sBGSprite
     }
     
-    internal class func loadAssets() {
+    internal static func loadAssets() {
        
         dispatch_once(&sContext) { () -> Void in
            let playerSprite = SKSpriteNode(imageNamed: playerImageName)
@@ -422,10 +426,16 @@ class Player: SKNode, ItemDestructable {
     
     
     func throwProjectileToLocation(location:CGPoint) -> SKNode! {
-        let xDiff = location.x - self.position.x
-        let yDiff = location.y - self.position.y
         
-        let len = distanceBetweenPoints(location, self.position)
+        var vLocation = location
+        /*if self.isCaptured {
+            vLocation = convertSceneLocationToParentOfNode(location, self)
+        }*/
+        
+        let xDiff = vLocation.x - self.position.x
+        let yDiff = vLocation.y - self.position.y
+        
+        let len = distanceBetweenPoints(vLocation, self.position)
         
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)))
     }
@@ -543,11 +553,15 @@ class Player: SKNode, ItemDestructable {
                 node.fontSize = 15
                 node.position = CGPointMake(Player.sBGSprite.size.width*0.5, Player.sBGSprite.size.height*0.5)
                 self.timeLeftLabel = node
+                //node.colorBlendFactor = 1.0
                 self.addChild(node)
             }
             else {
                 self.timeLeftLabel.hidden = false
             }
+            
+            self.timeLeftLabel.fontColor = !self.isCaptured ? SKColor.whiteColor() : SKColor.blackColor()
+            //self.timeLeftLabel.color = self.timeLeftLabel.fontColor
         }
         
         if xScale != 0 {

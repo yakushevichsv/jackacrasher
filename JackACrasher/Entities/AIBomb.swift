@@ -15,10 +15,6 @@ class AIBomb: Bomb {
     private let maxAlertRadius:CGFloat = AIBomb.enemyAlertRadius * 2.0
     private static let enemyAlertRadius:CGFloat = 50 * 40.0
     
-    /*private struct Constants {
-        private static let extraMove = "extraMove"
-    }*/
-    
     override init() {
         super.init()
         self.xScale *= 2
@@ -48,7 +44,9 @@ class AIBomb: Bomb {
             
             for hero in scene.heroes {
                 
-                let distance = distanceBetweenPoints(hero.position,self.position)
+                let position = self.positionOfNodeRelativeToOurParent(hero)
+                
+                let distance = distanceBetweenPoints(position,self.position)
                 
                 if (distance < AIBomb.enemyAlertRadius && distance < heroDistance) {
                     heroDistance = distance
@@ -58,7 +56,8 @@ class AIBomb: Bomb {
         }
         
         let chaseRadius = self.chaseRadius
-        let heroPosition = self.target!.position
+        let heroPosition = self.positionOfNodeRelativeToOurParent(self.target!)
+
         
         if (heroDistance > self.maxAlertRadius) {
             self.target = nil
@@ -71,13 +70,18 @@ class AIBomb: Bomb {
         }
     }
     
+    private func positionOfNodeRelativeToOurParent(node:SKNode) -> CGPoint {
+        
+        var position = node.position
+        
+        if (node.parent != self.parent) {
+            position = node.parent!.convertPoint(position, toNode: self.parent!)
+        }
+        
+        return position
+    }
+    
     private func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
-        
-        //let actionKey = AIBomb.Constants.extraMove
-        
-        /*if self.actionForKey(actionKey) != nil {
-            self.removeActionForKey(actionKey)
-        }*/
         
         let dist = distanceBetweenPoints(self.position, position)
         let moveAction = SKAction.moveTo(position, duration: NSTimeInterval(dist/Bomb.Constants.speed))
@@ -93,8 +97,6 @@ class AIBomb: Bomb {
     
         let ang = radiansBetweenPoints(self.position, position)
         
-        //let action = SKAction.rotateToAngle(ang, duration: 0)
-        //self.runAction(action)
         self.zRotation = π * 1.5 + ang
         return ang
     }

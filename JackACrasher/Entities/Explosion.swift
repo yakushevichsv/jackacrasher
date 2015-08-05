@@ -17,7 +17,7 @@ enum ExplosionType {
 }
 
 
-class Explosion: SKSpriteNode {
+class Explosion: SKSpriteNode, AssetsContainer {
     private static var textures:[SKTexture] = []
     private static var  animation:SKAction! = nil
     private static var small:Explosion!
@@ -26,7 +26,7 @@ class Explosion: SKSpriteNode {
     internal var explosionType:ExplosionType = .Small
     
     
-    internal class func loadAssets() {
+    internal static func loadAssets() {
         self.prepare()
     }
     

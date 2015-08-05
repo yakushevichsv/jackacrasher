@@ -11,7 +11,7 @@ import SpriteKit
 
  let blackHoleName = "blackhole"
 
-class BlackHole: SKNode,ItemDamaging {
+class BlackHole: SKNode,ItemDamaging,AssetsContainer {
     private static let gravityNodeName = "gravityNode"
     private weak var springField:SKFieldNode!
     
@@ -89,7 +89,7 @@ class BlackHole: SKNode,ItemDamaging {
         super.removeFromParent()
     }
     
-    internal class func  loadAssets() {
+    internal static func  loadAssets() {
     
         dispatch_once(&BlackHole.sContext) {
             

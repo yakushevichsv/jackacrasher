@@ -297,3 +297,22 @@ func radiansBetweenPoints(first:CGPoint, second:CGPoint) -> CGFloat {
 }
 
 
+func convertNodePositionToScene(node:SKNode!) -> CGPoint {
+    
+    if (node.scene != node.parent) {
+        return node.parent!.convertPoint(node.position, toNode: node.scene!)
+    }
+    else {
+        return node.position
+    }
+}
+
+func convertSceneLocationToParentOfNode(location:CGPoint,node:SKNode!) -> CGPoint {
+    
+    if (node.parent == node.scene) {
+        return location
+    } else {
+        return node.scene!.convertPoint(location, toNode: node.parent!)
+    }
+}
+

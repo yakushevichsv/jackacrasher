@@ -250,7 +250,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     }
 }
 
-class SmallRegularAsteroid:RegularAsteroid {
+class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
     
     private static let sFireEmitterNode = "FireEmitterNode"
     
@@ -266,7 +266,7 @@ class SmallRegularAsteroid:RegularAsteroid {
         return ForceType(1.0)
     }
     
-    internal class func loadAssets() {
+    internal static func loadAssets() {
         
         dispatch_once(&sContext, { () -> Void in
             self.sFireEmitter = SKEmitterNode(fileNamed: "Fire.sks")

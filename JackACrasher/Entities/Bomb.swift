@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class Bomb: SKSpriteNode {
+class Bomb: SKSpriteNode, AssetsContainer {
     
     internal weak var target:Player?
     
@@ -22,7 +22,7 @@ class Bomb: SKSpriteNode {
     private static var sBombTexture:SKTexture! = nil
     private static var sOnce:dispatch_once_t = 0
     
-    class func loadAssets() {
+    static func loadAssets() {
         dispatch_once(&Bomb.sOnce) {
             Bomb.sBombTexture = SKTexture(imageNamed: "cartoon-bomb")
         }
