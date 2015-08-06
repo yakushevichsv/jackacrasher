@@ -329,7 +329,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.fillInBackgroundLayer()
         self.createPlayer()
         self.createAsteroidGenerator()
-        self.createEnemiesGenerator()
+        //HACK: Uncomment this!
+        //self.createEnemiesGenerator()
         
         self.gameScoreNode = ScoreNode(point: CGPointMake(CGRectGetMinX(self.playableArea) + 40, CGRectGetMaxY(self.playableArea) - 30 ), score: self.totalGameScore)
         self.gameScoreNode.zPosition = self.fgZPosition
@@ -495,20 +496,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
-            //MARK: HACK life decrease....
-            
-            if (isPlayerVisible && self.player.containsPoint(location)) {
-                
-                let damageForce = ForceType(10)
-                
-                if self.tryToDestroyPlayer(damageForce) {
-                    
-                    terminateGame()
-                    return
-                }
-            }
-            
-            
             if (isPlayerVisible && self.player.canThrowProjectile()) {
                 self.player.throwProjectileToLocation(location)
             } else if (isPlayerVisible && self.player.parent == self.player.scene) {
@@ -523,9 +510,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     if let regAster = body.node as? RegularAsteroid {
 
                                 if (regAster.tryToDestroyWithForce(self.player.punchForce)) {
-                                    
-                                    
-                                    self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                                     
                                     var scale:CGFloat
                                     
@@ -545,13 +529,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                     }
                                     
                                     //MARK: Continue here, create crystal, with score addition.
-                                    
-                                    self.createRocksExplosion(location,scale:scale)
-                                    
-                                    self.displayScoreAdditionLabel(location, scoreAddition: 20)
+                                    self.rotateFakePlayer(regAster, location: location){
+                                        [unowned self] in
+                                        
+                                        self.createRocksExplosion(location,scale:scale)
+                                        self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                                        self.displayScoreAdditionLabel(location, scoreAddition: 20)
+                                    }
                                 }
                                 else {
-                                    self.shakeCamera(regAster, duration: 0.8)
+                                     self.rotateFakePlayer(regAster, location: location){
+                                        [unowned self] in
+                                        self.shakeCamera(regAster, duration: 0.8)
+                                    }
                                 }
                             pointer.memory = true
                         }
@@ -565,6 +555,35 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
             [unowned self] in
             self.storePrevPlayerPosition()
+        }
+    }
+    
+    private func rotateFakePlayer(regAster:RegularAsteroid!, location:CGPoint, runBlock:dispatch_block_t) {
+        
+        let relLocation = convertPoint(location, toNode: regAster)
+        
+        if let fPlayer = regAster.childNodeWithName(self.player.name!) {
+            
+            let difX = relLocation.x - fPlayer.position.x
+            
+            var angle:CGFloat = 0
+            var xScale:CGFloat = 1
+            
+            if (difX > 0) {
+                angle = -π * 0.5
+            } else if (difX < 0) {
+                angle = π * 0.5
+                xScale = -1.0
+            }
+            fPlayer.xScale = xScale
+            
+            let rotateAct = SKAction.rotateByAngle(angle, duration: angle != 0 ? 0.2 : 0 )
+            let runBlockAct = SKAction.runBlock(runBlock)
+            let rotateBackAct = rotateAct.reversedAction()
+            
+            let seq = SKAction.sequence([rotateAct,runBlockAct,rotateBackAct])
+            fPlayer.runAction(seq)
+            
         }
     }
     
@@ -807,10 +826,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             break
         case .RopeBased:
             self.enableCuttingRope = false
-            fallthrough
+            generator.paused = false
+            break
         case .Regular:
             returnPlayerToScene(asteroid)
-            fallthrough
+            generator.paused = false
+            break
         case .Bomb:
             generator.paused = false
             if (self.bombsCount != 0) {
@@ -1091,9 +1112,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             let angle2 = reflectionAngleFromContact(contact)
-            
+        
+            //TODO: Move to the Player class
             let playerNode:SKSpriteNode! = SKSpriteNode(imageNamed: "player")
-            
+            playerNode.name = self.player.name
             println("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
             
             let pointInternal = self.convertPoint(contact.contactPoint, toNode: pNode)
@@ -1258,8 +1280,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     self.processContact(eBody, andPlayerLaser: nil)
                     
                 } else if (eBody.categoryBitMask == EntityCategory.Player) {
-                    //TODO: remove live value...
-                    //or GameOver...
                     let damageForce = AsteroidGenerator.damageForce(.Bomb)
                     if self.tryToDestroyPlayer(damageForce) {
                         self.terminateGame()
