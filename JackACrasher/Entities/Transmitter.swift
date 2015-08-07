@@ -142,6 +142,7 @@ class Transmitter:SKNode,AssetsContainer {
         let position = node.position
         self.userInteractionEnabled = true
         self.removeAllActions()
+        node.removeAllActions()
         
         if (self.position.x != position.x) {
             let moveAction = SKAction.moveToX(position.x, duration: NSTimeInterval(fabs(position.x - self.position.x)/Transmitter.Constants.movingSpeed))
@@ -195,7 +196,7 @@ class Transmitter:SKNode,AssetsContainer {
         array.append(moveAction)
         
         
-        let yDiff2 = fabs(yDiff -  0 * self.beamHeight)
+        let yDiff2 = fabs(yDiff - self.beamHeight)
         
         let duration2 = NSTimeInterval(yDiff2/Transmitter.Constants.beamSpeed)
         

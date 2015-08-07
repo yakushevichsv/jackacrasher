@@ -495,7 +495,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
             
-            if (isPlayerVisible && self.player.canThrowProjectile()) {
+            if (isPlayerVisible && self.player.canThrowProjectile() && (self.player.parent != self.player.scene || self.childNodeWithName(Transmitter.NodeName) == nil)) {
                 self.player.throwProjectileToLocation(location)
             } else if (isPlayerVisible && self.player.parent == self.player.scene) {
                 if (!self.needToIgnore(location)) {
