@@ -386,6 +386,9 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     }
     
     internal func enableProjectileGunDuringMove() {
+        if (self.playerMode == .CanFire) {
+            return
+        }
         enableProjectileGun()
         self.playerMode = .CanFireAndMove
     }
@@ -570,16 +573,16 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         
         var margin = now - self.prevTimeInterval
         
-        if margin >= 4 {
+        if margin >= 2 {
             self.prevTimeInterval = now
                 throwProjectileToLocation(location)
                 self.projectileCount++
                 margin = 0
                 if (self.projectileCount == 10) {
-                    self.prevTimeInterval += 2
+                    self.prevTimeInterval += 1
                 }
         }
-        self.timeLeftLabel.text = "\(UInt(4 - margin + 1))"
+        self.timeLeftLabel.text = "\(UInt(2 - margin + 1))"
         
     }
 }

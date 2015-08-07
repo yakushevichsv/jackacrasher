@@ -22,6 +22,8 @@ class Transmitter:SKNode,AssetsContainer {
         case Constraining
     }
     
+    internal static let  NodeName = "Transmitter"
+    
     private  struct Constants {
         static let bgSpriteName = "bgSpriteName"
         static let movingSpeed:CGFloat = 100.0
@@ -51,7 +53,6 @@ class Transmitter:SKNode,AssetsContainer {
     internal var transmitterSize:CGSize {
         get {return self.size}
     }
-    
     
     
     init(transmitterSize size:CGSize,beamHeight:CGFloat) {
@@ -87,6 +88,7 @@ class Transmitter:SKNode,AssetsContainer {
         addChild(laserNode)
         self.laserNode = laserNode
         
+        self.name = Transmitter.NodeName
     }
 
     private func correctRayPath(time:CGFloat,duration:NSTimeInterval,yDiff:CGFloat,yOffset:CGFloat) {
@@ -104,26 +106,67 @@ class Transmitter:SKNode,AssetsContainer {
         self.rayNode.path = UIBezierPath(rect: CGRectMake(-self.size.halfWidth(), 0, self.size.width, -h)).CGPath
     }
     
+    internal func moveToPosition(toPosition destPosition:CGPoint) -> Bool {
+        
+        if self.position.x != destPosition.x {
+            let action = SKAction.moveToX(destPosition.x, duration: NSTimeInterval(fabs(destPosition.x - self.position.x)/Transmitter.Constants.movingSpeed))
+            self.runAction(action)
+            return true
+        }
+        else {
+            return false
+        }
+        
+    }
+    
+    internal func underRayBeam(positon itemPosition:CGPoint) -> Bool {
+        
+        let maxX = self.position.x + size.halfWidth()
+        let minX = self.position.x - size.halfWidth()
+        
+        let isUnder = minX <= itemPosition.x && maxX >= itemPosition.x
+        
+        if (isUnder){
+            println("Under value!")
+        }
+        return isUnder
+    }
+    
     internal func transmitAnItem(item node:Player!,itemSize:CGSize, toPosition destPosition:CGPoint, completion:(()->Void)!) {
         
-        self.userInteractionEnabled = true
+        if self.userInteractionEnabled {
+            return
+        }
         
         var array = [SKAction]()
         let position = node.position
+        self.userInteractionEnabled = true
+        self.removeAllActions()
+        
         if (self.position.x != position.x) {
             let moveAction = SKAction.moveToX(position.x, duration: NSTimeInterval(fabs(position.x - self.position.x)/Transmitter.Constants.movingSpeed))
             array.append(moveAction)
         }
+
         
         self.transmitNode = node
         
         let yDiff = fabs(self.position.y - position.y + itemSize.halfHeight())
         
         let duration = NSTimeInterval(yDiff/Transmitter.Constants.beamSpeed)
+       
         
         let custAction = SKAction.customActionWithDuration(duration) {
             [unowned self]
             node, time in
+            
+            if (!self.underRayBeam(positon: node.position)) {
+                self.userInteractionEnabled = false
+                self.removeAllActions()
+                completion()
+                return
+            }
+            
             
             self.correctRayPath(time, duration: duration, yDiff: yDiff, yOffset:0)
         }
@@ -131,6 +174,14 @@ class Transmitter:SKNode,AssetsContainer {
 
         let moveOwnership = SKAction.runBlock(){
             [unowned self] in
+            
+            if (!self.underRayBeam(positon: node.position)) {
+                self.userInteractionEnabled = false
+                self.removeAllActions()
+                completion()
+                return
+            }
+            
             let location = node.parent!.convertPoint(node.position, toNode: self)
             node.removeFromParent()
             node.position = location
@@ -152,6 +203,13 @@ class Transmitter:SKNode,AssetsContainer {
             [unowned self]
             node, time in
             
+            if (!self.underRayBeam(positon: node.position)) {
+                self.userInteractionEnabled = false
+                self.removeAllActions()
+                completion()
+                return
+            }
+            
             self.correctRayPath(time, duration: duration, yDiff: yDiff2,yOffset:yDiff)
         }
         array.append(expandBeamAction)
@@ -169,7 +227,8 @@ class Transmitter:SKNode,AssetsContainer {
         let touch = (touches.first as! UITouch)
         let point = touch.locationInNode(self)
         
-        self.transmitNode.moveToPoint(point)
+        if CGPathContainsPoint(self.rayNode.path, nil, point, false) {
+            self.transmitNode.moveToPoint(point)
+        }
     }
-    
 }

@@ -329,8 +329,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.fillInBackgroundLayer()
         self.createPlayer()
         self.createAsteroidGenerator()
-        //HACK: Uncomment this!
-        //self.createEnemiesGenerator()
+        self.createEnemiesGenerator()
         
         self.gameScoreNode = ScoreNode(point: CGPointMake(CGRectGetMinX(self.playableArea) + 40, CGRectGetMaxY(self.playableArea) - 30 ), score: self.totalGameScore)
         self.gameScoreNode.zPosition = self.fgZPosition
@@ -751,6 +750,27 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
+    private func didEvaluateActionPrivate() {
+        if !self.player.isCaptured {
+            
+            if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
+                
+                //let playerPos = self.player.parent!.convertPoint(self.player, toNode: transmitter)
+                if transmitter.underRayBeam(positon: self.player.position) {
+                    
+                    transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
+                        [unowned self] in
+                        self.enemyGenerator.paused = false
+                    }
+                }
+            }
+        }
+    }
+    
+    override func didEvaluateActions() {
+        didEvaluateActionPrivate()
+    }
+    
     func returnPlayerToScene(sprite:SKNode) -> Bool {
         
         if self.player.hidden {
@@ -958,9 +978,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if let transmitter = didProduceItems.last as? Transmitter {
                 self.player.enableProjectileGun()
-                transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
-                    [unowned self] in
-                    self.enemyGenerator.paused = false
+                if (!transmitter.moveToPosition(toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y))) {
+                    //TODO: Transfer ownership of the player to transmitter
+                    self.didEvaluateActionPrivate()
                 }
             }
         }
