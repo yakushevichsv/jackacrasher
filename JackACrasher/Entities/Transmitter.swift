@@ -196,7 +196,7 @@ class Transmitter:SKNode,AssetsContainer {
         array.append(moveAction)
         
         
-        let yDiff2 = fabs(yDiff - self.beamHeight)
+        let yDiff2 = fabs(yDiff - self.beamHeight + CGRectGetMinY(self.rayNode.frame))
         
         let duration2 = NSTimeInterval(yDiff2/Transmitter.Constants.beamSpeed)
         
@@ -213,6 +213,7 @@ class Transmitter:SKNode,AssetsContainer {
             
             self.correctRayPath(time, duration: duration, yDiff: yDiff2,yOffset:yDiff)
         }
+        assert(yDiff + yDiff2 >= self.beamHeight)
         array.append(expandBeamAction)
         
         self.runAction(SKAction.sequence(array), completion: completion)

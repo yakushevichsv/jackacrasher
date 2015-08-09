@@ -21,6 +21,8 @@ struct EntityCategory {
     static var RadialField:UInt32 = 1 << 8
     static var BlakHoleField:UInt32 = 1 << 8
     static var BlackHole:UInt32 = 1 << 10
+    static var EnemySpaceShip:UInt32 = 1 << 11
+    static var EnemySpaceShipLaser:UInt32 = 1 << 12
 }
 
 typealias ForceType = CGFloat
@@ -429,22 +431,21 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     
     func throwProjectileToLocation(location:CGPoint) -> SKNode! {
+       
+        println("Throw location \(location)")
         
-        var vLocation = location
-        /*if self.isCaptured {
-            vLocation = convertSceneLocationToParentOfNode(location, self)
-        }*/
+        let sPosition = convertNodePositionToScene(self)
         
-        let xDiff = vLocation.x - self.position.x
-        let yDiff = vLocation.y - self.position.y
+        let xDiff = location.x - sPosition.x
+        let yDiff = location.y - sPosition.y
         
-        let len = distanceBetweenPoints(vLocation, self.position)
+        let len = distanceBetweenPoints(location, sPosition)
         
-        return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)))
+        return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)),sPosition:sPosition)
     }
     
     
-    private func throwProjectileAtDirection(vector:CGVector) -> SKNode! {
+    private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
         
         let projectile = SKSpriteNode(imageNamed: "projectile")
         
@@ -452,18 +453,18 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         let isUp  = vector.dy > 0
         let signX:CGFloat = isLeft ? -1 : 1
         let signY:CGFloat = isUp ? 1 : -1
-        let xPos = self.position.x + CGFloat(signX * (self.size.width*0.5+10))
+        let xPos = sPosition.x + CGFloat(signX * (self.size.halfWidth() + 10))
         
-        let position = CGPointMake(xPos, self.position.y)
+        let position = CGPointMake(xPos, sPosition.y)
         projectile.alpha = 0.0
         
         var yDiff:CGFloat = 0.0
         
         if (isUp) {
-            yDiff = self.scene!.size.height + projectile.size.height*0.5 - position.y
+            yDiff = self.scene!.size.height + projectile.size.halfHeight() - position.y
         }
         else if (vector.dy != 0){
-            yDiff =  -(position.y + projectile.size.height * 0.5)
+            yDiff =  -(position.y + projectile.size.halfHeight())
         }
         
         var xDiff:CGFloat = 0.0
@@ -471,16 +472,15 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         if (yDiff != 0 ) {
             xDiff = vector.dx/vector.dy * yDiff
         } else if (isLeft) {
-            xDiff = -(position.x + projectile.size.width * 0.5)
+            xDiff = -(position.x + projectile.size.halfWidth())
         } else {
-            xDiff = self.scene!.size.width + projectile.size.width * 0.5 - position.x
+            xDiff = self.scene!.size.width + projectile.size.halfWidth() - position.x
         }
         
         self.xScale = isLeft ? -1 : 1
         
         let positionFinal = CGPointMake(position.x + xDiff, position.y + yDiff)
-        let length = Double(sqrt(pow(xDiff, 2) + pow(yDiff, 2)))
-        
+        let length =  Double(hypot(xDiff, yDiff))
         
         let fadeIn = SKAction.fadeInWithDuration(0.2)
         let moveTo = SKAction.moveTo(positionFinal, duration: length/Double(self.projectileSpeed))
@@ -496,7 +496,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         projectile.userData = ["owner":"p"]
         
         projectile.zPosition = self.zPosition
-        self.parent!.addChild(projectile)
+        self.scene!.addChild(projectile)
         
         return projectile
     }
@@ -584,5 +584,10 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         }
         self.timeLeftLabel.text = "\(UInt(2 - margin + 1))"
         
+    }
+    
+    //MARK: Laser force 
+    class var laserForce : ForceType {
+        get { return 30 }
     }
 }

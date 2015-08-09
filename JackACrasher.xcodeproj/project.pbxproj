@@ -65,6 +65,7 @@
 		21B007901B72321B001B1F7B /* TransmitterLaser.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21B0078F1B72321B001B1F7B /* TransmitterLaser.sks */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
+		21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */; };
 		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
 		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
 		21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA61B10A1B1009EDA3E /* button_press.wav */; };
@@ -166,6 +167,7 @@
 		21B0078F1B72321B001B1F7B /* TransmitterLaser.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = TransmitterLaser.sks; path = JackACrasher/Particles/TransmitterLaser.sks; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
 		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
+		21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemySpaceShip.swift; path = Entities/EnemySpaceShip.swift; sourceTree = "<group>"; };
 		21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JackACrasherNavigationController.swift; path = Model/JackACrasherNavigationController.swift; sourceTree = "<group>"; };
 		21CCA14D1B0A881C004419A2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		21CFBCA61B10A1B1009EDA3E /* button_press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_press.wav; sourceTree = "<group>"; };
@@ -387,6 +389,7 @@
 			children = (
 				21DDE5481B6A5A6300B41A91 /* Bomb.swift */,
 				21DDE54A1B6A619E00B41A91 /* AIBomb.swift */,
+				21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */,
 			);
 			name = Enemies;
 			sourceTree = "<group>";
@@ -717,6 +720,7 @@
 				217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */,
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
 				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,
+				21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */,
 				210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */,
 				21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */,
 			);

@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class AIBomb: Bomb {
+class AIBomb: Bomb,Attacker {
    
     private let chaseRadius:CGFloat = 300
     private let maxAlertRadius:CGFloat = AIBomb.enemyAlertRadius * 2.0

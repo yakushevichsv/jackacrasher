@@ -34,6 +34,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
     var enemyGenerator:EnemiesGenerator!
+    var enemiesShipsChunk:UInt = 0
     
     weak var gameSceneDelegate:GameSceneDelegate?
     private var prevPlayerPosition:CGPoint = CGPointZero
@@ -95,6 +96,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         BlackHole.loadAssets()
         Bomb.loadAssets()
         Transmitter.loadAssets()
+        EnemySpaceShip.loadAssets()
     }
     
     override init(size:CGSize) {
@@ -499,8 +501,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 self.player.throwProjectileToLocation(location)
             } else if (isPlayerVisible && self.player.parent == self.player.scene) {
                 if (!self.needToIgnore(location)) {
-                    self.storePrevPlayerPosition()
-                    self.player.moveToPoint(location)
+                    
+                    let transmitter = childNodeWithName(Transmitter.NodeName) as? Transmitter
+                    if (transmitter == nil || transmitter!.userInteractionEnabled == false) {
+                        self.player.moveToPoint(location)
+                        self.storePrevPlayerPosition()
+                    }
                 }
             } else  if (!isPlayerVisible) {
                 
@@ -748,6 +754,26 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 bomb.updateWithTimeSinceLastUpdate(timeSinceLast)
             }
         }
+        
+        if self.enemiesShipsChunk > 0 {
+            let enemyShips = self.children.filter(){
+                [unowned self]
+                curNode in
+            
+                    if let childNode = curNode as? SKNode {
+                        if let body = childNode.physicsBody {
+                            return body.categoryBitMask == EntityCategory.EnemySpaceShip
+                        }
+                    }
+                    return false
+                }
+        
+            for enemyShip in enemyShips {
+                let enemyRShip = enemyShip as! EnemySpaceShip
+                enemyRShip.updateWithTimeSinceLastUpdate(timeSinceLast)
+            }
+        }
+        
     }
     
     private func didEvaluateActionPrivate() {
@@ -962,9 +988,27 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func enemiesGenerator(generator: EnemiesGenerator, didProduceItems: [SKNode!], type: EnemyType) {
         
         var isTransmitter = didProduceItems.count == 1 && type == .Transmitter
+        let isSpaceShip = type == .SpaceShip
+        
+        if isSpaceShip {
+            self.enemiesShipsChunk = UInt(didProduceItems.count)
+        }
         
         for node in didProduceItems {
-            node.zPosition = self.bgZPosition + 1
+            let pBody = node.physicsBody
+            
+            if pBody == nil {
+                node.zPosition = self.bgZPosition + 1
+            }
+            else if pBody!.categoryBitMask == EntityCategory.BlackHole {
+                node.zPosition = self.bgZPosition + 1
+            }
+            else if pBody!.categoryBitMask == EntityCategory.EnemySpaceShip {
+                node.zPosition = self.fgZPosition
+                let eSpaceShip = node as! EnemySpaceShip
+                eSpaceShip.target = self.player
+            }
+            
             addChild(node)
             
             generator.signalItemAppearance(node, type: type)
@@ -987,7 +1031,22 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     func didDissappearItemForEnemiesGenerator(generator: EnemiesGenerator, item: SKNode!, type: EnemyType) {
-        generator.paused = false
+        
+        var paused:Bool = false
+        
+        if type == .SpaceShip {
+            
+            self.enemiesShipsChunk--
+            
+            if self.enemiesShipsChunk != 0 {
+                paused = true
+            }
+            else {
+                paused = generator.didFinishWithCurrentSpaceShipChunk()
+            }
+        }
+        
+        generator.paused = paused
         item.removeFromParent()
     }
     
@@ -1087,6 +1146,147 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
     }
     
+    func didContactContainBomb(contact:SKPhysicsContact!) -> Bool {
+        var bomb:SKPhysicsBody! = nil
+        // bomb search
+        if (contact.bodyA.categoryBitMask == EntityCategory.Bomb) {
+            bomb = contact.bodyA
+        } else if (contact.bodyB.categoryBitMask == EntityCategory.Bomb) {
+            bomb = contact.bodyB
+        }
+        
+        if let bombBody = bomb {
+            
+            if (bombBody.node == nil){
+                return true
+            }
+            
+            println("One node is bomb!")
+            let bombNode = bombBody.node!
+            
+            let radius = bombNode.userData!["radius"] as! CGFloat
+            
+            let contactP = contact.contactPoint
+            
+            let x = contactP.x - radius
+            let y = contactP.y - radius
+            
+            let rect = CGRectMake(x, y, 2*radius, 2*radius)
+            
+            
+            let node = bombNode
+            let scenePoint = contact.contactPoint
+            createExplosion(ExplosionType.Large, position: scenePoint,withScore:0)
+            bombNode.physicsBody = nil
+            bombNode.removeFromParent()
+            
+            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: bombNode as! SKSpriteNode, withType: AsteroidType.Bomb)
+            
+            self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { (eBody, _) -> Void in
+                
+                if (eBody.categoryBitMask == EntityCategory.TrashAsteroid) {
+                    
+                    self.processContact(eBody, andPlayerLaser: nil)
+                    
+                } else if (eBody.categoryBitMask == EntityCategory.Player) {
+                    let damageForce = AsteroidGenerator.damageForce(.Bomb)
+                    if self.tryToDestroyPlayer(damageForce) {
+                        self.terminateGame()
+                        return
+                    }
+                }  else if (eBody.categoryBitMask == EntityCategory.PlayerLaser) {
+                    if let node = eBody.node {
+                        node.physicsBody = nil
+                        node.removeFromParent();
+                    }
+                }
+            })
+            
+            
+            return true
+        }
+
+        return false
+    }
+    
+    func didPlayerLaserContactWithEnemyOrLaser(contact:SKPhysicsContact!) -> Bool {
+        
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        var playerLaser:SKNode? = nil
+        var otherNode:SKNode? = nil
+        var bomb:SKPhysicsBody? = nil
+        
+        if (bodyA.categoryBitMask == EntityCategory.PlayerLaser) {
+            playerLaser =  bodyA.node
+            otherNode = bodyB.node
+        } else if (bodyB.categoryBitMask == EntityCategory.PlayerLaser) {
+            playerLaser = bodyB.node
+            otherNode = bodyA.node
+        }
+        
+        if let playerLaser = playerLaser,let oNode = otherNode {
+            if oNode.physicsBody!.categoryBitMask == EntityCategory.EnemySpaceShip {
+                
+                let enemyShip = oNode as! ItemDestructable
+                
+                if enemyShip.tryToDestroyWithForce(Player.laserForce) {
+                    createExplosion(.Large, position: oNode.position, withScore: 10)
+                    self.didDissappearItemForEnemiesGenerator(self.enemyGenerator, item: oNode, type: .SpaceShip)
+                }
+                else {
+                    createExplosion(.Small, position: oNode.position, withScore: 5)
+                }
+            } else if oNode.physicsBody!.categoryBitMask == EntityCategory.EnemySpaceShipLaser {
+                createExplosion(.Small, position: oNode.position, withScore: 0)
+                oNode.removeFromParent()
+            }
+            
+            playerLaser.removeFromParent()
+            return true
+        }
+        return false
+    }
+    
+    func didEnemyLaserContactWithPlayerOrLaser(contact:SKPhysicsContact!) -> Bool {
+        
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        var enemyLaser:SKNode? = nil
+        var otherNode:SKNode? = nil
+        
+        if (bodyA.categoryBitMask == EntityCategory.EnemySpaceShipLaser) {
+            enemyLaser =  bodyA.node
+            otherNode = bodyB.node
+        } else if (bodyB.categoryBitMask == EntityCategory.EnemySpaceShipLaser) {
+            enemyLaser = bodyB.node
+            otherNode = bodyA.node
+        }
+        
+        if let enemyLaser = enemyLaser,let oNode = otherNode {
+            
+            if oNode.physicsBody!.categoryBitMask == EntityCategory.Player {
+                
+                let damageForce = ForceType(enemyLaser.userData!["damageForce"]!.doubleValue)
+                
+                if (self.tryToDestroyPlayer(damageForce)) {
+                    terminateGame()
+                }
+                else {
+                     createExplosion(.Small, position: enemyLaser.position, withScore: 0)
+                }
+            } else if oNode.physicsBody!.categoryBitMask == EntityCategory.PlayerLaser {
+                oNode.removeFromParent()
+                createExplosion(.Small, position: enemyLaser.position, withScore: 0)
+            }
+            
+            enemyLaser.removeFromParent()
+            return true
+        }
+        return false
+    }
     
     func didEntityContactWithRegularAsteroid(contact: SKPhysicsContact) -> Bool
     {
@@ -1240,13 +1440,25 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func didBeginContact(contact: SKPhysicsContact)
     {
+        if (didContactContainBomb(contact)) {
+            return
+        }
+        
+        if (didEntityContactWithRegularAsteroid(contact) || didContachHasBlackHole(contact)) {
+            return
+        }
+        
+        if (didEnemyLaserContactWithPlayerOrLaser(contact) || didPlayerLaserContactWithEnemyOrLaser(contact)) {
+            return
+        }
+        
         let bodyA = contact.bodyA
         let bodyB = contact.bodyB
         
         var trashAster:SKPhysicsBody? = nil
-        var bomb:SKPhysicsBody? = nil
         var laser:SKPhysicsBody? = nil
         var regular:SKPhysicsBody? = nil
+        
         
         //Trash asteroid
         if (bodyA.categoryBitMask == EntityCategory.TrashAsteroid ) {
@@ -1254,67 +1466,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
         else if (bodyB.categoryBitMask == EntityCategory.TrashAsteroid) {
             trashAster = bodyB
-        }
-        // bomb search
-        else if (bodyA.categoryBitMask == EntityCategory.Bomb) {
-            bomb = bodyA
-        } else if (bodyB.categoryBitMask == EntityCategory.Bomb) {
-            bomb = bodyB
-        }
-        
-        if (didEntityContactWithRegularAsteroid(contact) || didContachHasBlackHole(contact)) {
-            return
-        } 
-        
-        if let bombBody = bomb {
-            
-            if (bombBody.node == nil){
-                return
-            }
-            
-            println("One node is bomb!")
-            let bombNode = bombBody.node!
-            
-            let radius = bombNode.userData!["radius"] as! CGFloat
-        
-            let contactP = contact.contactPoint
-            
-            let x = contactP.x - radius
-            let y = contactP.y - radius
-            
-            let rect = CGRectMake(x, y, 2*radius, 2*radius)
-            
-            
-            let node = bombNode
-            let scenePoint = contact.contactPoint
-            createExplosion(ExplosionType.Large, position: scenePoint,withScore:0)
-            bombNode.physicsBody = nil
-            bombNode.removeFromParent()
-            
-            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: bombNode as! SKSpriteNode, withType: AsteroidType.Bomb)
-            
-            self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { (eBody, _) -> Void in
-                
-                if (eBody.categoryBitMask == EntityCategory.TrashAsteroid) {
-                    
-                    self.processContact(eBody, andPlayerLaser: nil)
-                    
-                } else if (eBody.categoryBitMask == EntityCategory.Player) {
-                    let damageForce = AsteroidGenerator.damageForce(.Bomb)
-                    if self.tryToDestroyPlayer(damageForce) {
-                        self.terminateGame()
-                        return
-                    }
-                }  else if (eBody.categoryBitMask == EntityCategory.PlayerLaser) {
-                    if let node = eBody.node {
-                        node.physicsBody = nil
-                        node.removeFromParent();
-                    }
-                }
-            })
-            
-            
-            return
         }
         
         if (trashAster == nil) {

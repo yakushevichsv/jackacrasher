@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class Bomb: SKSpriteNode, AssetsContainer {
+class Bomb: SKSpriteNode, AssetsContainer,Attacker {
     
     internal weak var target:Player?
     
