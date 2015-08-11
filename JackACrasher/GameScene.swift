@@ -1112,6 +1112,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
+    /*
+        There is an issue when player with asteroids is moved out. Player is not returned back to the scene.
+    */
+    
     //MARK: Contact methods
     
     func playerContactingWithSmallRegulaAsteroid(regAsteroid:RegularAsteroid!,contact: SKPhysicsContact) -> Bool {
