@@ -86,7 +86,7 @@ class AsteroidGenerator: NSObject {
     
     private func redifineTimer() {
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "generateItem", userInfo: nil, repeats: true)
     }
     
     internal func produceSeqActionToAsteroid(asteroid:RegularAsteroid,asteroidSpeed:CGFloat = 30.0) -> SKAction! {
@@ -132,8 +132,8 @@ class AsteroidGenerator: NSObject {
         
         let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
         
-        let yPos = CGFloat(arc4random() % divisor) + yMargin
-    
+        let yPos = randomUntil(CGFloat(divisor), withOffset: CGFloat(yMargin))
+        
         let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
         
         
@@ -275,17 +275,8 @@ class AsteroidGenerator: NSObject {
             }),SKAction.removeFromParent()]), rotateAlways])
 
             asteroids.runAction(moveDelAction, withKey: "moveDelAction")
-            //println("Asteroids \(asteroids). Rope \(asteroids.rope!)")
         
-        //MARK: HACK
-            println("Asteroid 1 \(asteroid1), Asteroid 2 \(asteroid2)")
-            //asteroid2.removeFromParent()
-            //asteroid1.removeFromParent()
-        
-            //asteroid1.runAction(moveDelAction, withKey: "@@")
-        
-            self.delegate.asteroidGenerator(self, didProduceAsteroids:[asteroids] /*[asteroid1,asteroid2]*/, type: .RopeBased)
-        //}
+            self.delegate.asteroidGenerator(self, didProduceAsteroids:[asteroids], type: .RopeBased)
         
     }
     
@@ -425,9 +416,6 @@ class AsteroidGenerator: NSObject {
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         self.prevAsteroidType = self.curAsteroidType
-        
-        //HACK:Warning
-        currentAstType = .Bomb
         
         self.curAsteroidType = currentAstType
         

@@ -17,6 +17,8 @@ protocol AssetsContainer
 class Transmitter:SKNode,AssetsContainer {
     
     enum State {
+        case None
+        case MovingToPlayer
         case Capturing
         case Transferring
         case Constraining
@@ -39,8 +41,11 @@ class Transmitter:SKNode,AssetsContainer {
     private static var sLaserEmitter:SKEmitterNode!
     private static var sOne:dispatch_once_t = 0
     
+    private var state:State = .None
     private let size:CGSize
     private let beamHeight:CGFloat
+    
+    private var capturedNodeName:String = "CapturedNodeName"
     
     static func loadAssets() {
         dispatch_once(&sOne) {
@@ -48,6 +53,10 @@ class Transmitter:SKNode,AssetsContainer {
             laser.name = self.Constants.transmitterLaserName
             self.sLaserEmitter = laser
         }
+    }
+    
+    internal func rayCapturingPlayer() -> Bool {
+        return self.state == .Capturing
     }
     
     internal var transmitterSize:CGSize {
@@ -93,17 +102,26 @@ class Transmitter:SKNode,AssetsContainer {
 
     private func correctRayPath(time:CGFloat,duration:NSTimeInterval,yDiff:CGFloat,yOffset:CGFloat) {
         
+        correctRayPath(-self.size.halfWidth(), width: self.size.width, time: time, duration: duration, yDiff: yDiff, yOffset: yOffset)
+    }
+    
+    private func correctRayPath(xOrigin:CGFloat, width:CGFloat,time:CGFloat,duration:NSTimeInterval,yDiff:CGFloat,yOffset:CGFloat) {
+        
         let ratio = time/CGFloat(duration)
-        let h = ratio * yDiff + yOffset
+        let h = min(ratio * yDiff + yOffset,self.beamHeight)
         
-        let half = self.laserNode.particleSpeedRange * 0.5
-        let lifeTimeMin = h / (self.laserNode.particleSpeed + half)
-        let lifeTimeMax = h / (self.laserNode.particleSpeed - half)
+        if self.laserNode != nil {
+            let half = self.laserNode.particleSpeedRange * 0.5
+            let lifeTimeMin = h / (self.laserNode.particleSpeed + half)
+            let lifeTimeMax = h / (self.laserNode.particleSpeed - half)
         
-        self.laserNode.particleLifetimeRange = lifeTimeMax - lifeTimeMin
-        self.laserNode.particleLifetime = 0.5 * (lifeTimeMin + lifeTimeMax )
-        self.laserNode.particleBirthRate = 100
-        self.rayNode.path = UIBezierPath(rect: CGRectMake(-self.size.halfWidth(), 0, self.size.width, -h)).CGPath
+            self.laserNode.particleLifetimeRange = lifeTimeMax - lifeTimeMin
+            self.laserNode.particleLifetime = 0.5 * (lifeTimeMin + lifeTimeMax )
+            self.laserNode.particleBirthRate = 100
+        }
+        
+        println("Ray Path h Size \(h) Beam Height \(self.beamHeight)")
+        self.rayNode.path = UIBezierPath(rect: CGRectMake(xOrigin, 0, width, -h)).CGPath
     }
     
     internal func moveToPosition(toPosition destPosition:CGPoint) -> Bool {
@@ -119,7 +137,13 @@ class Transmitter:SKNode,AssetsContainer {
         
     }
     
-    internal func underRayBeam(positon itemPosition:CGPoint) -> Bool {
+    internal func underRayBeam(node:SKNode!) -> Bool {
+        
+        if node.parent! == self {
+            return true
+        }
+        
+        let itemPosition = node.position
         
         let maxX = self.position.x + size.halfWidth()
         let minX = self.position.x - size.halfWidth()
@@ -143,10 +167,12 @@ class Transmitter:SKNode,AssetsContainer {
         self.userInteractionEnabled = true
         self.removeAllActions()
         node.removeAllActions()
+        node.disableEngine()
         
         if (self.position.x != position.x) {
             let moveAction = SKAction.moveToX(position.x, duration: NSTimeInterval(fabs(position.x - self.position.x)/Transmitter.Constants.movingSpeed))
             array.append(moveAction)
+            self.state = .MovingToPlayer
         }
 
         
@@ -161,13 +187,11 @@ class Transmitter:SKNode,AssetsContainer {
             [unowned self]
             node, time in
             
-            if (!self.underRayBeam(positon: node.position)) {
-                self.userInteractionEnabled = false
-                self.removeAllActions()
-                completion()
+            if self.exitActionForNode(node, completion: completion) {
                 return
             }
             
+            self.state = .Capturing
             
             self.correctRayPath(time, duration: duration, yDiff: yDiff, yOffset:0)
         }
@@ -176,17 +200,22 @@ class Transmitter:SKNode,AssetsContainer {
         let moveOwnership = SKAction.runBlock(){
             [unowned self] in
             
-            if (!self.underRayBeam(positon: node.position)) {
-                self.userInteractionEnabled = false
-                self.removeAllActions()
-                completion()
+            if self.exitActionForNode(node, completion: completion) {
                 return
             }
             
             let location = node.parent!.convertPoint(node.position, toNode: self)
             node.removeFromParent()
             node.position = location
-        
+            self.state = .Transferring
+            
+            if node.name != nil && !node.name!.isEmpty {
+                self.capturedNodeName = node.name!
+            }
+            else {
+                assertionFailure("Name was empty!")
+            }
+            
             self.addChild(node)
         }
         
@@ -204,19 +233,91 @@ class Transmitter:SKNode,AssetsContainer {
             [unowned self]
             node, time in
             
-            if (!self.underRayBeam(positon: node.position)) {
-                self.userInteractionEnabled = false
-                self.removeAllActions()
-                completion()
+            if self.exitActionForNode(node, completion: completion) {
                 return
             }
             
+            self.state = .Constraining
             self.correctRayPath(time, duration: duration, yDiff: yDiff2,yOffset:yDiff)
         }
         assert(yDiff + yDiff2 >= self.beamHeight)
         array.append(expandBeamAction)
         
-        self.runAction(SKAction.sequence(array), completion: completion)
+        let blockAction =
+            SKAction.runBlock(){
+                [unowned self] in
+                self.correctRayPath(-self.size.halfWidth(), width: self.size.width, time: 1, duration: 1, yDiff: 0, yOffset: self.beamHeight)
+            }
+        array.append(blockAction)
+        
+        self.runAction(SKAction.sequence(array)){
+            [unowned self] in
+            self.laserNode.removeFromParent()
+            completion()
+        }
+    }
+    
+    override func removeFromParent() {
+        restoreCapturedNode()
+        super.removeFromParent()
+    }
+    
+    
+    private func restoreCapturedNode() {
+        if let capturedNode = self.childNodeWithName(self.capturedNodeName) {
+            let sPosition = self.convertPoint(capturedNode.position, toNode: self.scene!)
+            capturedNode.position = sPosition
+            capturedNode.removeFromParent()
+            self.scene?.addChild(capturedNode)
+        }
+    }
+    
+    func disposeTransmitter() {
+        
+        let duration = NSTimeInterval(2)
+        
+        let blockAction = SKAction.runBlock(){
+            [unowned self] in
+            self.restoreCapturedNode()
+        }
+        
+        let shrinkInWidthAction = SKAction.customActionWithDuration(duration) {
+            [unowned self]
+            node, time in
+            
+            let ratio = NSTimeInterval(time) / duration
+            
+            let w = self.size.width * CGFloat(1 - ratio * 0.5)
+            
+            self.correctRayPath(-w*0.5, width: w, time: time, duration: duration, yDiff: 0, yOffset: self.beamHeight)
+        }
+        
+        let shrinkInHeightAction = SKAction.customActionWithDuration(duration) {
+            [unowned self]
+            node, time in
+            
+            let ratio = NSTimeInterval(time) / duration
+            
+            let w = self.size.halfWidth()
+        
+            self.correctRayPath(-w*0.5, width: w, time: time, duration: duration, yDiff: -self.beamHeight, yOffset: self.beamHeight)
+        }
+        let seq = SKAction.sequence([blockAction,shrinkInWidthAction,shrinkInHeightAction,SKAction.removeFromParent()])
+        
+        self.runAction(seq)
+        
+    }
+    
+    private func exitActionForNode(node:SKNode!,completion:((()->Void)!)) -> Bool {
+        
+        if (!self.underRayBeam(node)) {
+            self.userInteractionEnabled = false
+            self.removeAllActions()
+            self.state = .None
+            completion()
+            return true
+        }
+        return false
     }
     
     private func pointInsideBeam(location:CGPoint) -> Bool {
@@ -230,7 +331,39 @@ class Transmitter:SKNode,AssetsContainer {
         let point = touch.locationInNode(self)
         
         if CGPathContainsPoint(self.rayNode.path, nil, point, false) {
+            let prevPoint = touch.previousLocationInNode(self)
+            
+            let sTouch  = self.scene!.convertPoint(point, fromNode: self)
+            let pTouch  = self.scene!.convertPoint(prevPoint, fromNode: self)
+            
+            if let pBody = self.scene!.physicsWorld.bodyAlongRayStart(pTouch,end: sTouch) {
+                if (pBody.categoryBitMask == EntityCategory.EnemySpaceShip) {
+                 
+                    self.transmitNode.throwProjectileToLocation(sTouch)
+                    return
+                }
+            }
+            
+            if let node = self.scene?.nodeAtPoint(point) {
+                if let body = node.physicsBody {
+                    if body.categoryBitMask == EntityCategory.EnemySpaceShip {
+                        self.transmitNode.throwProjectileToLocation(sTouch)
+                    }
+                }
+            }
+            
+            
+            if (self.transmitNode.parent! != self) {
+                let sPoint = self.transmitNode.parent!.convertPoint(self.transmitNode.position, toNode: self)
+                self.transmitNode.removeFromParent()
+                self.transmitNode.position = sPoint
+                addChild(self.transmitNode)
+            }
+            
+            
             self.transmitNode.moveToPoint(point)
+            
+            
         }
     }
 }

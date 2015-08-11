@@ -15,12 +15,25 @@ import SpriteKit
 
 class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, ItemDestructable {
    
-    internal weak var target:Player?
+    internal weak var target:Player? {
+        didSet {
+            if let targetPrivate = self.target {
+                onUpdateTarget()
+            }
+        }
+    }
+    
+    func onUpdateTarget(){
+        let range = SKRange(lowerLimit:20)
+        let constr = SKConstraint.distance(range, toNode: self.target!)
+        self.constraints = [constr]
+    }
     
     
     internal struct Constants {
-        static let speed:CGFloat = 240
+        static let speed:CGFloat = 150
         static let name = "Bomb"
+        static let laserSpeed:CGFloat = speed * 2
     }
     
     
@@ -33,7 +46,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
     private static var sEnemyBulltet:SKSpriteNode! = nil
     
     private var timer:NSTimer!
-    private var canAtack:Bool = true
+    internal var canAtack:Bool = true
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
         let texture = EnemySpaceShip.sPlayerTexture
@@ -89,12 +102,14 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
         if (heroDistance > self.maxAlertRadius) {
             self.target = nil
         } else if (heroDistance > chaseRadius) {
-            moveTowards(heroPosition, withTimeInterval: interval)
             if arc4random() % 2 == 1 {
                 performAttackAction()
             }
+            else {
+                moveTowards(heroPosition, withTimeInterval: interval)
+            }
         } else if (heroDistance < chaseRadius) {
-            faceTo(heroPosition)
+            //self.zRotation = faceTo(heroPosition)
             moveTowards(heroPosition, withTimeInterval: interval)
             performAttackAction()
             
@@ -112,7 +127,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
         return position
     }
     
-    private func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
+    internal func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
         
         let dist = distanceBetweenPoints(self.position, position)
         let moveAction = SKAction.moveTo(position, duration: NSTimeInterval(dist/Bomb.Constants.speed))
@@ -120,7 +135,11 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
         self.runAction(moveAction)
     }
     
-    private func performAttackAction() {
+    internal var attackInterval:NSTimeInterval {
+        get {return 2}
+    }
+    
+    internal func performAttackAction() {
         
         if !canAtack {
             return
@@ -128,16 +147,32 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
         
         let bullet = EnemySpaceShip.sEnemyBulltet.copy() as! SKSpriteNode
         
-        let tPoint = self.target!.parent!.convertPoint(self.target!.position, toNode: self.parent!)
+        let sPoint = self.parent!.convertPoint(self.position, toNode:self.scene!)
+        let tPoint = self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!)
         
-        let duration = distanceBetweenPoints(CGPointZero, tPoint)/EnemySpaceShip.Constants.speed
+        let diff = tPoint - sPoint
         
-        let moveToAction = SKAction.moveTo(tPoint, duration: NSTimeInterval(duration))
+        let extraY = abs(diff.x) >= 1 ? tPoint.x * tan(diff.angle) : tPoint.y
         
-        self.addChild(bullet)
-        bullet.runAction(moveToAction)
+        let extraLen = abs(diff.x) >= 1 ? tPoint.x/cos(diff.angle) : abs(extraY)
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "allowsAttackAction", userInfo: nil, repeats: false)
+        
+        let duration = (distanceBetweenPoints(sPoint, tPoint) + extraLen)/EnemySpaceShip.Constants.laserSpeed
+        
+        let tPoint2 = CGPointMake(0, tPoint.y - extraY)
+        
+        let moveToAction = SKAction.moveTo(tPoint2, duration: NSTimeInterval(duration))
+        let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,tPoint), duration: NSTimeInterval(min(duration,0.2)))
+        let removeAction = SKAction.removeFromParent()
+        bullet.position = sPoint
+        
+        println("Bullet from point \(sPoint) to point: \(tPoint)")
+        
+        //bullet.zRotation =
+        self.scene?.addChild(bullet)
+        bullet.runAction(SKAction.sequence([SKAction.group([moveToAction,rotateAction]),removeAction]))
+        
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(self.attackInterval, target: self, selector: "allowsAttackAction", userInfo: nil, repeats: false)
         
         self.canAtack = false
     }
@@ -148,14 +183,6 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
             self.timer.invalidate()
         }
         self.timer = nil
-    }
-    
-    private func faceTo(position:CGPoint) -> CGFloat {
-        
-        let ang = radiansBetweenPoints(self.position, position)
-        
-        self.zRotation = π * 1.5 + ang
-        return ang
     }
     
     //AssetsContainer

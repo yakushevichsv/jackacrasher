@@ -86,7 +86,7 @@ class EnemiesGenerator: NSObject {
                 lTimer.invalidate()
             }
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(3, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "generateItem", userInfo: nil, repeats: true)
     }
     
     internal func generateItem() {
@@ -97,8 +97,17 @@ class EnemiesGenerator: NSObject {
         
         self.canFire = false
         
+        let isSerieOver = currentCount == EnemiesGenerator.sTransmitterNodesCount
         
-        let isBlackHole = !isTransmitterPresent && arc4random()%2 == 1 //MARK: TODO add support of spaceships
+        
+        
+        let isBlackHole = !isTransmitterPresent && ( isSerieOver ? arc4random() % 3 <= 2 : arc4random() % 2 == 1 )
+        
+        if (isSerieOver) {
+            self.currentCount = 0
+            /*self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
+            return*/
+        }
         
         var nodes = [SKNode]()
         var type:EnemyType = .None
@@ -111,7 +120,7 @@ class EnemiesGenerator: NSObject {
             nodes.append(produceTransmitter())
             type = .Transmitter
         }
-        else if (self.currentCount != EnemiesGenerator.sTransmitterNodesCount){
+        else if !isSerieOver {
             assert(isTransmitterPresent)
             type = .SpaceShip
             
@@ -125,30 +134,28 @@ class EnemiesGenerator: NSObject {
             } else if (currentCount == 5) {
                 //generate 3 items...
                 curCount = 3
-            }else if (currentCount == 8) {
+            }else if (currentCount == EnemiesGenerator.sTransmitterNodesCount - 2) {
                 curCount = 2
                 //generate 2 items...
             }
-            let items = produceEnemiesSpaceShips(curCount)
+            
+            currentCount += curCount
+            
+            let items = produceEnemiesSpaceShips(curCount,last: currentCount == EnemiesGenerator.sTransmitterNodesCount)
             for item in items {
                 nodes.append(item)
             }
             
+            
         } else if (isTransmitterPresent) {
             isTransmitterPresent = false
-            //TODO: remove transmitter
+            self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
+            return
         }
         
         if (type != .None) {
             self.delegate?.enemiesGenerator(self, didProduceItems: nodes, type: type)
         }
-        /*if (isTransmitterPresent && self.currentCount == EnemiesGenerator.sEnemiesInSerieCount) {
-            
-            self.isTransmitterPresent = false
-            //Finished items generation...
-            
-            //didDissappearItemForEnemiesGenerator
-        }*/
     }
     
     func didFinishWithCurrentSpaceShipChunk() -> Bool {
@@ -174,19 +181,28 @@ class EnemiesGenerator: NSObject {
         }
     }
     
-    private func produceEnemiesSpaceShips(count:UInt) -> [EnemySpaceShip]! {
+    private func produceEnemiesSpaceShips(count:UInt, last:Bool = false) -> [EnemySpaceShip]! {
         
         var result = [EnemySpaceShip]()
+        var curPart:CGFloat = 0
+        let allowedPart = CGRectGetHeight(self.playableRect)/CGFloat(count)
+        
+        if count == 0 {
+            return result
+        }
         
         for i in 0...count - 1 {
             
-            let enemy = EnemySpaceShip()
+            let enemy = last ? MotionlessEnemySpaceShip() : EnemySpaceShip()
             
-            let yPos = CGFloat( arc4random() % UInt32(CGRectGetHeight(self.playableRect) - enemy.size.height) )
+            let yPos = randomBetween(curPart, curPart + allowedPart - enemy.size.height)
+            
             let xPos = CGRectGetWidth(self.playableRect)
             enemy.position = CGPointMake(xPos, yPos)
             
             result.append(enemy)
+            
+            curPart += allowedPart
         }
         return result
     }

@@ -387,12 +387,16 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         return self.playerMode == .CanFire 
     }
     
+    internal func forceEnableProjectileGunDuringMove() {
+        enableProjectileGun()
+        self.playerMode = .CanFireAndMove
+    }
+    
     internal func enableProjectileGunDuringMove() {
         if (self.playerMode == .CanFire) {
             return
         }
-        enableProjectileGun()
-        self.playerMode = .CanFireAndMove
+        self.forceEnableProjectileGunDuringMove()
     }
     
     internal func enableProjectileGun() {
@@ -444,6 +448,20 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)),sPosition:sPosition)
     }
     
+    internal func playerBGSpriteNode() -> SKSpriteNode! {
+       let sprite = Player.sBGSprite.copy() as! SKSpriteNode
+        
+       sprite.name = self.name! + "BG"
+        
+       return sprite
+    }
+    
+    internal func playerBGSpriteFromNode(node:SKNode!)->SKSpriteNode? {
+       
+        let name = self.name! + "BG"
+        
+        return node.childNodeWithName(name) as? SKSpriteNode
+    }
     
     private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
         

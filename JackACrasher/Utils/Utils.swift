@@ -316,3 +316,21 @@ func convertSceneLocationToParentOfNode(location:CGPoint,node:SKNode!) -> CGPoin
     }
 }
 
+func randomBetween(y1:CGFloat,y2:CGFloat) -> CGFloat {
+    
+    let yMax = max(y1,y2)
+    let yMin = min(y1,y2)
+    
+    let yPos = arc4random() % UInt32(yMax-yMin)
+    
+    return yMin + CGFloat(yPos)
+}
+
+func randomUntil(y:CGFloat) -> CGFloat {
+    return randomBetween(0, y)
+}
+
+func randomUntil(y:CGFloat,withOffset offset:CGFloat) -> CGFloat{
+    return randomUntil(y) + offset
+}
+

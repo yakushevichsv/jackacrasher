@@ -144,6 +144,8 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     
     private func appendRadialGravityToAsteroid() {
         
+        return
+        
         let field = SKFieldNode.radialGravityField()
         
         let mRadius = round(0.5*min(self.bgImageNode.texture!.size().width,self.bgImageNode.texture!.size().height))
