@@ -10,14 +10,29 @@ import UIKit
 
 extension UIViewController {
     
-    func alertWithTitle(title:String?, message:String?,actionTitle:String = "OK")
+    func alertWithTitle(title:String?, message:String?,actionTitle:String! = "OK")
     {
         let vc = UIAlertController(title: title, message: message, preferredStyle: .Alert)
-        
-        let alertAction = UIAlertAction(title: actionTitle, style: .Default){
-            action in
+        var needToDisp:Bool = false
+        if !(actionTitle == nil || actionTitle.isEmpty) {
+            let alertAction = UIAlertAction(title: actionTitle, style: .Default){
+                action in
+            }
+            vc.addAction(alertAction)
         }
-        vc.addAction(alertAction)
-        presentViewController(vc, animated: true, completion: nil)
+        else {
+            needToDisp = true
+        }
+        presentViewController(vc, animated: true){
+            [unowned self] in
+            if needToDisp {
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                    Int64(1 * Double(NSEC_PER_SEC)))
+                
+                dispatch_after(delayTime, dispatch_get_main_queue()){
+                    self.dismissViewControllerAnimated(true, completion: nil)
+                }
+            }
+        }
     }
 }

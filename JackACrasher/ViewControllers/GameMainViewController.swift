@@ -8,8 +8,10 @@
 
 import UIKit
 import GameKit
+import FBSDKShareKit
 
-class GameMainViewController: UIViewController {
+
+class GameMainViewController: UIViewController,FBSDKSharingDelegate {
 
     internal var needToDisplayAnimation:Bool = false
     private let gcManager = GameCenterManager.sharedInstance
@@ -24,8 +26,10 @@ class GameMainViewController: UIViewController {
     @IBOutlet weak var btnShop:UIButton!
     @IBOutlet weak var btnRUpCorner:UIButton!
     @IBOutlet weak var btnSound:UIButton!
+    @IBOutlet weak var btnFB:UIButton!
     
     weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
+    weak var btnFBXSpaceConstraint:NSLayoutConstraint!
     
     private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
@@ -104,6 +108,10 @@ class GameMainViewController: UIViewController {
         displayOrScheduleGameKitAuthStatus()
         
         displayCloudKitAuthStatus()
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     private func displayOrScheduleGameKitAuthStatus() {
@@ -286,33 +294,32 @@ class GameMainViewController: UIViewController {
         return true
     }
     
-    @IBAction func btnRightUpCornerPressed(sender:UIButton) {
-        
-        sender.selected = sender.selected ? false : true
-        
-        performActionOnRMainButton(sender)
-    }
-    
-    
     private func performActionOnRMainButton(sender:UIButton?,animated:Bool = true) {
         
         if sender != nil && sender!.selected {
             //TODO: Animate button appearance
             
+            //TODO: put into Constants section...
             let yMargin:CGFloat = 40
+            let fbXSpce:CGFloat = 50
+            
             let origin = sender!.frame.origin
-            
             let oFrame = CGRect(origin:origin,size:self.btnSound.bounds.size)
-            
+    
             self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
             self.btnSound.hidden = false
-            sender!.superview?.bringSubviewToFront(sender!)
             
+            self.btnFB.center = CGPointMake(self.btnRUpCorner.center.x, self.btnFB.center.y)
+            self.btnFB.hidden = false
+            
+            sender!.superview?.bringSubviewToFront(sender!)
             println("Original center \(self.btnSound.center)")
             
             UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { () -> Void in
                 
                 self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnSound.center.y + yMargin)
+                
+                self.btnFB.frame = CGRectOffset(self.btnFB.frame, -fbXSpce, 0)
                 
                 println("Final 1 center \(self.btnSound.center)")
                 
@@ -324,7 +331,13 @@ class GameMainViewController: UIViewController {
                     
                     let attr = NSLayoutConstraint(item: self.btnSound, attribute: .CenterY, relatedBy: .Equal, toItem: self.btnRUpCorner, attribute: .CenterY, multiplier: 1, constant: yMargin)
                     self.btnRSoundCornerYConstraitnt = attr
-                    NSLayoutConstraint.activateConstraints([attr])
+                    
+                    let xDiff = CGRectGetMaxX(self.btnFB.frame) - CGRectGetMinX(self.btnRUpCorner.frame)
+                    
+                    let attr2 = NSLayoutConstraint(item: self.btnFB, attribute: .Trailing, relatedBy: .Equal, toItem: self.btnRUpCorner, attribute: .Leading, multiplier: 1, constant: xDiff)
+                    self.btnFBXSpaceConstraint = attr2
+                    
+                    NSLayoutConstraint.activateConstraints([attr,attr2])
                     
                     println("Final 2 center \(self.btnSound.center)")
                     
@@ -340,21 +353,33 @@ class GameMainViewController: UIViewController {
                 self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
                     println("Final 1 center \(self.btnSound.center)")
                 
+                self.btnFB.center = CGPoint(x:self.btnRUpCorner.center.x,y:self.btnFB.center.y)
+                
                 }){
                     [unowned self]
                     finished in
                     self.btnRUpCorner.superview?.bringSubviewToFront(self.btnRUpCorner)
                     self.btnSound.hidden = true
+                    self.btnFB.hidden = true
                     
-                    if self.btnRSoundCornerYConstraitnt != nil {
-                        NSLayoutConstraint.deactivateConstraints([self.btnRSoundCornerYConstraitnt])
+                    var constraint = self.btnRSoundCornerYConstraitnt
+                    if constraint != nil {
+                        NSLayoutConstraint.deactivateConstraints([constraint])
                         self.btnRSoundCornerYConstraitnt = nil
                     }
+                    
+                    constraint = self.btnFBXSpaceConstraint
+                    if constraint != nil {
+                        NSLayoutConstraint.deactivateConstraints([constraint])
+                        self.btnFBXSpaceConstraint = nil
+                    }
+                    
                     println("Final 2 center \(self.btnSound.center)")
             }
         }
     }
     
+    //MARK IBActions
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) {
        
@@ -397,9 +422,78 @@ class GameMainViewController: UIViewController {
         }
     }
     
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+    @IBAction func sharingPressed(sender:UIButton) {
+        
+        if sender == self.btnFB {
+            //Share to FB.....
+            shareOnFB()
+        } else {
+            //Share to Twitter
+        }
+        
     }
+    
+    @IBAction func btnRightUpCornerPressed(sender:UIButton) {
+        
+        sender.selected = sender.selected ? false : true
+        
+        performActionOnRMainButton(sender)
+    }
+
+    //MARK: FB's methods
+    
+    private func shareOnFB() {
+        
+        let content = FBSDKShareLinkContent()
+        content.contentTitle = "I am playing on JackACrasher!"
+        content.contentURL = NSURL(string: "https://developers.facebook.com")
+        content.contentDescription = "Have fun!. Help Jack to crash as much as you can!"
+        
+        
+        content.imageURL = NSURL(string:"http://www.nasa.gov/sites/default/files/images/685735main_pia15678-43_full.jpg")
+        let dialog = FBSDKShareDialog() //.showFromViewController(self, withContent: content, delegate: self)
+        dialog.fromViewController = self
+        dialog.delegate = self
+        dialog.shareContent = content
+        
+        var mode = FBSDKShareDialogMode.Native
+        dialog.mode = mode
+        
+        var count = UInt(0)
+        while(!dialog.canShow() && mode != .Automatic)  {
+                if let res = FBSDKShareDialogMode(rawValue: FBSDKShareDialogMode.FeedWeb.rawValue - count) {
+                    mode = res
+                }
+                else {
+                    mode = .Automatic
+                }
+                
+                count += 1
+                dialog.mode = mode
+        }
+        
+        dialog.show()
+        
+    }
+    
+    //MARK: FBSDKSharingDelegate's methods 
+    
+    func sharer(sharer: FBSDKSharing!, didFailWithError error: NSError!) {
+        
+        if error != nil {
+            self.alertWithTitle("Error", message: "Error posting on the timeline.\n Please try again latter", actionTitle: "OK")
+        }
+    }
+    
+    func sharer(sharer: FBSDKSharing!, didCompleteWithResults results: [NSObject : AnyObject]!) {
+        if (!results.isEmpty){
+            self.alertWithTitle("Success", message: "Thanks for posting", actionTitle: nil)
+        }
+        else {
+            sharerDidCancel(sharer)
+        }
+    }
+    
+    func sharerDidCancel(sharer: FBSDKSharing!){}
     
 }
