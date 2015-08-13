@@ -8,6 +8,8 @@
 
 import UIKit
 import FBSDKCoreKit
+import Fabric
+import TwitterKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -30,6 +32,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert | UIUserNotificationType.Sound | UIUserNotificationType.Badge,categories:nil))
             }
         }
+        
+        Fabric.with([Twitter()])
         
         appWillStart()
         return true

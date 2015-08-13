@@ -9,7 +9,7 @@
 import UIKit
 import GameKit
 import FBSDKShareKit
-
+import TwitterKit
 
 class GameMainViewController: UIViewController,FBSDKSharingDelegate {
 
@@ -27,6 +27,7 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     @IBOutlet weak var btnRUpCorner:UIButton!
     @IBOutlet weak var btnSound:UIButton!
     @IBOutlet weak var btnFB:UIButton!
+    @IBOutlet weak var btnTwitter:UIButton!
     
     weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
     weak var btnFBXSpaceConstraint:NSLayoutConstraint!
@@ -86,6 +87,8 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         authDidChange(nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
+        self.btnTwitter.hidden = false
+        
         
         let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
         
@@ -93,6 +96,8 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         self.btnPressed(self.btnSound)
         
         self.performActionOnRMainButton(nil,animated:false)
+        
+        
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -379,7 +384,7 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         }
     }
     
-    //MARK IBActions
+    //MARK: IBActions
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) {
        
@@ -427,8 +432,9 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         if sender == self.btnFB {
             //Share to FB.....
             shareOnFB()
-        } else {
+        } else if sender == self.btnTwitter{
             //Share to Twitter
+            shareOnTweeter()
         }
         
     }
@@ -439,6 +445,37 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         
         performActionOnRMainButton(sender)
     }
+    
+    //MARK: Twitter's methos
+    private func shareOnTweeter() {
+        
+        Twitter.sharedInstance().logInWithCompletion() {[unowned self]
+            session, error in
+            if (session != nil) {
+                if self.view.window != nil {
+                    let composer = TWTRComposer()
+                    
+                    composer.setText("I am playing on JackACrasher!")
+                    composer.setImage(UIImage(named: "player"))
+                    composer.setURL(NSURL(string: "https://developers.facebook.com"))
+                    // Called from a UIViewController
+                    composer.showFromViewController(self) { result in
+                        if (result == TWTRComposerResult.Cancelled) {
+                            println("Tweet composition cancelled")
+                        }
+                        else {
+                            println("Sending tweet!")
+                            self.alertWithTitle("Success", message: "Thanks for tweeting!", actionTitle: nil)
+                        }
+                    }
+                }
+                // make API calls that do not require user auth
+            } else {
+                println("error: \(error.localizedDescription)");
+            }
+        }
+    }
+    
 
     //MARK: FB's methods
     

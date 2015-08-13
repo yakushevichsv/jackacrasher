@@ -2,12 +2,6 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>LSApplicationQueriesSchemes</key>
-	<array>
-		<string>fbauth2</string>
-	</array>
-	<key>NSSupportsSuddenTermination</key>
-	<false/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -35,12 +29,37 @@
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>e352f5b447cd421c290f4b320fb95db6e5e74213</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict>
+					<key>consumerKey</key>
+					<string>quvuMDCaulJRzcPyJcKuMd4lU</string>
+					<key>consumerSecret</key>
+					<string>SPm5sZmzpurmNUTYO5xQHHPuVq3eQGIpiqBUXPMNoa47bQoNBR</string>
+				</dict>
+				<key>KitName</key>
+				<string>Twitter</string>
+			</dict>
+		</array>
+	</dict>
 	<key>FacebookAppID</key>
 	<string>480972678736201</string>
 	<key>FacebookDisplayName</key>
 	<string>JackACrasher</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>fbauth2</string>
+	</array>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSSupportsSuddenTermination</key>
+	<false/>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Game_Robot.ttf</string>

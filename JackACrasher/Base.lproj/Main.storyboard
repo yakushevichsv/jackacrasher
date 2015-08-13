@@ -156,9 +156,23 @@
                                     <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="iD5-Iv-dtN"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AF8-Mz-FY1" userLabel="Twitter Button">
+                                <rect key="frame" x="416" y="0.0" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="131-Va-jXM"/>
+                                    <constraint firstAttribute="width" constant="40" id="ikD-u5-jr3"/>
+                                </constraints>
+                                <state key="normal" image="twitter">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="JYK-Ca-CEt"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
                             <constraint firstAttribute="centerX" secondItem="1XG-Tp-FSs" secondAttribute="centerX" id="3aD-dm-1vj"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="baseline" secondItem="1XG-Tp-FSs" secondAttribute="baseline" id="7ua-XC-NFe"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="PTq-DP-qnf" secondAttribute="trailing" id="960-e4-7di"/>
@@ -178,6 +192,7 @@
                             <constraint firstItem="nd9-3T-vrx" firstAttribute="top" secondItem="2BG-Lf-P00" secondAttribute="bottom" constant="16" id="nq3-P8-wtG"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="bottom" constant="41" id="umh-HP-xfO"/>
                             <constraint firstItem="PTq-DP-qnf" firstAttribute="centerY" secondItem="FJb-8H-lOJ" secondAttribute="centerY" constant="40" placeholder="YES" id="v6O-Ed-ZJf"/>
+                            <constraint firstItem="bxu-q9-Fcb" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="wlH-qY-d4N"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="centerY" secondItem="bxu-q9-Fcb" secondAttribute="centerY" constant="-3.5" id="zzU-73-hWY"/>
                         </constraints>
                     </view>
@@ -191,6 +206,7 @@
                         <outlet property="btnShop" destination="1XG-Tp-FSs" id="iNm-dJ-eck"/>
                         <outlet property="btnSound" destination="PTq-DP-qnf" id="aM7-HV-47X"/>
                         <outlet property="btnStrategy" destination="fjR-H4-NMu" id="PY8-HJ-0yd"/>
+                        <outlet property="btnTwitter" destination="AF8-Mz-FY1" id="VDz-Mp-TKP"/>
                         <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                     </connections>
                 </viewController>
@@ -574,5 +590,6 @@
         <image name="fb-button" width="40" height="40"/>
         <image name="pause" width="14" height="18"/>
         <image name="play" width="15" height="17"/>
+        <image name="twitter" width="40" height="40"/>
     </resources>
 </document>
