@@ -22,16 +22,18 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     @IBOutlet weak var btnCompany:UIButton!
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
-    @IBOutlet weak var btnGameCenter:UIButton!
     @IBOutlet weak var btnShop:UIButton!
     @IBOutlet weak var btnRUpCorner:UIButton!
     @IBOutlet weak var btnSound:UIButton!
     @IBOutlet weak var btnFB:UIButton!
     @IBOutlet weak var btnTwitter:UIButton!
+    @IBOutlet weak var btnGameCenter:UIButton!
+    
+    @IBOutlet weak var twConstraint:NSLayoutConstraint!
+    @IBOutlet weak var gcConstraint:NSLayoutConstraint!
     
     weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
     weak var btnFBXSpaceConstraint:NSLayoutConstraint!
-    weak var btnTWXSpaceConstraint:NSLayoutConstraint!
     
     private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
@@ -40,7 +42,6 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         shiftXButton(self.btnCompany, isLeft: true)
         shiftXButton(self.btnStrategy, isLeft: false)
         shiftYButton(self.btnHelp, isUp: false)
-        shiftYButton(self.btnGameCenter, isUp: true)
     }
     
     private func shiftInButtons() {
@@ -48,7 +49,6 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         shiftXButton(self.btnCompany, isLeft: false)
         shiftXButton(self.btnStrategy, isLeft: true)
         shiftYButton(self.btnHelp, isUp: true)
-        shiftYButton(self.btnGameCenter, isUp: false)
     }
     
     private func shiftXButton(button:UIButton!, isLeft:Bool) {
@@ -67,16 +67,10 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     
     private func enableButtons() {
         setButtonsState(true)
-        self.correctGameCenterButtonState()
-    }
-    
-    private func correctGameCenterButtonState() {
-        if (self.btnGameCenter == nil) { return }
-        self.btnGameCenter.enabled = self.gcManager.isLocalUserAuthentificated
     }
     
     private func setButtonsState(enabled:Bool) {
-        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp,self.btnGameCenter,self.btnShop] {
+        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp,self.btnShop] {
             btn.enabled = enabled
         }
     }
@@ -96,20 +90,20 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         
         self.performActionOnRMainButton(nil,animated:false)
         
+        let btn = self.btnGameCenter
+        btn.layer.cornerRadius = 3;//half of the width
+        btn.layer.borderColor = UIColor.blackColor().CGColor//[UIColor blackColor].CGColor;
+        btn.layer.borderWidth = 1.0
         
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.correctGameCenterButtonState()
-        
         if (!self.needToDisplayAnimation) {
             self.scheduleAnimation()
             self.needToDisplayAnimation = true
         }
-        
-        displayOrScheduleGameKitAuthStatus()
         
         displayCloudKitAuthStatus()
     }
@@ -118,19 +112,20 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
-    private func displayOrScheduleGameKitAuthStatus() {
+    private func displayOnNeedGameKitAuthStatus() -> Bool {
         if (!self.gcManager.isLocalUserAuthentificated) {
             
             if let error = self.gcManager.lastError {
                 
                 if error.domain == GKErrorDomain  && error.code == GKErrorCode.UserDenied.rawValue {
-                    needToAuthPlayer()
-                    return
+                    needToEnableGC()
+                    return true
                 }
             }
+            needToAuthPlayerToGC()
+            return true
         }
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToAuthPlayer", name: kGameCenterManagerNeedToAuthPlayer, object: self.gcManager)
+        return false
     }
     
     private func displayCloudKitAuthStatus() {
@@ -146,14 +141,12 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: kGameCenterManagerNeedToAuthPlayer, object: self.gcManager)
         NSNotificationCenter.defaultCenter().removeObserver(self,name:SYLoggingToCloudNotification, object:self.ckManager)
     }
     
     //MARK: Authefication's related methods
     func authDidChange(notification:NSNotification!) {
         self.needToAuthGC = !self.gcManager.isLocalUserAuthentificated
-        self.correctGameCenterButtonState()
     }
     
     func needToEnableCloudKit() {
@@ -170,23 +163,37 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         })
     }
     
-    func needToAuthPlayer() {
+    func needToDisplayGC(title:String,message:String) {
+        
         if self.gcManager.isLocalUserAuthentificated {
             return
         }
         else if (self.needToAuthGC){
             self.needToAuthGC = false
-            let alertVC = UIAlertController(title: "Game Center is disabled", message: "To participate in Leaderboard\nPlease enable it", preferredStyle: .Alert)
-            
+            let alertVC = UIAlertController(title: title, message: message, preferredStyle: .Alert)
+            self.btnGameCenter.enabled = false
             self.presentViewController(alertVC, animated: true, completion: nil)
             
             let delayTime = dispatch_time(DISPATCH_TIME_NOW,
                 Int64(3 * Double(NSEC_PER_SEC)))
             
             dispatch_after(delayTime, dispatch_get_main_queue(), { () -> Void in
-                alertVC.dismissViewControllerAnimated(true, completion: nil)
+                alertVC.dismissViewControllerAnimated(true) {
+                    [unowned self] in
+                    self.btnGameCenter.enabled = true
+                    self.needToAuthGC = true
+                }
             })
         }
+    }
+    
+    func needToEnableGC() {
+        
+        needToDisplayGC("Game Center is disabled", message: "To participate in Leaderboard\nPlease enable it")
+    }
+    
+    func needToAuthPlayerToGC() {
+        needToDisplayGC("Attention", message: "Please enable Game Center!")
     }
     
     //MARK: -
@@ -299,8 +306,7 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     }
     
     private func performActionOnRMainButton(sender:UIButton?,animated:Bool = true) {
-        
-        if sender != nil && sender!.selected {
+        if sender?.selected == Optional<Bool>.Some(true) {
             //TODO: Animate button appearance
             
             //TODO: put into Constants section...
@@ -317,11 +323,12 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
             self.btnFB.hidden = false
             
             self.btnTwitter.hidden = true
+            self.btnGameCenter.hidden = true
             
             sender!.superview?.bringSubviewToFront(sender!)
             println("Original center \(self.btnSound.center)")
             
-            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { [unowned self]
+            UIView.animateWithDuration(animated ? 0.5 : 0.0, animations: { [unowned self]
                 () -> Void in
                 
                 self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnSound.center.y + yMargin)
@@ -348,53 +355,70 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
                     
                     println("Final 2 center \(self.btnSound.center)")
                     
-                    self.btnTwitter.center = self.btnFB.center
+                    //self.btnTwitter.center = self.btnFB.center
                     println("BTN Twitter center x  \(self.btnTwitter.center.x)")
+                    
+                    self.twConstraint.constant = -CGRectGetMidX(self.btnFB.bounds)
+                    self.btnTwitter.layoutIfNeeded()
+                    self.btnTwitter.alpha = 0.0
                     self.btnTwitter.hidden = false
                     
-                    self.btnFB.superview?.bringSubviewToFront(self.btnTwitter)
                     
-                    UIView.animateWithDuration(animated && finished ? 0.5 : 0.0, animations: {  [unowned self]
+                    self.gcConstraint.constant = -CGRectGetMidY(self.btnSound.bounds)
+                    self.btnGameCenter.layoutIfNeeded()
+                    self.btnGameCenter.alpha = 0.0
+                    self.btnGameCenter.hidden = false
+                    
+                    self.btnFB.superview?.bringSubviewToFront(self.btnFB)
+                    self.btnSound.superview?.bringSubviewToFront(self.btnSound)
+                    
+                    UIView.animateWithDuration(animated && finished ? 0.2 : 0.0, animations: {  [unowned self]
                         () -> Void in
-                        self.btnTwitter.frame = CGRectOffset(self.btnTwitter.frame, -fbXSpce, 0);
+                        
+                        self.twConstraint.constant = 25
+                        self.btnTwitter.alpha = 1.0
+                        self.btnTwitter.layoutIfNeeded()
+                        
+                        self.gcConstraint.constant = 20
+                        self.btnGameCenter.alpha = 1.0
+                        self.btnGameCenter.layoutIfNeeded()
+                        
                         }) {
                         [unowned self]
                         finished in
-                        
-                            println("BTN Twitter center x  \(self.btnTwitter.center.x)")
-                    
-                            let xDiff = CGRectGetMaxX(self.btnTwitter.frame) - CGRectGetMinX(self.btnFB.frame)
-                            
-                            let attr2 = NSLayoutConstraint(item: self.btnTwitter, attribute: .Trailing, relatedBy: .Equal, toItem: self.btnFB, attribute: .Leading, multiplier: 1, constant: xDiff)
-                            self.btnTWXSpaceConstraint = attr2
-                            NSLayoutConstraint.activateConstraints([attr2])
                     }
             }
         }
         else {
             
             println("Original center \(self.btnSound.center)")
-            self.btnFB.bringSubviewToFront(self.btnTwitter)
+            self.btnFB.superview?.bringSubviewToFront(self.btnFB)
+            self.btnTwitter.alpha = 1.0
+            self.btnTwitter.layoutIfNeeded()
             
-            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: {[unowned self]
+            self.btnCompany.superview?.bringSubviewToFront(self.btnCompany)
+            self.btnGameCenter.alpha = 1.0
+            self.btnGameCenter.layoutIfNeeded()
+            
+            UIView.animateWithDuration(animated ? 0.5 : 0.0, animations: {[unowned self]
                 () -> Void in
                 
-                    self.btnTwitter.center = CGPoint(x:self.btnFB.center.x,y:self.btnTwitter.center.y)
+                    self.twConstraint.constant = -CGRectGetMidX(self.btnFB.bounds)
+                    self.btnTwitter.alpha = 0.0
+                    self.btnTwitter.layoutIfNeeded()
+                
+                    self.gcConstraint.constant = -CGRectGetMidY(self.btnSound.bounds)
+                    self.btnGameCenter.alpha = 0.0
+                    self.btnGameCenter.layoutIfNeeded()
                 
                 }){
                     [unowned self]
                     finished in
                     
                     self.btnTwitter.hidden = true
+                    self.btnGameCenter.hidden = true
                     
-                    var constraint = self.btnTWXSpaceConstraint
-                    if constraint != nil {
-                        NSLayoutConstraint.deactivateConstraints([constraint])
-                        self.btnTWXSpaceConstraint = nil
-                    }
-
-                    
-                    UIView.animateWithDuration(animated && finished ? 1.0 : 0.0, animations: {[unowned self]
+                    UIView.animateWithDuration(animated && finished ? 0.25 : 0.0, animations: {[unowned self]
                         () -> Void in
                         
                         self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
@@ -446,9 +470,12 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
                 sender.enabled = true
             })
         } else if (sender == self.btnGameCenter) {
-            SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (url, successfully) -> Void in
-                GameCenterManager.sharedInstance.showGKGameCenterViewController(self)
-            })
+            
+            if !self.displayOnNeedGameKitAuthStatus() {
+                SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (url, successfully) -> Void in
+                    GameCenterManager.sharedInstance.showGKGameCenterViewController(self)
+                })
+            }
         } else if (sender == self.btnShop) {
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
                 

@@ -3,13 +3,11 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <customFonts key="customFonts">
         <mutableArray key="Game_Robot.ttf">
-            <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
@@ -66,25 +64,6 @@
                                 <state key="disabled">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                            </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="2BG-Lf-P00" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="233" y="337" width="134" height="64"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" relation="lessThanOrEqual" constant="64" id="3bk-ds-CTN"/>
-                                    <constraint firstAttribute="width" secondItem="2BG-Lf-P00" secondAttribute="height" multiplier="67:32" id="nZM-dX-gCv"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
-                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
-                                <state key="normal" title="Game Center">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="gmh-tg-1Yw"/>
-                                </connections>
                             </button>
                             <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="261" y="417" width="79" height="46"/>
@@ -169,15 +148,25 @@
                                     <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="JYK-Ca-CEt"/>
                                 </connections>
                             </button>
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVr-yc-HC5" userLabel="GameCenter Button">
+                                <rect key="frame" x="534" y="94" width="40" height="40"/>
+                                <state key="normal" image="game_center">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" placeholder="YES" id="3Do-S9-aWD"/>
+                            <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
                             <constraint firstAttribute="centerX" secondItem="1XG-Tp-FSs" secondAttribute="centerX" id="3aD-dm-1vj"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="baseline" secondItem="1XG-Tp-FSs" secondAttribute="baseline" id="7ua-XC-NFe"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="PTq-DP-qnf" secondAttribute="trailing" id="960-e4-7di"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="5vs-8M-X8t" secondAttribute="trailingMargin" id="CU3-2b-yf3"/>
-                            <constraint firstItem="2BG-Lf-P00" firstAttribute="centerX" secondItem="12G-JR-etf" secondAttribute="centerX" id="Jo2-6R-xeR"/>
+                            <constraint firstItem="cVr-yc-HC5" firstAttribute="top" secondItem="PTq-DP-qnf" secondAttribute="bottom" constant="20" id="GOd-eI-ATg"/>
+                            <constraint firstItem="PTq-DP-qnf" firstAttribute="centerX" secondItem="cVr-yc-HC5" secondAttribute="centerX" constant="3.5" id="IEu-An-NBO"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" id="LmO-pu-8R1"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="top" secondItem="VOQ-0L-H4x" secondAttribute="bottom" id="MUV-dg-Xbs"/>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="trailing" secondItem="FJb-8H-lOJ" secondAttribute="leading" constant="-30" placeholder="YES" id="WIW-XT-yoB"/>
@@ -189,7 +178,6 @@
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" multiplier="1.5" id="fOS-Hh-QcS">
                                 <variation key="widthClass=compact" constant="16.5"/>
                             </constraint>
-                            <constraint firstItem="nd9-3T-vrx" firstAttribute="top" secondItem="2BG-Lf-P00" secondAttribute="bottom" constant="16" id="nq3-P8-wtG"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="bottom" constant="41" id="umh-HP-xfO"/>
                             <constraint firstItem="PTq-DP-qnf" firstAttribute="centerY" secondItem="FJb-8H-lOJ" secondAttribute="centerY" constant="40" placeholder="YES" id="v6O-Ed-ZJf"/>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="wlH-qY-d4N"/>
@@ -200,13 +188,15 @@
                     <connections>
                         <outlet property="btnCompany" destination="nd9-3T-vrx" id="vui-zc-FDD"/>
                         <outlet property="btnFB" destination="bxu-q9-Fcb" id="5K5-Ow-03G"/>
-                        <outlet property="btnGameCenter" destination="2BG-Lf-P00" id="6Qb-NM-u8O"/>
+                        <outlet property="btnGameCenter" destination="cVr-yc-HC5" id="cUu-Tf-MXe"/>
                         <outlet property="btnHelp" destination="12G-JR-etf" id="QU8-aL-hj3"/>
                         <outlet property="btnRUpCorner" destination="FJb-8H-lOJ" id="uP0-sW-UlI"/>
                         <outlet property="btnShop" destination="1XG-Tp-FSs" id="iNm-dJ-eck"/>
                         <outlet property="btnSound" destination="PTq-DP-qnf" id="aM7-HV-47X"/>
                         <outlet property="btnStrategy" destination="fjR-H4-NMu" id="PY8-HJ-0yd"/>
                         <outlet property="btnTwitter" destination="AF8-Mz-FY1" id="VDz-Mp-TKP"/>
+                        <outlet property="gcConstraint" destination="GOd-eI-ATg" id="kDs-xY-zFO"/>
+                        <outlet property="twConstraint" destination="3Do-S9-aWD" id="GGd-oH-Usl"/>
                         <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                     </connections>
                 </viewController>
@@ -588,6 +578,7 @@
     </scenes>
     <resources>
         <image name="fb-button" width="40" height="40"/>
+        <image name="game_center" width="40" height="40"/>
         <image name="pause" width="14" height="18"/>
         <image name="play" width="15" height="17"/>
         <image name="twitter" width="40" height="40"/>
