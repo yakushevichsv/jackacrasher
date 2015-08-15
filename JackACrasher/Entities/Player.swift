@@ -401,6 +401,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     internal func enableProjectileGun() {
         defineProjectileGunState(false)
+        self.timeLeftLabel?.hidden = true
     }
     
     internal func disableProjectileGun() {

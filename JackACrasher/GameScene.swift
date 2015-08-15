@@ -753,7 +753,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         if parent == transmitter {
                             return
                         }
-                        
+                        else if (transmitter.underRayBeam(parent)) {
+                            returnPlayerToScene(parent, removeAsteroid: false)
+                        }
                         
                         
                     }
@@ -792,9 +794,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func returnPlayerToScene(sprite:SKNode,removeAsteroid:Bool = true) -> Bool {
         
         if self.player.hidden {
-            
-            self.player.position = convertNodePosition(sprite, toScene: self)
+            let spritePosition = convertNodePosition(sprite, toScene: self)
+            self.player.position = spritePosition
             self.removePlayerFromRegularAsteroidToScene()
+            
+            if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
+                if transmitter.underRayBeam(self.player) {
+                    
+                    transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
+                        [unowned self] in
+                        self.enemyGenerator.paused = false
+                    }
+                }
+            }
+            
             if removeAsteroid {
                 sprite.physicsBody = nil
                 sprite.removeFromParent()

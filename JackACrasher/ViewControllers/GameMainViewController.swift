@@ -31,6 +31,7 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     
     weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
     weak var btnFBXSpaceConstraint:NSLayoutConstraint!
+    weak var btnTWXSpaceConstraint:NSLayoutConstraint!
     
     private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
@@ -87,8 +88,6 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         authDidChange(nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
-        self.btnTwitter.hidden = false
-        
         
         let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
         
@@ -317,10 +316,13 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
             self.btnFB.center = CGPointMake(self.btnRUpCorner.center.x, self.btnFB.center.y)
             self.btnFB.hidden = false
             
+            self.btnTwitter.hidden = true
+            
             sender!.superview?.bringSubviewToFront(sender!)
             println("Original center \(self.btnSound.center)")
             
-            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { () -> Void in
+            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { [unowned self]
+                () -> Void in
                 
                 self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnSound.center.y + yMargin)
                 
@@ -346,41 +348,83 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
                     
                     println("Final 2 center \(self.btnSound.center)")
                     
+                    self.btnTwitter.center = self.btnFB.center
+                    println("BTN Twitter center x  \(self.btnTwitter.center.x)")
+                    self.btnTwitter.hidden = false
+                    
+                    self.btnFB.superview?.bringSubviewToFront(self.btnTwitter)
+                    
+                    UIView.animateWithDuration(animated && finished ? 0.5 : 0.0, animations: {  [unowned self]
+                        () -> Void in
+                        self.btnTwitter.frame = CGRectOffset(self.btnTwitter.frame, -fbXSpce, 0);
+                        }) {
+                        [unowned self]
+                        finished in
+                        
+                            println("BTN Twitter center x  \(self.btnTwitter.center.x)")
+                    
+                            let xDiff = CGRectGetMaxX(self.btnTwitter.frame) - CGRectGetMinX(self.btnFB.frame)
+                            
+                            let attr2 = NSLayoutConstraint(item: self.btnTwitter, attribute: .Trailing, relatedBy: .Equal, toItem: self.btnFB, attribute: .Leading, multiplier: 1, constant: xDiff)
+                            self.btnTWXSpaceConstraint = attr2
+                            NSLayoutConstraint.activateConstraints([attr2])
+                    }
             }
         }
         else {
             
             println("Original center \(self.btnSound.center)")
+            self.btnFB.bringSubviewToFront(self.btnTwitter)
             
-            
-            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: { () -> Void in
+            UIView.animateWithDuration(animated ? 1.0 : 0.0, animations: {[unowned self]
+                () -> Void in
                 
-                self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
-                    println("Final 1 center \(self.btnSound.center)")
-                
-                self.btnFB.center = CGPoint(x:self.btnRUpCorner.center.x,y:self.btnFB.center.y)
+                    self.btnTwitter.center = CGPoint(x:self.btnFB.center.x,y:self.btnTwitter.center.y)
                 
                 }){
                     [unowned self]
                     finished in
-                    self.btnRUpCorner.superview?.bringSubviewToFront(self.btnRUpCorner)
-                    self.btnSound.hidden = true
-                    self.btnFB.hidden = true
                     
-                    var constraint = self.btnRSoundCornerYConstraitnt
+                    self.btnTwitter.hidden = true
+                    
+                    var constraint = self.btnTWXSpaceConstraint
                     if constraint != nil {
                         NSLayoutConstraint.deactivateConstraints([constraint])
-                        self.btnRSoundCornerYConstraitnt = nil
+                        self.btnTWXSpaceConstraint = nil
                     }
+
                     
-                    constraint = self.btnFBXSpaceConstraint
-                    if constraint != nil {
-                        NSLayoutConstraint.deactivateConstraints([constraint])
-                        self.btnFBXSpaceConstraint = nil
+                    UIView.animateWithDuration(animated && finished ? 1.0 : 0.0, animations: {[unowned self]
+                        () -> Void in
+                        
+                        self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
+                        println("Final 1 center \(self.btnSound.center)")
+                        
+                        self.btnFB.center = CGPoint(x:self.btnRUpCorner.center.x,y:self.btnFB.center.y)
+                        
+                        }){
+                            [unowned self]
+                            finished in
+                            self.btnRUpCorner.superview?.bringSubviewToFront(self.btnRUpCorner)
+                            self.btnSound.hidden = true
+                            self.btnFB.hidden = true
+                            
+                            var constraint = self.btnRSoundCornerYConstraitnt
+                            if constraint != nil {
+                                NSLayoutConstraint.deactivateConstraints([constraint])
+                                self.btnRSoundCornerYConstraitnt = nil
+                            }
+                            
+                            constraint = self.btnFBXSpaceConstraint
+                            if constraint != nil {
+                                NSLayoutConstraint.deactivateConstraints([constraint])
+                                self.btnFBXSpaceConstraint = nil
+                            }
+                            
+                            println("Final 2 center \(self.btnSound.center)")
                     }
-                    
-                    println("Final 2 center \(self.btnSound.center)")
-            }
+                }
+            
         }
     }
     
