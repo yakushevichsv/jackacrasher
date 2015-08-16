@@ -147,6 +147,22 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             SoundManager.sharedInstance.pauseBGMusic()
             self.paused = true
         }
+        
+        /*if !self.enemiesShips.isEmpty {
+            
+            for enemyShip in self.enemiesShips {
+                enemyShip.paused = self.paused
+            }
+        }
+        
+        if !self.bombs.isEmpty {
+            
+            for bomb in self.bombs {
+                bomb.paused = self.paused
+            }
+        }
+        
+        self.childNodeWithName(Transmitter.NodeName)?.paused = self.paused*/
     }
     
     
@@ -352,7 +368,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         lEdge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         lEdge.physicsBody!.contactTestBitMask = EntityCategory.Player
-        lEdge.physicsBody!.collisionBitMask = EntityCategory.Player
+        lEdge.physicsBody!.collisionBitMask = 0
         lEdge.physicsBody!.categoryBitMask = EntityCategory.LeftEdgeBorder
         
         addChild(lEdge)
@@ -367,7 +383,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         edge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         edge.physicsBody!.contactTestBitMask = EntityCategory.PlayerLaser
-        edge.physicsBody!.collisionBitMask = EntityCategory.PlayerLaser
+        edge.physicsBody!.collisionBitMask = 0
         edge.physicsBody!.categoryBitMask = EntityCategory.RightEdgeBorder
         
         addChild(edge)
@@ -386,6 +402,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         self.gameSceneDelegate?.gameScenePlayerDied(self,totalScore: self.totalGameScore,currentScore: self.currentGameScore, playedTime: playedTime, needToContinue: needToContinue)
     }
+    
     
     private func setTotalScoreLabelValue() {
         self.gameScoreNode?.setScore(self.totalGameScore)
@@ -759,6 +776,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
    
     override func update(currentTime: CFTimeInterval) {
         
+        if self.paused {
+            return
+        }
+        
         var timeSinceLast = currentTime - self.lastUpdateTimeInterval
         self.lastUpdateTimeInterval = currentTime;
         if (timeSinceLast > 1) { // more than a second since last update
@@ -773,6 +794,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         for enemyShip in self.enemiesShips {
             enemyShip.updateWithTimeSinceLastUpdate(timeSinceLast)
         }
+        
+        if !self.player.isCaptured && self.player.zRotation != 0 {
+            self.player.zRotation = 0.0
+        }
+        
+        println("Player's z Rotaion \(self.player.zRotation) Is Hidden \(self.player.hidden)")
     }
     
     private func didEvaluateActionPrivate() {
@@ -785,8 +812,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         if parent == transmitter {
                             return
                         }
-                        else if (transmitter.underRayBeam(parent)) {
-                            returnPlayerToScene(parent, removeAsteroid: false)
+                        else {
+                            if (transmitter.underRayBeam(self.player)) {
+                                returnPlayerToScene(parent, removeAsteroid: false)
+                            }
                         }
                         
                         
@@ -860,7 +889,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func removePlayerFromRegularAsteroidToScene() {
         self.player.physicsBody!.contactTestBitMask &= ~EntityCategory.Player
-        self.player.zRotation = 0
+        self.player.zRotation = 0.0
         self.player.zPosition = self.fgZPosition
         
         self.player.removeFromParent()
@@ -1156,9 +1185,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     }
                 }
                 else {
-                    self.player.disableProjectileGun()
+                    
+                    if !self.enemiesShips.isEmpty {
+                        self.player.enableProjectileGun()
+                    }
+                    else {
+                        self.player.disableProjectileGun()
+                    }
                 }
-            
+            self.player.zRotation = 0
             self.player.physicsBody!.contactTestBitMask |= EntityCategory.Asteroid
             self.asteroidGenerator.paused = false
         }
@@ -1529,11 +1564,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             println("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
             
             let pointInternal = self.convertPoint(contact.contactPoint, toNode: pNode)
-            
-            
-            let group = SKAction.group([SKAction.rotateToAngle(angle2, duration: 0.5),SKAction.moveTo(pointInternal, duration: 0.5)])
-            
-            playerNode.runAction(group)
+            playerNode.position = pointInternal
+            playerNode.zRotation = angle2
             
             
             println("placing player at position \(pointInternal)")

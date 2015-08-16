@@ -143,10 +143,11 @@ class Transmitter:SKNode,AssetsContainer {
             return true
         }
         
-        let itemPosition = node.position
+        let itemPosition = convertNodePositionToScene(node)
+        let sPosition = convertNodePositionToScene(self)
         
-        let maxX = self.position.x + size.halfWidth()
-        let minX = self.position.x - size.halfWidth()
+        let maxX = sPosition.x + size.halfWidth()
+        let minX = sPosition.x - size.halfWidth()
         
         let isUnder = minX <= itemPosition.x && maxX >= itemPosition.x
         
