@@ -24,6 +24,7 @@ struct EntityCategory {
     static var EnemySpaceShip:UInt32 = 1 << 11
     static var EnemySpaceShipLaser:UInt32 = 1 << 12
     static var LeftEdgeBorder:UInt32 = 1 << 13
+    static var RightEdgeBorder:UInt32 = 1 << 14
 }
 
 typealias ForceType = CGFloat

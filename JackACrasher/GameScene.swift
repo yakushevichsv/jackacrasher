@@ -332,7 +332,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.createPlayer()
         self.createAsteroidGenerator()
         self.createEnemiesGenerator()
-        
+        self.createLeftBorderEdge()
+        self.createRightBorderEdge()
         
         self.gameScoreNode = ScoreNode(point: CGPointMake(CGRectGetMinX(self.playableArea) + 40, CGRectGetMaxY(self.playableArea) - 30 ), score: self.totalGameScore)
         self.gameScoreNode.zPosition = self.fgZPosition
@@ -345,7 +346,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createLeftBorderEdge() {
         
         let lEdge:SKNode = SKNode()
-        let w1 = -self.player.size.halfWidth()
+        let w1 = CGRectGetMinX(self.playableArea) - self.player.size.halfWidth()
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
@@ -356,6 +357,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         addChild(lEdge)
         
+    }
+    
+    func createRightBorderEdge() {
+        let edge:SKNode = SKNode()
+        let w1 = CGRectGetWidth(self.playableArea) + self.player.size.halfWidth()
+        let p1 = CGPointMake(w1, 0)
+        let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
+        
+        edge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
+        edge.physicsBody!.contactTestBitMask = EntityCategory.PlayerLaser
+        edge.physicsBody!.collisionBitMask = EntityCategory.PlayerLaser
+        edge.physicsBody!.categoryBitMask = EntityCategory.RightEdgeBorder
+        
+        addChild(edge)
     }
     
     func willTerminateApp() {
@@ -1618,7 +1633,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func didBeginContact(contact: SKPhysicsContact)
     {
-        if didPlayerContactWithEdge(contact) {
+        if (didPlayerContactWithEdge(contact) || didPlayerLaserContactWithEdge(contact)) {
             return
         }
         
@@ -1636,14 +1651,36 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
     }
     
-    func didPlayerContactWithEdge(contact:SKPhysicsContact) ->  Bool
-    {
+    func didPlayerContactWithEdge(contact:SKPhysicsContact) ->  Bool {
         //let pNode
         if (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder ||
             contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder) {
             
             self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
             return true
+        }
+        return false
+    }
+    
+    func didPlayerLaserContactWithEdge(contact:SKPhysicsContact) -> Bool {
+        
+        if (contact.bodyA.categoryBitMask == EntityCategory.RightEdgeBorder ||
+            contact.bodyB.categoryBitMask == EntityCategory.RightEdgeBorder) {
+                
+                var node:SKNode? = nil
+                
+                if (contact.bodyB.categoryBitMask == EntityCategory.RightEdgeBorder &&
+                    contact.bodyA.categoryBitMask == EntityCategory.PlayerLaser) {
+                    node = contact.bodyA.node
+                }
+                else if (contact.bodyA.categoryBitMask == EntityCategory.RightEdgeBorder &&
+                    contact.bodyB.categoryBitMask == EntityCategory.PlayerLaser) {
+                        node = contact.bodyB.node
+                }
+                
+                node?.removeFromParent()
+                
+                return true
         }
         return false
     }

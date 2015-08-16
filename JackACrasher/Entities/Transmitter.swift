@@ -280,7 +280,7 @@ class Transmitter:SKNode,AssetsContainer {
         
         
         self.restoreCapturedNode()
-        
+        self.name = nil
         
         let shrinkInWidthAction = SKAction.customActionWithDuration(duration) {
             [unowned self]
