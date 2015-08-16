@@ -892,7 +892,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.player.zRotation = 0.0
         self.player.zPosition = self.fgZPosition
         
+        if let asteroid = self.player.parent as? RegularAsteroid {
+            asteroid.physicsBody?.contactTestBitMask &= ~EntityCategory.Player
+            self.player.playerBGSpriteFromNode(asteroid)?.removeFromParent()
+            
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                    Int64(0.5 * Double(NSEC_PER_SEC)))
+                
+                dispatch_after(delayTime, dispatch_get_main_queue()){
+                    asteroid.physicsBody?.contactTestBitMask |= EntityCategory.Player
+                }
+            
+        }
         self.player.removeFromParent()
+        
         self.scene?.addChild(self.player)
         
         if (self.player.position.x <= CGRectGetMinX(self.playableArea) ) {
@@ -1486,6 +1499,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         var asteroidBody:SKPhysicsBody? = nil
         var entityBody:SKPhysicsBody? = nil
+        
+        if (bodyA.categoryBitMask == 0) {
+            bodyA.categoryBitMask == EntityCategory.RegularAsteroid
+        }
+        else if (bodyB.categoryBitMask == 0) {
+            bodyB.categoryBitMask == EntityCategory.RegularAsteroid
+        }
         
         if (bodyA.categoryBitMask == EntityCategory.RegularAsteroid) {
             asteroidBody = bodyA

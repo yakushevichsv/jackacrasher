@@ -36,6 +36,8 @@ class EnemiesGenerator: NSObject {
     private var currentCount:UInt = 0
     internal static let sTransmitterNodesCount:UInt = 10
     
+    private var isScheduled:Bool = false
+    
     init(playableRect rect:CGRect, andDelegate delegate:EnemiesGeneratorDelegate?) {
         self.playableRect = rect
         self.delegate = delegate
@@ -67,26 +69,38 @@ class EnemiesGenerator: NSObject {
     
     internal func start() {
         canFire = true
-        if !self.timer.valid {
+        if !isScheduled {
             redifineTimer()
         }
     }
     
     internal func stop() {
         
-        if (self.timer.valid) {
-            self.timer.invalidate()
+        if (isScheduled) {
+            isScheduled = false
         }
         canFire = false
     }
     
     private func redifineTimer() {
-        if let lTimer = timer {
-            if lTimer.valid {
-                lTimer.invalidate()
+        
+        if isScheduled {
+            return
+        }
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(2 * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
+            dispatch_async(dispatch_get_main_queue()) {
+                [unowned self] in
+                if self.isScheduled {
+                    self.generateItem()
+                    self.isScheduled = false
+                }
             }
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        isScheduled = true
     }
     
     internal func generateItem() {
@@ -105,8 +119,6 @@ class EnemiesGenerator: NSObject {
         
         if (isSerieOver) {
             self.currentCount = 0
-            /*self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
-            return*/
         }
         
         var nodes = [SKNode]()
@@ -149,12 +161,13 @@ class EnemiesGenerator: NSObject {
             
         } else if (isTransmitterPresent) {
             isTransmitterPresent = false
-            self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
+                self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
+            
             return
         }
         
         if (type != .None) {
-            self.delegate?.enemiesGenerator(self, didProduceItems: nodes, type: type)
+                self.delegate?.enemiesGenerator(self, didProduceItems: nodes, type: type)
         }
     }
     
@@ -170,9 +183,9 @@ class EnemiesGenerator: NSObject {
         if (currentCount == 2 || currentCount == 5 || currentCount == 8 || isSerieOver) {
             
             if isSerieOver {
-                self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
-                self.isTransmitterPresent = false
-            }
+                    self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
+                    self.isTransmitterPresent = false
+                }
             
             return true
         }
@@ -245,7 +258,7 @@ class EnemiesGenerator: NSObject {
                 hole.presentHole(){
                     [unowned self] in
                     self.delegate?.didDissappearItemForEnemiesGenerator(self,item:hole,type:.BlackHole)
-                }
+                    }
                 
             }
         }
