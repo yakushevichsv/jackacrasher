@@ -333,11 +333,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.createAsteroidGenerator()
         self.createEnemiesGenerator()
         
+        
         self.gameScoreNode = ScoreNode(point: CGPointMake(CGRectGetMinX(self.playableArea) + 40, CGRectGetMaxY(self.playableArea) - 30 ), score: self.totalGameScore)
         self.gameScoreNode.zPosition = self.fgZPosition
         addChild(self.gameScoreNode)
         
         self.setTotalScoreLabelValue()
+        
+    }
+    
+    func createLeftBorderEdge() {
+        
+        let lEdge:SKNode = SKNode()
+        let w1 = -self.player.size.halfWidth()
+        let p1 = CGPointMake(w1, 0)
+        let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
+        
+        lEdge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
+        lEdge.physicsBody!.contactTestBitMask = EntityCategory.Player
+        lEdge.physicsBody!.collisionBitMask = EntityCategory.Player
+        lEdge.physicsBody!.categoryBitMask = EntityCategory.LeftEdgeBorder
+        
+        addChild(lEdge)
         
     }
     
@@ -888,6 +905,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         case .RopeBased:
             self.enableCuttingRope = false
             generator.paused = false
+            if let ropeBased = asteroid as? RopeJointAsteroids {
+                for aster in ropeBased.asteroids {
+                    if self.player.parent ==  aster  && returnPlayerToScene(aster) {
+                        break;
+                    }
+                }
+            }
             break
         case .Regular:
             returnPlayerToScene(asteroid)
@@ -1170,7 +1194,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             asteroid.startFiringAtDirection(impulse, point: self.convertPoint(contact.contactPoint, toNode: asteroid))
             
             
-            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: asteroid, withType: .Regular)
+            self.asteroidGenerator.paused = false
             
             return true
         }
@@ -1594,6 +1618,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func didBeginContact(contact: SKPhysicsContact)
     {
+        if didPlayerContactWithEdge(contact) {
+            return
+        }
+        
         if (didContactContainBomb(contact) || didContactContainTrash(contact)) {
             return
         }
@@ -1606,7 +1634,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
-        
+    }
+    
+    func didPlayerContactWithEdge(contact:SKPhysicsContact) ->  Bool
+    {
+        //let pNode
+        if (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder ||
+            contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder) {
+            
+            self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
+            return true
+        }
+        return false
     }
     
     func processContact(trashAster:SKPhysicsBody!, andPlayerLaser laser:SKPhysicsBody?) {

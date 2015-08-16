@@ -252,7 +252,7 @@ class Transmitter:SKNode,AssetsContainer {
         
         self.runAction(SKAction.sequence(array)){
             [unowned self] in
-            self.laserNode.removeFromParent()
+            self.laserNode?.removeFromParent()
             completion()
         }
     }
@@ -268,18 +268,19 @@ class Transmitter:SKNode,AssetsContainer {
             let sPosition = self.convertPoint(capturedNode.position, toNode: self.scene!)
             capturedNode.position = sPosition
             capturedNode.removeFromParent()
-            self.scene?.addChild(capturedNode)
+            self.scene!.addChild(capturedNode)
         }
     }
     
     func disposeTransmitter() {
         
+        self.userInteractionEnabled = false
+        
         let duration = NSTimeInterval(2)
         
-        let blockAction = SKAction.runBlock(){
-            [unowned self] in
-            self.restoreCapturedNode()
-        }
+        
+        self.restoreCapturedNode()
+        
         
         let shrinkInWidthAction = SKAction.customActionWithDuration(duration) {
             [unowned self]
@@ -302,7 +303,7 @@ class Transmitter:SKNode,AssetsContainer {
         
             self.correctRayPath(-w*0.5, width: w, time: time, duration: duration, yDiff: -self.beamHeight, yOffset: self.beamHeight)
         }
-        let seq = SKAction.sequence([blockAction,shrinkInWidthAction,shrinkInHeightAction,SKAction.removeFromParent()])
+        let seq = SKAction.sequence([shrinkInWidthAction,shrinkInHeightAction,SKAction.removeFromParent()])
         
         self.runAction(seq)
         
