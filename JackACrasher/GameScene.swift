@@ -362,29 +362,32 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createLeftBorderEdge() {
         
         let lEdge:SKNode = SKNode()
-        let w1 = CGRectGetMinX(self.playableArea) - self.player.size.halfWidth()
+        let w1 = CGRectGetMinX(self.playableArea) - min(10.0,self.player.size.halfWidth())
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
+        lEdge.name = "leftEdge"
         lEdge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         lEdge.physicsBody!.contactTestBitMask = EntityCategory.Player
         lEdge.physicsBody!.collisionBitMask = 0
         lEdge.physicsBody!.categoryBitMask = EntityCategory.LeftEdgeBorder
-        
+        lEdge.physicsBody!.dynamic = false
         addChild(lEdge)
         
     }
     
     func createRightBorderEdge() {
         let edge:SKNode = SKNode()
-        let w1 = CGRectGetWidth(self.playableArea) + self.player.size.halfWidth()
+        let w1 = CGRectGetWidth(self.playableArea) + min(10,self.player.size.halfWidth())
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
+        edge.name = "rightEdge"
         edge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         edge.physicsBody!.contactTestBitMask = EntityCategory.PlayerLaser
         edge.physicsBody!.collisionBitMask = 0
         edge.physicsBody!.categoryBitMask = EntityCategory.RightEdgeBorder
+        edge.physicsBody!.dynamic = false
         
         addChild(edge)
     }
@@ -500,7 +503,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if (!CGPointEqualToPoint(self.startPoint, self.endPoint)){
                 
-                if let  body = self.physicsWorld.bodyAlongRayStart(self.startPoint, end: self.endPoint) {
+                self.physicsWorld.enumerateBodiesAlongRayStart(self.startPoint, end: self.endPoint) {
+                    [unowned self]
+                    (body,pos,vector,boolPtr) in
+                    
+                //if let  body = self.physicsWorld.bodyAlongRayStart(self.startPoint, end: self.endPoint) {
                     
                     if body.categoryBitMask == EntityCategory.Rope {
                         
@@ -511,7 +518,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                 
                                 let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
                                 
-                                physicsWorld.removeJoint(skJoint)
+                                self.physicsWorld.removeJoint(skJoint)
                             }
                            
                             if let bNode = body.node {
@@ -522,9 +529,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                 
                                 bNode.removeFromParent()
                             
-                                bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.5),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock({ () -> Void in
+                                bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.5),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock(){
+                                    [unowned self] in
                                     self.displayScoreAdditionLabel(position, scoreAddition: 20)
-                                })]))
+                                }]))
                                 
                                 self.enableCuttingRope = false
                                 
@@ -906,25 +914,47 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
         self.player.removeFromParent()
         
-        self.scene?.addChild(self.player)
+        var dx:CGFloat = 0
+        var dy:CGFloat = 0
         
-        if (self.player.position.x <= CGRectGetMinX(self.playableArea) ) {
-            self.player.position.x = CGFloat(self.player.size.width*0.5)
+        if self.player.position.x <= CGRectGetMinX(self.playableArea) {
+            dx = CGRectGetMinX(self.playableArea) - self.player.position.x + self.player.size.halfWidth()
+        }
+        else if self.player.position.x >= CGRectGetWidth(self.playableArea) {
+            dx = CGRectGetWidth(self.playableArea) - self.player.position.x - self.player.size.halfWidth()
+        }
+        
+        if self.player.position.y <= CGRectGetMinY(self.playableArea) {
+            dy = CGRectGetMinY(self.playableArea) - self.player.position.y + self.player.size.halfHeight()
+        }
+        else if self.player.position.y >= CGRectGetHeight(self.playableArea) {
+            dy = CGRectGetHeight(self.playableArea) - self.player.position.y - self.player.size.halfHeight()
+        }
+        
+        
+        
+        /*if self.player.position.x <= CGRectGetMinX(self.playableArea) {
+            self.player.position.x = CGRectGetMinX(self.playableArea)  + self.player.size.halfWidth()
         }
             
-        if (self.player.position.y <= CGRectGetMinY(self.playableArea) ){
-            self.player.position.y = CGFloat(self.player.size.height*0.5)
+        if self.player.position.y <= CGRectGetMinY(self.playableArea) {
+            self.player.position.y = CGRectGetMinY(self.playableArea) + self.player.size.halfHeight()
         }
         
-        if (self.player.position.y >= CGRectGetHeight(self.playableArea)) {
-            self.player.position.y = CGRectGetHeight(self.playableArea) - CGFloat(self.player.size.height*0.5)
+        if self.player.position.y >= CGRectGetHeight(self.playableArea) {
+            self.player.position.y = CGRectGetHeight(self.playableArea) - self.player.size.halfHeight()
         }
         
-        if (self.player.position.x >= CGRectGetWidth(self.playableArea)) {
-            self.player.position.x = CGRectGetWidth(self.playableArea) - CGFloat(self.player.size.width*0.5)
-        }
+        if self.player.position.x >= CGRectGetWidth(self.playableArea) {
+            self.player.position.x = CGRectGetWidth(self.playableArea) - self.player.size.halfHeight()
+        }*/
         
+        
+        self.scene?.addChild(self.player)
         self.player.hidden = false
+        
+        self.player.physicsBody?.applyForce(CGVectorMake(dx*0.5, dy*0.5))
+        
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(2 * Double(NSEC_PER_SEC)))
@@ -1534,6 +1564,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 smallAster.removeFromParent()
                 
+                //TODO: there is a chain out of screen here...
+                
+                // {
+                    //ptional(<SKPhysicsBody> type:<Rectangle> representedObject:[<SKSpriteNode> name:'Chain' texture:[<SKTexture> 'rope_ring.png' (10 x 5)] position:{-154.40547180175781, -25.338905334472656} size:{10, 5} rotation:0.19])
+                //}
+            
                 if (didSmallAsteroidCollidedWithRegulaOne(secondNode)) {
                     return true
                 }
@@ -1708,8 +1744,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder ||
             contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder) {
             
-            self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
-            return true
+            
+            let sPlayerPosition = convertNodePositionToScene(self.player)
+                
+            let result = !CGRectContainsPoint(self.playableArea, sPlayerPosition)
+                
+            if !(CGRectContainsPoint(self.playableArea, sPlayerPosition) || CGRectContainsPoint(self.playableArea, self.player.parent!.position)) {
+                self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
+                return true
+            }
         }
         return false
     }
