@@ -32,6 +32,14 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     @IBOutlet weak var twConstraint:NSLayoutConstraint!
     @IBOutlet weak var gcConstraint:NSLayoutConstraint!
     
+    @IBOutlet weak var ivAsteroidL:UIImageView!
+    @IBOutlet weak var ivAsteroidR:UIImageView!
+    @IBOutlet weak var ivBlackHole:UIImageView!
+    @IBOutlet weak var ivExplosion:UIImageView!
+    @IBOutlet weak var lAsterCenterX:NSLayoutConstraint!
+    @IBOutlet weak var rAsterCenterX:NSLayoutConstraint!
+    
+    
     weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
     weak var btnFBXSpaceConstraint:NSLayoutConstraint!
     
@@ -94,7 +102,87 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         btn.layer.cornerRadius = 3;//half of the width
         btn.layer.borderColor = UIColor.blackColor().CGColor//[UIColor blackColor].CGColor;
         btn.layer.borderWidth = 1.0
+    
+        let images = UIImage.spritesWithContentsOfAtlas("blackhole", sequence: "BlackHole%01d.png", start: 0, end: 4) as! [UIImage]
+        let animImage = UIImage.animatedImageWithImages(images, duration: 0.4)
+        self.ivBlackHole.image = animImage;
+        self.ivBlackHole.startAnimating()
         
+        
+        
+        let images2 = UIImage.spritesWithContentsOfAtlas("sprites", sequence: "explosion%04d.png", start: 1, end: 3) as! [UIImage]
+        let animImage2 = UIImage.animatedImageWithImages(images2, duration: 0.4)
+        self.ivExplosion.image = animImage2
+        
+        let image = UIImage.spriteWithContentsOfAtlas("sprites", name: "asteroid-large.png")
+        self.ivAsteroidL.image = image
+        self.ivAsteroidR.image = image
+        
+        self.ivAsteroidL.hidden = true
+        self.ivAsteroidR.hidden = true
+    }
+    
+    private func hideAsters() {
+    
+        self.ivAsteroidL.hidden = true
+        self.lAsterCenterX.constant = -CGRectGetMidX(self.view.bounds)
+        self.ivAsteroidL.layoutIfNeeded()
+        
+        self.ivAsteroidR.hidden = true
+        self.rAsterCenterX.constant = CGRectGetMidX(self.view.bounds)
+        self.ivAsteroidR.layoutIfNeeded()
+        
+        if self.ivExplosion.isAnimating() {
+            self.ivExplosion.stopAnimating()
+        }
+        self.ivExplosion.hidden = true
+        
+    }
+    
+    private func foreverAsterAnim() {
+        
+        if !(self.ivAsteroidL.hidden &&
+            self.ivAsteroidR.hidden) {
+            return
+        }
+        
+        self.hideAsters()
+        
+        self.ivAsteroidL.hidden = false
+        self.ivAsteroidR.hidden = false
+        
+        
+        UIImageView.animateWithDuration(2, animations: {[unowned self] () -> Void  in
+            
+            self.lAsterCenterX.constant = -CGRectGetMidX(self.ivAsteroidL.bounds) * 0.8
+            self.ivAsteroidL.layoutIfNeeded()
+            
+            self.rAsterCenterX.constant = CGRectGetMidX(self.ivAsteroidR.bounds) * 0.8
+            self.ivAsteroidR.layoutIfNeeded()
+            self.ivAsteroidR.transform = CGAffineTransformMakeRotation(CGFloat(Double(rand() % 7 + 1) *  M_PI_4));
+            self.ivAsteroidL.transform = CGAffineTransformMakeRotation(CGFloat(Double(rand() % 7 + 1) *  M_PI_4));
+            
+            }){[unowned self]
+                _ in
+                //if finished {
+                    self.ivExplosion.hidden = false
+                    self.ivExplosion.startAnimating()
+                    self.ivAsteroidL.hidden = true
+                    self.ivAsteroidR.hidden = true
+                    
+                    let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                        Int64(0.4 * Double(NSEC_PER_SEC)))
+                    
+                    dispatch_after(delayTime, dispatch_get_main_queue()){
+                        [unowned self] in
+                        self.ivExplosion.stopAnimating()
+                        self.foreverAsterAnim()
+                    }
+                //}
+                //else {
+                  //  self.hideAsters()
+                //}
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -105,8 +193,16 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
             self.needToDisplayAnimation = true
         }
         
+        foreverAsterAnim()
+        
         displayCloudKitAuthStatus()
     }
+
+    override func viewWillDisappear(animated: Bool) {
+        viewWillDisappear(animated)
+        self.hideAsters()
+    }
+
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)

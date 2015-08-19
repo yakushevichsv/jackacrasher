@@ -5,3 +5,4 @@
 #import <CommonCrypto/CommonCrypto.h>
 
 #import "IAPReceiptValidator.h"
+#import "UIImage+TextureAtlas.h"

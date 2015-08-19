@@ -3,6 +3,7 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -35,8 +36,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="82" y="417" width="137" height="46"/>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Muy-t8-eeK" userLabel="Right Asteroid ImageView">
+                                <rect key="frame" x="373" y="211" width="154" height="128"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="154" id="BMa-Vy-810"/>
+                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="qTC-hP-AV2"/>
+                                    <constraint firstAttribute="width" secondItem="Muy-t8-eeK" secondAttribute="height" multiplier="77:64" id="zEW-Bs-BII"/>
+                                </constraints>
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="zEW-Bs-BII"/>
+                                    </mask>
+                                </variation>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bzh-ay-0sk" userLabel="Left Asteroid ImageView">
+                                <rect key="frame" x="73" y="211" width="154" height="128"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="Bzh-ay-0sk" secondAttribute="height" multiplier="77:64" id="4CU-jd-j2g"/>
+                                    <constraint firstAttribute="width" relation="lessThanOrEqual" constant="154" id="TiO-Ua-jNK"/>
+                                    <constraint firstAttribute="height" constant="128" placeholder="YES" id="XaD-3u-8pd"/>
+                                </constraints>
+                            </imageView>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zOq-Ua-ez5" userLabel="Black Hole IV">
+                                <rect key="frame" x="245" y="120" width="110" height="116"/>
+                                <accessibility key="accessibilityConfiguration">
+                                    <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                </accessibility>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="110" id="3FQ-HW-AM3"/>
+                                    <constraint firstAttribute="width" secondItem="zOq-Ua-ez5" secondAttribute="height" multiplier="55:58" id="Bh9-hH-BsU"/>
+                                </constraints>
+                            </imageView>
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FSu-Xs-tHM" userLabel="Explosion IV">
+                                <rect key="frame" x="200" y="182" width="200" height="170"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="200" id="Vb0-re-OwX"/>
+                                </constraints>
+                            </imageView>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="82" y="410" width="137" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="137" id="PUB-me-Bhb"/>
                                 </constraints>
@@ -50,23 +94,8 @@
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="262" y="504" width="76" height="46"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="0r0-lm-6Hw"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
-                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
-                                <state key="normal" title="Help">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <state key="disabled">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                            </button>
                             <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="261" y="417" width="79" height="46"/>
+                                <rect key="frame" x="261" y="410" width="79" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="79" id="nST-Pv-pPT"/>
                                 </constraints>
@@ -85,7 +114,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="382" y="417" width="137" height="46"/>
+                                <rect key="frame" x="382" y="410" width="137" height="46"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="137" id="Cx9-kA-LBI"/>
                                 </constraints>
@@ -157,28 +186,62 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="262" y="505" width="76" height="46"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="0r0-lm-6Hw"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
+                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
+                                <state key="normal" title="Help">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
                             <constraint firstAttribute="centerX" secondItem="1XG-Tp-FSs" secondAttribute="centerX" id="3aD-dm-1vj"/>
+                            <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="FSu-Xs-tHM" secondAttribute="bottom" constant="58" id="3jx-WZ-5n9">
+                                <variation key="heightClass=compact" constant="29"/>
+                            </constraint>
+                            <constraint firstAttribute="centerY" secondItem="zOq-Ua-ez5" secondAttribute="centerY" constant="122" id="4nG-Qg-QlL"/>
+                            <constraint firstAttribute="centerX" secondItem="FSu-Xs-tHM" secondAttribute="centerX" id="7AU-2s-Toc"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="baseline" secondItem="1XG-Tp-FSs" secondAttribute="baseline" id="7ua-XC-NFe"/>
+                            <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="-8" id="8jb-EZ-pAf"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="PTq-DP-qnf" secondAttribute="trailing" id="960-e4-7di"/>
+                            <constraint firstItem="Bzh-ay-0sk" firstAttribute="top" secondItem="Muy-t8-eeK" secondAttribute="top" id="BWA-Q2-VqN"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="5vs-8M-X8t" secondAttribute="trailingMargin" id="CU3-2b-yf3"/>
                             <constraint firstItem="cVr-yc-HC5" firstAttribute="top" secondItem="PTq-DP-qnf" secondAttribute="bottom" constant="20" id="GOd-eI-ATg"/>
                             <constraint firstItem="PTq-DP-qnf" firstAttribute="centerX" secondItem="cVr-yc-HC5" secondAttribute="centerX" constant="3.5" id="IEu-An-NBO"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" id="LmO-pu-8R1"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="top" secondItem="VOQ-0L-H4x" secondAttribute="bottom" id="MUV-dg-Xbs"/>
+                            <constraint firstAttribute="centerX" secondItem="zOq-Ua-ez5" secondAttribute="centerX" id="OwL-my-HiC"/>
+                            <constraint firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="25" id="Rzo-jh-lUh"/>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="trailing" secondItem="FJb-8H-lOJ" secondAttribute="leading" constant="-30" placeholder="YES" id="WIW-XT-yoB"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="top" id="XMC-Aq-LR5"/>
+                            <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Muy-t8-eeK" secondAttribute="centerY" constant="-8" id="Z0S-z5-oEU"/>
                             <constraint firstItem="nd9-3T-vrx" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" multiplier="0.5" id="acR-bQ-l5K">
                                 <variation key="widthClass=compact" constant="-15.5"/>
                             </constraint>
-                            <constraint firstItem="Pbc-g6-Gbe" firstAttribute="top" secondItem="12G-JR-etf" secondAttribute="bottom" constant="50" id="etp-GV-7mr"/>
+                            <constraint firstItem="nd9-3T-vrx" firstAttribute="top" secondItem="Bzh-ay-0sk" secondAttribute="bottom" constant="71" id="bh6-Ni-Jg4">
+                                <variation key="heightClass=compact" constant="39"/>
+                            </constraint>
+                            <constraint firstAttribute="centerY" secondItem="Muy-t8-eeK" secondAttribute="centerY" constant="25" id="cFN-KV-9Po"/>
+                            <constraint firstItem="Pbc-g6-Gbe" firstAttribute="top" relation="lessThanOrEqual" secondItem="12G-JR-etf" secondAttribute="bottom" constant="50" id="etp-GV-7mr"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" multiplier="1.5" id="fOS-Hh-QcS">
                                 <variation key="widthClass=compact" constant="16.5"/>
                             </constraint>
-                            <constraint firstItem="12G-JR-etf" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="bottom" constant="41" id="umh-HP-xfO"/>
+                            <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="-8" id="nRk-5x-Ka9"/>
+                            <constraint firstItem="Muy-t8-eeK" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" constant="150" id="ozB-y0-7hy"/>
+                            <constraint firstItem="Bzh-ay-0sk" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" constant="-150" id="q6V-hm-i0M"/>
+                            <constraint firstItem="12G-JR-etf" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="bottom" constant="49" id="umh-HP-xfO">
+                                <variation key="heightClass=compact" constant="15"/>
+                            </constraint>
                             <constraint firstItem="PTq-DP-qnf" firstAttribute="centerY" secondItem="FJb-8H-lOJ" secondAttribute="centerY" constant="40" placeholder="YES" id="v6O-Ed-ZJf"/>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="wlH-qY-d4N"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="centerY" secondItem="bxu-q9-Fcb" secondAttribute="centerY" constant="-3.5" id="zzU-73-hWY"/>
@@ -196,6 +259,12 @@
                         <outlet property="btnStrategy" destination="fjR-H4-NMu" id="PY8-HJ-0yd"/>
                         <outlet property="btnTwitter" destination="AF8-Mz-FY1" id="VDz-Mp-TKP"/>
                         <outlet property="gcConstraint" destination="GOd-eI-ATg" id="kDs-xY-zFO"/>
+                        <outlet property="ivAsteroidL" destination="Bzh-ay-0sk" id="x1p-59-7m7"/>
+                        <outlet property="ivAsteroidR" destination="Muy-t8-eeK" id="hcT-fW-uMo"/>
+                        <outlet property="ivBlackHole" destination="zOq-Ua-ez5" id="mKk-Lc-1jI"/>
+                        <outlet property="ivExplosion" destination="FSu-Xs-tHM" id="tEn-Fc-NJ0"/>
+                        <outlet property="lAsterCenterX" destination="q6V-hm-i0M" id="5ee-ZC-Hf4"/>
+                        <outlet property="rAsterCenterX" destination="ozB-y0-7hy" id="rzx-sw-Pfr"/>
                         <outlet property="twConstraint" destination="3Do-S9-aWD" id="GGd-oH-Usl"/>
                         <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                     </connections>
