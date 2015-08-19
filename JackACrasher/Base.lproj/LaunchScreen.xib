@@ -58,8 +58,18 @@
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="explosion0001" translatesAutoresizingMaskIntoConstraints="NO" id="usc-Vb-D9E">
                             <rect key="frame" x="279" y="162" width="200" height="200"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="200" id="MHh-Ge-0L7"/>
+                                <constraint firstAttribute="width" constant="200" id="UeB-nw-dYm"/>
+                            </constraints>
+                            <variation key="heightClass=compact">
+                                <mask key="constraints">
+                                    <exclude reference="MHh-Ge-0L7"/>
+                                    <exclude reference="UeB-nw-dYm"/>
+                                </mask>
+                            </variation>
                         </imageView>
-                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="enemy-bullet-rot45" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-bk-H4h">
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot45" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-bk-H4h">
                             <rect key="frame" x="247" y="199" width="62" height="62"/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot-45" translatesAutoresizingMaskIntoConstraints="NO" id="ZHL-9m-M56">
@@ -69,6 +79,7 @@
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Dct-cY-Kbt" firstAttribute="top" secondItem="vu7-XZ-82a" secondAttribute="bottom" constant="-32" id="6Ff-4g-PJP"/>
+                        <constraint firstItem="vcF-bs-0j6" firstAttribute="top" secondItem="rmF-bk-H4h" secondAttribute="bottom" constant="-28" id="6zF-b0-qY3"/>
                         <constraint firstItem="vcF-bs-0j6" firstAttribute="leading" secondItem="zjT-x4-a4d" secondAttribute="trailing" constant="-28" id="7yb-SL-BFg"/>
                         <constraint firstItem="zjT-x4-a4d" firstAttribute="top" secondItem="vcF-bs-0j6" secondAttribute="bottom" constant="-28" id="7yk-P3-xsW"/>
                         <constraint firstAttribute="centerX" secondItem="QQC-q2-0gO" secondAttribute="centerX" id="91l-BA-wDS"/>
@@ -76,6 +87,7 @@
                         <constraint firstItem="Dct-cY-Kbt" firstAttribute="leading" secondItem="ZHL-9m-M56" secondAttribute="trailing" constant="-110" id="BAC-KM-EBp"/>
                         <constraint firstAttribute="centerY" secondItem="QQC-q2-0gO" secondAttribute="centerY" id="D9v-cf-F6E"/>
                         <constraint firstItem="0J7-xQ-kJw" firstAttribute="centerY" secondItem="vu7-XZ-82a" secondAttribute="centerY" multiplier="3" id="IYc-W7-TqE"/>
+                        <constraint firstItem="rmF-bk-H4h" firstAttribute="leading" secondItem="vcF-bs-0j6" secondAttribute="trailing" constant="8" id="Nmi-Tr-8yV"/>
                         <constraint firstItem="0J7-xQ-kJw" firstAttribute="trailing" secondItem="QQC-q2-0gO" secondAttribute="trailing" multiplier="0.9" id="RTC-EJ-PKh"/>
                         <constraint firstItem="Dct-cY-Kbt" firstAttribute="leading" secondItem="vu7-XZ-82a" secondAttribute="trailing" constant="-18" id="UOX-dN-45G"/>
                         <constraint firstItem="vu7-XZ-82a" firstAttribute="centerY" secondItem="QQC-q2-0gO" secondAttribute="centerY" multiplier="0.4" id="Z0b-Rb-e4X">
