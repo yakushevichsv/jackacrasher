@@ -2130,7 +2130,7 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "461616493.831792"
+                  timestampString = "461682582.945333"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "105"
@@ -2145,7 +2145,7 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "461616493.831933"
+                  timestampString = "461682582.945652"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "107"
@@ -3109,8 +3109,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1650"
             endingLineNumber = "1650"
-            landmarkName = "didContachHasBlackHole(_:)"
-            landmarkType = "5">
+            landmarkName = "GameScene"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -3893,7 +3893,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1779"
             endingLineNumber = "1779"
-            landmarkName = "processContact(_:andPlayerLaser:)"
+            landmarkName = "didPlayerLaserContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -4405,8 +4405,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1735"
             endingLineNumber = "1735"
-            landmarkName = "GameScene"
-            landmarkType = "3">
+            landmarkName = "didBeginContact(_:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -6021,7 +6021,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1738"
             endingLineNumber = "1738"
-            landmarkName = "didPlayerContactWithEdge(_:)"
+            landmarkName = "didBeginContact(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6117,7 +6117,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1756"
             endingLineNumber = "1756"
-            landmarkName = "didPlayerLaserContactWithEdge(_:)"
+            landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6133,8 +6133,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1759"
             endingLineNumber = "1759"
-            landmarkName = "didPlayerLaserContactWithEdge(_:)"
-            landmarkType = "5">
+            landmarkName = "GameScene"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -6181,7 +6181,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1695"
             endingLineNumber = "1695"
-            landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
+            landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6389,7 +6389,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1718"
             endingLineNumber = "1718"
-            landmarkName = "didBeginContact(_:)"
+            landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
