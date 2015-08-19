@@ -62,6 +62,9 @@
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="enemy-bullet-rot45" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-bk-H4h">
                             <rect key="frame" x="247" y="199" width="62" height="62"/>
                         </imageView>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot-45" translatesAutoresizingMaskIntoConstraints="NO" id="ZHL-9m-M56">
+                            <rect key="frame" x="369" y="164" width="62" height="62"/>
+                        </imageView>
                     </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
@@ -70,6 +73,7 @@
                         <constraint firstItem="zjT-x4-a4d" firstAttribute="top" secondItem="vcF-bs-0j6" secondAttribute="bottom" constant="-28" id="7yk-P3-xsW"/>
                         <constraint firstAttribute="centerX" secondItem="QQC-q2-0gO" secondAttribute="centerX" id="91l-BA-wDS"/>
                         <constraint firstItem="zjT-x4-a4d" firstAttribute="bottom" secondItem="QQC-q2-0gO" secondAttribute="bottom" multiplier="0.92" id="9He-Il-Fz8"/>
+                        <constraint firstItem="Dct-cY-Kbt" firstAttribute="leading" secondItem="ZHL-9m-M56" secondAttribute="trailing" constant="-110" id="BAC-KM-EBp"/>
                         <constraint firstAttribute="centerY" secondItem="QQC-q2-0gO" secondAttribute="centerY" id="D9v-cf-F6E"/>
                         <constraint firstItem="0J7-xQ-kJw" firstAttribute="centerY" secondItem="vu7-XZ-82a" secondAttribute="centerY" multiplier="3" id="IYc-W7-TqE"/>
                         <constraint firstItem="0J7-xQ-kJw" firstAttribute="trailing" secondItem="QQC-q2-0gO" secondAttribute="trailing" multiplier="0.9" id="RTC-EJ-PKh"/>
@@ -80,6 +84,7 @@
                         <constraint firstItem="usc-Vb-D9E" firstAttribute="top" secondItem="0J7-xQ-kJw" secondAttribute="bottom" constant="-134" id="Z2H-Yn-tAa"/>
                         <constraint firstItem="0J7-xQ-kJw" firstAttribute="leading" secondItem="usc-Vb-D9E" secondAttribute="trailing" constant="-76" id="aRM-G5-ei1"/>
                         <constraint firstItem="zjT-x4-a4d" firstAttribute="centerX" secondItem="NdV-FT-hDJ" secondAttribute="centerX" multiplier="0.5" id="kdK-Gn-uV7"/>
+                        <constraint firstItem="ZHL-9m-M56" firstAttribute="top" secondItem="Dct-cY-Kbt" secondAttribute="bottom" constant="4" id="oQh-un-XpZ"/>
                         <constraint firstItem="QQC-q2-0gO" firstAttribute="width" secondItem="NdV-FT-hDJ" secondAttribute="width" multiplier="0.8" id="tZx-oX-iyI"/>
                         <constraint firstAttribute="centerX" secondItem="0J7-xQ-kJw" secondAttribute="centerX" constant="-144" id="ta7-Tq-6rR"/>
                         <constraint firstAttribute="centerX" secondItem="vu7-XZ-82a" secondAttribute="centerX" constant="19" id="xOO-Pb-pAC"/>
@@ -92,9 +97,6 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="enemy-bullet-rot-45" translatesAutoresizingMaskIntoConstraints="NO" id="T5b-rK-52s">
-                    <rect key="frame" x="253" y="163" width="113" height="48"/>
-                </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="JackACrasher" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7av-FA-Z31">
                     <rect key="frame" x="87" y="147" width="306" height="50"/>
                     <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="44"/>
