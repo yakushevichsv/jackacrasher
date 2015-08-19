@@ -69,7 +69,7 @@
                             </variation>
                         </imageView>
                     </subviews>
-                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Dct-cY-Kbt" firstAttribute="top" secondItem="vu7-XZ-82a" secondAttribute="bottom" constant="-32" id="6Ff-4g-PJP"/>
                         <constraint firstItem="vcF-bs-0j6" firstAttribute="leading" secondItem="zjT-x4-a4d" secondAttribute="trailing" constant="-28" id="7yb-SL-BFg"/>
@@ -103,9 +103,12 @@
                     <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="44"/>
                     <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
+                    <variation key="heightClass=compact" misplaced="YES">
+                        <rect key="frame" x="102" y="146" width="277" height="52"/>
+                    </variation>
                 </label>
             </subviews>
-            <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+            <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="NdV-FT-hDJ" secondAttribute="bottom" priority="750" constant="17" id="2Xs-Ug-jlP"/>
                 <constraint firstAttribute="centerX" secondItem="7av-FA-Z31" secondAttribute="centerX" id="AVe-QU-9Ik"/>
