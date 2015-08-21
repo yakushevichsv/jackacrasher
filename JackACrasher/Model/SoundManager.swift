@@ -18,6 +18,7 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
     internal static let eSmallInternal = SKAction.playSoundFileNamed("explosion_small.wav", waitForCompletion: false)
     internal static let eLargeInternal = SKAction.playSoundFileNamed("explosion_large.wav", waitForCompletion: false)
     internal static let eLostInternal = SKAction.playSoundFileNamed("lose.wav", waitForCompletion: false)
+    internal static let eLapInternal = SKAction.playSoundFileNamed("lap.wav", waitForCompletion: false)
     
     internal static let emptyAction = SKAction.waitForDuration(0)
     
@@ -31,6 +32,10 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
     
     internal static var gameOverAction:SKAction! {
         get {return !SoundManager.sharedInstance.noSound ? eLostInternal: emptyAction }
+    }
+    
+    internal static var lapAction:SKAction! {
+        get {return !SoundManager.sharedInstance.noSound ? eLapInternal: emptyAction }
     }
     
     private var completionHandler:completionHandlerType? = nil

@@ -25,6 +25,7 @@ struct EntityCategory {
     static var EnemySpaceShipLaser:UInt32 = 1 << 12
     static var LeftEdgeBorder:UInt32 = 1 << 13
     static var RightEdgeBorder:UInt32 = 1 << 14
+    static var HealthUnit:UInt32 = 1 << 15
 }
 
 typealias ForceType = CGFloat
@@ -522,12 +523,20 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         return projectile
     }
     
+    
     func tryToDestroyWithForce(forceValue: ForceType) -> Bool {
         self.health -= forceValue
         
         if (self.health > 0) {
             
+            if self.health > ForceType(100) {
+                self.health = ForceType(100)
+            }
+            
             let damage = Player.sDamageEmitter.copy() as! SKEmitterNode
+            if (forceValue < 0) {
+                damage.particleColor = UIColor.greenColor()
+            }
             damage.position = self.position
             damage.zPosition = self.zPosition + 1
             self.scene?.addChild(damage)

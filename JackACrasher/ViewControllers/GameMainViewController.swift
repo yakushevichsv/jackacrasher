@@ -199,7 +199,7 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     }
 
     override func viewWillDisappear(animated: Bool) {
-        viewWillDisappear(animated)
+        super.viewWillDisappear(animated)
         self.hideAsters()
     }
 

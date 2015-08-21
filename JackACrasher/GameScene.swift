@@ -1079,6 +1079,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             break
+        case .Health:
+            generator.paused = false
+            break
         case .Regular:
             if self.childNodeWithName(Transmitter.NodeName) == nil {
                 self.player.disableProjectileGun()
@@ -1153,7 +1156,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             println("Enemy position \(node.position)")
             println("Scene size \(self.size)")
         }
-        generator.paused = true
+        generator.paused = type != .BlackHole
         
         if isTransmitter == true {
             self.asteroidGenerator.paused = true
@@ -1721,7 +1724,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func didBeginContact(contact: SKPhysicsContact)
     {
-        if (didPlayerContactWithEdge(contact) || didPlayerLaserContactWithEdge(contact)) {
+        if (didPlayerContactWithEdge(contact) || didPlayerContactWithHealthUnit(contact) || didPlayerLaserContactWithEdge(contact)) {
             return
         }
         
@@ -1737,6 +1740,33 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
+    }
+    
+    func didPlayerContactWithHealthUnit(contact:SKPhysicsContact) -> Bool {
+        
+        var healthBody:SKPhysicsBody? = nil
+        var secondBody:SKPhysicsBody? = nil
+        
+        if (contact.bodyA.categoryBitMask == EntityCategory.HealthUnit) {
+            healthBody = contact.bodyA
+            secondBody = contact.bodyB
+        } else if (contact.bodyB.categoryBitMask == EntityCategory.HealthUnit){
+            healthBody = contact.bodyB
+            secondBody = contact.bodyA
+        }
+        
+        if secondBody?.categoryBitMask == EntityCategory.Player && healthBody != nil {
+            
+            let node = healthBody!.node!
+            let force = node.userData!["healing"] as! ForceType
+            let res = tryToDestroyPlayer(force > 0 ? -force : force)
+            assert(res == false)
+            let action = SKAction.sequence([SoundManager.lapAction,SKAction.removeFromParent()])
+            healthBody?.node?.runAction(action)
+            return true
+        }
+        
+        return false
     }
     
     func didPlayerContactWithEdge(contact:SKPhysicsContact) ->  Bool {

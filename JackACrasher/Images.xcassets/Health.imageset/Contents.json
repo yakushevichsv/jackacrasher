@@ -2,17 +2,18 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "Health.png"
     },
     {
       "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "hammer@2x.png"
+      "filename" : "Health@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "hammer@3x.png"
+      "filename" : "Health@3x.png"
     }
   ],
   "info" : {

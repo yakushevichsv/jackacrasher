@@ -47,6 +47,7 @@
 		217341001AFE54AB009E934A /* GameOverScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 217340FF1AFE54AB009E934A /* GameOverScene.sks */; };
 		217341021AFE54C1009E934A /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217341011AFE54C1009E934A /* GameOverScene.swift */; };
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
+		217360F91B87260C00713E82 /* lap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217360F81B87260C00713E82 /* lap.wav */; };
 		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
 		217EDC961B7CC4710002E013 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EDC921B7CC4710002E013 /* Fabric.framework */; };
 		217EDC971B7CC4710002E013 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EDC931B7CC4710002E013 /* TwitterKit.framework */; };
@@ -65,7 +66,7 @@
 		2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */; };
 		2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */ = {isa = PBXBuildFile; fileRef = 2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */; };
 		2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B6871AE3FF7700DDDB9F /* SoundManager.swift */; };
-		2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */; };
+		2199B68B1AE4474D00DDDB9F /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2199B68A1AE4474D00DDDB9F /* Extensions.swift */; };
 		219A68B01B70AFB500CE6F07 /* Transmitter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A68AF1B70AFB500CE6F07 /* Transmitter.swift */; };
 		219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A6D221AFABCC400A63E7F /* HUDNode.swift */; };
 		21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */; };
@@ -158,6 +159,7 @@
 		217340FF1AFE54AB009E934A /* GameOverScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = GameOverScene.sks; path = Scenes/GameOverScene.sks; sourceTree = "<group>"; };
 		217341011AFE54C1009E934A /* GameOverScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverScene.swift; path = Scenes/GameOverScene.swift; sourceTree = "<group>"; };
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
+		217360F81B87260C00713E82 /* lap.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lap.wav; sourceTree = "<group>"; };
 		217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopUpTransitioningDelegate.swift; path = ViewControllers/PopUpTransitioningDelegate.swift; sourceTree = "<group>"; };
 		217EDC921B7CC4710002E013 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
 		217EDC931B7CC4710002E013 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = SOURCE_ROOT; };
@@ -176,7 +178,7 @@
 		2199B6831AE3FF2B00DDDB9F /* explosion_large.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_large.wav; path = Sounds/explosion_large.wav; sourceTree = "<group>"; };
 		2199B6841AE3FF2B00DDDB9F /* explosion_small.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; name = explosion_small.wav; path = Sounds/explosion_small.wav; sourceTree = "<group>"; };
 		2199B6871AE3FF7700DDDB9F /* SoundManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundManager.swift; path = Model/SoundManager.swift; sourceTree = "<group>"; };
-		2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "CGVector+Extensions.swift"; path = "Utils/CGVector+Extensions.swift"; sourceTree = "<group>"; };
+		2199B68A1AE4474D00DDDB9F /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Extensions.swift; path = Utils/Extensions.swift; sourceTree = "<group>"; };
 		219A68AF1B70AFB500CE6F07 /* Transmitter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Transmitter.swift; path = Entities/Transmitter.swift; sourceTree = "<group>"; };
 		219A6D221AFABCC400A63E7F /* HUDNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HUDNode.swift; path = HUD/HUDNode.swift; sourceTree = "<group>"; };
 		21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTransitionSegue.swift; path = Utils/CustomTransitionSegue.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 		2199B6821AE3FEF100DDDB9F /* Sounds */ = {
 			isa = PBXGroup;
 			children = (
+				217360F81B87260C00713E82 /* lap.wav */,
 				21FF6C111B51724F00256A63 /* backgroundMusic.mp3 */,
 				21CFBCA61B10A1B1009EDA3E /* button_press.wav */,
 				217341031AFE5674009E934A /* lose.wav */,
@@ -394,7 +397,7 @@
 		2199B6891AE4470100DDDB9F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				2199B68A1AE4474D00DDDB9F /* CGVector+Extensions.swift */,
+				2199B68A1AE4474D00DDDB9F /* Extensions.swift */,
 				21068A391AE555DB007398B5 /* Utils.swift */,
 				21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */,
 			);
@@ -678,6 +681,7 @@
 				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
 				217341041AFE5674009E934A /* lose.wav in Resources */,
 				218B92EE1B79F3C500444918 /* sprites.atlas in Resources */,
+				217360F91B87260C00713E82 /* lap.wav in Resources */,
 				2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */,
 				21DC553D1AF42DB60083210D /* Sparky.sks in Resources */,
 				2199B6851AE3FF2B00DDDB9F /* explosion_large.wav in Resources */,
@@ -741,7 +745,7 @@
 				217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */,
 				21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */,
 				2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */,
-				2199B68B1AE4474D00DDDB9F /* CGVector+Extensions.swift in Sources */,
+				2199B68B1AE4474D00DDDB9F /* Extensions.swift in Sources */,
 				210C0B4E1B357ABF00759382 /* IAPProduct.swift in Sources */,
 				2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */,
 				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,

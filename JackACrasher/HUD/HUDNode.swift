@@ -197,6 +197,10 @@ class HUDNode: SKNode {
             }
         }
         
+        if (self.curLifePercent > HUDNode.sLifePercentMax) {
+            self.curLifePercent = HUDNode.sLifePercentMax
+        }
+        
         updateLifeCurPercentNode(animated: true, prevValue: prevLifePercent)
     }
     

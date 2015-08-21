@@ -16,6 +16,7 @@ enum AsteroidType {
     case Joint
     case RopeBased
     case Regular
+    case Health
 }
 
 enum RegularAsteroidSize {
@@ -42,6 +43,8 @@ class AsteroidGenerator: NSObject {
     private let trashAvg:CGFloat   = 80.0
     private let trashRange:CGFloat = 10.0
 
+    private var healthUnitProdTime:NSTimeInterval =  NSDate.timeIntervalSinceReferenceDate()
+    
     internal var paused:Bool = false {
         didSet {
             let didChange = (paused != oldValue)
@@ -74,6 +77,7 @@ class AsteroidGenerator: NSObject {
         if !self.timer.valid {
             redifineTimer()
         }
+        //generateItem()
     }
     
     internal func stop() {
@@ -157,6 +161,45 @@ class AsteroidGenerator: NSObject {
         
     }
     
+    private func produceHealthUnit() {
+        
+        let health = SKSpriteNode(imageNamed: "health")
+        
+        let body = SKPhysicsBody(rectangleOfSize: health.size)
+        body.contactTestBitMask = EntityCategory.Player
+        body.categoryBitMask = EntityCategory.HealthUnit
+        body.collisionBitMask = 0
+        
+        health.userData = ["healing": ForceType(5)]
+        health.physicsBody = body
+        health.name = "health"
+        
+        let margin = health.size.halfMaxSizeParam()
+        
+        let yMargin = round(margin) + 10
+        
+        let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
+        
+        let yPos = CGFloat(arc4random() % divisor) + yMargin
+        
+        let xMargin = health.zRotation != 0 ? health.size.height : health.size.width
+        
+        let divisor2 = UInt32(max(CGRectGetWidth(self.playableRect) - 2*xMargin, xMargin))
+        
+        let xPos = CGFloat(arc4random() % divisor2) + xMargin
+        
+        health.position = CGPointMake(xPos, yPos)
+        health.alpha = 0.3
+        
+        let sequence = SKAction.sequence([SKAction.fadeInWithDuration(1),
+            SKAction.waitForDuration(4),
+            SKAction.fadeOutWithDuration(1),
+            SKAction.removeFromParent()])
+        
+        health.runAction(sequence)
+        self.delegate.asteroidGenerator(self, didProduceAsteroids: [health], type: .Health)
+    }
+    
     private func produceBomb() {
         
         let isAIBomb = arc4random() % 2 == 0
@@ -179,9 +222,9 @@ class AsteroidGenerator: NSObject {
         bomb.position = CGPointMake(CGRectGetMaxX(self.playableRect) + xMargin, yPos)
         
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
-        let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock({ () -> Void in
+        let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock(){ [unowned self] in
             self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: bomb, withType: .Bomb)
-        }),SKAction.removeFromParent()])
+        },SKAction.removeFromParent()])
         bomb.runAction(sequence)
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: [bomb], type: .Bomb)
@@ -408,16 +451,28 @@ class AsteroidGenerator: NSObject {
                 currentAstType == self.prevAsteroidType 
             }else if (randValue < 8) {
                 currentAstType = .Regular
+            } else if (randValue < 10) {
+                currentAstType = .Health
+                
+                let curTime = NSDate.timeIntervalSinceReferenceDate()
+                if curTime - self.healthUnitProdTime >= 10 {
+                    self.healthUnitProdTime = curTime
+                }
+                else {
+                    currentAstType = .None
+                }
+        
             } else {
                 currentAstType = .RopeBased
             }
-            
+        
             
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
-        self.prevAsteroidType = self.curAsteroidType
         
+        self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType
+        
         
         println("=== Produced current type \(self.curAsteroidType) === ")
         
@@ -437,8 +492,11 @@ class AsteroidGenerator: NSObject {
         case .Regular:
             println("=== Produced current type .Regular === ")
             let regSize = AsteroidGenerator.generateRegularAsteroidSize()
-            
             self.produceRegularAsteroid(regSize)
+            break
+        case .Health:
+            println("=== Produced current type .Health === ")
+            self.produceHealthUnit()
             break
         default:
             println("=== Produced current type .Default ===  \(currentAstType) ")
