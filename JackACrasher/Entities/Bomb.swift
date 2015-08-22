@@ -42,7 +42,10 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker {
         self.userData = ["radius":50]
         self.physicsBody = body
         self.name = Bomb.Constants.name
-        //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+        
+        if EnabledDisplayDebugLabel {
+            appendDebugLabels()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -54,6 +57,18 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker {
         
     }
     
+    private func appendDebugLabels() {
+        
+        
+        let label = NORLabelNode(fontNamed: "gamerobot")
+        label.text = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically"
+        label.fontColor = SKColor.redColor()
+        label.fontSize = 40
+        label.lineSpacing = 3
+        label.position = CGPointMake(-Bomb.sBombTexture.size().halfWidth()+50, Bomb.sBombTexture.size().halfHeight() + 20)
+        label.zRotation = CGFloat(-M_PI_2)
+        addChild(label)
+    }
     
     var canAttack:Bool {
         get {return false}

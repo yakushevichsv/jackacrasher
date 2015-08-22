@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */; };
 		2101EFC61B7B651E00516086 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */; };
+		2105AE511B8868ED00DDB0CC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2105AE501B8868ED00DDB0CC /* Constants.swift */; };
+		2105AE541B8881DA00DDB0CC /* NORLabelNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105AE531B8881DA00DDB0CC /* NORLabelNode.m */; };
 		21068A3A1AE555DB007398B5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21068A391AE555DB007398B5 /* Utils.swift */; };
 		210C0B4E1B357ABF00759382 /* IAPProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210C0B4D1B357ABF00759382 /* IAPProduct.swift */; };
 		210C0B501B357AFB00759382 /* IAPProductInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */; };
@@ -119,6 +121,9 @@
 /* Begin PBXFileReference section */
 		210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsCollectionViewCell.swift; path = Views/ShopDetailsCollectionViewCell.swift; sourceTree = "<group>"; };
 		2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		2105AE501B8868ED00DDB0CC /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Utils/Constants.swift; sourceTree = "<group>"; };
+		2105AE521B8881DA00DDB0CC /* NORLabelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NORLabelNode.h; sourceTree = "<group>"; };
+		2105AE531B8881DA00DDB0CC /* NORLabelNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NORLabelNode.m; sourceTree = "<group>"; };
 		21068A391AE555DB007398B5 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utils.swift; path = Utils/Utils.swift; sourceTree = "<group>"; };
 		210C0B4D1B357ABF00759382 /* IAPProduct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IAPProduct.swift; path = Model/IAP/IAPProduct.swift; sourceTree = "<group>"; };
 		210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IAPProductInfo.swift; path = Model/IAP/IAPProductInfo.swift; sourceTree = "<group>"; };
@@ -397,6 +402,7 @@
 		2199B6891AE4470100DDDB9F /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				2105AE501B8868ED00DDB0CC /* Constants.swift */,
 				2199B68A1AE4474D00DDDB9F /* Extensions.swift */,
 				21068A391AE555DB007398B5 /* Utils.swift */,
 				21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */,
@@ -415,6 +421,8 @@
 		21B2C99A1B85281F0008FEED /* External */ = {
 			isa = PBXGroup;
 			children = (
+				2105AE521B8881DA00DDB0CC /* NORLabelNode.h */,
+				2105AE531B8881DA00DDB0CC /* NORLabelNode.m */,
 				21B2C9A11B852A5B0008FEED /* UIImage+TextureAtlas.h */,
 				21B2C9A21B852A5B0008FEED /* UIImage+TextureAtlas.m */,
 			);
@@ -750,6 +758,7 @@
 				2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */,
 				21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */,
 				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
+				2105AE541B8881DA00DDB0CC /* NORLabelNode.m in Sources */,
 				216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
@@ -788,6 +797,7 @@
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
 				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,
 				21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */,
+				2105AE511B8868ED00DDB0CC /* Constants.swift in Sources */,
 				210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */,
 				21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */,
 			);

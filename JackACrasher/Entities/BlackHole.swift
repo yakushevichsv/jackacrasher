@@ -161,4 +161,7 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
     func destroyItem(item:ItemDestructable) -> Bool {
         return item.tryToDestroyWithForce(min(self.damageForce,item.health))
     }
+    
+    
+    //MARK: Debug label
 }

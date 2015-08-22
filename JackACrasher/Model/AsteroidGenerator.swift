@@ -426,8 +426,36 @@ class AsteroidGenerator: NSObject {
         
         assert(sprites.count == count, "Sprites are not \(spriteFrames.count) items")
         
+        if (EnabledDisplayDebugLabel) {
+        
+            var ySum:CGFloat = 0
+        
+            for sprite in sprites {
+                ySum += sprite.position.y
+            }
+            
+            ySum /= CGFloat(sprites.count)
+            
+            
+            appendDebugLabels(sprites.last!)
+        }
+        
         self.delegate.asteroidGenerator(self, didProduceAsteroids: sprites, type: .Trash)
     }
+    
+    private func appendDebugLabels(node:SKSpriteNode!) {
+        
+        
+        let label = NORLabelNode(fontNamed: "gamerobot")
+        label.text = "Can't move\n Attack trash asteroids"
+        label.fontColor = SKColor.redColor()
+        label.fontSize = 40
+        label.lineSpacing = 2
+        label.position = CGPointMake(node.size.width+50, node.size.halfHeight())
+        label.zRotation = CGFloat(-M_PI_2)
+        node.addChild(label)
+    }
+
     
     internal func generateItem() {
         
@@ -469,6 +497,9 @@ class AsteroidGenerator: NSObject {
             
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
+        
+        //HACK: 
+        currentAstType = .Trash
         
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType

@@ -98,6 +98,7 @@ class Transmitter:SKNode,AssetsContainer {
         self.laserNode = laserNode
         
         self.name = Transmitter.NodeName
+        
     }
 
     private func correctRayPath(time:CGFloat,duration:NSTimeInterval,yDiff:CGFloat,yOffset:CGFloat) {
@@ -162,6 +163,12 @@ class Transmitter:SKNode,AssetsContainer {
         if self.userInteractionEnabled {
             return
         }
+        
+        if EnabledDisplayDebugLabel {
+            //appendDebugLabel()
+            appendRows()
+        }
+        
         
         var array = [SKAction]()
         let position = node.position
@@ -367,5 +374,57 @@ class Transmitter:SKNode,AssetsContainer {
             
             
         }
+    }
+    
+    //MARK: Debug
+    
+    private func appendDebugLabel() {
+        
+        if childNodeWithName("debug") != nil {
+            return
+        }
+        
+        let label = NORLabelNode(fontNamed: "gamerobot")
+        label.text = "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies"
+        label.fontColor = SKColor.redColor()
+        label.fontSize = 15
+        label.lineSpacing = 2
+        label.position = CGPointMake(self.size.halfMaxSizeParam() * 2 + 10, -80)
+        label.zRotation = 0
+        label.name = "debug"
+        addChild(label)
+        
+    }
+    
+    private func appendRows() {
+        if childNodeWithName("debug2") != nil {
+            return
+        }
+        
+        let label = NORLabelNode(fontNamed: "gamerobot")
+        label.text = "In a Beam\nMove up &down\nAttack enemies"
+        label.fontColor = SKColor.redColor()
+        label.fontSize = 15
+        label.lineSpacing = 2
+        label.position = CGPointMake(+self.size.halfMaxSizeParam() * 2 + 10, -80)
+        label.zRotation = 0
+        label.name = "debug2"
+        addChild(label)
+        
+        let nodeUp = SKSpriteNode(imageNamed: "debug_arrow")
+        nodeUp.position = CGPointMake(0, -100)
+        nodeUp.zRotation = 0
+        nodeUp.yScale = 1
+        nodeUp.xScale = 0.8
+        nodeUp.yScale = 0.8
+        addChild(nodeUp)
+        
+        let nodeD = SKSpriteNode(imageNamed: "debug_arrow")
+        nodeD.position = CGPointMake(0, -300)
+        nodeD.zRotation = -CGFloat(M_PI)
+        nodeD.xScale = 0.8
+        nodeD.yScale = 0.8
+        addChild(nodeD)
+
     }
 }
