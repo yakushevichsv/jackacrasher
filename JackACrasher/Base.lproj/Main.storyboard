@@ -200,6 +200,9 @@
                                 <state key="disabled">
                                     <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <segue destination="CYZ-cS-sIm" kind="show" identifier="help" id="Fr3-ne-v48"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -317,8 +320,8 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvC-fI-uwO" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                                    <rect key="frame" x="174" y="103" width="102" height="33"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvC-fI-uwO" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                                    <rect key="frame" x="174" y="103" width="100" height="33"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="vRh-Bp-Tw3"/>
                                                     </constraints>
@@ -399,7 +402,61 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6rV-a3-qGY" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="831.5" y="-455"/>
+            <point key="canvasLocation" x="771.5" y="-837"/>
+        </scene>
+        <!--Help View Controller-->
+        <scene sceneID="EBq-S0-sEz">
+            <objects>
+                <viewController id="CYZ-cS-sIm" customClass="HelpViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="RCE-lE-6UZ"/>
+                        <viewControllerLayoutGuide type="bottom" id="PX6-Qj-dUN"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="wpY-4n-6bx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tz-W4B">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
+                                <connections>
+                                    <outlet property="delegate" destination="CYZ-cS-sIm" id="O8h-1G-14j"/>
+                                </connections>
+                            </scrollView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" defersCurrentPageDisplay="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="msr-3E-CEC">
+                                <rect key="frame" x="281" y="548" width="39" height="37"/>
+                            </pageControl>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZY2-HO-EkQ">
+                                <rect key="frame" x="8" y="465" width="584" height="75"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
+                            </textView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="msr-3E-CEC" firstAttribute="top" secondItem="ZY2-HO-EkQ" secondAttribute="bottom" constant="8" id="DBB-nG-RK1"/>
+                            <constraint firstItem="BAP-tz-W4B" firstAttribute="height" secondItem="wpY-4n-6bx" secondAttribute="height" multiplier="0.75" id="F4L-8O-efg"/>
+                            <constraint firstItem="ZY2-HO-EkQ" firstAttribute="top" secondItem="BAP-tz-W4B" secondAttribute="bottom" constant="15" id="HLj-8L-fO6"/>
+                            <constraint firstItem="PX6-Qj-dUN" firstAttribute="top" secondItem="msr-3E-CEC" secondAttribute="bottom" constant="15" id="HkL-Ex-bSJ"/>
+                            <constraint firstItem="BAP-tz-W4B" firstAttribute="leading" secondItem="wpY-4n-6bx" secondAttribute="leadingMargin" constant="-16" id="XJ7-qU-jgC"/>
+                            <constraint firstItem="ZY2-HO-EkQ" firstAttribute="leading" secondItem="wpY-4n-6bx" secondAttribute="leadingMargin" constant="-8" id="YqJ-9Z-mEX"/>
+                            <constraint firstItem="BAP-tz-W4B" firstAttribute="top" secondItem="RCE-lE-6UZ" secondAttribute="bottom" id="cS2-Qw-RaB"/>
+                            <constraint firstItem="BAP-tz-W4B" firstAttribute="top" secondItem="RCE-lE-6UZ" secondAttribute="bottom" id="cTt-YJ-K3f"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="ZY2-HO-EkQ" secondAttribute="trailing" constant="-8" id="jB0-ap-bsG"/>
+                            <constraint firstAttribute="centerX" secondItem="msr-3E-CEC" secondAttribute="centerX" constant="-0.5" id="tn2-K6-HfY"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="BAP-tz-W4B" secondAttribute="trailing" constant="-16" id="wcM-eo-n63"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="pageControl" destination="msr-3E-CEC" id="RLP-vF-AWK"/>
+                        <outlet property="scrollView" destination="BAP-tz-W4B" id="1NT-Hc-seH"/>
+                        <outlet property="textView" destination="ZY2-HO-EkQ" id="jOr-7v-lQP"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="kpr-PS-TWp" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1123" y="-320"/>
         </scene>
         <!--Initial Scene-->
         <scene sceneID="tXr-a1-R10">

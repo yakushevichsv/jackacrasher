@@ -351,6 +351,25 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
                 self.transitionDelegate.rect = self.view.frame
                 
                 dVC.transitioningDelegate = self.transitionDelegate
+            } else if (identifier == "help") {
+                let start:Int32 = 1
+                let end :Int32 = 6
+                
+                /*var images = [UIImage]()
+                
+                for index in start...end {
+                    let name = "help-page00\(index).png"
+                    let image = UIImage(named: name)
+                    images.append(image!)
+                }*/
+                
+                let images = UIImage.spritesWithContentsOfAtlas("help", sequence: "heltp-page%03d.png", start: start) as! [UIImage]
+                
+                //assert(images.count == Int(end - start + 1))
+                let dVC = segue.destinationViewController as! HelpViewController
+                
+                dVC.pageImages = images
+                dVC.pageDescriptions = ["Player can't move\n Attack trash asteroids","Page 2","Page 3","Page 4","Page 5","Page 6","Page 7"]
             }
         }
     }
