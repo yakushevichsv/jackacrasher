@@ -76,7 +76,6 @@
 		21B2C9A31B852A5B0008FEED /* UIImage+TextureAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B2C9A21B852A5B0008FEED /* UIImage+TextureAtlas.m */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
 		21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF9C271B89E0A60002AEAC /* HelpViewController.swift */; };
-		21BF9C2C1B89F7EB0002AEAC /* help.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21BF9C2B1B89F7EB0002AEAC /* help.atlas */; };
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
 		21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */; };
 		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
@@ -194,7 +193,6 @@
 		21B2C9A21B852A5B0008FEED /* UIImage+TextureAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TextureAtlas.m"; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
 		21BF9C271B89E0A60002AEAC /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ViewControllers/HelpViewController.swift; sourceTree = "<group>"; };
-		21BF9C2B1B89F7EB0002AEAC /* help.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = help.atlas; sourceTree = "<group>"; };
 		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
 		21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemySpaceShip.swift; path = Entities/EnemySpaceShip.swift; sourceTree = "<group>"; };
 		21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JackACrasherNavigationController.swift; path = Model/JackACrasherNavigationController.swift; sourceTree = "<group>"; };
@@ -375,7 +373,6 @@
 		218B92EC1B79F3A500444918 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
-				21BF9C2B1B89F7EB0002AEAC /* help.atlas */,
 				218B92F11B79F3DA00444918 /* blackhole.atlas */,
 				218B92EF1B79F3D000444918 /* trash.atlas */,
 				218B92ED1B79F3C500444918 /* sprites.atlas */,
@@ -710,7 +707,6 @@
 				211243611AEAE070006B5487 /* Rock.png in Resources */,
 				211243631AEAE07A006B5487 /* Explosion.sks in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
-				21BF9C2C1B89F7EB0002AEAC /* help.atlas in Resources */,
 				21B007901B72321B001B1F7B /* TransmitterLaser.sks in Resources */,
 				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
 				21FF6C121B51724F00256A63 /* backgroundMusic.mp3 in Resources */,

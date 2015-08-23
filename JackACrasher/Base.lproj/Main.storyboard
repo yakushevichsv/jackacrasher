@@ -21,6 +21,7 @@
             <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
+            <string>gamerobot</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -416,28 +417,39 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tz-W4B">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tz-W4B">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
                                 <connections>
                                     <outlet property="delegate" destination="CYZ-cS-sIm" id="O8h-1G-14j"/>
                                 </connections>
                             </scrollView>
-                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" defersCurrentPageDisplay="YES" numberOfPages="3" translatesAutoresizingMaskIntoConstraints="NO" id="msr-3E-CEC">
-                                <rect key="frame" x="281" y="548" width="39" height="37"/>
-                            </pageControl>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZY2-HO-EkQ">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ZY2-HO-EkQ">
                                 <rect key="frame" x="8" y="465" width="584" height="75"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="75" id="d2b-v7-sQz"/>
+                                </constraints>
                                 <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="19"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
+                            <pageControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" hidesForSinglePage="YES" defersCurrentPageDisplay="YES" numberOfPages="6" translatesAutoresizingMaskIntoConstraints="NO" id="msr-3E-CEC">
+                                <rect key="frame" x="208" y="548" width="185" height="37"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="185" id="tVb-Kl-gRd"/>
+                                </constraints>
+                                <color key="pageIndicatorTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <color key="currentPageIndicatorTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <connections>
+                                    <action selector="handlePagePressed:" destination="CYZ-cS-sIm" eventType="valueChanged" id="UGg-la-U91"/>
+                                </connections>
+                            </pageControl>
                         </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="msr-3E-CEC" firstAttribute="top" secondItem="ZY2-HO-EkQ" secondAttribute="bottom" constant="8" id="DBB-nG-RK1"/>
                             <constraint firstItem="BAP-tz-W4B" firstAttribute="height" secondItem="wpY-4n-6bx" secondAttribute="height" multiplier="0.75" id="F4L-8O-efg"/>
-                            <constraint firstItem="ZY2-HO-EkQ" firstAttribute="top" secondItem="BAP-tz-W4B" secondAttribute="bottom" constant="15" id="HLj-8L-fO6"/>
                             <constraint firstItem="PX6-Qj-dUN" firstAttribute="top" secondItem="msr-3E-CEC" secondAttribute="bottom" constant="15" id="HkL-Ex-bSJ"/>
                             <constraint firstItem="BAP-tz-W4B" firstAttribute="leading" secondItem="wpY-4n-6bx" secondAttribute="leadingMargin" constant="-16" id="XJ7-qU-jgC"/>
                             <constraint firstItem="ZY2-HO-EkQ" firstAttribute="leading" secondItem="wpY-4n-6bx" secondAttribute="leadingMargin" constant="-8" id="YqJ-9Z-mEX"/>

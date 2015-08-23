@@ -355,21 +355,21 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
                 let start:Int32 = 1
                 let end :Int32 = 6
                 
-                /*var images = [UIImage]()
+                var images = [UIImage]()
                 
                 for index in start...end {
-                    let name = "help-page00\(index).png"
+                    let name = "heltp-page00\(index).png"
                     let image = UIImage(named: name)
                     images.append(image!)
-                }*/
+                }
                 
-                let images = UIImage.spritesWithContentsOfAtlas("help", sequence: "heltp-page%03d.png", start: start) as! [UIImage]
+                //let images = UIImage.spritesWithContentsOfAtlas("help", sequence: "heltp-page%03d.png", start: start) as! [UIImage]
                 
-                //assert(images.count == Int(end - start + 1))
+                assert(images.count == Int(end - start + 1))
                 let dVC = segue.destinationViewController as! HelpViewController
                 
                 dVC.pageImages = images
-                dVC.pageDescriptions = ["Player can't move\n Attack trash asteroids","Page 2","Page 3","Page 4","Page 5","Page 6","Page 7"]
+                dVC.pageDescriptions = ["Player can't move\n Attack trash asteroids","Player can't move\n Destroy trash - asteroids","When there is a bomb\n Destroy it,being under the transmitter\n","When there is a bomb\n  Wait specified time interval to destroy it automatically","The transmitter transmits the player to the left corner\n You can shot under the ray beam","In a beam move up & down\n Destroy enemies"]
             }
         }
     }

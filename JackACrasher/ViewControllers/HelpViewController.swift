@@ -14,7 +14,6 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     @IBOutlet weak var scrollView:UIScrollView!
     @IBOutlet weak var pageControl:UIPageControl! {
         didSet {
-            pageControl.addTarget(self, action: "handlePagePressed:", forControlEvents: UIControlEvents.TouchUpInside)
             
             pageControl.numberOfPages = pageImages.count
             pageControl.currentPage = 0
@@ -44,15 +43,15 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             self.pageViews.append(nil)
         }
         
-        loadVisiblePages()
+        self.scrollView.backgroundColor = UIColor.redColor()
         
-        setCurrentPage(0)
+        loadVisiblePages()
         
     }
     
-    func handlePagePressed(item:AnyObject) {
+    @IBAction func handlePagePressed(item:UIPageControl) {
         
-        let index = pageControl.currentPage
+        let index = item.currentPage
         let w = CGRectGetWidth(self.view.bounds)
         
         self.scrollView.contentOffset = CGPointMake(w * CGFloat(index), 0.0)
@@ -129,9 +128,52 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             frame.origin.x = frame.size.width * CGFloat(page)
             frame.origin.y = 0.0
             
-            // 3
             let newPageView = UIImageView(image: pageImages[page])
-            newPageView.contentMode = .ScaleAspectFit
+            
+            let size = newPageView.image!.size
+            var scale:CGFloat
+            let scrollSize = self.scrollView.frame.size
+            
+            
+            if (self.traitCollection.userInterfaceIdiom == .Phone)
+            {
+                // 3
+                let ratio = size.height/size.width
+                
+                let scrollRatio = scrollSize.height/scrollSize.width
+                
+                let xScale = scrollSize.width/size.width
+                let yScale = scrollSize.height/size.height
+                
+                scale = min(xScale,yScale)
+                
+                newPageView.contentMode = .ScaleAspectFit
+            }
+            else {
+                newPageView.contentMode = .Center
+                scale = 1.0
+            }
+            
+            let newSize = CGSizeMake(size.width * scale, size.height * scale)
+            
+            println("Original image size \(size)\n New image size \(newSize)\n")
+            
+            var xMargin = 0.5 * (scrollSize.width - newSize.width)
+            var yMargin = 0.5 * (scrollSize.height - newSize.height)
+            
+            if xMargin < 0 {
+                xMargin  = 0
+            }
+            
+            if yMargin < 0 {
+                yMargin  = 0
+            }
+            
+            frame.origin.x += xMargin
+            frame.origin.y += yMargin
+            
+            println("Frame \(frame), \nX margin \(xMargin)\n Y margin \(yMargin)")
+            
             newPageView.frame = frame
             scrollView.addSubview(newPageView)
             
