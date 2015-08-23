@@ -12,33 +12,26 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
 
     @IBOutlet weak var textView:UITextView!
     @IBOutlet weak var scrollView:UIScrollView!
-    @IBOutlet weak var pageControl:UIPageControl! {
-        didSet {
-            
-            pageControl.numberOfPages = pageImages.count
-            pageControl.currentPage = 0
-        }
-    }
+    @IBOutlet weak var pageControl:UIPageControl!
+    
     private var screenWidth:CGFloat = 0
     
     var pageViews: [UIImageView?] = []
-    var pageImages: [UIImage] = [] {
-        didSet {
-            pageControl?.numberOfPages = pageImages.count
-            pageControl?.currentPage = 0
-        }
-    }
-    
+    var pageImages: [UIImage] = []
     var pageDescriptions: [String] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        pageControl.currentPage = 0
+        pageControl.numberOfPages = pageImages.count
+        
         // Do any additional setup after loading the view.
         let count = pageImages.count
-        self.screenWidth = CGRectGetWidth(self.view.bounds)
+        let pagesScrollViewSize = self.scrollView.frame.size
+        self.screenWidth = pagesScrollViewSize.width
         
-        self.scrollView.contentSize = CGSizeMake(self.screenWidth * CGFloat(count), CGRectGetHeight(self.scrollView.frame))
+        self.scrollView.contentSize = CGSizeMake(self.screenWidth * CGFloat(count), pagesScrollViewSize.height)
         
         for _ in 1...count {
             self.pageViews.append(nil)
@@ -48,6 +41,27 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         
         loadVisiblePages()
         
+        let recognizer = UITapGestureRecognizer(target: self, action: "handleTougch:")
+        
+        if var gesturesReco = self.scrollView.gestureRecognizers {
+            gesturesReco.append(recognizer)
+        } else {
+            self.scrollView.gestureRecognizers = [recognizer]
+        }
+    }
+    
+    func handleTougch(recognizer:UITapGestureRecognizer) {
+        
+        if recognizer.state == .Ended {
+            
+            self.navigationController!.navigationBarHidden = !self.navigationController!.navigationBarHidden
+        }
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        loadVisiblePages()
     }
     
     @IBAction func handlePagePressed(item:UIPageControl) {
@@ -124,7 +138,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             // Do nothing. The view is already loaded.
         } else {
             // 2
-            var frame = CGRectZero
+            /*var frame = CGRectZero
             frame.size = self.scrollView.frame.size
             frame.origin.x = self.screenWidth * CGFloat(page)
             frame.origin.y = 0.0
@@ -179,7 +193,22 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             scrollView.addSubview(newPageView)
             
             // 4
+            pageViews[page] = newPageView*/
+            
+            var frame = CGRectZero
+            frame.size = self.scrollView.frame.size
+            frame.origin.x = frame.size.width * CGFloat(page)
+            frame.origin.y = 0.0
+            
+            // 3
+            let newPageView = UIImageView(image: pageImages[page])
+            newPageView.contentMode = .ScaleAspectFit
+            newPageView.frame = frame
+            scrollView.addSubview(newPageView)
+            println("frame \(newPageView.frame)")
+            // 4
             pageViews[page] = newPageView
+
         }
     }
 
@@ -187,5 +216,9 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     func scrollViewDidScroll(scrollView: UIScrollView) {
         // Load the pages that are now on screen
         loadVisiblePages()
+    }
+    
+    func scrollViewShouldScrollToTop(scrollView: UIScrollView) -> Bool {
+        return true
     }
 }
