@@ -442,7 +442,7 @@
                                 <color key="pageIndicatorTintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <color key="currentPageIndicatorTintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <connections>
-                                    <action selector="handlePagePressed:" destination="CYZ-cS-sIm" eventType="valueChanged" id="UGg-la-U91"/>
+                                    <action selector="handlePagePressed:" destination="CYZ-cS-sIm" eventType="valueChanged" id="5em-rB-8HH"/>
                                 </connections>
                             </pageControl>
                         </subviews>

@@ -23,12 +23,14 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        pageControl.currentPage = 0
-        pageControl.numberOfPages = pageImages.count
-        
+        self.scrollView.showsHorizontalScrollIndicator = true
+        self.scrollView.showsVerticalScrollIndicator = false
+        self.scrollView.scrollsToTop = false
+        self.scrollView.directionalLockEnabled = true
+        self.scrollView.bounces = false
         // Do any additional setup after loading the view.
         let count = pageImages.count
-        let pagesScrollViewSize = self.scrollView.frame.size
+        let pagesScrollViewSize = self.view.bounds.size
         self.screenWidth = pagesScrollViewSize.width
         
         self.scrollView.contentSize = CGSizeMake(self.screenWidth * CGFloat(count), pagesScrollViewSize.height)
@@ -37,40 +39,41 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             self.pageViews.append(nil)
         }
         
-        self.scrollView.backgroundColor = UIColor.redColor()
+        self.scrollView.backgroundColor = UIColor.blackColor()
         
-        loadVisiblePages()
         
-        let recognizer = UITapGestureRecognizer(target: self, action: "handleTougch:")
+        pageControl.currentPage = 0
+        pageControl.numberOfPages = pageImages.count
         
-        if var gesturesReco = self.scrollView.gestureRecognizers {
-            gesturesReco.append(recognizer)
-        } else {
-            self.scrollView.gestureRecognizers = [recognizer]
-        }
-    }
-    
-    func handleTougch(recognizer:UITapGestureRecognizer) {
-        
-        if recognizer.state == .Ended {
-            
-            self.navigationController!.navigationBarHidden = !self.navigationController!.navigationBarHidden
+        setCurrentPage(pageControl.currentPage)
+        //loadPage(pageControl.currentPage)
+        dispatch_async(dispatch_get_main_queue()) {
+            [unowned self] in
+            self.loadPage(self.pageControl.currentPage)
         }
     }
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        loadVisiblePages()
+        self.navigationController!.navigationBarHidden = false
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        self.navigationController!.navigationBarHidden = true
     }
     
     @IBAction func handlePagePressed(item:UIPageControl) {
         
         let index = item.currentPage
         
-        self.scrollView.contentOffset = CGPointMake(self.screenWidth * CGFloat(index), 0.0)
-        
         loadVisiblePages()
+        
+        var bounds = self.scrollView.bounds
+        bounds.origin.x = CGRectGetWidth(bounds) * CGFloat(index)
+        bounds.origin.y = 0
+        self.scrollView.scrollRectToVisible(bounds,animated:true)
     }
     
     private func setCurrentPage(page:Int) {
@@ -84,7 +87,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         
         // First, determine which page is currently visible
         let pageWidth = self.screenWidth
-        let page = Int(floor((scrollView.contentOffset.x * 2.0 + pageWidth) / (pageWidth * 2.0)))
+        let page = Int(floor((self.scrollView.contentOffset.x - pageWidth / 2) / pageWidth) + 1)
         
         // Update the page control
         setCurrentPage(page)
@@ -195,8 +198,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             // 4
             pageViews[page] = newPageView*/
             
-            var frame = CGRectZero
-            frame.size = self.scrollView.frame.size
+            var frame = self.scrollView.bounds
             frame.origin.x = frame.size.width * CGFloat(page)
             frame.origin.y = 0.0
             
@@ -204,6 +206,27 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             let newPageView = UIImageView(image: pageImages[page])
             newPageView.contentMode = .ScaleAspectFit
             newPageView.frame = frame
+            
+            if newPageView.contentMode == .ScaleAspectFit {
+                
+                let size = newPageView.image!.size
+                var scale:CGFloat
+                let scrollSize = self.scrollView.frame.size
+                
+                let xScale = scrollSize.width/size.width
+                let yScale = scrollSize.height/size.height
+                    
+                scale = min(xScale,yScale)
+                
+                let newSize = CGSizeMake(size.width * scale, size.height * scale)
+                
+                /*let wConst = NSLayoutConstraint(item: newPageView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: round(newSize.width))
+                newPageView.addConstraint(wConst)
+                
+                let hConst = NSLayoutConstraint(item: newPageView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: round(newSize.height))
+                newPageView.addConstraint(hConst)*/
+            }
+            
             scrollView.addSubview(newPageView)
             println("frame \(newPageView.frame)")
             // 4
@@ -213,12 +236,9 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     }
 
     //MARK: Scroll View Delegate
-    func scrollViewDidScroll(scrollView: UIScrollView) {
+    func scrollViewDidEndDecelerating(scrollView: UIScrollView) {
         // Load the pages that are now on screen
+        self.scrollView.contentOffset = CGPointMake(self.scrollView.contentOffset.x,0.0)
         loadVisiblePages()
-    }
-    
-    func scrollViewShouldScrollToTop(scrollView: UIScrollView) -> Bool {
-        return true
     }
 }
