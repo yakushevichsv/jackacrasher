@@ -1753,38 +1753,6 @@
             endingLineNumber = "356"
             landmarkName = "purchasedProduct(_:)"
             landmarkType = "5">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "function signature specialization &lt;Arg[3] = Dead, Arg[4] = Value Promoted from InOut&gt; of JackACrasher.GameLogicManager.(purchasedProduct (JackACrasher.GameLogicManager) -&gt; (JackACrasher.IAPProduct) -&gt; ()).(closure #1)"
-                  moduleName = "JackACrasher"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/Model/GameLogicManager.swift"
-                  timestampString = "462068284.477686"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "356"
-                  endingLineNumber = "356"
-                  offsetFromSymbolStart = "84">
-               </Location>
-               <Location
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "JackACrasher.GameLogicManager.(purchasedProduct (JackACrasher.GameLogicManager) -&gt; (JackACrasher.IAPProduct) -&gt; ()).(closure #1).(closure #1)"
-                  moduleName = "JackACrasher"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/Model/GameLogicManager.swift"
-                  timestampString = "462068284.478016"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "357"
-                  endingLineNumber = "357"
-                  offsetFromSymbolStart = "20">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -2162,12 +2130,12 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "462068284.480069"
+                  timestampString = "462094683.200809"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "105"
                   endingLineNumber = "105"
-                  offsetFromSymbolStart = "1320">
+                  offsetFromSymbolStart = "1562">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -2177,7 +2145,7 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "462068284.480314"
+                  timestampString = "462094683.200965"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "107"
@@ -6783,11 +6751,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/ViewControllers/HelpViewController.swift"
-            timestampString = "462068284.231931"
+            timestampString = "462094682.690317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "69"
-            endingLineNumber = "69"
+            startingLineNumber = "73"
+            endingLineNumber = "73"
             landmarkName = "handlePagePressed(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6799,11 +6767,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/ViewControllers/HelpViewController.swift"
-            timestampString = "462068284.231931"
+            timestampString = "462094682.690317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "190"
-            endingLineNumber = "190"
+            startingLineNumber = "194"
+            endingLineNumber = "194"
             landmarkName = "loadPage(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6815,11 +6783,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/ViewControllers/HelpViewController.swift"
-            timestampString = "462068284.231931"
+            timestampString = "462094682.690317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "134"
-            endingLineNumber = "134"
+            startingLineNumber = "138"
+            endingLineNumber = "138"
             landmarkName = "loadPage(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6831,11 +6799,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/ViewControllers/HelpViewController.swift"
-            timestampString = "462068284.231931"
+            timestampString = "462094682.690317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "144"
+            endingLineNumber = "144"
             landmarkName = "loadPage(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6863,11 +6831,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/ViewControllers/HelpViewController.swift"
-            timestampString = "462068284.231931"
+            timestampString = "462094682.690317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "72"
-            endingLineNumber = "72"
+            startingLineNumber = "76"
+            endingLineNumber = "76"
             landmarkName = "handlePagePressed(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6879,11 +6847,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/ViewControllers/HelpViewController.swift"
-            timestampString = "462068284.231931"
+            timestampString = "462094682.690317"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
             landmarkName = "loadPage(_:)"
             landmarkType = "5">
          </BreakpointContent>

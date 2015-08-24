@@ -47,10 +47,6 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         
         setCurrentPage(pageControl.currentPage)
         //loadPage(pageControl.currentPage)
-        dispatch_async(dispatch_get_main_queue()) {
-            [unowned self] in
-            self.loadPage(self.pageControl.currentPage)
-        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -62,6 +58,14 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         self.navigationController!.navigationBarHidden = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        loadVisiblePages()
+        if pageControl.currentPage == 0 {
+            self.scrollView.contentOffset = CGPointZero
+        }
     }
     
     @IBAction func handlePagePressed(item:UIPageControl) {
