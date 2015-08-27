@@ -8,4 +8,7 @@
 
 import Foundation
 
-let EnabledDisplayDebugLabel:Bool = true
+let EnabledDisplayDebugLabel:Bool = false
+
+let FBAppID="480972678736201"
+let VKAppID="5044756"

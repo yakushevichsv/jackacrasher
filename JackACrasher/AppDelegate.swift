@@ -96,6 +96,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }
     
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+        
+        var wasHandled = VKSdk.processOpenURL(url, fromApplication: sourceApplication)
+        
+        if  (!wasHandled) {
+            
+            //Facebook.com
+            
+            let location = url.absoluteString!.rangeOfString("fb\(FBAppID)")
+            
+            if (location != nil) {
+                // Call FBAppCall's handleOpenURL:sourceApplication to handle Facebook app responses
+                wasHandled = true
+            }
+        }
+        return wasHandled
+    }
+    
     func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
         
         NetworkManager.sharedManager.saveCompletionHandler(completionHandler, forSessionId: identifier)
@@ -118,6 +136,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(application: UIApplication) {
         // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
         FBSDKAppEvents.activateApp()
+        VKSdk.handleDidBecomeActive();
     }
 }
 

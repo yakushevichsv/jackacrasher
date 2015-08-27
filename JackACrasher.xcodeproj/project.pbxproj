@@ -14,6 +14,8 @@
 		21068A3A1AE555DB007398B5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21068A391AE555DB007398B5 /* Utils.swift */; };
 		210C0B4E1B357ABF00759382 /* IAPProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210C0B4D1B357ABF00759382 /* IAPProduct.swift */; };
 		210C0B501B357AFB00759382 /* IAPProductInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */; };
+		210CE8721B8BC7B900C9F288 /* VKSdkResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */; };
+		210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210CE8731B8BC93C00C9F288 /* VKSdk.framework */; };
 		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
 		210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210EA9C81B26D54100C69D29 /* PurchaseManager.swift */; };
 		21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21103F811B289A39007D8649 /* ShopDetailsViewController.swift */; };
@@ -31,6 +33,8 @@
 		212A2F2B1B36F98700B31482 /* AppleIncRootCertificate.cer in Resources */ = {isa = PBXBuildFile; fileRef = 212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */; };
 		212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
 		212A2F401B37317600B31482 /* IAPReceiptValidator.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */; };
+		212B55FA1B8E52F400B816FD /* enemyDeath.sks in Resources */ = {isa = PBXBuildFile; fileRef = 212B55F91B8E52F400B816FD /* enemyDeath.sks */; };
+		212B55FC1B8E544200B816FD /* KamikadzeSpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 212B55FB1B8E544200B816FD /* KamikadzeSpaceShip.swift */; };
 		2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */; };
 		2138E0BA1B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */; };
 		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
@@ -128,6 +132,8 @@
 		21068A391AE555DB007398B5 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utils.swift; path = Utils/Utils.swift; sourceTree = "<group>"; };
 		210C0B4D1B357ABF00759382 /* IAPProduct.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IAPProduct.swift; path = Model/IAP/IAPProduct.swift; sourceTree = "<group>"; };
 		210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = IAPProductInfo.swift; path = Model/IAP/IAPProductInfo.swift; sourceTree = "<group>"; };
+		210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = VKSdkResources.bundle; sourceTree = "<group>"; };
+		210CE8731B8BC93C00C9F288 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
 		210DD8151AE3CBAA0092DD39 /* Explosion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Explosion.swift; path = Entities/Explosion.swift; sourceTree = "<group>"; };
 		210EA9C81B26D54100C69D29 /* PurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PurchaseManager.swift; path = Model/PurchaseManager.swift; sourceTree = "<group>"; };
 		210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductIsInfo.plist; sourceTree = "<group>"; };
@@ -146,6 +152,8 @@
 		212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = AppleIncRootCertificate.cer; sourceTree = "<group>"; };
 		212A2F3D1B37317600B31482 /* IAPReceiptValidator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IAPReceiptValidator.h; sourceTree = "<group>"; };
 		212A2F3E1B37317600B31482 /* IAPReceiptValidator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IAPReceiptValidator.m; sourceTree = "<group>"; };
+		212B55F91B8E52F400B816FD /* enemyDeath.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = enemyDeath.sks; sourceTree = "<group>"; };
+		212B55FB1B8E544200B816FD /* KamikadzeSpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = KamikadzeSpaceShip.swift; path = Entities/KamikadzeSpaceShip.swift; sourceTree = "<group>"; };
 		2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PauseReturnViewController.swift; path = ViewControllers/PauseReturnViewController.swift; sourceTree = "<group>"; };
 		2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPauseTransitionDelegate.swift; path = ViewControllers/ReturnPauseTransitionDelegate.swift; sourceTree = "<group>"; };
 		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
@@ -245,6 +253,7 @@
 				217EDC961B7CC4710002E013 /* Fabric.framework in Frameworks */,
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
+				210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */,
 				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -437,6 +446,7 @@
 			children = (
 				21DDE5481B6A5A6300B41A91 /* Bomb.swift */,
 				21DDE54A1B6A619E00B41A91 /* AIBomb.swift */,
+				212B55FB1B8E544200B816FD /* KamikadzeSpaceShip.swift */,
 				21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */,
 				21E5D2BF1B79193700D7E614 /* MotionlessEnemySpaceShip.swift */,
 			);
@@ -455,6 +465,7 @@
 		21E56B301ADA93C10071A217 /* Particles */ = {
 			isa = PBXGroup;
 			children = (
+				212B55F91B8E52F400B816FD /* enemyDeath.sks */,
 				21948BBF1B1DCE7300C438F6 /* ProjectileSplat.sks */,
 				21948BBD1B1DBAE000C438F6 /* Damage.sks */,
 				211C4C6F1B16FFA4005F50B8 /* Fire.sks */,
@@ -555,6 +566,8 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				210CE8731B8BC93C00C9F288 /* VKSdk.framework */,
+				210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */,
 				217EDC921B7CC4710002E013 /* Fabric.framework */,
 				217EDC931B7CC4710002E013 /* TwitterKit.framework */,
 				217EDC941B7CC4710002E013 /* TwitterKitResources.bundle */,
@@ -692,6 +705,7 @@
 				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
 				217341041AFE5674009E934A /* lose.wav in Resources */,
 				218B92EE1B79F3C500444918 /* sprites.atlas in Resources */,
+				210CE8721B8BC7B900C9F288 /* VKSdkResources.bundle in Resources */,
 				217360F91B87260C00713E82 /* lap.wav in Resources */,
 				2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */,
 				21DC553D1AF42DB60083210D /* Sparky.sks in Resources */,
@@ -702,6 +716,7 @@
 				21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */,
 				21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */,
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
+				212B55FA1B8E52F400B816FD /* enemyDeath.sks in Resources */,
 				2192CCE21AF6574800518F97 /* realStar.png in Resources */,
 				218B92F21B79F3DA00444918 /* blackhole.atlas in Resources */,
 				211243611AEAE070006B5487 /* Rock.png in Resources */,
@@ -804,6 +819,7 @@
 				2105AE511B8868ED00DDB0CC /* Constants.swift in Sources */,
 				210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */,
 				21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */,
+				212B55FC1B8E544200B816FD /* KamikadzeSpaceShip.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -938,6 +954,7 @@
 					"/Users/siarheiy/Downloads/FacebookSDKs-iOS-20150810-2",
 					/Users/siarheiy/Documents/FacebookSDK,
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/JackACrasher",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -971,6 +988,7 @@
 					"/Users/siarheiy/Downloads/FacebookSDKs-iOS-20150810-2",
 					/Users/siarheiy/Documents/FacebookSDK,
 					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/JackACrasher",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",

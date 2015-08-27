@@ -32,8 +32,13 @@ class EnemiesGenerator: NSObject {
     private var timer:NSTimer!
     weak var delegate:EnemiesGeneratorDelegate?
     
-    private var isTransmitterPresent:Bool = false
+    private var isTransmitterPresent:Bool {
+        return transmitter != nil
+    }
+    
     private var currentCount:UInt = 0
+    private weak var transmitter:Transmitter? = nil
+    
     internal static let sTransmitterNodesCount:UInt = 10
     
     init(playableRect rect:CGRect, andDelegate delegate:EnemiesGeneratorDelegate?) {
@@ -149,7 +154,7 @@ class EnemiesGenerator: NSObject {
             
             
         } else if (isTransmitterPresent) {
-            isTransmitterPresent = false
+            self.transmitter = nil
             self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
             return
         }
@@ -172,7 +177,7 @@ class EnemiesGenerator: NSObject {
             
             if isSerieOver {
                 self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
-                self.isTransmitterPresent = false
+                self.transmitter = nil
             }
             
             return true
@@ -194,7 +199,11 @@ class EnemiesGenerator: NSObject {
         
         for i in 0...count - 1 {
             
-            let enemy = last ? MotionlessEnemySpaceShip() : EnemySpaceShip()
+            var enemy = last ? MotionlessEnemySpaceShip() : EnemySpaceShip()
+            
+            if i == count/2 {
+                enemy = KamikadzeSpaceShip()
+            }
             
             let yPos = randomBetween(curPart, curPart + allowedPart - enemy.size.height)
             
@@ -209,13 +218,14 @@ class EnemiesGenerator: NSObject {
     }
     
     private func produceTransmitter() -> SKNode! {
-        self.isTransmitterPresent  = true
         self.currentCount = 0
         let w = CGRectGetWidth(self.playableRect) * 0.2
         let h = CGRectGetHeight(self.playableRect) * 0.05
         
         let transmitter = Transmitter(transmitterSize: CGSizeMake(w, h), beamHeight: CGRectGetHeight(self.playableRect))
         transmitter.position  = CGPointMake(CGRectGetWidth(self.playableRect), CGRectGetHeight(self.playableRect))
+        self.transmitter  = transmitter
+        
         return transmitter
     }
     

@@ -26,6 +26,16 @@
 				<string>fb480972678736201</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>vk5044756</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>vk5044756</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>1</string>

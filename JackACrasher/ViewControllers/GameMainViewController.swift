@@ -11,7 +11,7 @@ import GameKit
 import FBSDKShareKit
 import TwitterKit
 
-class GameMainViewController: UIViewController,FBSDKSharingDelegate {
+class GameMainViewController: UIViewController {
 
     internal var needToDisplayAnimation:Bool = false
     private let gcManager = GameCenterManager.sharedInstance
@@ -28,6 +28,7 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     @IBOutlet weak var btnFB:UIButton!
     @IBOutlet weak var btnTwitter:UIButton!
     @IBOutlet weak var btnGameCenter:UIButton!
+    @IBOutlet weak var btnVK:UIButton!
     
     @IBOutlet weak var twConstraint:NSLayoutConstraint!
     @IBOutlet weak var gcConstraint:NSLayoutConstraint!
@@ -85,6 +86,13 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        VKSdk.initializeWithDelegate(self, andAppId: VKAppID)
+        
+        if (VKSdk.wakeUpSession())
+        {
+            // start working.... - go to sharing..
+        }
         
         SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
         authDidChange(nil)
@@ -698,8 +706,12 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
         dialog.show()
         
     }
+}
+
+//MARK: FBSDKSharingDelegate's methods
+extension GameMainViewController: FBSDKSharingDelegate {
     
-    //MARK: FBSDKSharingDelegate's methods 
+    //MARK: FBSDKSharingDelegate's methods
     
     func sharer(sharer: FBSDKSharing!, didFailWithError error: NSError!) {
         
@@ -718,5 +730,32 @@ class GameMainViewController: UIViewController,FBSDKSharingDelegate {
     }
     
     func sharerDidCancel(sharer: FBSDKSharing!){}
+}
+
+//MARK: VK delegate's methods
+extension GameMainViewController:VKSdkDelegate {
     
+    func vkSdkAcceptedUserToken(token: VKAccessToken!) {
+        
+    }
+    
+    func vkSdkNeedCaptchaEnter(captchaError: VKError!) {
+        
+    }
+    
+    func vkSdkTokenHasExpired(expiredToken: VKAccessToken!) {
+        
+    }
+    
+    func vkSdkUserDeniedAccess(authorizationError: VKError!) {
+        
+    }
+    
+    func vkSdkShouldPresentViewController(controller: UIViewController!) {
+        
+    }
+    
+    func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
+        
+    }
 }

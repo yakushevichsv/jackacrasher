@@ -96,7 +96,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         BlackHole.loadAssets()
         Bomb.loadAssets()
         Transmitter.loadAssets()
-        EnemySpaceShip.loadAssets()
+        KamikadzeSpaceShip.loadAssets()
     }
     
     override init(size:CGSize) {
@@ -1150,6 +1150,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if type == .SpaceShip {
                 self.enemiesShips.append(node as! EnemySpaceShip)
+                
+                if let node = node as? KamikadzeSpaceShip {
+                    node.delegate = self
+                    let transmitter = self.childNodeWithName(Transmitter.NodeName) as! Transmitter
+                    let xPos = CGRectGetMinX(self.playableArea) + transmitter.transmitterSize.width
+                    node.explosionXPosition = xPos
+                }
             }
             
             generator.signalItemAppearance(node, type: type)
@@ -1909,4 +1916,72 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
 }
+
+//MARK: EnemySpaceShipDelegate
+extension GameScene:EnemySpaceShipDelegate {
+    
+    func enemySpaceShip(ship:EnemySpaceShip!, needToCreateExplosionWithEmitter emitter:SKEmitterNode!) {
+        
+        let maxTime = NSTimeInterval(emitter.particleLifetime +  emitter.particleLifetimeRange * 0.5 )
+        let minTime = NSTimeInterval(emitter.particleLifetime -  emitter.particleLifetimeRange * 0.5 )
+        
+        let maxSpeed = emitter.particleSpeed + emitter.particleSpeedRange*0.5
+        
+        let maxRadius = maxSpeed * CGFloat(maxTime)
+        
+        let shipPosition = ship.position
+        
+        didDissappearItemForEnemiesGenerator(self.enemyGenerator, item: ship, type: .SpaceShip)
+        
+        let seq = SKAction.sequence([SKAction.waitForDuration(minTime),SKAction.runBlock(){
+            [unowned self] in
+            if let wPlayer = self.player {
+                
+                let playerPos = wPlayer.parent!.convertPoint(wPlayer.position, toNode: self)
+                
+                let dist = distanceBetweenPoints(shipPosition, playerPos)
+                
+                if dist <= maxRadius {
+                    emitter.particleBirthRate = 0
+                    emitter.removeAllActions()
+                    emitter.removeFromParent()
+                    let damageForce = KamikadzeSpaceShip.damageForceForDistance()
+                    
+                    if (self.tryToDestroyPlayer(damageForce)) {
+                        self.terminateGame()
+                    }
+                }
+            }
+            
+            },SKAction.waitForDuration(maxTime - minTime),SKAction.runBlock(){
+                [unowned self] in
+                if let wPlayer = self.player {
+                    
+                    if emitter.particleBirthRate == 0 {
+                        return
+                    }
+                    
+                    let playerPos = wPlayer.parent!.convertPoint(wPlayer.position, toNode: self)
+                    
+                    let dist = distanceBetweenPoints(shipPosition, playerPos)
+                    
+                    if dist <= maxRadius {
+                        emitter.particleBirthRate = 0
+                        
+                        let damageForce = KamikadzeSpaceShip.damageForceForDistance()
+                        
+                        if (self.tryToDestroyPlayer(damageForce)) {
+                            self.terminateGame()
+                        }
+                    }
+                }
+                
+            }, SKAction.removeFromParent()])
+        
+        emitter.runAction(seq)
+        emitter.targetNode = nil
+        addChild(emitter)
+    }
+}
+
  

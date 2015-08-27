@@ -13,7 +13,7 @@ import SpriteKit
     func updateWithTimeSinceLastUpdate(interval:NSTimeInterval);
 }
 
-class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, ItemDestructable {
+class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
    
     internal weak var target:Player? {
         didSet {
@@ -127,7 +127,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
         return position
     }
     
-    internal func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
+    func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
         
         let dist = distanceBetweenPoints(self.position, position)
         let moveAction = SKAction.moveTo(position, duration: NSTimeInterval(dist/Bomb.Constants.speed))
@@ -136,10 +136,10 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
     }
     
     internal var attackInterval:NSTimeInterval {
-        get {return 2}
+        get {return 1.5 + NSTimeInterval(arc4random()%5/8) }
     }
     
-    internal func performAttackAction() {
+    func performAttackAction() {
         
         if !canAtack {
             return
@@ -186,7 +186,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
     }
     
     //AssetsContainer
-    static func loadAssets() {
+    class func loadAssets() {
         dispatch_once(&sOnce) {
             let texture = SKTexture(imageNamed: "enemy-bullet")
             let node = SKSpriteNode(texture: texture)
@@ -201,6 +201,11 @@ class EnemySpaceShip: SKSpriteNode,Attacker, AssetsContainer, ItemDamaging, Item
             
             self.sPlayerTexture = SKTexture(imageNamed: "enemyShip")
         }
+    }
+    
+    override func removeFromParent() {
+        self.target = nil
+        super.removeFromParent()
     }
     
     //MARK : Damaging Item 
