@@ -24,9 +24,6 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     }
     
     func onUpdateTarget(){
-        let range = SKRange(lowerLimit:20)
-        let constr = SKConstraint.distance(range, toNode: self.target!)
-        self.constraints = [constr]
     }
     
     
@@ -37,7 +34,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     }
     
     
-    private let chaseRadius:CGFloat = 300
+    private let chaseRadius:CGFloat = 100
     private let maxAlertRadius:CGFloat = EnemySpaceShip.enemyAlertRadius * 2.0
     private static let enemyAlertRadius:CGFloat = 50 * 40.0
     
@@ -108,7 +105,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
             else {
                 moveTowards(heroPosition, withTimeInterval: interval)
             }
-        } else if (heroDistance < chaseRadius) {
+        } else if (heroDistance <= chaseRadius) {
             //self.zRotation = faceTo(heroPosition)
             moveTowards(heroPosition, withTimeInterval: interval)
             performAttackAction()
@@ -148,7 +145,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let bullet = EnemySpaceShip.sEnemyBulltet.copy() as! SKSpriteNode
         
         let sPoint = self.parent!.convertPoint(self.position, toNode:self.scene!)
-        let tPoint = self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!)
+        var tPoint = self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!)
         
         let diff = tPoint - sPoint
         
@@ -156,6 +153,19 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         
         let extraLen = abs(diff.x) >= 1 ? tPoint.x/cos(diff.angle) : abs(extraY)
         
+        let length = diff.length()
+        
+        if (length <= 100 ) {
+            //println("Lenght is \(diff.length())")
+            let angle = acos(Double((tPoint.x - sPoint.x)/length))
+            
+            let p2x = sPoint.x + (length*5)*CGFloat(cos(angle))
+            let p2y = sPoint.y + (length*5)*CGFloat(sin(angle))
+            
+            tPoint = CGPointMake(p2x, p2y)
+        }
+        
+        println("Lenght is \(diff.length())")
         
         let duration = (distanceBetweenPoints(sPoint, tPoint) + extraLen)/EnemySpaceShip.Constants.laserSpeed
         
@@ -166,11 +176,16 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let removeAction = SKAction.removeFromParent()
         bullet.position = sPoint
         
-        println("Bullet from point \(sPoint) to point: \(tPoint)")
+        let secWaitAction = SKAction.waitForDuration(NSTimeInterval(min(6,duration)))
         
-        //bullet.zRotation =
+        let secSec = SKAction.sequence([secWaitAction,removeAction])
+        
+        println("Bullet from point \(sPoint) to point: \(tPoint)")
+       
+        bullet.runAction(SKAction.group([SKAction.sequence([SKAction.group([moveToAction,rotateAction]),removeAction]),secSec]))
+        
         self.scene?.addChild(bullet)
-        bullet.runAction(SKAction.sequence([SKAction.group([moveToAction,rotateAction]),removeAction]))
+       
         
         self.timer = NSTimer.scheduledTimerWithTimeInterval(self.attackInterval, target: self, selector: "allowsAttackAction", userInfo: nil, repeats: false)
         

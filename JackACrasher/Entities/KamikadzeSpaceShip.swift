@@ -14,6 +14,10 @@ import SpriteKit
     func enemySpaceShip(ship:EnemySpaceShip!, needToCreateExplosionWithEmitter:SKEmitterNode!)
 }
 
+@objc protocol EnemySpaceShipDataSource {
+    func detectXExplosionPositionForEnemySpaceShip(ship:EnemySpaceShip!) -> CGFloat
+}
+
 class KamikadzeSpaceShip: EnemySpaceShip  {
 
     private static var context:dispatch_once_t = 0
@@ -21,6 +25,7 @@ class KamikadzeSpaceShip: EnemySpaceShip  {
     var explosionXPosition:CGFloat = 0
     
     weak var delegate:EnemySpaceShipDelegate?
+    weak var dataSource:EnemySpaceShipDataSource?
     
     override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
         super.init(texture:texture,color:color,size:size)
@@ -42,6 +47,10 @@ class KamikadzeSpaceShip: EnemySpaceShip  {
         
         if self.target == nil {
             return
+        }
+        
+        if let explosionXPositionObj = dataSource?.detectXExplosionPositionForEnemySpaceShip(self) {
+            explosionXPosition = explosionXPositionObj
         }
         
         if explosionXPosition >= self.position.x {

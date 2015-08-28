@@ -20,8 +20,6 @@ enum ExplosionType {
 class Explosion: SKSpriteNode, AssetsContainer {
     private static var textures:[SKTexture] = []
     private static var  animation:SKAction! = nil
-    private static var small:Explosion!
-    private static var big:Explosion!
     private static var sContext:dispatch_once_t = 0
     internal var explosionType:ExplosionType = .Small
     
@@ -35,15 +33,15 @@ class Explosion: SKSpriteNode, AssetsContainer {
         var exp:Explosion!
         switch type {
          case .Large:
-            exp = big
+            exp = Explosion(explosionType: .Large)
             break
         case .Small:
-            exp = small
+            exp = Explosion(explosionType: .Small)
             break
         default:
             break
         }
-        return exp.copy() as! Explosion
+        return exp
     }
     
     private class func prepare() {
@@ -61,8 +59,6 @@ class Explosion: SKSpriteNode, AssetsContainer {
             SKTexture.preloadTextures(curTextures) { () -> Void in
                 self.textures = curTextures
                 self.animation = SKAction.animateWithTextures(curTextures, timePerFrame: 0.2)
-                self.small = Explosion(explosionType: .Small)
-                self.big = Explosion(explosionType: .Large)
             }
         }
     }

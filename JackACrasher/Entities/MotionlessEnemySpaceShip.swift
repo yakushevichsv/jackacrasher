@@ -28,41 +28,6 @@ class MotionlessEnemySpaceShip : EnemySpaceShip {
     }
     
     
-    /*override func moveTowards(position: CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
-        
-        let distance =  distanceBetweenPoints(self.position, position)
-        var action:SKAction!
-        
-        if self.position.x < 0 {
-            self.physicsBody!.applyImpulse(CGVector(dx: abs(self.position.normalized().x * 10), dy: 0))
-        }
-        
-        if self.position.y < 0 {
-            self.physicsBody!.applyImpulse(CGVector(dx: 0, dy: abs(self.position.normalized().y * 10)))
-        }
-        
-        if (position.x != self.position.x) {
-            let duration = NSTimeInterval((distance * 2)/(Bomb.Constants.speed))
-            
-            action = SKAction.moveToX(position.x, duration: duration)
-            
-        }
-        else {
-            let duration = NSTimeInterval(distance/(Bomb.Constants.speed))
-            action = SKAction.moveToY(position.y, duration: duration)
-            self.allowsAttackAction()
-        }
-        
-        self.runAction(action)
-        performAttackAction()
-    }
-    
-    override internal var attackInterval:NSTimeInterval {
-        get { return NSTimeInterval(super.attackInterval/2) }
-    } */
-    
-    
-    
     override func updateWithTimeSinceLastUpdate(interval: NSTimeInterval) {
         
         if self.target == nil {

@@ -541,7 +541,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             damage.zPosition = self.zPosition + 1
             self.scene?.addChild(damage)
             
-            runOneShortEmitter(damage, 0.3)
+            runOneShortEmitter(damage, 0.4)
             
             return false
         }

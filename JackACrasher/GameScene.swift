@@ -1153,6 +1153,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 if let node = node as? KamikadzeSpaceShip {
                     node.delegate = self
+                    node.dataSource = self
                     let transmitter = self.childNodeWithName(Transmitter.NodeName) as! Transmitter
                     let xPos = CGRectGetMinX(self.playableArea) + transmitter.transmitterSize.width
                     node.explosionXPosition = xPos
@@ -1519,7 +1520,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     terminateGame()
                 }
                 else {
-                     createExplosion(.Small, position: enemyLaser.position, withScore: 0)
+
                 }
             } else if oNode.physicsBody!.categoryBitMask == EntityCategory.PlayerLaser {
                 oNode.removeFromParent()
@@ -1692,6 +1693,31 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         println("blackHoleNode")
 
         self.userInteractionEnabled = !(secondNode is Player)
+        
+        if !self.userInteractionEnabled {
+            
+            if secondNode.parent != blackHoleNode.parent {
+            
+                assert(self.player == secondNode)
+                
+                if self.player.hidden {
+                    
+                    if let parent = self.player.parent as? RegularAsteroid {
+                        let scaleAction = SKAction.scaleTo(0.2, duration: 0.2)
+                        parent.runAction(SKAction.sequence([scaleAction,SKAction.removeFromParent()]))
+                    }
+                }
+                
+                let itemPos = secondNode.parent?.convertPoint(secondNode.position, toNode: blackHoleNode.parent!)
+                secondNode.removeFromParent()
+                blackHoleNode.parent?.addChild(secondNode)
+                secondNode.position = itemPos!
+            }
+            
+            
+            
+            secondNode.physicsBody?.categoryBitMask &= self.physicsBody!.categoryBitMask
+        }
 
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
         
@@ -1917,8 +1943,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
 }
 
-//MARK: EnemySpaceShipDelegate
-extension GameScene:EnemySpaceShipDelegate {
+//MARK: EnemySpaceShipDelegate & Data Source
+extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
     
     func enemySpaceShip(ship:EnemySpaceShip!, needToCreateExplosionWithEmitter emitter:SKEmitterNode!) {
         
@@ -1981,6 +2007,15 @@ extension GameScene:EnemySpaceShipDelegate {
         emitter.runAction(seq)
         emitter.targetNode = nil
         addChild(emitter)
+    }
+    
+    //MARK: Data Source
+    func detectXExplosionPositionForEnemySpaceShip(ship: EnemySpaceShip!) -> CGFloat {
+        
+        let transmitter = self.childNodeWithName(Transmitter.NodeName) as! Transmitter
+        let xPos = transmitter.position.x + transmitter.transmitterSize.halfWidth()
+        
+        return xPos
     }
 }
 
