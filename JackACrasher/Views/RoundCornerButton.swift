@@ -8,8 +8,14 @@
 
 import UIKit
 
+@IBDesignable
 class RoundCornerButton: UIButton {
-
+    
+    private  struct Constants {
+        static let sBorderWidth:CGFloat  = 2.0
+        static let sCornerRadius:CGFloat = 5.0
+        static let sBorderColor = UIColor.blackColor()
+    }
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -21,14 +27,39 @@ class RoundCornerButton: UIButton {
         setup()
     }
     
+    @IBInspectable
+    var borderWidth:CGFloat = 2.0 {
+        didSet {
+            self.layer.borderWidth = borderWidth
+        }
+    }
+    
+    @IBInspectable
+    var borderColor:UIColor = Constants.sBorderColor {
+        didSet {
+            self.layer.borderColor = self.borderColor.CGColor
+        }
+    }
+    
+    @IBInspectable
+    var cornerRadius:CGFloat = Constants.sCornerRadius {
+        didSet {
+            self.layer.cornerRadius = self.cornerRadius
+        }
+    }
+    
     private func setup() {
-        self.layer.cornerRadius = 5.0
-        self.layer.borderColor = UIColor.blackColor().CGColor
-        self.layer.borderWidth = 2.0
+        self.borderColor = Constants.sBorderColor
+        self.borderWidth = Constants.sBorderWidth
+        self.cornerRadius = Constants.sCornerRadius
         
         self.setTitleColor(UIColor(red: 0, green: 0, blue: 0.5, alpha: 0.8), forState: UIControlState.Normal)
         let color = UIColor.darkTextColor().colorWithAlphaComponent(0.8)
         self.setTitleColor(color, forState: UIControlState.Disabled)
     }
 
+    
+    override func prepareForInterfaceBuilder() {
+        setup()
+    }
 }
