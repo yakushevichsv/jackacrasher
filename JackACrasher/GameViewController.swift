@@ -59,6 +59,16 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         sender.selected = !sender.selected
         
+        var name:String! = nil
+        if sender.selected {
+            name = "player_btn_pause_down"
+        } else {
+            name = "player_btn_play_down"
+        }
+        
+        let img = UIImage(named: name)
+        sender.setImage(img, forState: UIControlState.Highlighted)
+        
         if let scene = skView.scene as? GameScene {
             scene.pauseGame(pause: !sender.selected)
         }

@@ -179,6 +179,9 @@
                                     <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
                                         <real key="value" value="1"/>
                                     </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="6"/>
+                                    </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="iD5-Iv-dtN"/>
@@ -404,8 +407,8 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q0F-Ln-9WS">
-                                <rect key="frame" x="384" y="-7" width="30" height="34"/>
-                                <state key="normal" title="X">
+                                <rect key="frame" x="385" y="-5" width="29" height="30"/>
+                                <state key="normal" image="close">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -512,15 +515,22 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGW-Qx-yrp">
-                                <rect key="frame" x="16" y="0.0" width="15" height="22"/>
+                                <rect key="frame" x="16" y="0.0" width="30" height="33"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="15" placeholder="YES" id="1qU-LX-LQn"/>
+                                    <constraint firstAttribute="width" constant="30" placeholder="YES" id="1qU-LX-LQn"/>
+                                    <constraint firstAttribute="width" secondItem="TGW-Qx-yrp" secondAttribute="height" multiplier="10:11" id="YEx-BY-ZMS"/>
                                 </constraints>
-                                <state key="normal" image="play">
+                                <state key="normal" image="player_btn_play">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
-                                <state key="selected" image="pause"/>
+                                <state key="selected" image="player_btn_pause"/>
+                                <state key="highlighted" image="player_btn_play_down"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="btnPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="4ld-Rh-1Kh"/>
                                     <segue destination="odW-g4-p7G" kind="presentation" identifier="selectAction" id="3lf-OP-NJD"/>
@@ -689,8 +699,8 @@
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gyq-mg-j3U">
-                                <rect key="frame" x="270" y="0.0" width="30" height="34"/>
-                                <state key="normal" title="X">
+                                <rect key="frame" x="270" y="5" width="29" height="29"/>
+                                <state key="normal" image="close">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
@@ -744,10 +754,12 @@
         </scene>
     </scenes>
     <resources>
+        <image name="close" width="29" height="29"/>
         <image name="fb-button" width="40" height="40"/>
         <image name="game_center" width="40" height="40"/>
-        <image name="pause" width="14" height="18"/>
-        <image name="play" width="15" height="17"/>
+        <image name="player_btn_pause" width="30" height="30"/>
+        <image name="player_btn_play" width="30" height="30"/>
+        <image name="player_btn_play_down" width="30" height="30"/>
         <image name="twitter" width="40" height="40"/>
     </resources>
 </document>

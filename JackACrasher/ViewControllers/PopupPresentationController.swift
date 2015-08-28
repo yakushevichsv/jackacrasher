@@ -12,7 +12,7 @@ class PopupPresentationController: UIPresentationController {
    
     lazy var dimmingView :UIView = {
         let view = UIView(frame: self.containerView!.bounds)
-        view.backgroundColor = UIColor.darkGrayColor()
+        view.backgroundColor = UIColor.clearColor()
         view.alpha = 0.0
         return view
         }()

@@ -2130,7 +2130,7 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "462444331.291673"
+                  timestampString = "462456612.578712"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "105"
@@ -2145,7 +2145,7 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "462444331.291972"
+                  timestampString = "462456612.57902"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "107"
@@ -3056,11 +3056,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "209"
-            endingLineNumber = "209"
+            startingLineNumber = "219"
+            endingLineNumber = "219"
             landmarkName = "gameScenePlayerDied(_:totalScore:currentScore:playedTime:needToContinue:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3072,11 +3072,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "212"
-            endingLineNumber = "212"
+            startingLineNumber = "222"
+            endingLineNumber = "222"
             landmarkName = "gameScenePlayerDied(_:totalScore:currentScore:playedTime:needToContinue:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3344,11 +3344,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "235"
-            endingLineNumber = "235"
+            startingLineNumber = "245"
+            endingLineNumber = "245"
             landmarkName = "unwindToReplay(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3360,11 +3360,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459627353.18832"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "83"
-            endingLineNumber = "83"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
             landmarkName = "GameViewController"
             landmarkType = "3">
          </BreakpointContent>
@@ -3376,11 +3376,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "234"
-            endingLineNumber = "234"
+            startingLineNumber = "244"
+            endingLineNumber = "244"
             landmarkName = "unwindToReplay(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3392,11 +3392,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459627353.18832"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "62"
-            endingLineNumber = "62"
+            startingLineNumber = "72"
+            endingLineNumber = "72"
             landmarkName = "btnPressed(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3408,11 +3408,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459627353.18832"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "73"
-            endingLineNumber = "73"
+            startingLineNumber = "83"
+            endingLineNumber = "83"
             landmarkName = "shouldPerformSegueWithIdentifier(_:sender:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3440,11 +3440,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459627353.18832"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "75"
-            endingLineNumber = "75"
+            startingLineNumber = "85"
+            endingLineNumber = "85"
             landmarkName = "shouldPerformSegueWithIdentifier(_:sender:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3536,11 +3536,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "144"
-            endingLineNumber = "144"
+            startingLineNumber = "154"
+            endingLineNumber = "154"
             landmarkName = "willMoveToFG(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3552,11 +3552,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "137"
-            endingLineNumber = "137"
+            startingLineNumber = "147"
+            endingLineNumber = "147"
             landmarkName = "didMoveToBG(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3600,11 +3600,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459643245.402427"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "91"
-            endingLineNumber = "91"
+            startingLineNumber = "101"
+            endingLineNumber = "101"
             landmarkName = "restartGame(isNew:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3664,11 +3664,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameViewController.swift"
-            timestampString = "459645742.21791"
+            timestampString = "462456084.470118"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "239"
-            endingLineNumber = "239"
+            startingLineNumber = "249"
+            endingLineNumber = "249"
             landmarkName = "unwindToReplay(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7163,7 +7163,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
@@ -7179,7 +7179,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Model/SoundManager.swift"
@@ -7206,6 +7206,22 @@
             endingLineNumber = "52"
             landmarkName = "setup()"
             landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/Views/RoundCornerButton.swift"
+            timestampString = "462456447.408075"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "33"
+            endingLineNumber = "33"
+            landmarkName = "RoundCornerButton"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
