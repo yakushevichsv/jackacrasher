@@ -98,20 +98,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
         
-        var wasHandled = VKSdk.processOpenURL(url, fromApplication: sourceApplication)
-        
-        if  (!wasHandled) {
-            
-            //Facebook.com
-            
-            let location = url.absoluteString!.rangeOfString("fb\(FBAppID)")
-            
-            if (location != nil) {
-                // Call FBAppCall's handleOpenURL:sourceApplication to handle Facebook app responses
-                wasHandled = true
-            }
-        }
-        return wasHandled
+        return  VKSdk.processOpenURL(url, fromApplication: sourceApplication) ||
+            FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
     }
     
     func application(application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: () -> Void) {
