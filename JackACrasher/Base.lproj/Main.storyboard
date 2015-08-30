@@ -237,9 +237,23 @@
                                     <segue destination="CYZ-cS-sIm" kind="show" identifier="help" id="Fr3-ne-v48"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AcO-iW-VYX" userLabel="VK Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="354" y="0.0" width="40" height="40"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="AcO-iW-VYX" secondAttribute="height" multiplier="1:1" id="Shq-VD-xFw"/>
+                                    <constraint firstAttribute="width" constant="40" id="VhO-h0-jPf"/>
+                                </constraints>
+                                <state key="normal" image="ic_vk_activity_logo.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="Pyg-6o-f9I"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="AcO-iW-VYX" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="0Cg-9a-Sho"/>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
                             <constraint firstAttribute="centerX" secondItem="1XG-Tp-FSs" secondAttribute="centerX" id="3aD-dm-1vj"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="FSu-Xs-tHM" secondAttribute="bottom" constant="58" id="3jx-WZ-5n9">
@@ -258,7 +272,8 @@
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="top" secondItem="VOQ-0L-H4x" secondAttribute="bottom" id="MUV-dg-Xbs"/>
                             <constraint firstAttribute="centerX" secondItem="zOq-Ua-ez5" secondAttribute="centerX" id="OwL-my-HiC"/>
                             <constraint firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="25" id="Rzo-jh-lUh"/>
-                            <constraint firstItem="bxu-q9-Fcb" firstAttribute="trailing" secondItem="FJb-8H-lOJ" secondAttribute="leading" constant="-30" placeholder="YES" id="WIW-XT-yoB"/>
+                            <constraint firstItem="AF8-Mz-FY1" firstAttribute="leading" secondItem="AcO-iW-VYX" secondAttribute="trailing" constant="22" id="THO-Uc-mEI"/>
+                            <constraint firstItem="bxu-q9-Fcb" firstAttribute="trailing" secondItem="FJb-8H-lOJ" secondAttribute="leading" constant="-30" id="WIW-XT-yoB"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="top" id="XMC-Aq-LR5"/>
                             <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Muy-t8-eeK" secondAttribute="centerY" constant="-8" id="Z0S-z5-oEU"/>
                             <constraint firstItem="nd9-3T-vrx" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" multiplier="0.5" id="acR-bQ-l5K">
@@ -294,6 +309,8 @@
                         <outlet property="btnSound" destination="PTq-DP-qnf" id="aM7-HV-47X"/>
                         <outlet property="btnStrategy" destination="fjR-H4-NMu" id="PY8-HJ-0yd"/>
                         <outlet property="btnTwitter" destination="AF8-Mz-FY1" id="VDz-Mp-TKP"/>
+                        <outlet property="btnVK" destination="AcO-iW-VYX" id="WD9-EI-ozh"/>
+                        <outlet property="fbConstraint" destination="WIW-XT-yoB" id="dqT-Pf-ZQ7"/>
                         <outlet property="gcConstraint" destination="GOd-eI-ATg" id="kDs-xY-zFO"/>
                         <outlet property="ivAsteroidL" destination="Bzh-ay-0sk" id="x1p-59-7m7"/>
                         <outlet property="ivAsteroidR" destination="Muy-t8-eeK" id="hcT-fW-uMo"/>
@@ -302,6 +319,7 @@
                         <outlet property="lAsterCenterX" destination="q6V-hm-i0M" id="5ee-ZC-Hf4"/>
                         <outlet property="rAsterCenterX" destination="ozB-y0-7hy" id="rzx-sw-Pfr"/>
                         <outlet property="twConstraint" destination="3Do-S9-aWD" id="GGd-oH-Usl"/>
+                        <outlet property="vkConstraint" destination="THO-Uc-mEI" id="vm6-Go-JH9"/>
                         <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                     </connections>
                 </viewController>
@@ -757,6 +775,7 @@
         <image name="close" width="29" height="29"/>
         <image name="fb-button" width="40" height="40"/>
         <image name="game_center" width="40" height="40"/>
+        <image name="ic_vk_activity_logo.png" width="60" height="60"/>
         <image name="player_btn_pause" width="30" height="30"/>
         <image name="player_btn_play" width="30" height="30"/>
         <image name="player_btn_play_down" width="30" height="30"/>

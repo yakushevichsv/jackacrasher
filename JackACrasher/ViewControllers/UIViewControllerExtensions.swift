@@ -10,13 +10,17 @@ import UIKit
 
 extension UIViewController {
     
-    func alertWithTitle(title:String?, message:String?,actionTitle:String! = "OK")
+    func alertWithTitle(title:String?, message:String?,actionTitle:String! = "OK",completion: (() -> Void)? = nil)
     {
         let vc = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         var needToDisp:Bool = false
         if !(actionTitle == nil || actionTitle.isEmpty) {
             let alertAction = UIAlertAction(title: actionTitle, style: .Default){
                 action in
+                
+                if let completion = completion {
+                    completion()
+                }
             }
             vc.addAction(alertAction)
         }

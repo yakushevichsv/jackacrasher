@@ -18,6 +18,7 @@ class GameMainViewController: UIViewController {
     private let ckManager = CloudManager.sharedInstance
     
     private var needToAuthGC:Bool = true
+    private var vkToken:VKAccessToken? = nil
     
     @IBOutlet weak var btnCompany:UIButton!
     @IBOutlet weak var btnStrategy:UIButton!
@@ -32,17 +33,17 @@ class GameMainViewController: UIViewController {
     
     @IBOutlet weak var twConstraint:NSLayoutConstraint!
     @IBOutlet weak var gcConstraint:NSLayoutConstraint!
+    @IBOutlet weak var vkConstraint:NSLayoutConstraint!
+    @IBOutlet weak var lAsterCenterX:NSLayoutConstraint!
+    @IBOutlet weak var rAsterCenterX:NSLayoutConstraint!
+    @IBOutlet weak var fbConstraint:NSLayoutConstraint!
     
     @IBOutlet weak var ivAsteroidL:UIImageView!
     @IBOutlet weak var ivAsteroidR:UIImageView!
     @IBOutlet weak var ivBlackHole:UIImageView!
     @IBOutlet weak var ivExplosion:UIImageView!
-    @IBOutlet weak var lAsterCenterX:NSLayoutConstraint!
-    @IBOutlet weak var rAsterCenterX:NSLayoutConstraint!
-    
     
     weak var btnRSoundCornerYConstraitnt:NSLayoutConstraint!
-    weak var btnFBXSpaceConstraint:NSLayoutConstraint!
     
     private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
@@ -87,12 +88,7 @@ class GameMainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        VKSdk.initializeWithDelegate(self, andAppId: VKAppID)
-        
-        if (VKSdk.wakeUpSession())
-        {
-            // start working.... - go to sharing..
-        }
+        initVK()
         
         SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
         authDidChange(nil)
@@ -128,6 +124,16 @@ class GameMainViewController: UIViewController {
         
         self.ivAsteroidL.hidden = true
         self.ivAsteroidR.hidden = true
+        
+        let scale = Int(self.traitCollection.displayScale != 0 ? self.traitCollection.displayScale : UIScreen.mainScreen().scale)
+        
+        var template = scale == 1 ? "" : "@\(scale)x"
+        
+        var name = "VKSdkResources.bundle"
+        name = name.stringByAppendingPathComponent("ic_vk_activity_logo")
+        name = name.stringByAppendingString("\(template).png")
+        
+        self.btnVK.setImage(UIImage(named:name), forState: .Normal)
     }
     
     private func hideAsters() {
@@ -442,9 +448,11 @@ class GameMainViewController: UIViewController {
             self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
             self.btnSound.hidden = false
             
-            self.btnFB.center = CGPointMake(self.btnRUpCorner.center.x, self.btnFB.center.y)
+            self.fbConstraint.constant = 0
+            self.btnFB.alpha  = 0.0
             self.btnFB.hidden = false
-            
+            self.btnFB.layoutIfNeeded()
+                
             self.btnTwitter.hidden = true
             self.btnGameCenter.hidden = true
             
@@ -456,7 +464,9 @@ class GameMainViewController: UIViewController {
                 
                 self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnSound.center.y + yMargin)
                 
-                self.btnFB.frame = CGRectOffset(self.btnFB.frame, -fbXSpce, 0)
+                self.fbConstraint.constant = -30
+                self.btnFB.alpha = 1.0
+                self.btnFB.layoutIfNeeded()
                 
                 println("Final 1 center \(self.btnSound.center)")
                 
@@ -471,10 +481,8 @@ class GameMainViewController: UIViewController {
                     
                     let xDiff = CGRectGetMaxX(self.btnFB.frame) - CGRectGetMinX(self.btnRUpCorner.frame)
                     
-                    let attr2 = NSLayoutConstraint(item: self.btnFB, attribute: .Trailing, relatedBy: .Equal, toItem: self.btnRUpCorner, attribute: .Leading, multiplier: 1, constant: xDiff)
-                    self.btnFBXSpaceConstraint = attr2
                     
-                    NSLayoutConstraint.activateConstraints([attr,attr2])
+                    NSLayoutConstraint.activateConstraints([attr])
                     
                     println("Final 2 center \(self.btnSound.center)")
                     
@@ -509,69 +517,103 @@ class GameMainViewController: UIViewController {
                         }) {
                         [unowned self]
                         finished in
+                            
+                        self.vkConstraint.constant = -CGRectGetMidX(self.btnTwitter.bounds)
+                        self.btnVK.layoutIfNeeded()
+                        self.btnVK.alpha = 0.0
+                        self.btnVK.hidden = false
+                        
+                            UIView.animateWithDuration(animated && finished ? 0.2 : 0.0, animations:{  [unowned self]
+                                () -> Void in
+                                
+                                self.vkConstraint.constant = 22
+                                self.btnVK.layoutIfNeeded()
+                                self.btnVK.alpha = 1.0
+                                
+                                }) {
+                                    [unowned self]
+                                    finished in
+                            
+                                    
+                            }
+                            
                     }
             }
         }
         else {
             
-            println("Original center \(self.btnSound.center)")
-            self.btnFB.superview?.bringSubviewToFront(self.btnFB)
-            self.btnTwitter.alpha = 1.0
-            self.btnTwitter.layoutIfNeeded()
+            self.btnVK.alpha = 1.0
+            self.btnVK.layoutIfNeeded()
             
-            self.btnCompany.superview?.bringSubviewToFront(self.btnCompany)
-            self.btnGameCenter.alpha = 1.0
-            self.btnGameCenter.layoutIfNeeded()
+            self.btnTwitter.superview?.bringSubviewToFront(self.btnTwitter)
             
             UIView.animateWithDuration(animated ? 0.5 : 0.0, animations: {[unowned self]
                 () -> Void in
                 
-                    self.twConstraint.constant = -CGRectGetMidX(self.btnFB.bounds)
-                    self.btnTwitter.alpha = 0.0
-                    self.btnTwitter.layoutIfNeeded()
+                self.vkConstraint.constant = -CGRectGetMidX(self.btnTwitter.bounds)
+                self.btnVK.alpha = 0.0
+                self.btnVK.layoutIfNeeded()
                 
-                    self.gcConstraint.constant = -CGRectGetMidY(self.btnSound.bounds)
-                    self.btnGameCenter.alpha = 0.0
-                    self.btnGameCenter.layoutIfNeeded()
-                
-                }){
+                }) {
                     [unowned self]
                     finished in
+             
+                    println("Original center \(self.btnSound.center)")
+                    self.btnFB.superview?.bringSubviewToFront(self.btnFB)
+                    self.btnTwitter.alpha = 1.0
+                    self.btnTwitter.layoutIfNeeded()
                     
-                    self.btnTwitter.hidden = true
-                    self.btnGameCenter.hidden = true
+                    self.btnCompany.superview?.bringSubviewToFront(self.btnCompany)
+                    self.btnGameCenter.alpha = 1.0
+                    self.btnGameCenter.layoutIfNeeded()
                     
-                    UIView.animateWithDuration(animated && finished ? 0.25 : 0.0, animations: {[unowned self]
+                    UIView.animateWithDuration(animated ? 0.5 : 0.0, animations: {[unowned self]
                         () -> Void in
                         
-                        self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
-                        println("Final 1 center \(self.btnSound.center)")
+                        self.twConstraint.constant = -CGRectGetMidX(self.btnFB.bounds)
+                        self.btnTwitter.alpha = 0.0
+                        self.btnTwitter.layoutIfNeeded()
                         
-                        self.btnFB.center = CGPoint(x:self.btnRUpCorner.center.x,y:self.btnFB.center.y)
+                        self.gcConstraint.constant = -CGRectGetMidY(self.btnSound.bounds)
+                        self.btnGameCenter.alpha = 0.0
+                        self.btnGameCenter.layoutIfNeeded()
                         
                         }){
                             [unowned self]
                             finished in
-                            self.btnRUpCorner.superview?.bringSubviewToFront(self.btnRUpCorner)
-                            self.btnSound.hidden = true
-                            self.btnFB.hidden = true
                             
-                            var constraint = self.btnRSoundCornerYConstraitnt
-                            if constraint != nil {
-                                NSLayoutConstraint.deactivateConstraints([constraint])
-                                self.btnRSoundCornerYConstraitnt = nil
+                            self.btnTwitter.hidden = true
+                            self.btnGameCenter.hidden = true
+                            
+                            UIView.animateWithDuration(animated && finished ? 0.25 : 0.0, animations: {[unowned self]
+                                () -> Void in
+                                
+                                self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
+                                println("Final 1 center \(self.btnSound.center)")
+                                
+                                self.btnFB.center = CGPoint(x:self.btnRUpCorner.center.x,y:self.btnFB.center.y)
+                                
+                                }){
+                                    [unowned self]
+                                    finished in
+                                    self.btnRUpCorner.superview?.bringSubviewToFront(self.btnRUpCorner)
+                                    self.btnSound.hidden = true
+                                    self.btnFB.hidden = true
+                                    
+                                    var constraint = self.btnRSoundCornerYConstraitnt
+                                    if constraint != nil {
+                                        NSLayoutConstraint.deactivateConstraints([constraint])
+                                        self.btnRSoundCornerYConstraitnt = nil
+                                    }
+                                    
+                                    self.fbConstraint.constant = 0
+                                    self.btnFB.alpha  = 0.0
+                                    self.btnFB.layoutIfNeeded()
+                                    
+                                    println("Final 2 center \(self.btnSound.center)")
                             }
-                            
-                            constraint = self.btnFBXSpaceConstraint
-                            if constraint != nil {
-                                NSLayoutConstraint.deactivateConstraints([constraint])
-                                self.btnFBXSpaceConstraint = nil
-                            }
-                            
-                            println("Final 2 center \(self.btnSound.center)")
                     }
-                }
-            
+            }
         }
     }
     
@@ -629,8 +671,9 @@ class GameMainViewController: UIViewController {
         } else if sender == self.btnTwitter{
             //Share to Twitter
             shareOnTweeter()
+        } else if sender == self.btnVK {
+            shareOnVK()
         }
-        
     }
     
     @IBAction func btnRightUpCornerPressed(sender:UIButton) {
@@ -639,6 +682,7 @@ class GameMainViewController: UIViewController {
         
         performActionOnRMainButton(sender)
     }
+    
     
     //MARK: Twitter's methos
     private func shareOnTweeter() {
@@ -735,27 +779,99 @@ extension GameMainViewController: FBSDKSharingDelegate {
 //MARK: VK delegate's methods
 extension GameMainViewController:VKSdkDelegate {
     
-    func vkSdkAcceptedUserToken(token: VKAccessToken!) {
+    //MARK:VK's methods
+    
+    private func initVK() {
         
+        VKSdk.initializeWithDelegate(self, andAppId: VKAppID)
+        
+        if (VKSdk.wakeUpSession())
+        {
+            // start working.... - go to sharing..
+            self.vkToken =  VKSdk.getAccessToken()
+        }
+    }
+    
+    private func shareOnVK() {
+        
+        if self.btnVK.selected {
+            return
+        }
+        
+        self.btnVK.selected = true
+        
+        if let vToken = self.vkToken {
+        
+            
+            let shareDialog = VKShareDialogController()
+            shareDialog.text = "I am playing in JackACrasher!"
+            
+            /*shareDialog.shareLink    = [[VKShareLink alloc] initWithTitle:@"Super puper link, but nobody knows" link:[NSURL URLWithString:@"https://vk.com/dev/ios_sdk"]];*/
+            
+            shareDialog.completionHandler = {
+                [unowned self]
+                result  in
+                self.dismissViewControllerAnimated(true) {
+                    [unowned self] in
+                    self.btnVK.selected = false
+                    
+                    if result == .Done {
+                        self.alertWithTitle("Success", message: "Thanks for posting on VK!", actionTitle: nil)
+                    }
+                }
+            }
+            
+            self.presentViewController(shareDialog, animated: true, completion: nil)
+            
+        }
+        else {
+            authorize();
+        }
+    }
+    
+    private func authorize() {
+        VKSdk.authorize([VK_PER_WALL,VK_PER_OFFLINE,VK_PER_STATUS], revokeAccess: true, forceOAuth: true, inApp: true, display: VK_DISPLAY_IOS)
+    }
+    
+    func vkSdkAcceptedUserToken(token: VKAccessToken!) {
+        processToken(token)
+    }
+    
+    func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
+        processToken(newToken)
+    }
+    
+    private func processToken(token:VKAccessToken!) {
+        self.vkToken = token
+        
+        if self.btnVK.selected && self.presentedViewController == nil {
+            self.btnVK.selected = false
+            shareOnVK()
+        }
     }
     
     func vkSdkNeedCaptchaEnter(captchaError: VKError!) {
         
+        let vc = VKCaptchaViewController.captchaControllerWithError(captchaError)
+        vc.presentIn(self.navigationController?.topViewController)
     }
     
     func vkSdkTokenHasExpired(expiredToken: VKAccessToken!) {
-        
+        if (self.vkToken == expiredToken) {
+            self.vkToken = nil
+        }
+        self.btnVK.selected = false
     }
     
     func vkSdkUserDeniedAccess(authorizationError: VKError!) {
-        
+        self.alertWithTitle("Access denied", message: authorizationError.description, actionTitle: "OK") {
+            [unowned self ] in
+            self.navigationController?.popToRootViewControllerAnimated(true)
+        }
+        self.vkToken = nil
     }
     
     func vkSdkShouldPresentViewController(controller: UIViewController!) {
-        
-    }
-    
-    func vkSdkReceivedNewToken(newToken: VKAccessToken!) {
-        
+        self.navigationController!.topViewController.presentViewController(controller, animated: true, completion: nil)
     }
 }
