@@ -864,9 +864,11 @@ extension GameMainViewController:VKSdkDelegate {
     }
     
     func vkSdkUserDeniedAccess(authorizationError: VKError!) {
-        self.alertWithTitle("Access denied", message: authorizationError.description, actionTitle: "OK") {
-            [unowned self ] in
-            self.navigationController?.popToRootViewControllerAnimated(true)
+        if self.btnVK.selected {
+            self.alertWithTitle("Access denied", message: authorizationError.description, actionTitle: "OK") {
+                [unowned self ] in
+                self.navigationController?.popToRootViewControllerAnimated(true)
+            }
         }
         self.vkToken = nil
     }

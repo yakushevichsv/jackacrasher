@@ -822,7 +822,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         }
                         else {
                             if (transmitter.underRayBeam(self.player)) {
-                                returnPlayerToScene(parent, removeAsteroid: false)
+                                returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true)
                             }
                         }
                         
@@ -860,12 +860,32 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         didEvaluateActionPrivate()
     }
     
-    func returnPlayerToScene(sprite:SKNode,removeAsteroid:Bool = true) -> Bool {
+    func returnPlayerToScene(sprite:SKNode,removeAsteroid:Bool = true,usePlayerPostion:Bool = false) -> Bool {
         
         if self.player.hidden {
-            let spritePosition = convertNodePosition(sprite, toScene: self)
-            self.player.position = spritePosition
+            
+            var position:CGPoint
+            if !usePlayerPostion {
+                position = convertNodePosition(sprite, toScene: self)
+            }
+            else {
+                position = convertNodePosition(self.player, toScene: self)
+            }
+            
+            println("New player posiltion \(position)")
+            self.player.position = position
+            
             self.removePlayerFromRegularAsteroidToScene()
+            
+            if usePlayerPostion {
+                var affectedNode:SKNode! = sprite
+                if sprite.parent != self.scene {
+                    affectedNode = affectedNode.parent
+                }
+                
+                affectedNode.physicsBody?.applyImpulse(CGVector(dx: -40, dy: 0.0))
+
+            }
             
             if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
                 if transmitter.underRayBeam(self.player) {
@@ -882,7 +902,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 sprite.removeFromParent()
             }
             else {
-                self.player.physicsBody!.contactTestBitMask &= ~EntityCategory.Asteroid
+                sprite.physicsBody!.contactTestBitMask = EntityCategory.PlayerLaser
             }
             return true
         }
@@ -908,7 +928,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     Int64(0.5 * Double(NSEC_PER_SEC)))
                 
                 dispatch_after(delayTime, dispatch_get_main_queue()){
-                    asteroid.physicsBody?.contactTestBitMask |= EntityCategory.Player
+                    asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)
                 }
             
         }
@@ -953,8 +973,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.scene?.addChild(self.player)
         self.player.hidden = false
         
-        self.player.physicsBody?.applyForce(CGVectorMake(dx*0.5, dy*0.5))
-        
+        if (dx != 0 || dy != 0) {
+            self.player.physicsBody?.applyForce(CGVectorMake(dx*0.5, dy*0.5))
+        }
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(2 * Double(NSEC_PER_SEC)))
@@ -1716,7 +1737,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             
             
-            secondNode.physicsBody?.categoryBitMask &= self.physicsBody!.categoryBitMask
+            secondNode.physicsBody?.categoryBitMask = 0
         }
 
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)

@@ -353,14 +353,19 @@ class Transmitter:SKNode,AssetsContainer {
                 }
             }
             
-            if let node = self.scene?.nodeAtPoint(point) {
-                if let body = node.physicsBody {
-                    if body.categoryBitMask == EntityCategory.EnemySpaceShip {
-                        self.transmitNode.throwProjectileToLocation(sTouch)
-                    }
-                }
-            }
+            let sPoint = convertPoint(point, toNode: self.scene!)
             
+            let x = sPoint.x - self.transmitNode.size.halfWidth()
+            let y = sPoint.y - self.transmitNode.size.halfHeight()
+            
+            let rect = CGRectMake(x, y, self.transmitNode.size.width, self.transmitNode.size.height)
+            
+            self.scene!.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { (body, retPtr) -> Void in
+                if body.categoryBitMask == EntityCategory.EnemySpaceShip {
+                    self.transmitNode.throwProjectileToLocation(sTouch)
+                    retPtr.memory = true
+                }
+            })
             
             if (self.transmitNode.parent! != self) {
                 let sPoint = self.transmitNode.parent!.convertPoint(self.transmitNode.position, toNode: self)
