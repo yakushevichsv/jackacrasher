@@ -119,7 +119,7 @@ class AsteroidGenerator: NSObject {
     }
     
     internal class var regularAsteroidSpeed:CGFloat {
-        get { return 30  }
+        get { return 60  }
     }
     
     private func produceRegularAsteroidPrivate(size:RegularAsteroidSize,initialAnimation:Bool) -> (asteroid:RegularAsteroid,actions:SKAction)  {
@@ -497,7 +497,8 @@ class AsteroidGenerator: NSObject {
             
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
-        
+        //HACKL
+        currentAstType = .Regular
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType
         

@@ -1645,6 +1645,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return true
             }
             
+            
+            if (self.player.parent != self.scene && !self.player.hidden) {
+                if let node = asteroidBody?.node {
+                    node.removeAllActions()
+                    let action = SKAction.repeatActionForever(SKAction.rotateByAngle(-CGFloat(M_PI), duration: 2))
+                    node.runAction(action)
+                    asteroidBody?.applyImpulse(CGVector(dx:100,dy: 0))
+                    
+                }
+                return true
+            }
+            
             let angle2 = reflectionAngleFromContact(contact)
         
             //TODO: Move to the Player class
