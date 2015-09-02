@@ -498,7 +498,7 @@ class AsteroidGenerator: NSObject {
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         //HACKL
-        currentAstType = .Regular
+        currentAstType = .RopeBased
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType
         

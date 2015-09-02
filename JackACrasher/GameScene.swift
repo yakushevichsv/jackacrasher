@@ -362,7 +362,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createLeftBorderEdge() {
         
         let lEdge:SKNode = SKNode()
-        let w1 = CGRectGetMinX(self.playableArea) - min(10.0,self.player.size.halfWidth())
+        let w1 = CGRectGetMinX(self.playableArea) - (self.player.size.maxSizeParam()*0.5)
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
@@ -499,6 +499,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             let touch = touches.first as! UITouch
             let location = touch.locationInNode(self)
+            
             self.endPoint = location
             
             if (!CGPointEqualToPoint(self.startPoint, self.endPoint)){
@@ -511,36 +512,84 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     
                     if body.categoryBitMask == EntityCategory.Rope {
                         
-                        if !body.joints.isEmpty {
+                        //HACK: add rotation here....
+                        
+                        if let bNode = body.node {
                             
-                            for var i = 0; i < body.joints.endIndex;i++ {
-                                let joint: AnyObject = body.joints[i]
-                                
-                                let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
-                                
-                                self.physicsWorld.removeJoint(skJoint)
-                            }
-                           
-                            if let bNode = body.node {
-                                
-                                let bNodeParent = bNode.parent!
-                                
-                                let position = bNodeParent.convertPoint(bNode.position, toNode: self.scene!)
-                                
-                                bNode.removeFromParent()
+                            var impulseDirection:CGFloat = -1
+                            var boost:CGFloat = 1.0
+                            var extraPlus:CGFloat = 0.05
                             
-                                bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.5),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock(){
-                                    [unowned self] in
-                                    self.displayScoreAdditionLabel(position, scoreAddition: 20)
-                                }]))
+                            bNode.parent?.enumerateChildNodesWithName(bNode.name!, usingBlock: { (curNode, retPtr) -> Void in
                                 
-                                self.enableCuttingRope = false
+                                let bNodeParent = curNode.parent!
                                 
-                            }
+                                let curPhysBody = curNode.physicsBody!
+                                
+                                if !curPhysBody.joints.isEmpty {
+                                    
+                                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                                        let joint: AnyObject = curPhysBody.joints[i]
+                                        
+                                        let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
+                                        
+                                        self.physicsWorld.removeJoint(skJoint)
+                                    }
+                                }
+                                
+                                
+                                var pos1 = bNodeParent.convertPoint(curNode.position, toNode: self)
+                                
+                                if (curNode == bNode) {
+                                    impulseDirection = 1
+                                    extraPlus *= -1
+                                    
+                                    bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock(){
+                                        [unowned self] in
+                                        self.displayScoreAdditionLabel(pos, scoreAddition: 20)
+                                        }]))
+                                }
+                                
+                                
+                                curNode.removeFromParent()
+                                curNode.position = pos1
+                                self.addChild(curNode)
+                                
+                                var v1 = vector.normalize()
+                                v1.dx *= boost * impulseDirection
+                                v1.dy *= boost * impulseDirection
+                                boost += extraPlus
+                                boost = max(1.0,boost)
+                                
+                                curPhysBody.categoryBitMask = 0
+                                curPhysBody.contactTestBitMask = 0
+                                curPhysBody.collisionBitMask = 0
+                                
+                                if (curNode == bNode) {
+                                    pos1 = pos
+                                    pos1.x += (CGFloat(Int(arc4random() % 10) * (arc4random() == 1 ? 1 : -1)))
+                                    pos1.y += (CGFloat(Int(arc4random() % 10) * (arc4random() == 1 ? 1 : -1)))
+                                }
+                                else {
+                                    curPhysBody.applyAngularImpulse(boost/3)
+                                }
+                                
+                                
+                                
+                                curPhysBody.applyImpulse(v1, atPoint: pos1)
+                                
+                                curNode.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.removeFromParent()]))
+                                
+                            })
                             
+                            
+                            
+                            
+                            
+                            
+                            self.enableCuttingRope = false
                             
                         }
-                        
                     }
                 }
             }
@@ -660,7 +709,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let point = touch.locationInNode(self)
         let prevPoint = touch.previousLocationInNode(self)
         
-        for curNode in self.scene!.nodesAtPoint(point) as! [SKNode] {
+        for curNode in self.nodesAtPoint(point) as! [SKNode] {
             
             if (curNode is RegularAsteroid ||
                 curNode is SmallRegularAsteroid) {
@@ -788,6 +837,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
+        /*if self.player.hidden {
+            
+            if let pParent = self.player.parent as? RegularAsteroid {
+                let sPosition = self.player.parent!.convertPoint(self.player.position, toNode: self)
+                if (!CGRectContainsPoint(self.playableArea, sPosition)){
+                    returnPlayerToScene(pParent)
+                }
+            }
+        }*/
+        
         var timeSinceLast = currentTime - self.lastUpdateTimeInterval
         self.lastUpdateTimeInterval = currentTime;
         if (timeSinceLast > 1) { // more than a second since last update
@@ -807,7 +866,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.player.zRotation = 0.0
         }
         
-        println("Player's z Rotaion \(self.player.zRotation) Is Hidden \(self.player.hidden)")
+        //println("Player's z Rotaion \(self.player.zRotation) Is Hidden \(self.player.hidden)")
     }
     
     private func didEvaluateActionPrivate() {
@@ -857,6 +916,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     override func didEvaluateActions() {
+        super.didEvaluateActions()
         didEvaluateActionPrivate()
     }
     
@@ -932,55 +992,53 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 }
             
         }
+        
+        let pPos = self.player.parent!.convertPoint(self.player.position, toNode: self)
         self.player.removeFromParent()
         
-        var dx:CGFloat = 0
-        var dy:CGFloat = 0
+        var x:CGFloat = 0
+        var y:CGFloat = 0
         
-        if self.player.position.x <= CGRectGetMinX(self.playableArea) {
-            dx = CGRectGetMinX(self.playableArea) - self.player.position.x + self.player.size.halfWidth()
-        }
-        else if self.player.position.x >= CGRectGetWidth(self.playableArea) {
-            dx = CGRectGetWidth(self.playableArea) - self.player.position.x - self.player.size.halfWidth()
-        }
         
-        if self.player.position.y <= CGRectGetMinY(self.playableArea) {
-            dy = CGRectGetMinY(self.playableArea) - self.player.position.y + self.player.size.halfHeight()
+        
+        if pPos.x <= CGRectGetMinX(self.playableArea) {
+            x = CGRectGetMinX(self.playableArea)  + self.player.size.halfWidth()
         }
-        else if self.player.position.y >= CGRectGetHeight(self.playableArea) {
-            dy = CGRectGetHeight(self.playableArea) - self.player.position.y - self.player.size.halfHeight()
+        else if pPos.x >= CGRectGetWidth(self.playableArea) {
+            x = CGRectGetWidth(self.playableArea) - self.player.size.halfHeight()
+        }
+        else {
+            x = pPos.x
         }
         
-        
-        
-        /*if self.player.position.x <= CGRectGetMinX(self.playableArea) {
-            self.player.position.x = CGRectGetMinX(self.playableArea)  + self.player.size.halfWidth()
+        if pPos.y <= CGRectGetMinY(self.playableArea) {
+            y = CGRectGetMinY(self.playableArea) + self.player.size.halfHeight()
         }
-            
-        if self.player.position.y <= CGRectGetMinY(self.playableArea) {
-            self.player.position.y = CGRectGetMinY(self.playableArea) + self.player.size.halfHeight()
+        else if pPos.y >= CGRectGetHeight(self.playableArea) {
+            y = CGRectGetHeight(self.playableArea) - self.player.size.halfHeight()
         }
-        
-        if self.player.position.y >= CGRectGetHeight(self.playableArea) {
-            self.player.position.y = CGRectGetHeight(self.playableArea) - self.player.size.halfHeight()
+        else {
+            y = pPos.y
         }
         
-        if self.player.position.x >= CGRectGetWidth(self.playableArea) {
-            self.player.position.x = CGRectGetWidth(self.playableArea) - self.player.size.halfHeight()
-        }*/
         
-        
-        self.scene?.addChild(self.player)
+        self.player.alpha = 1.0
         self.player.hidden = false
         
-        if (dx != 0 || dy != 0) {
-            self.player.physicsBody?.applyForce(CGVectorMake(dx*0.5, dy*0.5))
+        self.player.removeAllActions();
+        
+        
+        let newPoint = CGPointMake(x, y)
+        if (!CGPointEqualToPoint(newPoint, pPos)) {
+            //self.player.moveToPoint(CGPointMake(x, y))
+            println("Return position \newPoint)")
+            self.player.runAction(SKAction.moveTo(newPoint, duration: 0.2))
         }
+        
+        self.addChild(self.player)
         
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(2 * Double(NSEC_PER_SEC)))
-        
-        self.player.removeAllActions();
         
         dispatch_after(delayTime, dispatch_get_main_queue()){
             [unowned self] in
@@ -1646,7 +1704,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             
-            if (self.player.parent != self.scene && !self.player.hidden) {
+            if (self.player.parent != self && !self.player.hidden) {
                 if let node = asteroidBody?.node {
                     node.removeAllActions()
                     let action = SKAction.repeatActionForever(SKAction.rotateByAngle(-CGFloat(M_PI), duration: 2))
@@ -1672,6 +1730,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.player.disableGravityReceptivity()
             self.player.hidden = true
             self.player.position = playerNode.position
+            println("\(self.player.physicsBody!.contactTestBitMask)")
             self.player.removeFromParent()
             pNode.addChild(self.player)
             
@@ -1790,6 +1849,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func didBeginContact(contact: SKPhysicsContact)
     {
+        println("Contact \(contact)")
         if (didPlayerContactWithEdge(contact) || didPlayerContactWithHealthUnit(contact) || didPlayerLaserContactWithEdge(contact)) {
             return
         }
@@ -1841,14 +1901,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder) {
             
             
-            let sPlayerPosition = convertNodePositionToScene(self.player)
-                
+            /*let sPlayerPosition = convertNodePositionToScene(self.player)
+                let pPlayerPosition = (self.player.parent != nil && self.player.parent != self) ? convertNodePositionToScene(self.player.parent) : self.player.position
+            
             let result = !CGRectContainsPoint(self.playableArea, sPlayerPosition)
-                
-            if !(CGRectContainsPoint(self.playableArea, sPlayerPosition) || CGRectContainsPoint(self.playableArea, self.player.parent!.position)) {
+            //HACK:
+                let result2 = true //!CGRectContainsPoint(self.playableArea, pPlayerPosition)
+            if result && (result2 || self.player.parent == self) {
                 self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
                 return true
-            }
+            }*/
+            println("Player contacted with left edge")
+            self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
+            return true
         }
         return false
     }
