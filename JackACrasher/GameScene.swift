@@ -925,17 +925,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if self.player.hidden {
             
             var position:CGPoint
+            var node:SKNode!
             if !usePlayerPostion {
                 position = convertNodePosition(sprite, toScene: self)
+                node = sprite
             }
             else {
                 position = convertNodePosition(self.player, toScene: self)
+                node = self.player
             }
             
             println("New player posiltion \(position)")
             self.player.position = position
             
-            self.removePlayerFromRegularAsteroidToScene()
+            self.removePlayerFromRegularAsteroidToScene(node)
             
             if usePlayerPostion {
                 var affectedNode:SKNode! = sprite
@@ -975,7 +978,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
-    func removePlayerFromRegularAsteroidToScene() {
+    func removePlayerFromRegularAsteroidToScene(node:SKNode!) {
         self.player.physicsBody!.contactTestBitMask &= ~EntityCategory.Player
         self.player.zRotation = 0.0
         self.player.zPosition = self.fgZPosition
@@ -993,7 +996,25 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
         }
         
-        let pPos = self.player.parent!.convertPoint(self.player.position, toNode: self)
+        
+            
+        var pPos = CGPointZero
+        
+        if let parentParent = node.parent?.parent {
+            
+            
+            pPos = node.parent!.convertPoint(node.position, toNode: parentParent)
+            
+            if (parentParent == self) {
+                pPos = node.parent!.convertPoint(node.position, toNode: self)
+            }
+        }
+        else {
+            pPos = node.position
+        }
+        
+        //let pPos = recursiveConvertPositionToScene(self.player)
+        println("Current position \(pPos)")
         self.player.removeFromParent()
         
         var x:CGFloat = 0
@@ -1397,7 +1418,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if (regAster.tryToDestroyWithForce(self.player.punchForce * 2)) {
                 
-                let location  = regAster.position
+                let location  = regAster.parent!.convertPoint(regAster.position, toNode: self)
                 
                 self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                 
@@ -1421,7 +1442,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 //MARK: Continue here, create crystal, with score addition.
                 
                 self.createRocksExplosion(location,scale:scale)
-                
                 self.displayScoreAdditionLabel(location, scoreAddition: 20)
             }
             else {
@@ -1648,9 +1668,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return true
             } else if (pNode is SmallRegularAsteroid) {
                 let smallAster = pNode as! SmallRegularAsteroid
-                
-                createRocksExplosion(smallAster.position, scale: 2)
-                displayScoreAdditionLabel(smallAster.position, scoreAddition: 10)
+                let asterPos = smallAster.parent!.convertPoint(smallAster.position,toNode:self)
+                createRocksExplosion(asterPos, scale: 2)
+                displayScoreAdditionLabel(asterPos, scoreAddition: 10)
                 
                 smallAster.removeFromParent()
                 
@@ -1896,11 +1916,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     func didPlayerContactWithEdge(contact:SKPhysicsContact) ->  Bool {
-        //let pNode
-        if (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder ||
-            contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder) {
+        
+        if (contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyA.categoryBitMask == EntityCategory.Player) || (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyB.categoryBitMask == EntityCategory.Player)  {
             
-            
+            println("Player contacted with left edge")
+            self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
+            return true
+        }
+        
+        return false
+        
             /*let sPlayerPosition = convertNodePositionToScene(self.player)
                 let pPlayerPosition = (self.player.parent != nil && self.player.parent != self) ? convertNodePositionToScene(self.player.parent) : self.player.position
             
@@ -1911,11 +1936,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
                 return true
             }*/
-            println("Player contacted with left edge")
-            self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
-            return true
-        }
-        return false
+                
+            //HACK: deside what to do here....
+        
     }
     
     func didPlayerLaserContactWithEdge(contact:SKPhysicsContact) -> Bool {

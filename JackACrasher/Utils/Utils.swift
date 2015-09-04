@@ -334,3 +334,20 @@ func randomUntil(y:CGFloat,withOffset offset:CGFloat) -> CGFloat{
     return randomUntil(y) + offset
 }
 
+func recursiveConvertPositionToScene(node:SKNode!) -> CGPoint {
+    
+    var curNode = node
+    var parent = curNode.parent!
+    var pos = curNode.position
+
+    
+    while (parent != node.scene)  {
+    
+        curNode = parent
+        parent = curNode.parent!
+        pos = parent.convertPoint(pos, fromNode: curNode)
+    }
+    
+    return pos
+}
+

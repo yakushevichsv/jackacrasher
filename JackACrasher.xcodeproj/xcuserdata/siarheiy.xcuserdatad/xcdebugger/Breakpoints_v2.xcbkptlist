@@ -394,11 +394,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1340"
-            endingLineNumber = "1340"
+            startingLineNumber = "1361"
+            endingLineNumber = "1361"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -2130,12 +2130,12 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "462905275.47775"
+                  timestampString = "463090862.462844"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "105"
                   endingLineNumber = "105"
-                  offsetFromSymbolStart = "1320">
+                  offsetFromSymbolStart = "1562">
                </Location>
                <Location
                   shouldBeEnabled = "Yes"
@@ -2145,7 +2145,7 @@
                   moduleName = "JackACrasher"
                   usesParentBreakpointCondition = "Yes"
                   urlString = "file:///Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/JackACrasher/ViewControllers/ShopDetailsViewController.swift"
-                  timestampString = "462905275.478019"
+                  timestampString = "463090862.463846"
                   startingColumnNumber = "9223372036854775807"
                   endingColumnNumber = "9223372036854775807"
                   startingLineNumber = "107"
@@ -2578,11 +2578,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1115"
-            endingLineNumber = "1115"
+            startingLineNumber = "1136"
+            endingLineNumber = "1136"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2674,11 +2674,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1642"
-            endingLineNumber = "1642"
+            startingLineNumber = "1662"
+            endingLineNumber = "1662"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2690,11 +2690,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462901338.103663"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "968"
-            endingLineNumber = "968"
+            startingLineNumber = "971"
+            endingLineNumber = "971"
             landmarkName = "returnPlayerToScene(_:removeAsteroid:usePlayerPostion:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2722,11 +2722,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1052"
-            endingLineNumber = "1052"
+            startingLineNumber = "1073"
+            endingLineNumber = "1073"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2770,11 +2770,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1171"
-            endingLineNumber = "1171"
+            startingLineNumber = "1192"
+            endingLineNumber = "1192"
             landmarkName = "asteroidGenerator(_:didProduceAsteroids:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2786,11 +2786,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1172"
-            endingLineNumber = "1172"
+            startingLineNumber = "1193"
+            endingLineNumber = "1193"
             landmarkName = "asteroidGenerator(_:didProduceAsteroids:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2848,11 +2848,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1185"
-            endingLineNumber = "1185"
+            startingLineNumber = "1206"
+            endingLineNumber = "1206"
             landmarkName = "emulateImpulse(forAsteroid:direction:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2880,11 +2880,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1775"
-            endingLineNumber = "1775"
+            startingLineNumber = "1795"
+            endingLineNumber = "1795"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2896,11 +2896,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1657"
-            endingLineNumber = "1657"
+            startingLineNumber = "1677"
+            endingLineNumber = "1677"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2912,11 +2912,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1737"
-            endingLineNumber = "1737"
+            startingLineNumber = "1757"
+            endingLineNumber = "1757"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
             <Locations>
@@ -2960,11 +2960,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1731"
-            endingLineNumber = "1731"
+            startingLineNumber = "1751"
+            endingLineNumber = "1751"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -2976,11 +2976,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1753"
-            endingLineNumber = "1753"
+            startingLineNumber = "1773"
+            endingLineNumber = "1773"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -3008,11 +3008,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1757"
-            endingLineNumber = "1757"
+            startingLineNumber = "1777"
+            endingLineNumber = "1777"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3072,11 +3072,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1069"
-            endingLineNumber = "1069"
+            startingLineNumber = "1090"
+            endingLineNumber = "1090"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3200,11 +3200,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1833"
-            endingLineNumber = "1833"
+            startingLineNumber = "1853"
+            endingLineNumber = "1853"
             landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3280,11 +3280,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1735"
-            endingLineNumber = "1735"
+            startingLineNumber = "1755"
+            endingLineNumber = "1755"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3296,11 +3296,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1726"
-            endingLineNumber = "1726"
+            startingLineNumber = "1746"
+            endingLineNumber = "1746"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3312,11 +3312,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1777"
-            endingLineNumber = "1777"
+            startingLineNumber = "1797"
+            endingLineNumber = "1797"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3664,11 +3664,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1781"
-            endingLineNumber = "1781"
+            startingLineNumber = "1801"
+            endingLineNumber = "1801"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3744,11 +3744,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1940"
-            endingLineNumber = "1940"
+            startingLineNumber = "1963"
+            endingLineNumber = "1963"
             landmarkName = "didPlayerLaserContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3776,11 +3776,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1258"
-            endingLineNumber = "1258"
+            startingLineNumber = "1279"
+            endingLineNumber = "1279"
             landmarkName = "enemiesGenerator(_:didProduceItems:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3792,11 +3792,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1246"
-            endingLineNumber = "1246"
+            startingLineNumber = "1267"
+            endingLineNumber = "1267"
             landmarkName = "enemiesGenerator(_:didProduceItems:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3808,11 +3808,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1618"
-            endingLineNumber = "1618"
+            startingLineNumber = "1638"
+            endingLineNumber = "1638"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3888,11 +3888,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1837"
-            endingLineNumber = "1837"
+            startingLineNumber = "1857"
+            endingLineNumber = "1857"
             landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3920,11 +3920,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1053"
-            endingLineNumber = "1053"
+            startingLineNumber = "1074"
+            endingLineNumber = "1074"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3936,11 +3936,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1089"
-            endingLineNumber = "1089"
+            startingLineNumber = "1110"
+            endingLineNumber = "1110"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -3952,11 +3952,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1104"
-            endingLineNumber = "1104"
+            startingLineNumber = "1125"
+            endingLineNumber = "1125"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4032,7 +4032,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461846212.665969"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "604"
@@ -4048,7 +4048,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461846212.665969"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "604"
@@ -4064,7 +4064,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461846212.665969"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "605"
@@ -4096,11 +4096,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1250"
-            endingLineNumber = "1250"
+            startingLineNumber = "1271"
+            endingLineNumber = "1271"
             landmarkName = "enemiesGenerator(_:didProduceItems:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4208,7 +4208,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461846212.665969"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "593"
@@ -4224,7 +4224,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461846212.665969"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "581"
@@ -4240,7 +4240,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461842351.8346"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "469"
@@ -4256,11 +4256,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1864"
-            endingLineNumber = "1864"
+            startingLineNumber = "1884"
+            endingLineNumber = "1884"
             landmarkName = "didBeginContact(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4272,7 +4272,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461842351.8346"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "359"
@@ -4480,7 +4480,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461842351.8346"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "358"
@@ -4560,11 +4560,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1534"
-            endingLineNumber = "1534"
+            startingLineNumber = "1554"
+            endingLineNumber = "1554"
             landmarkName = "didContactContainBomb(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4576,11 +4576,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1499"
-            endingLineNumber = "1499"
+            startingLineNumber = "1519"
+            endingLineNumber = "1519"
             landmarkName = "didContactContainBomb(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4736,11 +4736,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1588"
-            endingLineNumber = "1588"
+            startingLineNumber = "1608"
+            endingLineNumber = "1608"
             landmarkName = "didEnemyLaserContactWithPlayerOrLaser(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4752,11 +4752,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1842"
-            endingLineNumber = "1842"
+            startingLineNumber = "1862"
+            endingLineNumber = "1862"
             landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4768,11 +4768,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1841"
-            endingLineNumber = "1841"
+            startingLineNumber = "1861"
+            endingLineNumber = "1861"
             landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4784,11 +4784,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1840"
-            endingLineNumber = "1840"
+            startingLineNumber = "1860"
+            endingLineNumber = "1860"
             landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4928,11 +4928,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1280"
-            endingLineNumber = "1280"
+            startingLineNumber = "1301"
+            endingLineNumber = "1301"
             landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4944,7 +4944,39 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1328"
+            endingLineNumber = "1328"
+            landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1327"
+            endingLineNumber = "1327"
+            landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1307"
@@ -4960,11 +4992,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1306"
-            endingLineNumber = "1306"
+            startingLineNumber = "1313"
+            endingLineNumber = "1313"
             landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4976,11 +5008,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1286"
-            endingLineNumber = "1286"
+            startingLineNumber = "1336"
+            endingLineNumber = "1336"
             landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -4992,43 +5024,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1292"
-            endingLineNumber = "1292"
-            landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1315"
-            endingLineNumber = "1315"
-            landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1326"
-            endingLineNumber = "1326"
+            startingLineNumber = "1347"
+            endingLineNumber = "1347"
             landmarkName = "didDissappearItemForEnemiesGenerator(_:item:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5120,11 +5120,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1722"
-            endingLineNumber = "1722"
+            startingLineNumber = "1742"
+            endingLineNumber = "1742"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5136,7 +5136,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461842351.8346"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "296"
@@ -5152,7 +5152,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461842351.8346"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "411"
@@ -5168,11 +5168,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1665"
-            endingLineNumber = "1665"
+            startingLineNumber = "1685"
+            endingLineNumber = "1685"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5184,11 +5184,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1083"
-            endingLineNumber = "1083"
+            startingLineNumber = "1104"
+            endingLineNumber = "1104"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5436,7 +5436,7 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
@@ -5520,11 +5520,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1076"
-            endingLineNumber = "1076"
+            startingLineNumber = "1097"
+            endingLineNumber = "1097"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5536,11 +5536,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1072"
-            endingLineNumber = "1072"
+            startingLineNumber = "1093"
+            endingLineNumber = "1093"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5552,11 +5552,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1725"
-            endingLineNumber = "1725"
+            startingLineNumber = "1745"
+            endingLineNumber = "1745"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5584,11 +5584,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1343"
-            endingLineNumber = "1343"
+            startingLineNumber = "1364"
+            endingLineNumber = "1364"
             landmarkName = "playerContactingWithSmallRegulaAsteroid(_:contact:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5648,11 +5648,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1867"
-            endingLineNumber = "1867"
+            startingLineNumber = "1887"
+            endingLineNumber = "1887"
             landmarkName = "didBeginContact(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5728,7 +5728,7 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/Entities/Player.swift"
-            timestampString = "461842351.8346"
+            timestampString = "463086445.27099"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "360"
@@ -5744,11 +5744,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1917"
-            endingLineNumber = "1917"
+            startingLineNumber = "1941"
+            endingLineNumber = "1941"
             landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5760,11 +5760,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1920"
-            endingLineNumber = "1920"
+            startingLineNumber = "1943"
+            endingLineNumber = "1943"
             landmarkName = "GameScene"
             landmarkType = "3">
          </BreakpointContent>
@@ -5808,11 +5808,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1823"
-            endingLineNumber = "1823"
+            startingLineNumber = "1843"
+            endingLineNumber = "1843"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5840,12 +5840,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462901338.103663"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "979"
-            endingLineNumber = "979"
-            landmarkName = "removePlayerFromRegularAsteroidToScene()"
+            startingLineNumber = "982"
+            endingLineNumber = "982"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -5920,11 +5920,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1846"
-            endingLineNumber = "1846"
+            startingLineNumber = "1866"
+            endingLineNumber = "1866"
             landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5936,11 +5936,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1617"
-            endingLineNumber = "1617"
+            startingLineNumber = "1637"
+            endingLineNumber = "1637"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5952,11 +5952,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1624"
-            endingLineNumber = "1624"
+            startingLineNumber = "1644"
+            endingLineNumber = "1644"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -5968,28 +5968,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1627"
-            endingLineNumber = "1627"
+            startingLineNumber = "1647"
+            endingLineNumber = "1647"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
-            landmarkType = "5">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "JackACrasher/GameScene.swift"
-            timestampString = "461607818.70486"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "438"
-            endingLineNumber = "438"
-            landmarkName = "touchesBegan(_:withEvent:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6048,11 +6032,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1170"
-            endingLineNumber = "1170"
+            startingLineNumber = "1191"
+            endingLineNumber = "1191"
             landmarkName = "asteroidGenerator(_:didProduceAsteroids:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6080,11 +6064,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1903"
-            endingLineNumber = "1903"
+            startingLineNumber = "1927"
+            endingLineNumber = "1927"
             landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6112,12 +6096,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905094.673876"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1040"
-            endingLineNumber = "1040"
-            landmarkName = "removePlayerFromRegularAsteroidToScene()"
+            startingLineNumber = "1061"
+            endingLineNumber = "1061"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -6128,11 +6112,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1655"
-            endingLineNumber = "1655"
+            startingLineNumber = "1675"
+            endingLineNumber = "1675"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6335,11 +6319,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1873"
-            endingLineNumber = "1873"
+            startingLineNumber = "1893"
+            endingLineNumber = "1893"
             landmarkName = "didPlayerContactWithHealthUnit(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6351,11 +6335,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1124"
-            endingLineNumber = "1124"
+            startingLineNumber = "1145"
+            endingLineNumber = "1145"
             landmarkName = "asteroidGenerator(_:didProduceAsteroids:type:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6431,11 +6415,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1886"
-            endingLineNumber = "1886"
+            startingLineNumber = "1906"
+            endingLineNumber = "1906"
             landmarkName = "didPlayerContactWithHealthUnit(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6799,11 +6783,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2047"
-            endingLineNumber = "2047"
+            startingLineNumber = "2070"
+            endingLineNumber = "2070"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6815,11 +6799,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2048"
-            endingLineNumber = "2048"
+            startingLineNumber = "2071"
+            endingLineNumber = "2071"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6831,11 +6815,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2055"
-            endingLineNumber = "2055"
+            startingLineNumber = "2078"
+            endingLineNumber = "2078"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6847,11 +6831,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2056"
-            endingLineNumber = "2056"
+            startingLineNumber = "2079"
+            endingLineNumber = "2079"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6863,11 +6847,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2068"
-            endingLineNumber = "2068"
+            startingLineNumber = "2091"
+            endingLineNumber = "2091"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6879,11 +6863,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2064"
-            endingLineNumber = "2064"
+            startingLineNumber = "2087"
+            endingLineNumber = "2087"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6895,11 +6879,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2088"
-            endingLineNumber = "2088"
+            startingLineNumber = "2111"
+            endingLineNumber = "2111"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -6911,11 +6895,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2060"
-            endingLineNumber = "2060"
+            startingLineNumber = "2083"
+            endingLineNumber = "2083"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
             <Locations>
@@ -6959,11 +6943,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "2084"
-            endingLineNumber = "2084"
+            startingLineNumber = "2107"
+            endingLineNumber = "2107"
             landmarkName = "enemySpaceShip(_:needToCreateExplosionWithEmitter:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7055,11 +7039,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1791"
-            endingLineNumber = "1791"
+            startingLineNumber = "1811"
+            endingLineNumber = "1811"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7087,11 +7071,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905275.202493"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1986"
-            endingLineNumber = "1986"
+            startingLineNumber = "2009"
+            endingLineNumber = "2009"
             landmarkName = "createExplosion(_:position:withScore:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7279,11 +7263,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462901338.103663"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "932"
-            endingLineNumber = "932"
+            startingLineNumber = "934"
+            endingLineNumber = "934"
             landmarkName = "returnPlayerToScene(_:removeAsteroid:usePlayerPostion:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7295,11 +7279,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462901338.103663"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "932"
-            endingLineNumber = "932"
+            startingLineNumber = "934"
+            endingLineNumber = "934"
             landmarkName = "returnPlayerToScene(_:removeAsteroid:usePlayerPostion:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7311,11 +7295,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462901338.103663"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "936"
-            endingLineNumber = "936"
+            startingLineNumber = "939"
+            endingLineNumber = "939"
             landmarkName = "returnPlayerToScene(_:removeAsteroid:usePlayerPostion:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7327,11 +7311,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1792"
-            endingLineNumber = "1792"
+            startingLineNumber = "1812"
+            endingLineNumber = "1812"
             landmarkName = "didContachHasBlackHole(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7343,11 +7327,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462901338.103663"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "946"
-            endingLineNumber = "946"
+            startingLineNumber = "949"
+            endingLineNumber = "949"
             landmarkName = "returnPlayerToScene(_:removeAsteroid:usePlayerPostion:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7423,11 +7407,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1707"
-            endingLineNumber = "1707"
+            startingLineNumber = "1727"
+            endingLineNumber = "1727"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7439,11 +7423,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1715"
-            endingLineNumber = "1715"
+            startingLineNumber = "1735"
+            endingLineNumber = "1735"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7487,27 +7471,27 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905094.673876"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1033"
-            endingLineNumber = "1033"
-            landmarkName = "removePlayerFromRegularAsteroidToScene()"
+            startingLineNumber = "1054"
+            endingLineNumber = "1054"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1900"
-            endingLineNumber = "1900"
+            startingLineNumber = "1927"
+            endingLineNumber = "1927"
             landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7515,15 +7499,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1911"
-            endingLineNumber = "1911"
+            startingLineNumber = "1936"
+            endingLineNumber = "1936"
             landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7531,15 +7515,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1904"
-            endingLineNumber = "1904"
+            startingLineNumber = "1929"
+            endingLineNumber = "1929"
             landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7567,11 +7551,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1906"
-            endingLineNumber = "1906"
+            startingLineNumber = "1931"
+            endingLineNumber = "1931"
             landmarkName = "didPlayerContactWithEdge(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7579,15 +7563,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1054"
-            endingLineNumber = "1054"
+            startingLineNumber = "1075"
+            endingLineNumber = "1075"
             landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7595,16 +7579,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462902761.081133"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "996"
-            endingLineNumber = "996"
-            landmarkName = "removePlayerFromRegularAsteroidToScene()"
+            startingLineNumber = "1016"
+            endingLineNumber = "1016"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -7615,12 +7599,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462905094.673876"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1035"
-            endingLineNumber = "1035"
-            landmarkName = "removePlayerFromRegularAsteroidToScene()"
+            startingLineNumber = "1056"
+            endingLineNumber = "1056"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -7631,11 +7615,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "JackACrasher/GameScene.swift"
-            timestampString = "462904873.041065"
+            timestampString = "463090731.329782"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "1741"
-            endingLineNumber = "1741"
+            startingLineNumber = "1761"
+            endingLineNumber = "1761"
             landmarkName = "didEntityContactWithRegularAsteroid(_:)"
             landmarkType = "5">
          </BreakpointContent>
@@ -7653,6 +7637,390 @@
             startingLineNumber = "836"
             endingLineNumber = "836"
             landmarkName = "update(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1872"
+            endingLineNumber = "1872"
+            landmarkName = "didBeginContact(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1918"
+            endingLineNumber = "1918"
+            landmarkName = "didPlayerContactWithEdge(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463083111.255754"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "590"
+            endingLineNumber = "590"
+            landmarkName = "touchesEnded(_:withEvent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1095"
+            endingLineNumber = "1095"
+            landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463083658.900215"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "755"
+            endingLineNumber = "755"
+            landmarkName = "tryToDestroyPlayer(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463083660.250319"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "754"
+            endingLineNumber = "754"
+            landmarkName = "tryToDestroyPlayer(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1416"
+            endingLineNumber = "1416"
+            landmarkName = "didSmallAsteroidCollidedWithRegulaOne(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463083933.520474"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "628"
+            endingLineNumber = "628"
+            landmarkName = "touchesEnded(_:withEvent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463083959.33911"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "648"
+            endingLineNumber = "648"
+            landmarkName = "touchesEnded(_:withEvent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463084008.47686"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "438"
+            endingLineNumber = "438"
+            landmarkName = "touchesBegan(_:withEvent:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/Entities/Player.swift"
+            timestampString = "463086445.27099"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "361"
+            endingLineNumber = "361"
+            landmarkName = "moveToPoint(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1211"
+            endingLineNumber = "1211"
+            landmarkName = "emulateImpulse(forAsteroid:direction:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1018"
+            endingLineNumber = "1018"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1558"
+            endingLineNumber = "1558"
+            landmarkName = "didPlayerLaserContactWithEnemyOrLaser(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1874"
+            endingLineNumber = "1874"
+            landmarkName = "didBeginContact(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1882"
+            endingLineNumber = "1882"
+            landmarkName = "didBeginContact(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463085339.563002"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "806"
+            endingLineNumber = "806"
+            landmarkName = "createRocksExplosion(_:scale:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1940"
+            endingLineNumber = "1940"
+            landmarkName = "didPlayerContactWithEdge(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1927"
+            endingLineNumber = "1927"
+            landmarkName = "didPlayerContactWithEdge(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1025"
+            endingLineNumber = "1025"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/Utils/Utils.swift"
+            timestampString = "463087973.868955"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "338"
+            endingLineNumber = "338"
+            landmarkName = "recursiveConvertPositionToScene(_:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1003"
+            endingLineNumber = "1003"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1013"
+            endingLineNumber = "1013"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/GameScene.swift"
+            timestampString = "463090731.329782"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "1009"
+            endingLineNumber = "1009"
+            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

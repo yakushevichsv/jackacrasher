@@ -491,7 +491,7 @@ class AsteroidGenerator: NSObject {
                 }
         
             } else {
-                currentAstType = .RopeBased
+                currentAstType = .Regular
             }
         
             
