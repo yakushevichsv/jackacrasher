@@ -94,10 +94,8 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     override func viewDidLoad() {
         super.viewDidLoad()
         if !GameLogicManager.sharedInstance.isAdvDisabled {
-            //self.needToRestartGame = true
             cycleInterstitial()
             self.btnPlay.hidden = true
-            //UIViewController.prepareInterstitialAds()
         }
         else {
             restartGame()
@@ -112,6 +110,11 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         adContainerView?.hidden = true
         btnClose?.hidden = true
         
+        interstitial?.cancelAction()
+        interstitial?.delegate = nil
+        interstitial = nil
+    
+
         self.btnPlay.hidden = false
         // Configure the view.
         let skView = self.view as! SKView
@@ -359,7 +362,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
             
             indicator.startAnimating()
         }
-        
+        //TODO: Move to GameOver Screen. add timer for several seconds...
     }
     
     private func presentInterlude() {
