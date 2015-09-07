@@ -17,8 +17,10 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     private var myContext = 0
     private var adWillBeDisplayed:Bool = false
     private var interstitial:ADInterstitialAd!
-    
     private var needToRestartGame:Bool = false
+    private weak var adContainerView:UIView! = nil
+    private weak var activityIndicatorView:UIActivityIndicatorView! = nil
+    private weak var btnClose:UIButton! = nil
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -94,7 +96,8 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         if !GameLogicManager.sharedInstance.isAdvDisabled {
             //self.needToRestartGame = true
             cycleInterstitial()
-            UIViewController.prepareInterstitialAds()
+            self.btnPlay.hidden = true
+            //UIViewController.prepareInterstitialAds()
         }
         else {
             restartGame()
@@ -104,6 +107,12 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     //MARK: - Public function
     func restartGame(isNew:Bool = true) {
         
+        isDisabledAdv()
+        activityIndicatorView?.stopAnimating()
+        adContainerView?.hidden = true
+        btnClose?.hidden = true
+        
+        self.btnPlay.hidden = false
         // Configure the view.
         let skView = self.view as! SKView
         let scene = GameScene(size: skView.bounds.size)
@@ -154,6 +163,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         super.viewWillDisappear(animated)
         
         NSNotificationCenter.defaultCenter().removeObserver(self)
+        
     }
     
     func didMoveToBG(aNotification:NSNotification) {
@@ -287,13 +297,22 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     }
     //MARK:Interstitial Management
     
+    private func isDisabledAdv() -> Bool {
+        
+        if GameLogicManager.sharedInstance.isAdvDisabled{
+            self.adContainerView?.removeFromSuperview()
+            return true
+        }
+        return false
+    }
+    
     private func cycleInterstitial() {
         
         interstitial?.cancelAction()
         interstitial?.delegate = nil
         interstitial = nil
         
-        if GameLogicManager.sharedInstance.isAdvDisabled{
+        if isDisabledAdv(){
             return
         }
         
@@ -301,34 +320,81 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         ad.delegate = self
         interstitial = ad
         self.interstitialPresentationPolicy = .Manual
-        UIViewController.prepareInterstitialAds()
+        //UIViewController.prepareInterstitialAds()
+        
+        if (self.adContainerView == nil) {
+            
+            let containerView = UIView(frame: self.view.bounds)
+            containerView.frame.origin = CGPointZero
+            self.view.addSubview(containerView)
+            self.adContainerView = containerView
+            
+            let indicator = UIActivityIndicatorView()
+            indicator.hidesWhenStopped = true
+            containerView.addSubview(indicator)
+            
+            self.activityIndicatorView = indicator
+            
+            
+            let constLeft = NSLayoutConstraint(item: containerView, attribute: .Left, relatedBy: .Equal, toItem: self.view, attribute: .Left, multiplier: 1.0, constant: 0)
+            
+            let constRight = NSLayoutConstraint(item: containerView, attribute: .Right, relatedBy: .Equal, toItem: self.view, attribute: .Right, multiplier: 1.0, constant: 0)
+            
+            let constTop = NSLayoutConstraint(item: containerView, attribute: .Top, relatedBy: .Equal, toItem: self.view, attribute: .Top, multiplier: 1.0, constant: 0)
+            
+            let constBottom = NSLayoutConstraint(item: containerView, attribute: .Bottom, relatedBy: .Equal, toItem: self.view, attribute: .Bottom, multiplier: 1.0, constant: 0)
+            
+            self.view.addConstraints([constLeft,constRight,constTop,constBottom])
+            
+            
+            let constrYInd = NSLayoutConstraint(item: indicator, attribute: .CenterY, relatedBy: .Equal, toItem: containerView, attribute: .CenterY, multiplier: 1.0, constant: 0)
+            let constrXInd = NSLayoutConstraint(item: indicator, attribute: .CenterX, relatedBy: .Equal, toItem: containerView, attribute: .CenterX, multiplier: 1.0, constant: 0)
+            
+            
+            containerView.addConstraints([constrXInd,constrYInd])
+            
+            indicator.center = CGPointMake(self.view.frame.midX, self.view.frame.midY)
+            
+            containerView.setTranslatesAutoresizingMaskIntoConstraints(false)
+            
+            indicator.startAnimating()
+        }
         
     }
     
     private func presentInterlude() {
         if let loaded = interstitial?.loaded {
             if !GameLogicManager.sharedInstance.isAdvDisabled{
-                //self.interstitial?.presentFromViewController(s)
-                let res = requestInterstitialAdPresentation()
-                self.adWillBeDisplayed = res
                 
-                println("Result \(res)")
-                /*if (!res) {
-                    interstitial?.presentInView(self.view)
-                }*/
-                /*if (!res && self.interstitialPresentationPolicy == .Manual) {
-                    self.needToRestartGame = true
-                }*/
-                
-                if (!res) {
-                    //self.needToRestartGame = true
-                    let tempView = UIView(frame: CGRectMake(200, 200, 500, 600))
-                    self.view.addSubview(tempView)
-                    if let result = interstitial?.presentInView(tempView) {
-                        self.needToRestartGame = !result
+                if let result = interstitial?.presentInView(self.adContainerView) {
+                    
+                    
+                    if result {
+                        
+                            if self.btnClose == nil {
+                                
+                                let btn = UIButton()
+                                btn.setImage(UIImage(named: "close"), forState: .Normal)
+                                btn.addTarget(self, action: "closePressed:", forControlEvents: UIControlEvents.TouchUpInside)
+                                let btnCenter = CGPointMake(CGRectGetWidth(self.view.bounds) * 0.9, CGRectGetHeight(self.view.bounds)*0.1)
+                                btn.center = btnCenter
+                                btn.bounds = CGRectMake(0, 0, btn.imageForState(.Normal)!.size.width, btn.imageForState(.Normal)!.size.height)
+                                self.view.insertSubview(btn, belowSubview: self.adContainerView)
+                                self.view.addSubview(btn)
+                                self.view.bringSubviewToFront(btn)
+                                self.btnClose = btn
+                            }
+                            activityIndicatorView?.stopAnimating()
                     }
+                    
+                    self.needToRestartGame = !result
                 }
+            } else {
+                self.needToRestartGame = true
             }
+        }
+        else {
+            self.needToRestartGame = true
         }
             
         if self.needToRestartGame {
@@ -337,12 +403,22 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         }
     }
     
+    func closePressed(sender:UIButton!) {
+        sender.removeFromSuperview()
+        interstitial?.cancelAction()
+        interstitialAdActionDidFinish(interstitial)
+        self.activityIndicatorView?.stopAnimating()
+    }
+    
     //MARK: ADInterstitialAdDelegate
     
     func interstitialAd(interstitialAd: ADInterstitialAd!, didFailWithError error: NSError!) {
         println("Error interstitialAd \(error)")
         let domainFault = error.domain == ADErrorDomain
         let codeFault = error.code == ADError.InventoryUnavailable.rawValue
+        
+        activityIndicatorView?.stopAnimating()
+        btnClose?.hidden = true
         
         if !(domainFault && codeFault) {
             cycleInterstitial()
