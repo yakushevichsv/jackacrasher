@@ -30,9 +30,7 @@
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "459"
-            endingLineNumber = "459"
-            landmarkName = "GameViewController"
-            landmarkType = "3">
+            endingLineNumber = "459">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -79,8 +77,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "426"
             endingLineNumber = "426"
-            landmarkName = "GameViewController"
-            landmarkType = "3">
+            landmarkName = "interstitialAd(_:didFailWithError:)"
+            landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -111,7 +109,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "441"
             endingLineNumber = "441"
-            landmarkName = "interstitialAd(_:didFailWithError:)"
+            landmarkName = "interstitialAdDidLoad(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

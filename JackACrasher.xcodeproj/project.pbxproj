@@ -96,6 +96,7 @@
 		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
 		21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B341ADA9D8F0071A217 /* Images.xcassets */; };
 		21E5D2C01B79193700D7E614 /* MotionlessEnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E5D2BF1B79193700D7E614 /* MotionlessEnemySpaceShip.swift */; };
+		21E5F5B11B9E338C0003491D /* SWBlade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E5F5B01B9E338C0003491D /* SWBlade.swift */; };
 		21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */; };
 		21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */; };
 		21F7956A1B555788003464BF /* SurvivalGameInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F795691B555788003464BF /* SurvivalGameInfo.swift */; };
@@ -218,6 +219,7 @@
 		21E56B311ADA9C2A0071A217 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = Entities/Player.swift; sourceTree = "<group>"; };
 		21E56B341ADA9D8F0071A217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		21E5D2BF1B79193700D7E614 /* MotionlessEnemySpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionlessEnemySpaceShip.swift; path = Entities/MotionlessEnemySpaceShip.swift; sourceTree = "<group>"; };
+		21E5F5B01B9E338C0003491D /* SWBlade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SWBlade.swift; path = Entities/SWBlade.swift; sourceTree = "<group>"; };
 		21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectRope.swift; path = Entities/DirectRope.swift; sourceTree = "<group>"; };
 		21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RopeJointAsteroids.swift; path = Entities/RopeJointAsteroids.swift; sourceTree = "<group>"; };
 		21F795691B555788003464BF /* SurvivalGameInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SurvivalGameInfo.swift; path = Model/SurvivalGameInfo.swift; sourceTree = "<group>"; };
@@ -500,6 +502,7 @@
 				21FFA04E1AE6EAAE00EF3EDC /* RegularAsteroid.swift */,
 				21F0FFA61AED09B300C2BDB6 /* Rope */,
 				219A68AF1B70AFB500CE6F07 /* Transmitter.swift */,
+				21E5F5B01B9E338C0003491D /* SWBlade.swift */,
 			);
 			name = Entities;
 			sourceTree = "<group>";
@@ -787,6 +790,7 @@
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */,
+				21E5F5B11B9E338C0003491D /* SWBlade.swift in Sources */,
 				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				21B2C9A31B852A5B0008FEED /* UIImage+TextureAtlas.m in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,

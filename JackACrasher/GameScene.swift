@@ -39,6 +39,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private var prevPlayerPosition:CGPoint = CGPointZero
     private var lastUpdateTimeInterval:CFTimeInterval
     
+    private var ropeBasedArray = [RopeJointAsteroids]()
+    
      var currentGameScore:Int64 = 0
     private var totalGameScore:UInt64 = 0 {
         didSet {
@@ -67,7 +69,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         get { return Float(self.player.health % 100) }
     }
     
-    private var enableCuttingRope:Bool = false
     private var startPoint:CGPoint = CGPointZero
     private var movedPoint:CGPoint = CGPointZero
     private var endPoint:CGPoint = CGPointZero
@@ -412,7 +413,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     private func canCutRope(touches: Set<NSObject>) -> Bool {
-        return touches.count == 1 && self.enableCuttingRope
+        return !(touches.count == 0 || self.ropeBasedArray.isEmpty)
     }
     
     private func transferAsteroidsToScene(rope:Rope) {
@@ -446,9 +447,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if !self.canCutRope(touches) {
             self.storePrevPlayerPosition()
         }
+        
+        println("touchesBegan. Can cut the rope \(self.canCutRope(touches))")
     }
     
     override  func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        println("touchesMoved. Can cut the rope \(self.canCutRope(touches))")
+        
         if self.canCutRope(touches) {
             
             if let touch = touches.first as? UITouch {
@@ -479,23 +485,30 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 else {
                     self.createSparks(position)
                     self.moving = true
+                    touchesShouldCutRopes(touches)
                 }
             }
         }
     }
     
     override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+        
+        println("touchesCancelled. Can cut the rope \(self.canCutRope(touches))")
+        
         self.moving = false
         self.needToReflect = false
     }
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
-        if (self.needToReflect) {
-            self.needToReflect = false
-            return
+    private func touchesShouldCutRopes(touches: Set<NSObject>,useMoving:Bool = false) -> Bool {
+        
+        var movingToUse = self.moving
+        if !useMoving {
+            movingToUse = true
         }
         
-        if self.canCutRope(touches) &&  self.moving {
+        var result:Bool
+        
+        if self.canCutRope(touches) &&  movingToUse {
             
             let touch = touches.first as! UITouch
             let location = touch.locationInNode(self)
@@ -504,13 +517,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if (!CGPointEqualToPoint(self.startPoint, self.endPoint)){
                 
+                println("See body under ray \(self.startPoint) End Point \(self.endPoint)")
+                
                 self.physicsWorld.enumerateBodiesAlongRayStart(self.startPoint, end: self.endPoint) {
                     [unowned self]
                     (body,pos,vector,boolPtr) in
                     
-                //if let  body = self.physicsWorld.bodyAlongRayStart(self.startPoint, end: self.endPoint) {
+                    //if let  body = self.physicsWorld.bodyAlongRayStart(self.startPoint, end: self.endPoint) {
+                    let isRope = body.categoryBitMask == EntityCategory.Rope
                     
-                    if body.categoryBitMask == EntityCategory.Rope {
+                    println("Body category \(body.categoryBitMask)\n Is rope \(isRope)")
+                    
+                    if isRope {
                         
                         //HACK: add rotation here....
                         
@@ -582,19 +600,32 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                 
                             })
                             
-                            
-                            
-                            
-                            
-                            
-                            self.enableCuttingRope = false
-                            
                         }
                     }
                 }
             }
-            
+            result = true
+        }
+        
+        result =  false
+        
+        if useMoving {
             self.moving = false
+        }
+        
+        return result
+    }
+    
+    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+        
+        println("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
+        
+        if (self.needToReflect) {
+            self.needToReflect = false
+            return
+        }
+        
+        if touchesShouldCutRopes(touches, useMoving: true) {
             return
         }
         
@@ -1090,7 +1121,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             break
         case .RopeBased:
-            self.enableCuttingRope = false
+            
+            if !self.ropeBasedArray.isEmpty {
+                
+                for (var i = self.ropeBasedArray.startIndex; i < self.ropeBasedArray.endIndex;i++) {
+                    
+                    let curAster = self.ropeBasedArray[i]
+                    
+                    if curAster == asteroid {
+                        self.ropeBasedArray.removeAtIndex(i)
+                        break
+                    }
+                }
+            }
             generator.paused = false
             if let ropeBased = asteroid as? RopeJointAsteroids {
                 for aster in ropeBased.asteroids {
@@ -1188,9 +1231,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             break
         case .RopeBased:
-            if let asteroids = didProduceAsteroids.last as? RopeJointAsteroids {
-                asteroids.prepare()
-                self.enableCuttingRope = true
+            for aster in didProduceAsteroids {
+                if let asteroids = aster as? RopeJointAsteroids {
+                    asteroids.prepare()
+                    self.ropeBasedArray.append(asteroids)
+                }
             }
             break
         default:
