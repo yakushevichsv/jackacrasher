@@ -84,6 +84,7 @@
 		21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */; };
 		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
 		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
+		21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CEEFAA1B9CCB2D008937A2 /* iAd.framework */; };
 		21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA61B10A1B1009EDA3E /* button_press.wav */; };
 		21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA81B10AAB6009EDA3E /* star_small.png */; };
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
@@ -205,6 +206,7 @@
 		21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemySpaceShip.swift; path = Entities/EnemySpaceShip.swift; sourceTree = "<group>"; };
 		21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JackACrasherNavigationController.swift; path = Model/JackACrasherNavigationController.swift; sourceTree = "<group>"; };
 		21CCA14D1B0A881C004419A2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
+		21CEEFAA1B9CCB2D008937A2 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		21CFBCA61B10A1B1009EDA3E /* button_press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_press.wav; sourceTree = "<group>"; };
 		21CFBCA81B10AAB6009EDA3E /* star_small.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = star_small.png; sourceTree = "<group>"; };
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
@@ -243,6 +245,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */,
 				2171B32B1B7B9F46007733BA /* Social.framework in Frameworks */,
 				217EDC971B7CC4710002E013 /* TwitterKit.framework in Frameworks */,
 				2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */,
@@ -566,6 +569,7 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				21CEEFAA1B9CCB2D008937A2 /* iAd.framework */,
 				210CE8731B8BC93C00C9F288 /* VKSdk.framework */,
 				210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */,
 				217EDC921B7CC4710002E013 /* Fabric.framework */,

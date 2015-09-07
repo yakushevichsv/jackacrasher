@@ -8,12 +8,17 @@
 
 import UIKit
 import SpriteKit
+import iAd
 
-class GameViewController: UIViewController,GameSceneDelegate {
+class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDelegate {
     @IBOutlet weak var btnPlay: UIButton!
     private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
     private lazy var returnPauseTransDelegate = ReturnPauseTransitionDelegate()
     private var myContext = 0
+    private var adWillBeDisplayed:Bool = false
+    private var interstitial:ADInterstitialAd!
+    
+    private var needToRestartGame:Bool = false
     
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -86,8 +91,14 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        restartGame()
+        if !GameLogicManager.sharedInstance.isAdvDisabled {
+            //self.needToRestartGame = true
+            cycleInterstitial()
+            UIViewController.prepareInterstitialAds()
+        }
+        else {
+            restartGame()
+        }
     }
     
     //MARK: - Public function
@@ -124,6 +135,11 @@ class GameViewController: UIViewController,GameSceneDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        if self.adWillBeDisplayed {
+            self.adWillBeDisplayed = false
+            willMoveToFGPrivate()
+        }
+        
         /*NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationDidEnterBackgroundNotification, object: nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationWillEnterForegroundNotification, object: nil)*/
@@ -142,11 +158,15 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     func didMoveToBG(aNotification:NSNotification) {
         
-        let scene = self.skView.scene as! GameScene
-        scene.pauseGame(pause: true)
+        let scene = self.skView.scene as? GameScene
+        scene?.pauseGame(pause: true)
     }
     
     func willMoveToFG(aNotification:NSNotification) {
+        willMoveToFGPrivate()
+    }
+    
+    private func willMoveToFGPrivate() {
         var paused = false
         if self.presentedViewController == nil {
             paused = !self.btnPlay.selected
@@ -155,8 +175,11 @@ class GameViewController: UIViewController,GameSceneDelegate {
             paused = true
         }
         
-        let scene = self.skView.scene as! GameScene
-        scene.pauseGame(pause: paused)
+        if let scene = self.skView.scene as? GameScene {
+            scene.pauseGame(pause: paused)
+        } else {
+            restartGame()
+        }
     }
     
 
@@ -252,7 +275,102 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         
         if let vc = sender.destinationViewController as? GameViewController {
-            vc.restartGame(isNew: false)
+            
+            if (!GameLogicManager.sharedInstance.isAdvDisabled) {
+                self.needToRestartGame = true
+                self.presentInterlude()
+            }
+            else {
+                vc.restartGame(isNew: false)
+            }
         }
+    }
+    //MARK:Interstitial Management
+    
+    private func cycleInterstitial() {
+        
+        interstitial?.cancelAction()
+        interstitial?.delegate = nil
+        interstitial = nil
+        
+        if GameLogicManager.sharedInstance.isAdvDisabled{
+            return
+        }
+        
+        let ad = ADInterstitialAd()
+        ad.delegate = self
+        interstitial = ad
+        self.interstitialPresentationPolicy = .Manual
+        UIViewController.prepareInterstitialAds()
+        
+    }
+    
+    private func presentInterlude() {
+        if let loaded = interstitial?.loaded {
+            if !GameLogicManager.sharedInstance.isAdvDisabled{
+                //self.interstitial?.presentFromViewController(s)
+                let res = requestInterstitialAdPresentation()
+                self.adWillBeDisplayed = res
+                
+                println("Result \(res)")
+                /*if (!res) {
+                    interstitial?.presentInView(self.view)
+                }*/
+                /*if (!res && self.interstitialPresentationPolicy == .Manual) {
+                    self.needToRestartGame = true
+                }*/
+                
+                if (!res) {
+                    //self.needToRestartGame = true
+                    let tempView = UIView(frame: CGRectMake(200, 200, 500, 600))
+                    self.view.addSubview(tempView)
+                    if let result = interstitial?.presentInView(tempView) {
+                        self.needToRestartGame = !result
+                    }
+                }
+            }
+        }
+            
+        if self.needToRestartGame {
+            self.needToRestartGame = false
+            restartGame(isNew: false)
+        }
+    }
+    
+    //MARK: ADInterstitialAdDelegate
+    
+    func interstitialAd(interstitialAd: ADInterstitialAd!, didFailWithError error: NSError!) {
+        println("Error interstitialAd \(error)")
+        let domainFault = error.domain == ADErrorDomain
+        let codeFault = error.code == ADError.InventoryUnavailable.rawValue
+        
+        if !(domainFault && codeFault) {
+            cycleInterstitial()
+        }
+        
+        self.willMoveToFGPrivate()
+    }
+    
+    func interstitialAdDidUnload(interstitialAd: ADInterstitialAd!) {
+        
+        cycleInterstitial()
+        
+        self.willMoveToFGPrivate()
+    }
+    
+    func interstitialAdDidLoad(interstitialAd: ADInterstitialAd!) {
+        println("Did load interstitialAdDidLoad")
+        
+        if interstitialAd.loaded {
+            presentInterlude()
+        }
+    }
+    
+    override var shouldPresentInterstitialAd:Bool {
+        get { return !GameLogicManager.sharedInstance.isAdvDisabled}
+    }
+    
+    func interstitialAdActionDidFinish(interstitialAd: ADInterstitialAd!) {
+        self.willMoveToFGPrivate()
     }
 }

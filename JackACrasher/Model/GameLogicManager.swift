@@ -717,7 +717,7 @@ extension GameLogicManager {
     }
 }
 
-//Music sound
+//MARK:Music sound
 extension GameLogicManager {
     
     private struct SoundConstants {
@@ -738,4 +738,44 @@ extension GameLogicManager {
         return def.boolForKey(key)
     }
     
+}
+
+// MARK: Adv Logic 
+
+extension GameLogicManager {
+    
+    private struct AdConstants {
+        static let AdKey = "AdKey"
+    }
+    
+    var isAdvDisabled:Bool {
+        get {
+            return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.AdConstants.AdKey)
+        }
+    }
+    
+    func disableAdv() -> Bool {
+        return setAdvState(true)
+    }
+    
+    
+    func enableAdv() -> Bool {
+        return setAdvState(false)
+    }
+    
+    private func setAdvState(disabled:Bool) -> Bool {
+        let userDef = NSUserDefaults.standardUserDefaults()
+        let key = GameLogicManager.AdConstants.AdKey
+        
+        if (!disabled) {
+            //enabled... 
+            if isAdvDisabled {
+                userDef.removeObjectForKey(key)
+            }
+        }
+        else {
+            userDef.setBool(true, forKey: key)
+        }
+        return userDef.synchronize()
+    }
 }

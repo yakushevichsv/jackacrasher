@@ -90,13 +90,18 @@ class GameMainViewController: UIViewController {
         
         initVK()
         
-        SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
         authDidChange(nil)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
         
         let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
         
+        if disabled {
+            SoundManager.sharedInstance.disableSound()
+        }else {
+            SoundManager.sharedInstance.enableSound()
+            SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
+        }
         self.btnSound.selected = !disabled
         self.btnPressed(self.btnSound)
         
