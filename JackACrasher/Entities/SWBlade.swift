@@ -8,13 +8,18 @@
 
 import SpriteKit
 
-class SWBlade: SKNode {
-    
+class SWBlade: SKNode,AssetsContainer {
+    private weak var emitter:SKEmitterNode!
+    private static var whiteEmitterNode:SKEmitterNode! = nil
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
-    init(position:CGPoint, target:SKNode, color:UIColor) {
+    static func loadAssets() {
+       whiteEmitterNode = emitterNodeWithColor(UIColor.whiteColor())
+    }
+    
+    init(position:CGPoint, target:SKNode?, color:UIColor) {
         super.init()
         
         self.name = "skblade"
@@ -25,12 +30,17 @@ class SWBlade: SKNode {
         tip.zPosition = 10
         self.addChild(tip)
         
-        let emitter:SKEmitterNode = emitterNodeWithColor(color)
-        emitter.targetNode = target
-        emitter.zPosition = 0
-        tip.addChild(emitter)
+        let emitter1 = color == UIColor.whiteColor() ? SWBlade.whiteEmitterNode.copy() as! SKEmitterNode : SWBlade.emitterNodeWithColor(color)
+        emitter1.targetNode = target
+        emitter1.zPosition = 0
+        tip.addChild(emitter1)
+        self.emitter = emitter1
         
         self.setScale(0.6)
+    }
+    
+    var particleLifeTime:NSTimeInterval {
+        get {return NSTimeInterval(emitter.particleLifetime + emitter.particleLifetimeRange)}
     }
     
     func enablePhysics(categoryBitMask:UInt32, contactTestBitmask:UInt32, collisionBitmask:UInt32) {
@@ -41,9 +51,10 @@ class SWBlade: SKNode {
         self.physicsBody?.dynamic = false
     }
     
-    func emitterNodeWithColor(color:UIColor)->SKEmitterNode {
+    class func emitterNodeWithColor(color:UIColor)->SKEmitterNode {
         var emitterNode:SKEmitterNode = SKEmitterNode()
-        emitterNode.particleTexture = SKTexture(imageNamed: "spark.png")
+        let texture = SKTexture(imageNamed: "spark")
+        emitterNode.particleTexture = texture
         emitterNode.particleBirthRate = 3000
         
         emitterNode.particleLifetime = 0.2

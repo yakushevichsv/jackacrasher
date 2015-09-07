@@ -26,6 +26,7 @@ struct EntityCategory {
     static var LeftEdgeBorder:UInt32 = 1 << 13
     static var RightEdgeBorder:UInt32 = 1 << 14
     static var HealthUnit:UInt32 = 1 << 15
+    static var Blade:UInt32 = 1 << 16
 }
 
 typealias ForceType = CGFloat
