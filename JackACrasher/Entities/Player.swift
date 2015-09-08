@@ -10,7 +10,6 @@ import UIKit
 import SpriteKit
 
 struct EntityCategory {
-    static var Asteroid: UInt32  = 1 << 0
     static var Player : UInt32  = 1 << 1
     static var PlayerLaser: UInt32 = 1 << 2
     static var Boss : UInt32 = 1 << 3
@@ -26,6 +25,7 @@ struct EntityCategory {
     static var LeftEdgeBorder:UInt32 = 1 << 13
     static var RightEdgeBorder:UInt32 = 1 << 14
     static var HealthUnit:UInt32 = 1 << 15
+    static var Blade:UInt32 = 1 << 16
 }
 
 typealias ForceType = CGFloat
@@ -514,7 +514,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         projectile.physicsBody!.collisionBitMask = 0
         
         projectile.physicsBody!.categoryBitMask  = EntityCategory.PlayerLaser
-        projectile.physicsBody!.contactTestBitMask =  EntityCategory.Asteroid
+        projectile.physicsBody!.contactTestBitMask =  EntityCategory.RegularAsteroid
         projectile.userData = ["owner":"p"]
         
         projectile.zPosition = self.zPosition
