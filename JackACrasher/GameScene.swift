@@ -38,7 +38,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     weak var gameSceneDelegate:GameSceneDelegate?
     private var prevPlayerPosition:CGPoint = CGPointZero
     private var lastUpdateTimeInterval:CFTimeInterval
-    private var ignoreToucheseForBlade = false
     private weak var blade:SWBlade! = nil
     private var delta = CGPointZero
     
@@ -463,9 +462,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         println("touchesCancelled. Can cut the rope \(self.canCutRope(touches))")
         removeBlade()
-        
-        self.ignoreToucheseForBlade = false
-        
+    
     }
     
     
@@ -1720,7 +1717,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func didBeginContact(contact: SKPhysicsContact)
     {
         println("Contact \(contact)")
-        if (didBladeContactWithRope(contact) || didBladeContactWithAsteroid(contact)) {
+        if (didBladeContactWithRope(contact)) {
             return
         }
         
@@ -2040,15 +2037,9 @@ extension GameScene {
     private func areTouchesEndedForBlade(touches: Set<NSObject>, withEvent event: UIEvent) -> Bool {
         
         println("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
-        let flag = self.removedBlade || self.blade != nil || self.ignoreToucheseForBlade
-        if !self.ignoreToucheseForBlade {
-            removeBlade()
-        }
-        
-        
-        self.ignoreToucheseForBlade = false
-        
-        
+        let flag = self.removedBlade || self.blade != nil
+        removeBlade()
+    
         if self.canCutRope(touches) && flag {
             return true
         }
@@ -2067,51 +2058,7 @@ extension GameScene {
             delta = CGPointZero
         }
     }
-    
-    func didBladeContactWithAsteroid(contact:SKPhysicsContact) -> Bool {
-        
-        if self.ignoreToucheseForBlade {
-            return true
-        }
-        
-        var bladeBody:SKPhysicsBody? = nil
-        var asterBody:SKPhysicsBody? = nil
-        
-        if (contact.bodyA.categoryBitMask == EntityCategory.Blade) {
-            bladeBody = contact.bodyA
-        } else if (contact.bodyB.categoryBitMask  == EntityCategory.Blade) {
-            bladeBody = contact.bodyB
-        }
-        
-        if (contact.bodyA.categoryBitMask == EntityCategory.RegularAsteroid) {
-            asterBody = contact.bodyA
-        } else if (contact.bodyB.categoryBitMask  == EntityCategory.RegularAsteroid) {
-            asterBody = contact.bodyB
-        }
-        
-        let res = asterBody != nil && bladeBody != nil
-        
-        if res {
-            if let asterNode = asterBody?.node as? RegularAsteroid {
-            
-                //HACK: Why FPS drops if SmallRegularAsteroid
-                let smallAster = asterNode as? SmallRegularAsteroid
-                if smallAster == nil {
-                    let vec = CGVector(dx: contact.contactNormal.dx*10, dy: contact.contactNormal.dy*10)
-                    bladeBody?.applyImpulse(vec)
-                    
-                    asterNode.runAction(SKAction.sequence([SKAction.waitForDuration(0.8),SKAction.runBlock(){
-                            self.removeBlade()
-                        }]))
-                }
-                blade.physicsBody?.categoryBitMask = EntityCategory.Rope
-                self.ignoreToucheseForBlade = true
-                shakeCamera(asterNode, duration: 0.5)
-            }
-        }
-        return res
-    }
-    
+
     func didBladeContactWithRope(contact:SKPhysicsContact) -> Bool {
         
         var bladeBody:SKPhysicsBody? = nil
