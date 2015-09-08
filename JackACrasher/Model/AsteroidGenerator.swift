@@ -418,7 +418,7 @@ class AsteroidGenerator: NSObject {
             //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
             sprite.physicsBody!.categoryBitMask = EntityCategory.TrashAsteroid
             sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
-            sprite.physicsBody!.collisionBitMask = EntityCategory.TrashAsteroid | EntityCategory.Asteroid
+            sprite.physicsBody!.collisionBitMask = EntityCategory.TrashAsteroid
             
             sprites.append(sprite)
         }
