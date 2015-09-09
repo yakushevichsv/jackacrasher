@@ -27,27 +27,6 @@ class RoundCornerButton: UIButton {
         setup()
     }
     
-    @IBInspectable
-    var borderWidth:CGFloat = 2.0 {
-        didSet {
-            self.layer.borderWidth = borderWidth
-        }
-    }
-    
-    @IBInspectable
-    var borderColor:UIColor = Constants.sBorderColor {
-        didSet {
-            self.layer.borderColor = self.borderColor.CGColor
-        }
-    }
-    
-    @IBInspectable
-    var cornerRadius:CGFloat = Constants.sCornerRadius {
-        didSet {
-            self.layer.cornerRadius = self.cornerRadius
-        }
-    }
-    
     private func setup() {
         self.borderColor = Constants.sBorderColor
         self.borderWidth = Constants.sBorderWidth

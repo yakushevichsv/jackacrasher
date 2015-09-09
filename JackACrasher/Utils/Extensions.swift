@@ -37,3 +37,47 @@ func length() -> CGFloat {
     
 }
 
+
+extension UIView {
+    
+    @IBInspectable var cornerRadius:CGFloat {
+        get {
+            return self.layer.cornerRadius
+        }
+        set {
+            self.layer.cornerRadius = newValue
+            self.layer.masksToBounds = newValue > 0
+            
+            if self.cornerRadius != newValue {
+                setNeedsDisplay()
+            }
+        }
+    }
+    
+    @IBInspectable  var borderWidth:CGFloat {
+        get {
+            return self.layer.borderWidth
+        }
+        set {
+            self.layer.borderWidth = newValue
+            
+            if self.borderWidth != newValue {
+                setNeedsDisplay()
+            }
+        }
+        
+    }
+    
+    @IBInspectable var borderColor:UIColor! {
+        get {
+            return UIColor(CGColor: self.layer.borderColor)
+        }
+        set {
+            self.layer.borderColor = newValue.CGColor
+            
+            if self.borderColor != newValue {
+                setNeedsDisplay()
+            }
+        }
+    }
+}
