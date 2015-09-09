@@ -61,7 +61,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         var f_size:CGFloat
         
         var isLittle:Bool = false
-        
+        var multiplicator:CGFloat = 1.0
         switch (asteroid) {
         case .Medium:
             partName = "medium"
@@ -81,7 +81,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
             break
         case .Big:
             partName = "large"
-            
+            multiplicator = 0.5
             w_R = 20
             w_r = 14
             f_size = 100
@@ -96,15 +96,18 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         
         self.maxLife = maxLife
         let texture = SKTexture(imageNamed: nodeName!)
+        var size = texture.size()
+        size.width *= multiplicator
+        size.height *= multiplicator
         
-        self.digitNode = DigitNode(size: texture.size(), digit: maxLife,params:[w_R,w_r,f_size])
-        self.cropNode = ProgressTimerCropNode(size: texture.size())
+        self.digitNode = DigitNode(size: size, digit: maxLife,params:[w_R,w_r,f_size])
+        self.cropNode = ProgressTimerCropNode(size: size)
         self.asterSize = asteroid
         
         super.init()
         
         self.bgImageNode.texture = texture
-        self.bgImageNode.size = texture.size()
+        self.bgImageNode.size = size
         
         self.addChild(bgImageNode)
         
@@ -113,7 +116,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
             addChild(self.cropNode)
         }
         
-        let physBody = SKPhysicsBody(texture: texture, size: texture.size())
+        let physBody = SKPhysicsBody(texture: texture, size: size)
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         physBody.collisionBitMask = 0

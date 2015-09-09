@@ -368,6 +368,8 @@ class GameMainViewController: UIViewController {
                 
                 self.transitionDelegate.isPortrait = isPortrait
                 self.transitionDelegate.rect = self.view.frame
+                self.transitionDelegate.backgroundColor = UIColor.lightGrayColor()
+                self.transitionDelegate.backgroundAlpha = 1.0
                 
                 dVC.transitioningDelegate = self.transitionDelegate
             } else if (identifier == "help") {

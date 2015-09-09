@@ -13,6 +13,9 @@ class PopUpTransitioningDelegate: NSObject,UIViewControllerTransitioningDelegate
     internal var rect:CGRect = CGRectZero
     internal var isPortrait:Bool = false
     
+    internal var backgroundColor:UIColor! = UIColor.clearColor()
+    internal var backgroundAlpha:CGFloat = 0.0
+    
     override init() {
         super.init()
     }
@@ -38,7 +41,12 @@ class PopUpTransitioningDelegate: NSObject,UIViewControllerTransitioningDelegate
     func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController!, sourceViewController source: UIViewController) -> UIPresentationController? {
         
     
-        return PopupPresentationController(presentedViewController: presented, presentingViewController: presenting)
+        let controller = PopupPresentationController(presentedViewController: presented, presentingViewController: presenting)
+        
+        controller.backgroundAlpha = self.backgroundAlpha
+        controller.backgroundColor = self.backgroundColor
+        
+        return controller
         
     }
     
