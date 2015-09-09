@@ -81,7 +81,7 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
             break
         case .Big:
             partName = "large"
-            multiplicator = 0.5
+            multiplicator = 0.8
             w_R = 20
             w_r = 14
             f_size = 100
@@ -97,8 +97,15 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         self.maxLife = maxLife
         let texture = SKTexture(imageNamed: nodeName!)
         var size = texture.size()
-        size.width *= multiplicator
-        size.height *= multiplicator
+        
+        if (multiplicator != 1.0) {
+            size.width *= multiplicator
+            size.height *= multiplicator
+        
+            w_R *= multiplicator
+            w_r *= multiplicator
+            f_size *= multiplicator
+        }
         
         self.digitNode = DigitNode(size: size, digit: maxLife,params:[w_R,w_r,f_size])
         self.cropNode = ProgressTimerCropNode(size: size)

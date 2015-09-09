@@ -77,6 +77,9 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     private static var sContext:dispatch_once_t = 0
     
+#if DEBUG
+    private var playerCount:UInt = 0
+#endif
     
     var health: ForceType = 100
     
@@ -456,12 +459,26 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
        let sprite = Player.sBGSprite.copy() as! SKSpriteNode
         
        sprite.name = self.name! + "BG"
+    
+#if DEBUG
+        //HACK:
+        self.playerCount++;
+        
+        if self.playerCount > 1 {
+            println("Count \(self.playerCount)")
+        }
+#endif
         
        return sprite
     }
     
     internal func playerBGSpriteFromNode(node:SKNode!)->SKSpriteNode? {
-       
+#if DEBUG
+        if self.playerCount > 0 {
+            self.playerCount--;
+        }
+#endif
+        
         let name = self.name! + "BG"
         
         return node.childNodeWithName(name) as? SKSpriteNode

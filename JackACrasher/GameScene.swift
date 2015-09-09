@@ -1592,6 +1592,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             playerNode.position = pointInternal
             playerNode.zRotation = angle2
             
+            pNode.physicsBody?.categoryBitMask &= ~EntityCategory.Player
             
             println("placing player at position \(pointInternal)")
             self.player.disableGravityReceptivity()
@@ -1772,7 +1773,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if (contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyA.categoryBitMask == EntityCategory.Player) || (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyB.categoryBitMask == EntityCategory.Player)  {
             
             println("Player contacted with left edge")
-            self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
+            if (self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)) {
+                
+                let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                    Int64(0.5 * Double(NSEC_PER_SEC)))
+                
+                self.player.physicsBody?.categoryBitMask &= ~EntityCategory.LeftEdgeBorder
+                
+                dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
+                    [unowned self] in
+                    self.player?.physicsBody?.categoryBitMask |= EntityCategory.LeftEdgeBorder
+                }
+            }
             return true
         }
         
