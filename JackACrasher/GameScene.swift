@@ -521,10 +521,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                     //MARK: Continue here, create crystal, with score addition.
                                     self.rotateFakePlayer(regAster, location: location){
                                         [unowned self] in
+                                       
+                                        let spritePos = self.player.playerBGSpriteFromNode(regAster)!.position
+                                        
+                                        let diffVector = spritePos.normalized().toVector() * -4
+                                        self.applyRotationOnNeedToRopeJointAsteroids(diffVector, node: regAster)
                                         
                                         self.createRocksExplosion(location,scale:scale)
                                         self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                                         self.displayScoreAdditionLabel(location, scoreAddition: 20)
+                                        
                                     }
                                 }
                                 else {
@@ -753,6 +759,22 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         didEvaluateActionPrivate()
     }
     
+    
+    private func applyImpulseToNode(sprite:SKNode!,vector:CGVector) {
+        
+        var affectedNode:SKNode! = sprite
+        if sprite.parent != self {
+            affectedNode = affectedNode.parent
+        }
+        
+        affectedNode.physicsBody?.applyImpulse(vector)
+    }
+    
+    private func applyBackImpulseToNode(sprite:SKNode!) {
+        
+        applyImpulseToNode(sprite, vector: CGVector(dx: -40, dy: 0.0))
+    }
+    
     func returnPlayerToScene(sprite:SKNode,removeAsteroid:Bool = true,usePlayerPostion:Bool = false) -> Bool {
         
         if self.player.hidden {
@@ -774,13 +796,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.removePlayerFromRegularAsteroidToScene(node)
             
             if usePlayerPostion {
-                var affectedNode:SKNode! = sprite
-                if sprite.parent != self.scene {
-                    affectedNode = affectedNode.parent
-                }
-                
-                affectedNode.physicsBody?.applyImpulse(CGVector(dx: -40, dy: 0.0))
-
+                applyBackImpulseToNode(sprite)
             }
             
             if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
@@ -1479,6 +1495,27 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return false
     }
     
+    func applyRotationOnNeedToRopeJointAsteroids(vector:CGVector,node:SKNode!) -> Bool
+    {
+        if let ropeJointAsters =  node.parent as? RopeJointAsteroids {
+            
+            if ropeJointAsters.rope == nil {
+                return false
+            }
+            
+            var secondAster = (ropeJointAsters.asteroids.last == node ? ropeJointAsters.asteroids.first : ropeJointAsters.asteroids.last)!
+            
+            let position = ropeJointAsters.convertPoint(secondAster.position, toNode: self)
+            
+            ropeJointAsters.rope?.physicsBody?.applyImpulse(vector, atPoint: position)
+            
+            //ropeJointAsters.rope?.physicsBody?.applyAngularImpulse(vector.length()*10)
+            
+            return true
+        }
+        return false
+    }
+    
     func didEntityContactWithRegularAsteroid(contact: SKPhysicsContact) -> Bool
     {
         let bodyA = contact.bodyA
@@ -1557,10 +1594,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         }
                         let location = contact.contactPoint
                         
+                        var vector = contact.contactNormal * -4
+                        
+                        self.applyRotationOnNeedToRopeJointAsteroids(vector, node: regAster)
+                        
                         self.createRocksExplosion(location,scale:scale)
                         self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                         self.displayScoreAdditionLabel(location, scoreAddition: 20)
-                        
                     }
                     else {
                            self.shakeCamera(regAster, duration: 0.8)
@@ -2165,10 +2205,10 @@ extension GameScene {
                     curNode.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.removeFromParent()]))
                     
                 })
-                /*if let ropeJointAsters =  bNodeParent?.parent as? RopeJointAsteroids {
-                    
-                    self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: ropeJointAsters, withType: .RopeBased)
-                }*/
+                
+                if let ropeJointAsters =  bNodeParent?.parent as? RopeJointAsteroids {
+                    ropeJointAsters.rope = nil
+                }
             }
         }
         

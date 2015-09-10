@@ -73,6 +73,15 @@ func /= (inout point: CGPoint, scalar: CGFloat) {
     point = point / scalar
 }
 
+func *= (inout vector:CGVector,value:CGFloat) {
+    vector = vector * value
+}
+
+func * (vector:CGVector, value:CGFloat) -> CGVector {
+    
+    return CGVector(dx: vector.dx * value, dy: vector.dy * value)
+}
+
 #if !(arch(x86_64) || arch(arm64))
     func atan2(y: CGFloat, x: CGFloat) -> CGFloat {
         return CGFloat(atan2f(Float(y), Float(x)))
@@ -111,6 +120,10 @@ extension CGPoint {
     
     var angle: CGFloat {
         return atan2(y, x)
+    }
+    
+    func toVector() -> CGVector {
+        return CGVector(dx: x, dy: y)
     }
 }
 
@@ -213,6 +226,8 @@ extension CGPoint {
         return CGPoint(x: round(self.x),y: round(self.y))
     }
 }
+
+
 
 extension CGSize {
     func rectAtPoint(point:CGPoint) -> CGRect {
