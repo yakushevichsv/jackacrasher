@@ -524,7 +524,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                        
                                         let spritePos = self.player.playerBGSpriteFromNode(regAster)!.position
                                         
-                                        let diffVector = spritePos.normalized().toVector() * -4
+                                        let diffVector = spritePos.normalized().toVector() * -0.5
                                         self.applyRotationOnNeedToRopeJointAsteroids(diffVector, node: regAster)
                                         
                                         self.createRocksExplosion(location,scale:scale)
@@ -1503,11 +1503,70 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return false
             }
             
-            var secondAster = (ropeJointAsters.asteroids.last == node ? ropeJointAsters.asteroids.first : ropeJointAsters.asteroids.last)!
+            var secondAster = node //(ropeJointAsters.asteroids.last == node ? ropeJointAsters.asteroids.first : ropeJointAsters.asteroids.last)!
             
             let position = ropeJointAsters.convertPoint(secondAster.position, toNode: self)
             
-            ropeJointAsters.rope?.physicsBody?.applyImpulse(vector, atPoint: position)
+            let childrenNode = ropeJointAsters.rope?.children as? [SKNode]
+            if let chain = childrenNode?.last {
+                
+                let curPhysBody = chain.physicsBody!
+                
+                if !curPhysBody.joints.isEmpty {
+                    
+                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                        let joint: AnyObject = curPhysBody.joints[i]
+                        
+                        let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
+                        
+                        if let nodeA =  skJoint.bodyA.node {
+                            
+                            if (secondAster == nodeA) {
+                                chain.physicsBody?.applyImpulse(vector) //applyImpulse(vector, atPoint: position)
+                                return true
+                            }
+                        }
+                        
+                        if let nodeB =  skJoint.bodyB.node {
+                            if (secondAster == nodeB) {
+                                chain.physicsBody?.applyImpulse(vector)//applyImpulse(vector, atPoint: position)
+                                return true
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            if let chain = childrenNode?.first {
+                
+                let curPhysBody = chain.physicsBody!
+                
+                if !curPhysBody.joints.isEmpty {
+                    
+                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                        let joint: AnyObject = curPhysBody.joints[i]
+                        
+                        let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
+                        
+                        if let nodeA =  skJoint.bodyA.node {
+                            
+                            if (secondAster == nodeA) {
+                                chain.physicsBody?.applyImpulse(vector)//, atPoint: position)
+                                return true
+                            }
+                        }
+                        
+                        if let nodeB =  skJoint.bodyB.node {
+                            if (secondAster == nodeB) {
+                                chain.physicsBody?.applyImpulse(vector)//, atPoint: position)
+                                return true
+                            }
+                        }
+                    }
+                    
+                }
+            }
             
             //ropeJointAsters.rope?.physicsBody?.applyAngularImpulse(vector.length()*10)
             
@@ -1594,7 +1653,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         }
                         let location = contact.contactPoint
                         
-                        var vector = contact.contactNormal * -4
+                        var vector = contact.contactNormal * -0.5
                         
                         self.applyRotationOnNeedToRopeJointAsteroids(vector, node: regAster)
                         

@@ -34,6 +34,15 @@ class RopeJointAsteroids: SKNode {
         addChild(self.asteroid1)
         addChild(self.asteroid2)
         
+        #if DEBUG
+            let dot = SKShapeNode(rectOfSize: CGSizeMake(20, 20))
+            dot.fillColor = UIColor.redColor()
+        
+            dot.position = CGPointZero
+        
+            addChild(dot)
+        #endif
+        
     }
     
     
