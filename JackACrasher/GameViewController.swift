@@ -399,6 +399,9 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
                                 btn.center = btnCenter
                                 btn.bounds = CGRectMake(0, 0, btn.imageForState(.Normal)!.size.width, btn.imageForState(.Normal)!.size.height)
                                 self.view.insertSubview(btn, belowSubview: self.adContainerView)
+                                
+                                self.adContainerView.hidden = false
+                                
                                 self.view.addSubview(btn)
                                 self.view.bringSubviewToFront(btn)
                                 self.btnClose = btn

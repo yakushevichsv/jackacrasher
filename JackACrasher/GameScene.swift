@@ -804,7 +804,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 node = sprite
             }
             else {
-                position = convertNodePosition(self.player, toScene: self)
+                let playerNode = self.player.playerBGSpriteFromNode(sprite)
+                
+                position = convertNodePosition(playerNode ?? self.player, toScene: self)
                 node = self.player
             }
             
@@ -981,7 +983,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         break;
                     }
                 }
+                ropeBased.removeFromParent()
             }
+            
             break
         case .Regular:
             returnPlayerToScene(asteroid)
@@ -1268,18 +1272,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             asteroid.physicsBody!.categoryBitMask = 0
             asteroid.physicsBody!.contactTestBitMask = 0 //UInt32.max // contacts with all objects...
             //asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
-            var impulse = contact.contactNormal
             
-            if (CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
-                emulateImpulse(forAsteroid: asteroid, direction: impulse)
-            } else {
-                let posNormalized = (self.player.position - self.prevPlayerPosition)
-                self.player.placeAtPoint(contact.contactPoint)
-                emulateImpulse(forAsteroid: asteroid, direction: CGVector(dx: posNormalized.x, dy: posNormalized.y))
+            if (checkNodeAndDestroyParentOnNeed(regAsteroid, isRope: false)) {
+                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAsteroid, withType: .RopeBased)
             }
             
-            //asteroid.physicsBody!.applyImpulse(impulse, atPoint: contact.contactPoint)
-        
+            var impulse = contact.contactNormal
+            
+            if (!CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
+                let posNormalized = (self.player.position - self.prevPlayerPosition)
+                self.player.placeAtPoint(contact.contactPoint)
+                impulse = CGVector(dx: posNormalized.x, dy: posNormalized.y)
+            }
+            emulateImpulse(forAsteroid: asteroid, direction: impulse)
+            
             asteroid.startFiringAtDirection(impulse, point: self.convertPoint(contact.contactPoint, toNode: asteroid))
             
             
@@ -1631,9 +1637,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             let needToRemove = jointsAster.asteroids.isEmpty && jointsAster.rope == nil
             
-            if needToRemove {
-                node.removeFromParent()
-                
+            if (needToRemove){
+                self.returnPlayerToScene(node, removeAsteroid: true, usePlayerPostion: true)
             }
             
             return needToRemove
@@ -1944,6 +1949,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if (contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyA.categoryBitMask == EntityCategory.Player) || (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyB.categoryBitMask == EntityCategory.Player)  {
             
             println("Player contacted with left edge")
+            
+            if let bgSprite = self.player.playerBGSpriteFromNode(self.player.parent) {
+            
+                let bgSpritePos = self.player.parent!.convertPoint(bgSprite.position, toNode:self)
+            
+                let result = CGRectContainsPoint(self.playableArea, bgSpritePos)
+            
+                if (result) {
+                    return true
+                }
+                
+            }
+            
             if (self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)) {
                 
                 let delayTime = dispatch_time(DISPATCH_TIME_NOW,
