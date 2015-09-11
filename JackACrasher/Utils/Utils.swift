@@ -18,7 +18,7 @@ func runOneShortEmitter(emitter:SKEmitterNode, duration:NSTimeInterval) {
 
 func convertNodePosition(node:SKNode!,toScene scene:SKScene!) -> CGPoint {
     
-    if (node.parent == nil && scene == node.parent!) {
+    if (node.parent == nil || scene == node.parent!) {
         return node.position
     }
     
@@ -314,7 +314,7 @@ func radiansBetweenPoints(first:CGPoint, second:CGPoint) -> CGFloat {
 
 func convertNodePositionToScene(node:SKNode!) -> CGPoint {
     
-    if (node.scene != node.parent) {
+    if (node.scene != node.parent && node.parent != nil) {
         return node.parent!.convertPoint(node.position, toNode: node.scene!)
     }
     else {

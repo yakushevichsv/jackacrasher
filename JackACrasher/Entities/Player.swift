@@ -479,8 +479,12 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         }
 #endif
         
-        let name = self.name! + "BG"
         
+        if !self.hidden {
+            return nil
+        }
+        
+        let name = self.name! + "BG"
         return node.childNodeWithName(name) as? SKSpriteNode
     }
     

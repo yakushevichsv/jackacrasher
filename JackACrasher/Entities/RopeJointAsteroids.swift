@@ -15,8 +15,8 @@ class RopeJointAsteroids: SKNode {
     private weak var asteroid2:RegularAsteroid!
     internal var rope:Rope? {
         didSet {
+            oldValue?.removeFromParent()
             if let ropeValue = rope {
-                oldValue?.removeFromParent()
                 addChild(ropeValue)
             }
         }
@@ -58,14 +58,44 @@ class RopeJointAsteroids: SKNode {
     }
     
     internal var asteroids:[RegularAsteroid!] {
-        get  {return [asteroid1,asteroid2]}
+        get  {
+            var res = [RegularAsteroid]()
+            
+            if asteroid1 != nil {
+                res.append(asteroid1)
+            }
+            
+            if asteroid2 != nil {
+                res.append(asteroid2)
+            }
+            return res
+        }
     }
     
     internal func prepare() {
         if let ropeValue = rope {
             ropeValue.createRopeRings()
-            //ropeValue.configureBody()
-            //configureBody()
+        }
+    }
+    
+    internal func removeAsteroid(aster:RegularAsteroid!) {
+        
+        if aster == nil {
+            return
+        }
+        
+        let isFirst = self.asteroid1 != nil && aster == self.asteroid1
+        
+        let asterToDelete:RegularAsteroid? = isFirst ? self.asteroid1 : self.asteroid2
+        
+        if asterToDelete == aster {
+            asterToDelete?.removeFromParent()
+            
+            if isFirst {
+                self.asteroid1 = nil
+            } else {
+                self.asteroid2 = nil
+            }
         }
     }
 }

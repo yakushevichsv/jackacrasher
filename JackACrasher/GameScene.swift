@@ -306,7 +306,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     private func storePrevPlayerPosition() {
         
-        self.prevPlayerPosition = convertNodePositionToScene(self.player)
+        if self.player.parent != nil && self.player.scene != nil {
+            self.prevPlayerPosition = convertNodePositionToScene(self.player)
+        }
+        else {
+            
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                Int64(0.1 * Double(NSEC_PER_SEC)))
+            
+            dispatch_after(delayTime, dispatch_get_main_queue()){
+                [unowned self] in
+                self.storePrevPlayerPosition()
+            }
+        }
     }
     
     func createPlayer() {
@@ -522,13 +534,19 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                     self.rotateFakePlayer(regAster, location: location){
                                         [unowned self] in
                                        
-                                        let spritePos = self.player.playerBGSpriteFromNode(regAster)!.position
+                                        let spritePos = (self.player.playerBGSpriteFromNode(regAster) ?? self.player)!.position
                                         
                                         let diffVector = spritePos.normalized().toVector() * -0.5
                                         self.applyRotationOnNeedToRopeJointAsteroids(diffVector, node: regAster)
                                         
                                         self.createRocksExplosion(location,scale:scale)
-                                        self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                                        
+                                        if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
+                                            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                                        } else {
+                                            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .RopeBased)
+                                        }
+
                                         self.displayScoreAdditionLabel(location, scoreAddition: 20)
                                         
                                     }
@@ -550,7 +568,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let delayTime = dispatch_time(DISPATCH_TIME_NOW,
             Int64(0.5 * Double(NSEC_PER_SEC)))
         
-        dispatch_after(delayTime, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)){
+        dispatch_after(delayTime, dispatch_get_main_queue()){
             [unowned self] in
             self.storePrevPlayerPosition()
         }
@@ -790,7 +808,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 node = self.player
             }
             
-            println("New player posiltion \(position)")
+            //println("New player posiltion \(position)")
             self.player.position = position
             
             self.removePlayerFromRegularAsteroidToScene(node)
@@ -834,8 +852,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         if let asteroid = self.player.parent as? RegularAsteroid {
             asteroid.physicsBody?.contactTestBitMask &= ~EntityCategory.Player
-            self.player.playerBGSpriteFromNode(asteroid)?.removeFromParent()
             
+            let bgSprite = self.player.playerBGSpriteFromNode(asteroid)
+            
+            if bgSprite != nil {
+                bgSprite!.removeFromParent()
+            }
                 let delayTime = dispatch_time(DISPATCH_TIME_NOW,
                     Int64(0.5 * Double(NSEC_PER_SEC)))
                 
@@ -1282,9 +1304,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             if (regAster.tryToDestroyWithForce(self.player.punchForce * 2)) {
                 
                 let location  = regAster.parent!.convertPoint(regAster.position, toNode: self)
-                
-                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
-                
+            
                 var scale:CGFloat
                 
                 switch (regAster.asteroidSize){
@@ -1306,6 +1326,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 self.createRocksExplosion(location,scale:scale)
                 self.displayScoreAdditionLabel(location, scoreAddition: 20)
+                if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
+                    self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                }
+                else {
+                    self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .RopeBased)
+                }
             }
             else {
                 self.shakeCamera(regAster, duration: 0.8)
@@ -1575,6 +1601,46 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return false
     }
     
+    func checkNodeAndDestroyParentOnNeed(node:SKNode!,isRope rope:Bool) -> Bool {
+        
+        if let jointsAster = node.parent as? RopeJointAsteroids  {
+            
+            if rope {
+                jointsAster.rope = nil
+            }
+            else {
+                if let last = jointsAster.asteroids.last {
+                    if last == node{
+                       jointsAster.removeAsteroid(node as? RegularAsteroid)
+                       let nPos = jointsAster.convertPoint(node.position, toNode: self)
+                       node.position = nPos
+                       addChild(node)
+                    }
+                }
+                
+                
+                if let first = jointsAster.asteroids.first {
+                    if first == node {
+                        jointsAster.removeAsteroid(node as? RegularAsteroid)
+                        let nPos = jointsAster.convertPoint(node.position, toNode: self)
+                        node.position = nPos
+                        addChild(node)
+                    }
+                }
+            }
+            
+            let needToRemove = jointsAster.asteroids.isEmpty && jointsAster.rope == nil
+            
+            if needToRemove {
+                node.removeFromParent()
+                
+            }
+            
+            return needToRemove
+        }
+        return false
+    }
+    
     func didEntityContactWithRegularAsteroid(contact: SKPhysicsContact) -> Bool
     {
         let bodyA = contact.bodyA
@@ -1658,7 +1724,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         self.applyRotationOnNeedToRopeJointAsteroids(vector, node: regAster)
                         
                         self.createRocksExplosion(location,scale:scale)
-                        self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                        
+                        if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
+                            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                        } else {
+                            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .RopeBased)
+                        }
+                        
                         self.displayScoreAdditionLabel(location, scoreAddition: 20)
                     }
                     else {
@@ -2265,9 +2337,9 @@ extension GameScene {
                     
                 })
                 
-                if let ropeJointAsters =  bNodeParent?.parent as? RopeJointAsteroids {
-                    ropeJointAsters.rope = nil
-                }
+                
+                self.checkNodeAndDestroyParentOnNeed(bNodeParent, isRope: true)
+                
             }
         }
         
