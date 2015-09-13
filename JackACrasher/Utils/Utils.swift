@@ -82,6 +82,10 @@ func * (vector:CGVector, value:CGFloat) -> CGVector {
     return CGVector(dx: vector.dx * value, dy: vector.dy * value)
 }
 
+func * (vector1:CGVector,vector2:CGVector) -> CGFloat {
+    return vector1.dx*vector2.dx + vector1.dy*vector2.dy
+}
+
 #if !(arch(x86_64) || arch(arm64))
     func atan2(y: CGFloat, x: CGFloat) -> CGFloat {
         return CGFloat(atan2f(Float(y), Float(x)))

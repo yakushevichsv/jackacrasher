@@ -16,7 +16,6 @@ import UIKit
 
 class ShopDetailsCollectionViewCell: UICollectionViewCell {
 
-    private static var originImageW:CGFloat = 0
     private static var originImageH:CGFloat = 0
     
     private static var sPredicate:dispatch_once_t = 0
@@ -28,7 +27,6 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
     
     @IBOutlet weak var delegate:ShopDetailsCellDelegate!
     
-    @IBOutlet weak var imageWConstraint:NSLayoutConstraint!
     @IBOutlet weak var imageHConstraint:NSLayoutConstraint!
     
     @IBAction func buyButtonPressed(sender:UIButton!) {
@@ -39,7 +37,6 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         super.applyLayoutAttributes(layoutAttributes)
         
         dispatch_once(&ShopDetailsCollectionViewCell.sPredicate) {
-            ShopDetailsCollectionViewCell.originImageW = self.imageWConstraint.constant
             ShopDetailsCollectionViewCell.originImageH = self.imageHConstraint.constant
         }
     }
@@ -83,7 +80,6 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         self.delegate = nil
         self.productImageView?.hidden = false
         self.hideActivityIndicatorAfterDonwloading()
-        self.imageWConstraint.constant = ShopDetailsCollectionViewCell.originImageW
         self.imageHConstraint.constant = ShopDetailsCollectionViewCell.originImageH
     }
 }

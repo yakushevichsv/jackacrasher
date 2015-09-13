@@ -365,7 +365,10 @@ class GameMainViewController: UIViewController {
                 
                 
                 let isPortrait = CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame)
+                let btnShopFrame = self.btnShop.frame //self.btnShop.superview!.convertRect(self.btnShop.frame, toView: self.view)
                 
+                self.transitionDelegate.initialFrame = btnShopFrame
+                    
                 self.transitionDelegate.isPortrait = isPortrait
                 self.transitionDelegate.rect = self.view.frame
                 self.transitionDelegate.backgroundColor = UIColor.lightGrayColor()

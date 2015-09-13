@@ -1,4 +1,4 @@
-//
+	//
 //  PopupAnimator.swift
 //  JackACrasher
 //
@@ -14,6 +14,8 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     internal let isPortrait:Bool
     internal let rect:CGRect
     
+    var initialFrame:CGRect = CGRectZero
+    
     init(rect:CGRect, portrait isPortrait:Bool, isPresenting:Bool = false) {
         self.isPresenting = isPresenting
         self.isPortrait = isPortrait
@@ -21,6 +23,9 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         super.init()
     }
     
+    var isInitialFrameSet:Bool {
+        return !CGRectEqualToRect(CGRectZero, self.initialFrame)
+    }
     
     func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
         return NSTimeInterval(1)
@@ -46,8 +51,26 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 
                 transitionContext.containerView().addSubview(fromViewInternal)
                 
+                var transform:CGAffineTransform
+                
+                if isInitialFrameSet {
+                    
+                    let toViewFrame = self.initialFrame
+                    
+                    let scale = CGAffineTransformMakeScale(CGRectGetWidth(toViewFrame)/CGRectGetWidth(fromViewInternal.frame), CGRectGetHeight(toViewFrame)/CGRectGetHeight(fromViewInternal.frame))
+                    
+                    let translation = CGAffineTransformMakeTranslation(toViewFrame.origin.x - fromViewInternal.frame.origin.x, toViewFrame.origin.y - fromViewInternal.frame.origin.y)
+                    
+                    transform = CGAffineTransformConcat(scale, translation)
+                }
+                else {
+                    transform = CGAffineTransformMakeScale(1e-1, 1e-1)
+                }
+
+                
+                
                 UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
-                    fromViewInternal.transform = CGAffineTransformMakeScale(1e-1, 1e-1)
+                    fromViewInternal.transform = transform
                     
                     }) { (flag) -> Void in
                         transitionContext.completeTransition(true)
@@ -91,13 +114,36 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             }
             
             toViewInternal.frame = toViewFrame
-            toViewInternal.transform = CGAffineTransformMakeScale(1e-1, 1e-1)
             
+            var transform:CGAffineTransform
+            
+            
+            let scale = CGAffineTransformMakeScale(CGRectGetWidth(toViewFrame)/CGRectGetWidth(self.initialFrame), CGRectGetHeight(toViewFrame)/CGRectGetHeight(self.initialFrame))
+            
+            if isInitialFrameSet {
+                toViewInternal.frame = self.initialFrame
+                //toViewInternal.frame.origin = self.initialFrame.origin
+                toViewInternal.setNeedsLayout()
+                /*let translation = CGAffineTransformMakeTranslation(toViewFrame.origin.x - self.initialFrame.origin.x, toViewFrame.origin.y - self.initialFrame.origin.y)
+                
+                transform = CGAffineTransformConcat(scale, translation)*/
+                
+                //toViewInternal.transform = scale
+            }
+            else {
+                transform = CGAffineTransformMakeScale(1e-1, 1e-1)
+            }
             
             UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
-                toViewInternal.transform = CGAffineTransformIdentity
+                    //toViewInternal.transform = transform
+                    //toViewInternal.frame = toViewFrame
+                    toViewInternal.frame = toViewFrame
+                    toViewInternal.transform = CGAffineTransformIdentity
+                
                 }) { (flag) -> Void in
+                    
                     transitionContext.completeTransition(true)
+                    toViewInternal.setNeedsLayout()
             }
         }
         

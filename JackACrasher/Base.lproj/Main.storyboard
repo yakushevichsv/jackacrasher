@@ -432,16 +432,16 @@
                                             <rect key="frame" x="0.0" y="0.0" width="402" height="294"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z59-15-5a9">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z59-15-5a9">
                                                     <rect key="frame" x="13" y="17" width="153" height="119"/>
                                                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="119" id="8Iv-Mb-EMW"/>
-                                                        <constraint firstAttribute="width" constant="153" id="HxY-gB-g1Z"/>
+                                                        <constraint firstAttribute="height" constant="119" id="0CA-Ff-0cw"/>
+                                                        <constraint firstAttribute="width" secondItem="z59-15-5a9" secondAttribute="height" multiplier="9:7" id="X3V-ha-3oA"/>
                                                     </constraints>
                                                 </imageView>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="250" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2i-Oy-fNO">
-                                                    <rect key="frame" x="13" y="148" width="374" height="132"/>
+                                                    <rect key="frame" x="13" y="148" width="374" height="138"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -471,7 +471,6 @@
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="cvC-fI-uwO" firstAttribute="top" relation="greaterThanOrEqual" secondItem="6dL-56-Q5y" secondAttribute="bottom" constant="5" id="2Za-tS-DYs"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="z59-15-5a9" secondAttribute="trailing" constant="8" id="6Co-7p-ML9"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="trailing" secondItem="G2i-Oy-fNO" secondAttribute="trailing" id="CQY-H0-ezN"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="cvC-fI-uwO" secondAttribute="leading" id="D0k-Hh-Yg0"/>
@@ -481,20 +480,30 @@
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="cvC-fI-uwO" secondAttribute="leading" id="TM5-cF-aQJ"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="top" secondItem="cvC-fI-uwO" secondAttribute="bottom" constant="12" id="agI-25-NfB"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="bottom" secondItem="cvC-fI-uwO" secondAttribute="bottom" id="cSI-T3-JW4"/>
-                                            <constraint firstAttribute="bottomMargin" secondItem="G2i-Oy-fNO" secondAttribute="bottom" constant="6" id="djw-3n-9bj"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="G2i-Oy-fNO" secondAttribute="bottom" id="djw-3n-9bj"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="top" secondItem="z59-15-5a9" secondAttribute="top" id="eKo-M2-4mF"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="leading" secondItem="ZTf-z3-8q5" secondAttribute="leadingMargin" constant="5" id="rSD-43-fV2"/>
                                         </constraints>
                                         <connections>
                                             <outlet property="buyButton" destination="cvC-fI-uwO" id="OZw-U7-AVR"/>
-                                            <outlet property="imageHConstraint" destination="8Iv-Mb-EMW" id="eIh-up-P2T"/>
-                                            <outlet property="imageWConstraint" destination="HxY-gB-g1Z" id="Yzx-Lr-LKB"/>
+                                            <outlet property="imageHConstraint" destination="0CA-Ff-0cw" id="4Xi-7g-20D"/>
                                             <outlet property="productDescription" destination="G2i-Oy-fNO" id="txf-j4-q5O"/>
                                             <outlet property="productImageView" destination="z59-15-5a9" id="bge-7S-kgR"/>
                                             <outlet property="productTitle" destination="6dL-56-Q5y" id="xKR-6l-B11"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <outlet property="dataSource" destination="aN4-v4-THo" id="hZt-C9-NQT"/>
                                     <outlet property="delegate" destination="aN4-v4-THo" id="wvf-M5-vPX"/>
@@ -519,17 +528,6 @@
                             <constraint firstItem="n54-lp-IOg" firstAttribute="top" secondItem="5o5-OH-fTw" secondAttribute="bottom" constant="9" id="jR3-w3-g0x"/>
                             <constraint firstAttribute="trailingMargin" secondItem="5o5-OH-fTw" secondAttribute="trailing" id="oWF-M4-OPa"/>
                         </constraints>
-                        <userDefinedRuntimeAttributes>
-                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                <real key="value" value="5"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                <real key="value" value="1"/>
-                            </userDefinedRuntimeAttribute>
-                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </userDefinedRuntimeAttribute>
-                        </userDefinedRuntimeAttributes>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="415" height="314"/>

@@ -1762,11 +1762,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
             //TODO: Move to the Player class
             let playerNode = self.player.playerBGSpriteNode()
+            //playerNode.anchorPoint = CGPointZero
             println("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
             
             let pointInternal = self.convertPoint(contact.contactPoint, toNode: pNode)
             playerNode.position = pointInternal
-            playerNode.zRotation = angle2
+            //HACK: angle is zero
+            playerNode.zRotation = angle2 * 0
             
             pNode.physicsBody?.categoryBitMask &= ~EntityCategory.Player
             
@@ -1789,12 +1791,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             Player.displayHammerForSprite(playerNode)
             
             //check the node....
-            if needToCorrectRotation(playerNode) {
-                playerNode.zRotation += π
-                /*if needToCorrectRotation(playerNode) {
-                    playerNode.zRotation += π
-                }*/
-            }
+            needToCorrectRotation(playerNode,contact: contact)
+            
             return true
         }
         
@@ -1802,19 +1800,29 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     
-    func needToCorrectRotation(node:SKSpriteNode!) -> Bool
+    func needToCorrectRotation(node:SKSpriteNode!,contact:SKPhysicsContact!)
     {
         let p2 = node.parent?.convertPoint(CGPointMake(0, node.size.halfHeight()), fromNode: node)
         let p1 = node.parent?.convertPoint(CGPointZero, fromNode: node)
         
         assert(CGPointEqualToPoint(p1!, node.position))
         
-        let firstPoint = (p2! - p1!).normalized()
-        let lastPoint = (p1! - CGPointZero).normalized()
+        let vector1 = (p2! - p1!).normalized().toVector()
         
-        let productPoint = firstPoint * lastPoint
+        let vector2 = contact.contactNormal * -1
         
-        return (productPoint.x * productPoint.y) < 0
+        //let resVector = ccvRotate(vector1,v2: vector2)
+        //let angle = resVector.length()
+        
+        let extraAngle = acos(vector1*vector2)
+        println("Extra angle \(extraAngle)")
+        node.zRotation = extraAngle
+        
+    }
+    
+    func ccvRotate(v1: CGVector,v2:CGVector) -> CGVector
+    {
+        return CGVectorMake(v1.dx * v2.dx - v1.dy * v2.dy, v1.dx * v2.dy + v1.dy * v2.dx)
     }
     
     func didContachHasBlackHole(contact:SKPhysicsContact) -> Bool
