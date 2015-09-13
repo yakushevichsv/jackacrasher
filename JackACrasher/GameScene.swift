@@ -1786,15 +1786,36 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             pNode.addChild(playerNode)
-            
             Player.displayHammerForSprite(playerNode)
             
+            //check the node....
+            if needToCorrectRotation(playerNode) {
+                playerNode.zRotation += π
+                /*if needToCorrectRotation(playerNode) {
+                    playerNode.zRotation += π
+                }*/
+            }
             return true
         }
         
         return false
     }
     
+    
+    func needToCorrectRotation(node:SKSpriteNode!) -> Bool
+    {
+        let p2 = node.parent?.convertPoint(CGPointMake(0, node.size.halfHeight()), fromNode: node)
+        let p1 = node.parent?.convertPoint(CGPointZero, fromNode: node)
+        
+        assert(CGPointEqualToPoint(p1!, node.position))
+        
+        let firstPoint = (p2! - p1!).normalized()
+        let lastPoint = (p1! - CGPointZero).normalized()
+        
+        let productPoint = firstPoint * lastPoint
+        
+        return (productPoint.x * productPoint.y) < 0
+    }
     
     func didContachHasBlackHole(contact:SKPhysicsContact) -> Bool
     {
@@ -1978,19 +1999,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
         
         return false
-        
-            /*let sPlayerPosition = convertNodePositionToScene(self.player)
-                let pPlayerPosition = (self.player.parent != nil && self.player.parent != self) ? convertNodePositionToScene(self.player.parent) : self.player.position
-            
-            let result = !CGRectContainsPoint(self.playableArea, sPlayerPosition)
-            //HACK:
-                let result2 = true //!CGRectContainsPoint(self.playableArea, pPlayerPosition)
-            if result && (result2 || self.player.parent == self) {
-                self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)
-                return true
-            }*/
-                
-            //HACK: deside what to do here....
         
     }
     

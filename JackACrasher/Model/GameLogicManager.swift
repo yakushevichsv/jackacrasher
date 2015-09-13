@@ -378,7 +378,6 @@ extension GameLogicManager
                                 }
                             }
                             
-                            //MARK: HACK?
                             if (ratio == 0 && playedTime == 0) {
                                 ratio = 1
                             }
