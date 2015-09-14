@@ -25,24 +25,29 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var productTitle:UILabel!
     @IBOutlet weak var buyButton:UIButton!
     @IBOutlet weak var productDescription:UITextView!
+    @IBOutlet weak var descriptionTextView:UITextView!
     
     @IBOutlet weak var delegate:ShopDetailsCellDelegate!
     
-    @IBOutlet weak var imageWConstraint:NSLayoutConstraint!
-    @IBOutlet weak var imageHConstraint:NSLayoutConstraint!
     
     @IBAction func buyButtonPressed(sender:UIButton!) {
         delegate.buyButtonPressedInCell(self)
     }
     
-    override func applyLayoutAttributes(layoutAttributes: UICollectionViewLayoutAttributes!) {
-        super.applyLayoutAttributes(layoutAttributes)
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
         
-        dispatch_once(&ShopDetailsCollectionViewCell.sPredicate) {
-            ShopDetailsCollectionViewCell.originImageW = self.imageWConstraint.constant
-            ShopDetailsCollectionViewCell.originImageH = self.imageHConstraint.constant
-        }
+        
+        let wConstraint = NSLayoutConstraint(item:self.productImageView , attribute: .Width, relatedBy: .Equal, toItem: self, attribute: .Width, multiplier: 0.4, constant: 0.0)
+        let hConstraint = NSLayoutConstraint(item:self.productImageView , attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 0.4, constant: 0.0)
+       
+        let hConstraint2 = NSLayoutConstraint(item: self.descriptionTextView, attribute: .Height, relatedBy: .Equal, toItem: self, attribute: .Height, multiplier: 0.47, constant: 0.0)
+        
+        self.addConstraints([wConstraint,hConstraint,hConstraint2])
+        self.setNeedsUpdateConstraints()
     }
+    
     
     internal func setImage(imagePtr:UIImage?) {
         if let image = imagePtr {
@@ -51,8 +56,6 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         else {
             self.productImageView?.image = nil
             self.productImageView.sizeToFit()
-            //self.imageWConstraint.constant = 0
-            //self.imageHConstraint.constant = 0
             self.productImageView?.hidden = true
             self.setNeedsLayout()
         }
@@ -83,7 +86,5 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         self.delegate = nil
         self.productImageView?.hidden = false
         self.hideActivityIndicatorAfterDonwloading()
-        self.imageWConstraint.constant = ShopDetailsCollectionViewCell.originImageW
-        self.imageHConstraint.constant = ShopDetailsCollectionViewCell.originImageH
     }
 }

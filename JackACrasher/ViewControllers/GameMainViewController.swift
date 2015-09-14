@@ -400,7 +400,10 @@ class GameMainViewController: UIViewController {
         if let identifier = identifierObj {
             if (identifier == "displayShop") {
                 
-                return PurchaseManager.canPurchase() && PurchaseManager.sharedInstance.hasValidated
+                let canPurchase = PurchaseManager.canPurchase()
+                let validated = PurchaseManager.sharedInstance.hasValidated
+                
+                return canPurchase && validated
             }
         }
         return super.shouldPerformSegueWithIdentifier(identifierObj, sender: sender)
