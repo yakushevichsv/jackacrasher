@@ -40,7 +40,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     
     private static var sOnce:dispatch_once_t = 0
     private static var sPlayerTexture:SKTexture! = nil
-    private static var sEnemyBulltet:SKSpriteNode! = nil
+    internal static var sEnemyBulltet:SKSpriteNode! = nil
     
     private var timer:NSTimer!
     internal var canAtack:Bool = true
@@ -151,7 +151,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         
         let extraY = abs(diff.x) >= 1 ? tPoint.x * tan(diff.angle) : tPoint.y
         
-        let extraLen = abs(diff.x) >= 1 ? tPoint.x/cos(diff.angle) : abs(extraY)
+        let extraLen = abs(abs(diff.x) >= 1 ? tPoint.x/cos(diff.angle) : extraY)
         
         let length = diff.length()
         

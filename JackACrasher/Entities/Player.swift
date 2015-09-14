@@ -73,7 +73,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     private static var sBGSprite:SKSpriteNode!
     private static var sHammerSprite:SKSpriteNode!
-    private static var sDamageEmitter:SKEmitterNode!
+    internal static var sDamageEmitter:SKEmitterNode!
     
     private static var sContext:dispatch_once_t = 0
     
@@ -560,7 +560,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             }
             damage.position = self.position
             damage.zPosition = self.zPosition + 1
-            self.scene?.addChild(damage)
+            self.parent?.addChild(damage)
             
             runOneShortEmitter(damage, 0.4)
             
