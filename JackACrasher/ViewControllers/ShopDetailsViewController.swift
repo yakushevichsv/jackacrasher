@@ -427,7 +427,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         
         
         
-        collectionViewCell.productTitle.text = product.skProduct.localizedTitle
+        collectionViewCell.setTitleForProduct(product.skProduct.localizedTitle)
         collectionViewCell.productDescription.text = product.skProduct.localizedDescription
         collectionViewCell.productDescription.sizeToFit()
         

@@ -48,6 +48,11 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         self.setNeedsUpdateConstraints()
     }
     
+    internal func setTitleForProduct(title:String) {
+        self.productTitle?.text = title
+        self.productTitle?.sizeToFit()
+        self.setNeedsLayout()
+    }
     
     internal func setImage(imagePtr:UIImage?) {
         if let image = imagePtr {
