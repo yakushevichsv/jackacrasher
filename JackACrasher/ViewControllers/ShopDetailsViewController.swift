@@ -50,10 +50,20 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         
         initialRect = self.collectionView.frame
         
+        
+        let layout = self.collectionView.collectionViewLayout as! UICollectionViewFlowLayout
+        layout.itemSize = self.collectionView.frame.size;
+        
         if CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame) {
             rotatePrivateForSize(self.view.frame.size)
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePurchasesNotification:", name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
+    }
+    
+    
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        self.collectionView.collectionViewLayout.invalidateLayout()
     }
     
     // Update the UI according to the purchase request notification result

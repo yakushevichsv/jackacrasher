@@ -406,7 +406,7 @@
         <!--Shop Details View Controller-->
         <scene sceneID="DiS-P0-S6f">
             <objects>
-                <viewController id="aN4-v4-THo" customClass="ShopDetailsViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="aN4-v4-THo" customClass="ShopDetailsViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="yhn-PO-Lro"/>
                         <viewControllerLayoutGuide type="bottom" id="n54-lp-IOg"/>
@@ -481,6 +481,7 @@
                                             <constraint firstItem="z59-15-5a9" firstAttribute="bottom" secondItem="cvC-fI-uwO" secondAttribute="bottom" id="cSI-T3-JW4"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="G2i-Oy-fNO" secondAttribute="bottom" id="djw-3n-9bj"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="top" secondItem="z59-15-5a9" secondAttribute="top" id="eKo-M2-4mF"/>
+                                            <constraint firstItem="z59-15-5a9" firstAttribute="top" secondItem="ZTf-z3-8q5" secondAttribute="topMargin" constant="9" id="gKW-T1-88c"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="leading" secondItem="ZTf-z3-8q5" secondAttribute="leadingMargin" constant="7" id="rSD-43-fV2"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="z59-15-5a9" secondAttribute="trailing" constant="8" symbolic="YES" id="xr1-HC-jrS"/>
                                         </constraints>
@@ -529,6 +530,7 @@
                             <constraint firstAttribute="trailingMargin" secondItem="5o5-OH-fTw" secondAttribute="trailing" id="oWF-M4-OPa"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="415" height="314"/>
                     <connections>

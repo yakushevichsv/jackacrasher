@@ -221,7 +221,6 @@ class GameMainViewController: UIViewController {
         super.viewWillDisappear(animated)
         self.hideAsters()
     }
-
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
