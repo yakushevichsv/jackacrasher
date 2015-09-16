@@ -172,17 +172,14 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let tPoint2 = CGPointMake(0, tPoint.y - extraY)
         
         let moveToAction = SKAction.moveTo(tPoint2, duration: NSTimeInterval(duration))
-        let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,tPoint), duration: NSTimeInterval(min(duration,0.2)))
+        let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,tPoint), duration: 0)
         let removeAction = SKAction.removeFromParent()
         bullet.position = sPoint
         
-        let secWaitAction = SKAction.waitForDuration(NSTimeInterval(min(6,duration)))
-        
-        let secSec = SKAction.sequence([secWaitAction,removeAction])
         
         println("Bullet from point \(sPoint) to point: \(tPoint)")
        
-        bullet.runAction(SKAction.group([SKAction.sequence([SKAction.group([moveToAction,rotateAction]),removeAction]),secSec]))
+        bullet.runAction(SKAction.sequence([rotateAction,moveToAction,removeAction]))
         
         self.scene?.addChild(bullet)
        

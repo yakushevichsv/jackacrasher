@@ -474,9 +474,7 @@ class AsteroidGenerator: NSObject {
             } else if (randValue < 4) {
                 currentAstType = .Bomb
             } else if (randValue < 6) {
-                //currentAstType = .Joint
-                //TODO: add Joint based item...
-                currentAstType == self.prevAsteroidType 
+                currentAstType = .RopeBased
             }else if (randValue < 8) {
                 currentAstType = .Regular
             } else if (randValue < 10) {
@@ -498,7 +496,7 @@ class AsteroidGenerator: NSObject {
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         //HACK
-        //currentAstType = arc4random() % 2 == 1 ? .RopeBased : .Regular
+        currentAstType = arc4random() % 2 == 1 ? .RopeBased : .Regular
         
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType

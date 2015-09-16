@@ -732,12 +732,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
              
                 if self.player.isCaptured {
                     
-                    if let parent = self.player.parent  {
+                    let bgSprite = self.player.playerBGSpriteFromNode(self.player.parent) ?? self.player
+                    if let parent = bgSprite!.parent  {
                         if parent == transmitter {
                             return
                         }
                         else {
-                            if (transmitter.underRayBeam(self.player)) {
+                            if (transmitter.underRayBeam(bgSprite!)) {
                                 returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true)
                             }
                         }
@@ -852,43 +853,48 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.player.zRotation = 0.0
         self.player.zPosition = self.fgZPosition
         
+        var useNode:SKNode!
+        
         if let asteroid = self.player.parent as? RegularAsteroid {
             asteroid.physicsBody?.contactTestBitMask &= ~EntityCategory.Player
             
             let bgSprite = self.player.playerBGSpriteFromNode(asteroid)
             
-            if bgSprite != nil {
-                bgSprite!.removeFromParent()
-            }
-                let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-                    Int64(0.5 * Double(NSEC_PER_SEC)))
+            useNode = bgSprite ?? node
+                /*let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+                    Int64(1 * Double(NSEC_PER_SEC)))
                 
                 dispatch_after(delayTime, dispatch_get_main_queue()){
                     asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)
-                }
+                }*/
             
+            asteroid.runAction(SKAction.sequence([SKAction.waitForDuration(1),SKAction.runBlock(){
+                    asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)
+                }]))
+            
+        }else {
+            useNode = node
         }
         
         
             
-        var pPos = CGPointZero
+        var pPos = useNode.position
         
-        if let parentParent = node.parent?.parent {
+        if let parentParent = useNode.parent?.parent {
             
             
-            pPos = node.parent!.convertPoint(node.position, toNode: parentParent)
+            pPos = useNode.parent!.convertPoint(pPos, toNode: parentParent)
             
-            if (parentParent == self) {
-                pPos = node.parent!.convertPoint(node.position, toNode: self)
+            if (parentParent != self) {
+                pPos = useNode.parent!.convertPoint(pPos, toNode: self)
             }
-        }
-        else {
-            pPos = node.position
         }
         
         //let pPos = recursiveConvertPositionToScene(self.player)
         println("Current position \(pPos)")
+        
         self.player.removeFromParent()
+        useNode.removeFromParent()
         
         var x:CGFloat = 0
         var y:CGFloat = 0
@@ -1655,10 +1661,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         var entityBody:SKPhysicsBody? = nil
         
         if (bodyA.categoryBitMask == 0) {
-            bodyA.categoryBitMask == EntityCategory.RegularAsteroid
+            bodyA.categoryBitMask = EntityCategory.RegularAsteroid
         }
         else if (bodyB.categoryBitMask == 0) {
-            bodyB.categoryBitMask == EntityCategory.RegularAsteroid
+            bodyB.categoryBitMask = EntityCategory.RegularAsteroid
         }
         
         if (bodyA.categoryBitMask == EntityCategory.RegularAsteroid) {
@@ -1671,7 +1677,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
 
         if let regularBody = asteroidBody  {
             
-            if regularBody.node == nil {
+            if regularBody.node == nil || (regularBody.node as? RegularAsteroid) == nil {
+                regularBody.categoryBitMask = 0
                 return true
             }
             

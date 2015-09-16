@@ -472,7 +472,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
        return sprite
     }
     
-    internal func playerBGSpriteFromNode(node:SKNode!)->SKSpriteNode? {
+    internal func playerBGSpriteFromNode(node:SKNode?)->SKSpriteNode? {
 #if DEBUG
         if self.playerCount > 0 {
             self.playerCount--;
@@ -485,7 +485,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         }
         
         let name = self.name! + "BG"
-        return node.childNodeWithName(name) as? SKSpriteNode
+        return node?.childNodeWithName(name) as? SKSpriteNode
     }
     
     private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
