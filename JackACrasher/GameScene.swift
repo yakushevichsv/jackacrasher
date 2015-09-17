@@ -861,12 +861,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let bgSprite = self.player.playerBGSpriteFromNode(asteroid)
             
             useNode = bgSprite ?? node
-                /*let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-                    Int64(1 * Double(NSEC_PER_SEC)))
-                
-                dispatch_after(delayTime, dispatch_get_main_queue()){
-                    asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)
-                }*/
             
             asteroid.runAction(SKAction.sequence([SKAction.waitForDuration(1),SKAction.runBlock(){
                     asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)

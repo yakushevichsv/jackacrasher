@@ -96,12 +96,6 @@ class GameMainViewController: UIViewController {
         
         let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
         
-        if disabled {
-            SoundManager.sharedInstance.disableSound()
-        }else {
-            SoundManager.sharedInstance.enableSound()
-            SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
-        }
         self.btnSound.selected = !disabled
         self.btnPressed(self.btnSound)
         
@@ -666,6 +660,7 @@ class GameMainViewController: UIViewController {
                 SoundManager.sharedInstance.disableSound()
             } else {
                 SoundManager.sharedInstance.enableSound()
+                SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
             }
             
             GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
