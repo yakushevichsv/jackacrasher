@@ -31,6 +31,7 @@ class EnemiesGenerator: NSObject {
     private var canFire:Bool = true
     private var timer:NSTimer!
     weak var delegate:EnemiesGeneratorDelegate?
+    private var transmitterTime:NSTimeInterval = 0
     
     private var isTransmitterPresent:Bool {
         return transmitter != nil
@@ -124,6 +125,12 @@ class EnemiesGenerator: NSObject {
             type = .BlackHole
         }
         else if (!isTransmitterPresent) {
+            
+            if (NSDate.timeIntervalSinceReferenceDate() - self.transmitterTime < 20 ){
+                generateItem()
+                return
+            }
+            
             nodes.append(produceTransmitter())
             type = .Transmitter
         }
@@ -144,6 +151,7 @@ class EnemiesGenerator: NSObject {
             }else if (currentCount == EnemiesGenerator.sTransmitterNodesCount - 2) {
                 curCount = 2
                 //generate 2 items...
+                self.transmitterTime = NSDate.timeIntervalSinceReferenceDate()
             }
             
             currentCount += curCount
@@ -226,6 +234,8 @@ class EnemiesGenerator: NSObject {
         let transmitter = Transmitter(transmitterSize: CGSizeMake(w, h), beamHeight: CGRectGetHeight(self.playableRect))
         transmitter.position  = CGPointMake(CGRectGetWidth(self.playableRect), CGRectGetHeight(self.playableRect))
         self.transmitter  = transmitter
+        
+        self.transmitterTime = NSDate.timeIntervalSinceReferenceDate()
         
         return transmitter
     }

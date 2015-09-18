@@ -461,7 +461,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
        sprite.name = self.name! + "BG"
     
 #if DEBUG
-        //HACK:
         self.playerCount++;
         
         if self.playerCount > 1 {

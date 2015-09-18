@@ -386,7 +386,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
                 if let resultNew = interstitial?.presentInView(self.adContainerView) {
                     result = resultNew
                     
-                    if result {
+                    if result && self.skView.scene != nil {
                         didMoveToBGPrivate()
                             self.btnPlay.hidden = true
                             self.timeInterval = NSDate.timeIntervalSinceReferenceDate()

@@ -98,4 +98,14 @@ class RopeJointAsteroids: SKNode {
             }
         }
     }
+    
+    override func removeFromParent() {
+        for asteroid in self.asteroids {
+            asteroid.removeFromParent()
+        }
+        
+        self.rope?.removeFromParent()
+        
+        super.removeFromParent()
+    }
 }

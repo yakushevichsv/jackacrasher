@@ -931,15 +931,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         self.addChild(self.player)
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-            Int64(2 * Double(NSEC_PER_SEC)))
-        
-        dispatch_after(delayTime, dispatch_get_main_queue()){
+        let actSeq = SKAction.sequence([SKAction.waitForDuration(2),SKAction.runBlock(){
             [unowned self] in
             if (self.view != nil) {
                 self.player?.enableGravityReceptivity()
             }
-        }
+        }])
+        
+        self.runAction(actSeq)
     }
     
     //MARK: Asteroid Generator's delegate methods
@@ -1734,7 +1733,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
                             self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                         } else {
-                            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .RopeBased)
+                            if let parent = regAster.parent as? RopeJointAsteroids {
+                                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: parent, withType: .RopeBased)
+                            } else {
+                                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
+                            }
                         }
                         
                         self.displayScoreAdditionLabel(location, scoreAddition: 20)
@@ -1753,9 +1756,34 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     node.removeAllActions()
                     let action = SKAction.repeatActionForever(SKAction.rotateByAngle(-CGFloat(M_PI), duration: 2))
                     node.runAction(action)
-                    asteroidBody?.applyImpulse(CGVector(dx:100,dy: 0))
                     
+                    
+                    let vector = CGVector(dx:100,dy:0)
+                    let pos = node.parent!.convertPoint(node.position, toNode: self)
+                    let duration = NSTimeInterval((CGRectGetMaxX(self.playableArea) - pos.x)/CGFloat(vector.dx))
+                    
+                    let action2 = SKAction.sequence([SKAction.waitForDuration(duration),SKAction.removeFromParent()])
+                    
+                    if node.parent != self {
+                    
+                        if let ropeJointsAster = asteroidBody?.node?.parent as? RopeJointAsteroids {
+                            cutRopeUsingImpulse(ropeJointsAster.rope?.childNodeWithName("Chain"), v: CGVector(dx:1,dy:0))
+                            
+                            ropeJointsAster.runAction(action2)
+                        }
+                    }
+                    else {
+                        node.runAction(action2)
+                    }
+                    
+                    asteroidBody?.applyImpulse(vector)
+                    asteroidBody?.contactTestBitMask &= EntityCategory.Player
+                    self.asteroidGenerator.paused = false
                 }
+                return true
+            }
+            
+            if self.player.hidden {
                 return true
             }
             
@@ -1886,6 +1914,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             [unowned self] in 
             self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
         }
+        
+        let act = SKAction.sequence([SKAction.waitForDuration(durationToWait)])
         
         return true
     }
@@ -2232,11 +2262,28 @@ extension GameScene {
                 let position = touch.locationInNode(self)
                 let prevPosition = touch.previousLocationInNode(self)
                 
-                if self.blade == nil {
-                    presentBladeAtPosition(position)
+                var removedBlade:Bool = false
+                
+                self.physicsWorld.enumerateBodiesAtPoint(position) {
+                    [unowned self]
+                    (curBody, exitPtr) in
+                    
+                    if curBody.categoryBitMask == EntityCategory.RegularAsteroid {
+                        self.removeBlade()
+                        removedBlade = true
+                        exitPtr.memory = true
+                    }
                 }
                 
-                delta = CGPoint(x: position.x - prevPosition.x, y: position.y - prevPosition.y)
+                if removedBlade {
+                    return true
+                }
+                
+                if self.blade == nil {
+                    self.presentBladeAtPosition(position)
+                }
+                
+                self.delta = CGPoint(x: position.x - prevPosition.x, y: position.y - prevPosition.y)
             }
             
             return true
@@ -2268,6 +2315,84 @@ extension GameScene {
             delta = CGPointZero
         }
     }
+    
+    func cutRopeUsingImpulse(bNode:SKNode?,v:CGVector) {
+        
+        if let bNode = bNode {
+            
+            var impulseDirection:CGFloat = -1
+            var boost:CGFloat = 1.0
+            var extraPlus:CGFloat = 0.05
+            
+            let bNodeParent =  bNode.parent
+            
+            bNodeParent?.enumerateChildNodesWithName(bNode.name!, usingBlock: { (curNode, retPtr) -> Void in
+                
+                let bNodeParent = curNode.parent!
+                
+                let curPhysBody = curNode.physicsBody!
+                
+                if !curPhysBody.joints.isEmpty {
+                    
+                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                        let joint: AnyObject = curPhysBody.joints[i]
+                        
+                        let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
+                        
+                        self.physicsWorld.removeJoint(skJoint)
+                    }
+                }
+                
+                
+                var pos1 = bNodeParent.convertPoint(curNode.position, toNode: self)
+                
+                if (curNode == bNode) {
+                    impulseDirection = 1
+                    extraPlus *= -1
+                    
+                    bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock(){
+                        [unowned self] in
+                        self.displayScoreAdditionLabel(bNode.position, scoreAddition: 20)
+                        }]))
+                }
+                
+                
+                curNode.removeFromParent()
+                curNode.position = pos1
+                self.addChild(curNode)
+                
+                var v1 = v.normalize()
+                v1.dx *= boost * impulseDirection
+                v1.dy *= boost * impulseDirection
+                boost += extraPlus
+                boost = max(1.0,boost)
+                
+                curPhysBody.categoryBitMask = 0
+                curPhysBody.contactTestBitMask = 0
+                curPhysBody.collisionBitMask = 0
+                
+                if (curNode == bNode) {
+                    pos1 = bNode.position
+                    pos1.x += (CGFloat(Int(arc4random() % 10) * (arc4random() == 1 ? 1 : -1)))
+                    pos1.y += (CGFloat(Int(arc4random() % 10) * (arc4random() == 1 ? 1 : -1)))
+                }
+                else {
+                    curPhysBody.applyAngularImpulse(boost/3)
+                }
+                
+                
+                
+                curPhysBody.applyImpulse(v1, atPoint: pos1)
+                
+                curNode.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.removeFromParent()]))
+                
+            })
+            
+            
+            self.checkNodeAndDestroyParentOnNeed(bNodeParent, isRope: true)
+            
+        }
+    }
 
     func didBladeContactWithRope(contact:SKPhysicsContact) -> Bool {
         
@@ -2291,83 +2416,7 @@ extension GameScene {
         //println("Body category \(body.categoryBitMask)\n Is rope \(isRope)")
         
         if isRope {
-            
-            //HACK: add rotation here....
-            
-            if let bNode = ropeBody?.node {
-                
-                var impulseDirection:CGFloat = -1
-                var boost:CGFloat = 1.0
-                var extraPlus:CGFloat = 0.05
-                
-                let bNodeParent =  bNode.parent
-                
-                bNodeParent?.enumerateChildNodesWithName(bNode.name!, usingBlock: { (curNode, retPtr) -> Void in
-                    
-                    let bNodeParent = curNode.parent!
-                    
-                    let curPhysBody = curNode.physicsBody!
-                    
-                    if !curPhysBody.joints.isEmpty {
-                        
-                        for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
-                            let joint: AnyObject = curPhysBody.joints[i]
-                            
-                            let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
-                            
-                            self.physicsWorld.removeJoint(skJoint)
-                        }
-                    }
-                    
-                    
-                    var pos1 = bNodeParent.convertPoint(curNode.position, toNode: self)
-                    
-                    if (curNode == bNode) {
-                        impulseDirection = 1
-                        extraPlus *= -1
-                        
-                        bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock(){
-                            [unowned self] in
-                            self.displayScoreAdditionLabel(bNode.position, scoreAddition: 20)
-                            }]))
-                    }
-                    
-                    
-                    curNode.removeFromParent()
-                    curNode.position = pos1
-                    self.addChild(curNode)
-                    
-                    var v1 = contact.contactNormal.normalize()
-                    v1.dx *= boost * impulseDirection
-                    v1.dy *= boost * impulseDirection
-                    boost += extraPlus
-                    boost = max(1.0,boost)
-                    
-                    curPhysBody.categoryBitMask = 0
-                    curPhysBody.contactTestBitMask = 0
-                    curPhysBody.collisionBitMask = 0
-                    
-                    if (curNode == bNode) {
-                        pos1 = bNode.position
-                        pos1.x += (CGFloat(Int(arc4random() % 10) * (arc4random() == 1 ? 1 : -1)))
-                        pos1.y += (CGFloat(Int(arc4random() % 10) * (arc4random() == 1 ? 1 : -1)))
-                    }
-                    else {
-                        curPhysBody.applyAngularImpulse(boost/3)
-                    }
-                    
-                    
-                    
-                    curPhysBody.applyImpulse(v1, atPoint: pos1)
-                    
-                    curNode.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.removeFromParent()]))
-                    
-                })
-                
-                
-                self.checkNodeAndDestroyParentOnNeed(bNodeParent, isRope: true)
-                
-            }
+            cutRopeUsingImpulse(ropeBody?.node, v: contact.contactNormal)
         }
         
         return isRope
