@@ -135,6 +135,9 @@ class GameMainViewController: UIViewController {
         self.btnVK.setImage(UIImage(named:name), forState: .Normal)
     }
     
+    
+
+    
     private func hideAsters() {
     
         self.ivAsteroidL.hidden = true
@@ -207,6 +210,9 @@ class GameMainViewController: UIViewController {
         }
         
         foreverAsterAnim()
+        
+        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
+        self.btnSound.selected = disabled
         
         displayCloudKitAuthStatus()
     }
