@@ -50,6 +50,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
 
+    private struct Constants {
+        static let LeftEdge  = "leftEdge"
+        static let RightEdge = "rightEdge"
+    }
+    
     private var bombs = [Bomb]()
     private var enemiesShips = [EnemySpaceShip]()
     
@@ -380,7 +385,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
-        lEdge.name = "leftEdge"
+        lEdge.name = Constants.LeftEdge
         lEdge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         lEdge.physicsBody!.contactTestBitMask = EntityCategory.Player
         lEdge.physicsBody!.collisionBitMask = 0
@@ -396,7 +401,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
-        edge.name = "rightEdge"
+        edge.name = Constants.RightEdge
         edge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         edge.physicsBody!.contactTestBitMask = EntityCategory.PlayerLaser
         edge.physicsBody!.collisionBitMask = 0
@@ -738,7 +743,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                             return
                         }
                         else {
-                            if (transmitter.underRayBeam(bgSprite!)) {
+                            if (transmitter.underRayBeam(bgSprite!) && !self.player.isCaptured) {
                                 returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true)
                             }
                         }
@@ -748,7 +753,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 }
                 
                 //let playerPos = self.player.parent!.convertPoint(self.player, toNode: transmitter)
-                if transmitter.underRayBeam(self.player) {
+                if transmitter.underRayBeam(self.player) && !self.player.isCaptured {
                     
                     transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
                         [unowned self] in
@@ -821,7 +826,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
-                if transmitter.underRayBeam(self.player) {
+                if transmitter.underRayBeam(self.player) && !self.player.isCaptured {
                     
                     transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
                         [unowned self] in
@@ -1954,6 +1959,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
+        if (didContactOutOfRange(contact)) {
+            return
+        }
+        
         if (didContactContainBomb(contact) || didContactContainTrash(contact)) {
             return
         }
@@ -1968,6 +1977,24 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
     }
     
+    
+    func didContactOutOfRange(contact:SKPhysicsContact) -> Bool {
+        
+        var minX = CGRectGetMinX(self.playableArea)
+        var maxX = CGRectGetMaxX(self.playableArea)
+        
+        if let lEdge = self.childNodeWithName(Constants.LeftEdge) {
+            minX = min(lEdge.position.x - 10,minX)
+        }
+        
+        if let rEdge = self.childNodeWithName(Constants.RightEdge) {
+            maxX = max(rEdge.position.x + 10,maxX)
+        }
+        
+        let rect = CGRectMake(minX, CGRectGetMinY(self.playableArea), maxX - minX, CGRectGetHeight(self.playableArea))
+        
+        return !CGRectContainsPoint(rect, contact.contactPoint)
+    }
     
     func didPlayerContactWithHealthUnit(contact:SKPhysicsContact) -> Bool {
         
