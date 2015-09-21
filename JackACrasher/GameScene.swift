@@ -1792,7 +1792,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return true
             }
             
-            let angle2 = reflectionAngleFromContact(contact)
+            let angle2 = reflectionAngleFromContact3(contact)
         
             //TODO: Move to the Player class
             let playerNode = self.player.playerBGSpriteNode()

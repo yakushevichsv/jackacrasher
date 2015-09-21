@@ -251,6 +251,24 @@ extension CGSize {
     }
 }
 
+func reflectionAngleFromContact3(contact:SKPhysicsContact!) -> CGFloat {
+    
+    var normal = contact.contactNormal
+    
+    println("Before reflection  Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    
+    normal.dx *= CGFloat(-1.0)
+    normal.dy *= CGFloat(-1.0)
+    
+    println("After reflection Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    
+    var angle:CGFloat = normal.angle
+    
+    angle += π
+    
+    return angle
+}
+
 func reflectionAngleFromContact2(contact:SKPhysicsContact!) -> CGFloat {
     
     var normal = contact.contactNormal

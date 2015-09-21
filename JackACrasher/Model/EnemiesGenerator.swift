@@ -73,6 +73,9 @@ class EnemiesGenerator: NSObject {
     
     internal func start() {
         
+        //HACK
+        return
+            
         canFire = true
         if !self.timer.valid {
             redifineTimer()
