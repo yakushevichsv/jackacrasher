@@ -74,7 +74,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         assert(self.bgSession.configuration.identifier == sessionId)
         
         self.completionHandler = handler
-        println("Saved BG Session with ID: \(sessionId)")
+        print("Saved BG Session with ID: \(sessionId)")
     }
     
     internal func downloadFileFromPath(path:String!,completion:((path:String?,error:NSError?)->Void)?) -> Int! {
@@ -117,7 +117,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         
         self.tasksDic.removeValueForKey(task.taskIdentifier)
         if let errorInter = error {
-            println("\(errorInter)")
+            print("\(errorInter)")
             if let completion = self.tasksCompletions.removeValueForKey(task.taskIdentifier){
                 completion(path: nil, error:error)
             }

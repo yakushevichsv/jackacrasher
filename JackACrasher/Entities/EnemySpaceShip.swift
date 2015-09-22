@@ -17,7 +17,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
    
     internal weak var target:Player? {
         didSet {
-            if let targetPrivate = self.target {
+            if let _ = self.target {
                 onUpdateTarget()
             }
         }
@@ -45,7 +45,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     private var timer:NSTimer!
     internal var canAtack:Bool = true
     
-    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
+    override init(texture: SKTexture!, color: UIColor, size: CGSize) {
         let texture = EnemySpaceShip.sPlayerTexture
         super.init(texture: texture, color: SKColor.blackColor(), size: texture.size())
         
@@ -55,7 +55,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     }
     
     private func createPhysicsBody() {
-        let body = SKPhysicsBody(texture: self.texture, size: texture!.size())
+        let body = SKPhysicsBody(texture: self.texture!, size: texture!.size())
         body.categoryBitMask = EntityCategory.EnemySpaceShip
         body.collisionBitMask = EntityCategory.EnemySpaceShip | EntityCategory.EnemySpaceShipLaser
         body.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
@@ -83,7 +83,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
                 
                 let position = self.positionOfNodeRelativeToOurParent(hero)
                 
-                let distance = distanceBetweenPoints(position,self.position)
+                let distance = distanceBetweenPoints(position,point2: self.position)
                 
                 if (distance < EnemySpaceShip.enemyAlertRadius && distance < heroDistance) {
                     heroDistance = distance
@@ -126,7 +126,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     
     func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
         
-        let dist = distanceBetweenPoints(self.position, position)
+        let dist = distanceBetweenPoints(self.position, point2: position)
         let moveAction = SKAction.moveTo(position, duration: NSTimeInterval(dist/Bomb.Constants.speed))
         
         self.runAction(moveAction)
@@ -165,19 +165,19 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
             tPoint = CGPointMake(p2x, p2y)
         }
         
-        println("Lenght is \(diff.length())")
+        print("Lenght is \(diff.length())")
         
-        let duration = (distanceBetweenPoints(sPoint, tPoint) + extraLen)/EnemySpaceShip.Constants.laserSpeed
+        let duration = (distanceBetweenPoints(sPoint, point2: tPoint) + extraLen)/EnemySpaceShip.Constants.laserSpeed
         
         let tPoint2 = CGPointMake(0, tPoint.y - extraY)
         
         let moveToAction = SKAction.moveTo(tPoint2, duration: NSTimeInterval(duration))
-        let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,tPoint), duration: 0)
+        let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,second: tPoint), duration: 0)
         let removeAction = SKAction.removeFromParent()
         bullet.position = sPoint
         
         
-        println("Bullet from point \(sPoint) to point: \(tPoint)")
+        print("Bullet from point \(sPoint) to point: \(tPoint)")
        
         bullet.runAction(SKAction.sequence([rotateAction,moveToAction,removeAction]))
         

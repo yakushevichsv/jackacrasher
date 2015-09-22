@@ -22,7 +22,7 @@ class CloudUserInfo  {
     
     internal func loggedInToICloud(completion : (accountStatus : CKAccountStatus, error : NSError?) -> ()) {
         
-        self.container.accountStatusWithCompletionHandler() { (status : CKAccountStatus, error : NSError!)
+        self.container.accountStatusWithCompletionHandler() { (status : CKAccountStatus, error : NSError?)
             in
             completion(accountStatus: status, error: error)
         }
@@ -45,12 +45,12 @@ class CloudUserInfo  {
     
     func requestDiscoverability(completion: (discoverable: Bool) -> ()) {
         container.statusForApplicationPermission(
-            .PermissionUserDiscoverability) {
+            CKApplicationPermissions.UserDiscoverability) {
                 status, error in
                 if error != nil || status == CKApplicationPermissionStatus.Denied {
                     completion(discoverable: false)
                 } else {
-                    self.container.requestApplicationPermission(.PermissionUserDiscoverability) { status, error in
+                    self.container.requestApplicationPermission(CKApplicationPermissions.UserDiscoverability) { status, error in
                         completion(discoverable: status == .Granted)
                     }
                 }
@@ -58,12 +58,12 @@ class CloudUserInfo  {
     }
     
     internal func getUserInfo(recordID: CKRecordID!,
-        completion:(userInfo: CKDiscoveredUserInfo!, error: NSError!)->()) {
+        completion:(userInfo: CKDiscoveredUserInfo?, error: NSError?)->()) {
             container.discoverUserInfoWithUserRecordID(recordID,
                 completionHandler:completion)
     }
     
-    internal func getUserInfo(completion: (userInfo: CKDiscoveredUserInfo!, error: NSError!)->()){
+    internal func getUserInfo(completion: (userInfo: CKDiscoveredUserInfo?, error: NSError?)->()){
         
         requestDiscoverability() { discoverable in
             self.getUserId() { recordID, error in

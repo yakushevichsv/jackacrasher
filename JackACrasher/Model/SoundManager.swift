@@ -157,15 +157,15 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
             return
         }
         
-        var url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : player?.url
+        let url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : player?.url
         if (url == nil) {
-            println("Could not find file: \(fileName) or there is nothing to cancel")
+            print("Could not find file: \(fileName) or there is nothing to cancel")
             return
         }
         
         
         if let curPlayer = player {
-            if !curPlayer.url.isEqual(url) {
+            if !curPlayer.url!.isEqual(url) {
                 return
             }
             if (curPlayer.playing) {
@@ -186,20 +186,27 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
         
         let url = fileName != nil ? NSBundle.mainBundle().URLForResource(fileName!, withExtension: nil) : (useSoundEffectPlayer ? self.soundEffectPlayer?.url : nil)
         if (url == nil) {
-            println("Could not find file: \(fileName) or there is nothing to cancel")
+            print("Could not find file: \(fileName) or there is nothing to cancel")
             return (false,nil)
         }
         
         if useSoundEffectPlayer {
             if let curPlayer = self.soundEffectPlayer {
-                if curPlayer.url.isEqual(url) {
+                if curPlayer.url!.isEqual(url) {
                     return (true,curPlayer)
                 }
             }
         }
         
-        var error: NSError? = nil
-        let player = AVAudioPlayer(contentsOfURL: url, error: &error)
+        var player:AVAudioPlayer? = nil
+        do {
+            player = try AVAudioPlayer(contentsOfURL: url!)
+        } catch {
+            player = nil
+            print("Could not create audio player !")
+            
+        }
+        
         if let cPlayer = player {
             if useSoundEffectPlayer {
                 cPlayer.delegate = self
@@ -209,7 +216,6 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
             return (res,player)
             
         } else {
-            println("Could not create audio player: \(error!)")
             return (false,nil)
         }
     }
@@ -226,7 +232,7 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
     }
     
     //MARK: AVAudioPlayerDelegate
-    func audioPlayerDidFinishPlaying(player: AVAudioPlayer!, successfully flag: Bool) {
+    func audioPlayerDidFinishPlaying(player: AVAudioPlayer, successfully flag: Bool) {
         //MARK: TODO not called if there is an interruption...
         assert((player.delegate as! SoundManager) == self,"player.delegate != self")
         

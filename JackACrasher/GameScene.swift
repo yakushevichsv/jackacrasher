@@ -13,22 +13,6 @@ import SpriteKit
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64,playedTime:NSTimeInterval,needToContinue:Bool)
 }
 
-extension GameScene {
-    class func unarchiveFromFile(file : NSString) -> SKNode? {
-        if let path = NSBundle.mainBundle().pathForResource(file as String, ofType: "sks") {
-            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
-            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
-            
-            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameScene
-            archiver.finishDecoding()
-            return scene
-        } else {
-            return nil
-        }
-    }
-}
-
 class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate,AssetsContainer {
     
     var asteroidManager:AsteroidManager!
@@ -91,7 +75,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     internal static func loadAssets() {
     
-        let projectileEmitter = SKEmitterNode(fileNamed: "ProjectileSplat")
+        let projectileEmitter = SKEmitterNode(fileNamed: "ProjectileSplat")!
         projectileEmitter.name = "ProjectileSplat"
         GameScene.sProjectileEmitter = projectileEmitter
         
@@ -181,7 +165,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     
         let inSize = CGSizeMake(CGFloat(round(self.playableArea.size.width/4.0)), height)
-        println("IN size \(inSize)")
+        print("IN size \(inSize)")
         
         
         let hudNode = HUDNode(inSize: inSize)
@@ -191,7 +175,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         hudNode.zPosition = self.fgZPosition + 1
         addChild(hudNode)
         self.hudNode = hudNode
-        println("HUD node position \(hudNode.position)")
+        print("HUD node position \(hudNode.position)")
         
         
         GameLogicManager.sharedInstance.accessSurvivalGameScores{
@@ -221,7 +205,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         assert(self.scaleMode == .AspectFill, "Not aspect fill mode")
         
-        if let presentView = self.view {
+        if let _ = self.view {
             
             
             let maxAspectRatio:CGFloat = 16.0/9.0 // 1
@@ -230,14 +214,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             playableArea = CGRect(x: 0, y: playableMargin,
                 width: size.width,
                 height: playableHeight) // 4
-            println("Area \(self.playableArea)")
+            print("Area \(self.playableArea)")
         }
     }
     
     
     func fillInBackgroundLayer() {
         
-        let emitterNode = SKEmitterNode(fileNamed: "BGStarts.sks")
+        let emitterNode = SKEmitterNode(fileNamed: "BGStarts.sks")!
         emitterNode.position = CGPointMake(CGRectGetWidth(self.playableArea), CGRectGetMidY(self.playableArea))
         
         emitterNode.name = self.bgStarsName
@@ -270,7 +254,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         for node in self.nodesAtPoint(position) {
             
-            if node.categoryBitMask == EntityCategory.BlackHole {
+            if node.physicsBody?.categoryBitMask == EntityCategory.BlackHole {
                 let blackHole = node as! BlackHole
                 
                 let size = blackHole.size
@@ -336,18 +320,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         storePrevPlayerPosition()
         
         
-        let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")
+        let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")!
         sparkEmitter.zPosition = player.zPosition
         sparkEmitter.position = player.position
         addChild(sparkEmitter)
-        runOneShortEmitter(sparkEmitter, 0.15)
+        runOneShortEmitter(sparkEmitter, duration: 0.15)
         player.runAction(SKAction.fadeInWithDuration(2.0))
         
         //self.player.anchorPoint = CGPointZero
         //self.player.zRotation = CGFloat(140).radians
         //MARK: ee Why fade in stopped working...
         player.alpha = 1.0
-        println("Z rotation \(self.player.zRotation)")
+        print("Z rotation \(self.player.zRotation)")
         self.player.hidden = false
     }
 
@@ -412,7 +396,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     func willTerminateApp() {
-        terminateGame(needToContinue:false)
+        terminateGame(false)
     }
     
     private func terminateGame(needToContinue:Bool = true) {
@@ -450,12 +434,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
-        
     //MARK: Touch system
-    override func touchesBegan(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesBegan(touches: Set<UITouch>, withEvent event: UIEvent?) {
         /* Called when a touch begins */
         self.removedBlade = false
-        let touch = (touches.first as! UITouch)
+        let touch = touches.first!
         let point = touch.locationInNode(self)
         
         if self.canCutRope(touches) {
@@ -465,27 +448,27 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.storePrevPlayerPosition()
         }
         
-        println("touchesBegan. Can cut the rope \(self.canCutRope(touches))")
+        print("touchesBegan. Can cut the rope \(self.canCutRope(touches))")
     }
     
-    override  func touchesMoved(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override  func touchesMoved(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        println("touchesMoved. Can cut the rope \(self.canCutRope(touches))")
+        print("touchesMoved. Can cut the rope \(self.canCutRope(touches))")
         
         areTouchesMovedForBlade(touches, withEvent: event)
     }
     
-    override func touchesCancelled(touches: Set<NSObject>!, withEvent event: UIEvent!) {
+    override func touchesCancelled(touches: Set<UITouch>?, withEvent event: UIEvent?) {
         
-        println("touchesCancelled. Can cut the rope \(self.canCutRope(touches))")
+        print("touchesCancelled. Can cut the rope \(self.canCutRope(touches!))")
         removeBlade()
     
     }
     
     
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        println("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
+        print("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
         
         
         if areTouchesEndedForBlade(touches, withEvent: event) {
@@ -546,13 +529,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                         
                                         self.createRocksExplosion(location,scale:scale)
                                         
+                                        
+                                        regAster.syDisplayScore(rect:self.playableArea, scoreAddition: 20)
+                                        
                                         if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
                                             self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                                         } else {
                                             self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .RopeBased)
                                         }
-
-                                        self.displayScoreAdditionLabel(location, scoreAddition: 20)
                                         
                                     }
                                 }
@@ -642,7 +626,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let curNumberOfLives = self.hudNode.life
         
         let destroyed = self.player.tryToDestroyWithForce(damageForce)
-        println("!!! Destroyed \(destroyed) prevNumberOfLives \(prevNumberOfLives) curNumberOfLives \(curNumberOfLives)")
+        print("!!! Destroyed \(destroyed) prevNumberOfLives \(prevNumberOfLives) curNumberOfLives \(curNumberOfLives)")
         if (prevNumberOfLives != curNumberOfLives) {
             
             let info = SurvivalGameInfo()
@@ -653,7 +637,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             GameLogicManager.sharedInstance.updateCurrentSurvivalGameInfo(info) {
                 updated in
-                println("UPdated \(updated)")
+                print("UPdated \(updated)")
             }
         }
         
@@ -673,12 +657,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func createRocksExplosion(point:CGPoint,scale:CGFloat) {
         
-        let  emitter = SKEmitterNode(fileNamed: "Explosion")
-        emitter!.zPosition = self.fgZPosition
-        emitter!.position = point
-        emitter!.targetNode = self
+        let  emitter = SKEmitterNode(fileNamed: "Explosion")!
+        emitter.zPosition = self.fgZPosition
+        emitter.position = point
+        emitter.targetNode = self
         emitter.particleScale = scale
-        addChild(emitter!)
+        addChild(emitter)
     }
     
     
@@ -687,7 +671,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let amplitudeY:CGFloat = 6;
         let numberOfShakes = duration / 0.04;
         var actionsArray:[SKAction] = [];
-        for index in 1...Int(numberOfShakes) {
+        for _ in 1...Int(numberOfShakes) {
             // build a new random shake and add it to the list
             let moveX = CGFloat(arc4random_uniform(UInt32(amplitudeX))) - CGFloat(amplitudeX * 0.5)
             let moveY = CGFloat(arc4random_uniform(UInt32(amplitudeY))) - CGFloat(amplitudeY * 0.5)
@@ -728,7 +712,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.player.zRotation = 0.0
         }
         
-        //println("Player's z Rotaion \(self.player.zRotation) Is Hidden \(self.player.hidden)")
+        //print("Player's z Rotaion \(self.player.zRotation) Is Hidden \(self.player.hidden)")
     }
     
     private func didEvaluateActionPrivate() {
@@ -816,7 +800,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 node = self.player
             }
             
-            //println("New player posiltion \(position)")
+            //print("New player posiltion \(position)")
             self.player.position = position
             
             self.removePlayerFromRegularAsteroidToScene(node)
@@ -890,7 +874,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
         
         //let pPos = recursiveConvertPositionToScene(self.player)
-        println("Current position \(pPos)")
+        print("Current position \(pPos)")
         
         self.player.removeFromParent()
         useNode.removeFromParent()
@@ -930,7 +914,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let newPoint = CGPointMake(x, y)
         if (!CGPointEqualToPoint(newPoint, pPos)) {
             //self.player.moveToPoint(CGPointMake(x, y))
-            println("Return position \newPoint)")
+            print("Return position \newPoint)")
             self.player.runAction(SKAction.moveTo(newPoint, duration: 0.2))
         }
         
@@ -963,7 +947,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 generator.paused = self.trashAsteroidsCount != 0
             }
             
-            println("Trash asteroids count \(self.trashAsteroidsCount) after removing" )
+            print("Trash asteroids count \(self.trashAsteroidsCount) after removing" )
             
             break
         case .RopeBased:
@@ -1014,7 +998,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
             if CGRectContainsPoint(self.playableArea, bomb.position) {
                 if (bomb.parent != nil) {
-                    createExplosion(.Small, position: bomb.position, withScore: 0)
+                    createExplosion(.Small, position: bomb.position)
+                    bomb.syDisplayScore(rect: self.playableArea, scoreAddition: 0)
                 }
             }
             
@@ -1039,8 +1024,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             //assert(CGRectGetHeight(self.playableArea) > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > CGRectGetMinY(self.playableArea), "Doesn't contain frame!")
             
-            println("Asteroid position \(node.position)")
-            println("Scene size \(self.size)")
+            print("Asteroid position \(node.position)")
+            print("Scene size \(self.size)")
         }
         generator.paused = true
         
@@ -1052,7 +1037,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.player.disableEngine()
             self.trashAsteroidsCount += didProduceAsteroids.count
             
-            println("Trash asteroids count \(self.trashAsteroidsCount) addition" )
+            print("Trash asteroids count \(self.trashAsteroidsCount) addition" )
             self.player.enableProjectileGun()
             
             //eee Move up if there is a contact...
@@ -1122,7 +1107,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     //MARK: Enemies Generator's methods
     func enemiesGenerator(generator: EnemiesGenerator, didProduceItems: [SKNode!], type: EnemyType) {
         
-        var isTransmitter = didProduceItems.count == 1 && type == .Transmitter
+        let isTransmitter = didProduceItems.count == 1 && type == .Transmitter
         
         for node in didProduceItems {
             let pBody = node.physicsBody
@@ -1154,8 +1139,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             generator.signalItemAppearance(node, type: type)
-            println("Enemy position \(node.position)")
-            println("Scene size \(self.size)")
+            print("Enemy position \(node.position)")
+            print("Scene size \(self.size)")
         }
         generator.paused = type != .BlackHole
         
@@ -1335,7 +1320,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 //MARK: Continue here, create crystal, with score addition.
                 
                 self.createRocksExplosion(location,scale:scale)
-                self.displayScoreAdditionLabel(location, scoreAddition: 20)
+                
+                regAster.syDisplayScore(rect: self.playableArea, scoreAddition: 20)
+                
                 if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
                     self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
                 }
@@ -1358,8 +1345,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         var trashAster:SKPhysicsBody? = nil
         var laser:SKPhysicsBody? = nil
-        var regular:SKPhysicsBody? = nil
-        
         
         //Trash asteroid
         if (bodyA.categoryBitMask == EntityCategory.TrashAsteroid ) {
@@ -1404,7 +1389,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return true
             }
             
-            println("One node is bomb!")
+            print("One node is bomb!")
             let bombNode = bombBody.node!
             
             let radius = bombNode.userData!["radius"] as! CGFloat
@@ -1417,9 +1402,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let rect = CGRectMake(x, y, 2*radius, 2*radius)
             
             
-            let node = bombNode
             let scenePoint = contact.contactPoint
-            createExplosion(ExplosionType.Large, position: scenePoint,withScore:0)
+            createExplosion(ExplosionType.Large, position: scenePoint)
             bombNode.physicsBody = nil
             bombNode.removeFromParent()
             
@@ -1459,7 +1443,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         var playerLaser:SKNode? = nil
         var otherNode:SKNode? = nil
-        var bomb:SKPhysicsBody? = nil
         
         if (bodyA.categoryBitMask == EntityCategory.PlayerLaser) {
             playerLaser =  bodyA.node
@@ -1475,14 +1458,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 let enemyShip = oNode as! ItemDestructable
                 
                 if enemyShip.tryToDestroyWithForce(Player.laserForce) {
-                    createExplosion(.Large, position: oNode.position, withScore: 10)
+                    createExplosion(.Large, position: oNode.position)
+                    oNode.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
                     self.didDissappearItemForEnemiesGenerator(self.enemyGenerator, item: oNode, type: .SpaceShip)
                 }
                 else {
-                    createExplosion(.Small, position: oNode.position, withScore: 5)
+                    createExplosion(.Small, position: oNode.position)
+                    oNode.syDisplayScore(rect: self.playableArea, scoreAddition: 5)
                 }
             } else if oNode.physicsBody!.categoryBitMask == EntityCategory.EnemySpaceShipLaser {
-                createExplosion(.Small, position: oNode.position, withScore: 0)
+                createExplosion(.Small, position: oNode.position)
                 oNode.removeFromParent()
             }
             
@@ -1522,7 +1507,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 }
             } else if oNode.physicsBody!.categoryBitMask == EntityCategory.PlayerLaser {
                 oNode.removeFromParent()
-                createExplosion(.Small, position: enemyLaser.position, withScore: 0)
+                createExplosion(.Small, position: enemyLaser.position)
             }
             
             enemyLaser.removeFromParent()
@@ -1539,11 +1524,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 return false
             }
             
-            var secondAster = node //(ropeJointAsters.asteroids.last == node ? ropeJointAsters.asteroids.first : ropeJointAsters.asteroids.last)!
+            let secondAster = node //(ropeJointAsters.asteroids.last == node ? ropeJointAsters.asteroids.first : ropeJointAsters.asteroids.last)!
             
-            let position = ropeJointAsters.convertPoint(secondAster.position, toNode: self)
+            //let position = ropeJointAsters.convertPoint(secondAster.position, toNode: self)
             
-            let childrenNode = ropeJointAsters.rope?.children as? [SKNode]
+            let childrenNode = ropeJointAsters.rope?.children
             if let chain = childrenNode?.last {
                 
                 let curPhysBody = chain.physicsBody!
@@ -1689,16 +1674,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 let smallAster = pNode as! SmallRegularAsteroid
                 let asterPos = smallAster.parent!.convertPoint(smallAster.position,toNode:self)
                 createRocksExplosion(asterPos, scale: 2)
-                displayScoreAdditionLabel(asterPos, scoreAddition: 10)
                 
+                smallAster.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
                 smallAster.removeFromParent()
                 
-                //TODO: there is a chain out of screen here...
-                
-                // {
-                    //ptional(<SKPhysicsBody> type:<Rectangle> representedObject:[<SKSpriteNode> name:'Chain' texture:[<SKTexture> 'rope_ring.png' (10 x 5)] position:{-154.40547180175781, -25.338905334472656} size:{10, 5} rotation:0.19])
-                //}
-            
                 if (didSmallAsteroidCollidedWithRegulaOne(secondNode)) {
                     return true
                 }
@@ -1729,11 +1708,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         }
                         let location = contact.contactPoint
                         
-                        var vector = contact.contactNormal * -0.5
+                        let vector = contact.contactNormal * -0.5
                         
                         self.applyRotationOnNeedToRopeJointAsteroids(vector, node: regAster)
                         
                         self.createRocksExplosion(location,scale:scale)
+                        
+                        regAster.syDisplayScore(rect: self.playableArea, scoreAddition: 20)
                         
                         if (!self.checkNodeAndDestroyParentOnNeed(regAster, isRope: false)) {
                             self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAster, withType: .Regular)
@@ -1745,7 +1726,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                             }
                         }
                         
-                        self.displayScoreAdditionLabel(location, scoreAddition: 20)
                     }
                     else {
                            self.shakeCamera(regAster, duration: 0.8)
@@ -1796,7 +1776,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
             //TODO: Move to the Player class
             let playerNode = self.player.playerBGSpriteNode()
-            println("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
+            print("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
             
             let pointInternal = self.convertPoint(contact.contactPoint, toNode: pNode)
             playerNode.position = pointInternal
@@ -1804,11 +1784,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             pNode.physicsBody?.categoryBitMask &= ~EntityCategory.Player
             
-            println("placing player at position \(pointInternal)")
+            print("placing player at position \(pointInternal)")
             self.player.disableGravityReceptivity()
             self.player.hidden = true
             self.player.position = playerNode.position
-            println("\(self.player.physicsBody!.contactTestBitMask)")
+            print("\(self.player.physicsBody!.contactTestBitMask)")
             self.player.removeFromParent()
             pNode.addChild(self.player)
             
@@ -1881,7 +1861,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         secondNode.physicsBody!.contactTestBitMask &= ~EntityCategory.BlackHole
     
         
-        println("blackHoleNode")
+        print("blackHoleNode")
 
         self.userInteractionEnabled = !(secondNode is Player)
         
@@ -1920,8 +1900,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
         }
         
-        let act = SKAction.sequence([SKAction.waitForDuration(durationToWait)])
-        
         return true
     }
     
@@ -1950,7 +1928,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     func didBeginContact(contact: SKPhysicsContact)
     {
-        println("Contact \(contact)")
+        print("Contact \(contact)")
         if (didBladeContactWithRope(contact)) {
             return
         }
@@ -2027,7 +2005,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         if (contact.bodyB.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyA.categoryBitMask == EntityCategory.Player) || (contact.bodyA.categoryBitMask == EntityCategory.LeftEdgeBorder && contact.bodyB.categoryBitMask == EntityCategory.Player)  {
             
-            println("Player contacted with left edge")
+            print("Player contacted with left edge")
             
             if let bgSprite = self.player.playerBGSpriteFromNode(self.player.parent) {
             
@@ -2098,8 +2076,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             laser?.node?.removeAllActions()
             
             if 0 == self.trashAsteroidsCount {
-                createExplosion(expType, position: scenePoint,withScore: 10)
-
+                createExplosion(expType, position: scenePoint)
+                node.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
+                
                 let timeInterval = NSDate.timeIntervalSinceReferenceDate()
                 self.lastProjectileExp = (timeInterval,scenePoint)
             }
@@ -2113,7 +2092,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     addChild(emitterNode)
                     emitterNode.zPosition = self.fgZPosition + 1
                     
-                    runOneShortEmitter(emitterNode, 0.15)
+                    runOneShortEmitter(emitterNode, duration: 0.15)
                 }
             }
             laser?.node?.removeFromParent()
@@ -2123,11 +2102,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
     }
     
-    func createExplosion(explosionType:ExplosionType, position:CGPoint, withScore scoreAddition:Int64 = 0) {
+    func createExplosion(explosionType:ExplosionType, position:CGPoint) {
         
         switch explosionType {
         case .Small:
-            var explosion = Explosion.getExplostionForType(.Small)
+            let explosion = Explosion.getExplostionForType(.Small)
             explosion.position = position
             explosion.zPosition = self.fgZPosition
             
@@ -2135,50 +2114,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             break;
         case .Large:
-            var explosion = Explosion.getExplostionForType(.Large)
+            let explosion = Explosion.getExplostionForType(.Large)
             explosion.zPosition = self.fgZPosition
             explosion.position = position
             
             addChild(explosion)
             
-            if (scoreAddition == 0) {
-                return
-            }
             
-            displayScoreAdditionLabel(position,scoreAddition: scoreAddition)
-            
-            break;
-        }
-        
-    }
-    
-    func displayScoreAdditionLabel(position:CGPoint,scoreAddition:Int64) {
-        scoreLabel.alpha = 1.0
-        scoreLabel.text = (scoreAddition > 0) ? "+\(scoreAddition)" : "-\(scoreAddition)"
-        scoreLabel.fontSize = 30.0
-        scoreLabel.fontColor = SKColor.greenColor()
-        scoreLabel.horizontalAlignmentMode = .Center
-        scoreLabel.position = position
-        
-        self.currentGameScore += scoreAddition
-        self.totalGameScore += UInt64(scoreAddition)
-        
-        var yDiff:CGFloat = 0.0
-        if (30 + position.y > CGRectGetMaxY(self.playableArea)) {
-            yDiff = -30
-        }
-        else {
-            yDiff = 30
-        }
-        
-        scoreLabel.runAction(SKAction.sequence([
-            SKAction.moveByX(0, y: yDiff, duration: 1.0),
-            SKAction.fadeOutWithDuration(1.0),
-            SKAction.removeFromParent()
-            ]))
-        
-        if (scoreLabel.parent == nil) {
-            addChild(scoreLabel)
         }
     }
 }
@@ -2205,7 +2147,7 @@ extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
                 
                 let playerPos = wPlayer.parent!.convertPoint(wPlayer.position, toNode: self)
                 
-                let dist = distanceBetweenPoints(shipPosition, playerPos)
+                let dist = distanceBetweenPoints(shipPosition, point2: playerPos)
                 
                 if dist <= maxRadius {
                     emitter.particleBirthRate = 0
@@ -2229,7 +2171,7 @@ extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
                     
                     let playerPos = wPlayer.parent!.convertPoint(wPlayer.position, toNode: self)
                     
-                    let dist = distanceBetweenPoints(shipPosition, playerPos)
+                    let dist = distanceBetweenPoints(shipPosition, point2: playerPos)
                     
                     if dist <= maxRadius {
                         emitter.particleBirthRate = 0
@@ -2278,9 +2220,9 @@ extension GameScene {
         blade = nil
     }
     
-    private func areTouchesMovedForBlade(touches: Set<NSObject>, withEvent event: UIEvent) -> Bool {
+    private func areTouchesMovedForBlade(touches: Set<NSObject>, withEvent event: UIEvent?) -> Bool {
         
-        println("touchesMoved. Can cut the rope \(self.canCutRope(touches))")
+        print("touchesMoved. Can cut the rope \(self.canCutRope(touches))")
         
         if self.canCutRope(touches) {
             
@@ -2318,9 +2260,9 @@ extension GameScene {
         return false
     }
     
-    private func areTouchesEndedForBlade(touches: Set<NSObject>, withEvent event: UIEvent) -> Bool {
+    private func areTouchesEndedForBlade(touches: Set<UITouch>, withEvent event: UIEvent?) -> Bool {
         
-        println("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
+        print("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
         let flag = self.removedBlade || self.blade != nil
         removeBlade()
     
@@ -2379,7 +2321,7 @@ extension GameScene {
                     
                     bNodeParent.runAction(SKAction.sequence([SKAction.waitForDuration(1.0),SKAction.fadeOutWithDuration(0.5),SKAction.runBlock(){
                         [unowned self] in
-                        self.displayScoreAdditionLabel(bNode.position, scoreAddition: 20)
+                        bNode.syDisplayScore(rect: self.playableArea, scoreAddition: 20)
                         }]))
                 }
                 
@@ -2440,7 +2382,7 @@ extension GameScene {
         
         let isRope = bladeBody != nil && ropeBody != nil
         
-        //println("Body category \(body.categoryBitMask)\n Is rope \(isRope)")
+        //print("Body category \(body.categoryBitMask)\n Is rope \(isRope)")
         
         if isRope {
             cutRopeUsingImpulse(ropeBody?.node, v: contact.contactNormal)

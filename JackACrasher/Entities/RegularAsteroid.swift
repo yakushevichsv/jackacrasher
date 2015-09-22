@@ -24,6 +24,59 @@ let duration = (M_PI*2)/digitAppearanceSpeed
     func destroyItem(item:ItemDestructable) -> Bool
 }
 
+extension SKNode {
+    
+    private var syScoreLabel:SKLabelNode! {
+        get {
+            
+            let label = SKLabelNode(fontNamed: "gamerobot")
+            label.alpha = 1.0
+            label.text = ""
+            label.fontSize = 30.0
+            label.fontColor = SKColor.greenColor()
+            label.horizontalAlignmentMode = .Center
+            label.position = CGPointZero
+            label.zPosition = self.zPosition + CGFloat(1.0)
+            label.hidden = false
+            
+            
+            return label
+        }
+    }
+    
+    func syDisplayScore(rect playableArea:CGRect, scoreAddition:Int64) {
+        syDisplayScore(CGPointZero, rect:playableArea, scoreAddition: scoreAddition)
+    }
+    
+    func syDisplayScore(position:CGPoint, rect playableArea:CGRect, scoreAddition:Int64) {
+        self.syScoreLabel.text = "\(scoreAddition)"
+        
+        let sPosition = self.scene!.convertPoint(self.position, fromNode: self.parent!)
+        
+        self.syScoreLabel.position = sPosition + position
+        
+        self.scene?.addChild(self.syScoreLabel)
+        
+        var yDiff:CGFloat = 30
+        var sign:CGFloat
+        
+        
+        if (yDiff + sPosition.y > CGRectGetMaxY(playableArea)) {
+            sign = -1.0
+        }
+        else {
+            sign = 1.0
+        }
+        
+        yDiff *= sign
+        
+        self.syScoreLabel.runAction(SKAction.sequence([
+            SKAction.moveByX(0, y: yDiff, duration: 1.0),
+            SKAction.fadeOutWithDuration(1.0),
+            SKAction.removeFromParent()
+            ]))
+    }
+}
 
 class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
     private let digitNode:DigitNode!

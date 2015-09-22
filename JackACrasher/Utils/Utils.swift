@@ -150,7 +150,7 @@ func vectorFromPoint(point:CGPoint, usingDirection direction:CGVector, inRect re
         
         let isU = direction.dy > 0
         let isR = direction.dx > 0
-        var angle = CGVector(dx: fabs(direction.dx), dy: fabs(direction.dy)).angle
+        let angle = CGVector(dx: fabs(direction.dx), dy: fabs(direction.dy)).angle
     
         /*let pHalf =  π * 0.5
     
@@ -200,7 +200,7 @@ func vectorFromPoint(point:CGPoint, usingDirection direction:CGVector, inRect re
         xPosDist *= -1
     }
     
-    println("Result vector x:\(xPosDist) y:\(yPosDist). Initial Position \(point). Direction \(direction)")
+    print("Result vector x:\(xPosDist) y:\(yPosDist). Initial Position \(point). Direction \(direction)")
     return CGVector(dx: xPosDist, dy: yPosDist)
 }
 
@@ -255,12 +255,12 @@ func reflectionAngleFromContact3(contact:SKPhysicsContact!) -> CGFloat {
     
     var normal = contact.contactNormal
     
-    println("Before reflection  Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    print("Before reflection  Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
     
     normal.dx *= CGFloat(-1.0)
     normal.dy *= CGFloat(-1.0)
     
-    println("After reflection Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    print("After reflection Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
     
     var angle:CGFloat = normal.angle
     
@@ -273,12 +273,12 @@ func reflectionAngleFromContact2(contact:SKPhysicsContact!) -> CGFloat {
     
     var normal = contact.contactNormal
     
-    println("Before reflection  Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    print("Before reflection  Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
     
     normal.dx *= CGFloat(-1.0)
     normal.dy *= CGFloat(-1.0)
     
-    println("After reflection Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
+    print("After reflection Normal dx \(normal.dx),Normal dy \(normal.dy) . Angle (degree) \(normal.angle.degree)")
     
     var angle:CGFloat = normal.angle
     
@@ -314,7 +314,7 @@ func reflectionAngleFromContact(contact:SKPhysicsContact!) -> CGFloat {
     
     var point2 = point - CGPointMake(normal.dx*10, normal.dy*10)
     
-    let extraAngle = shortestAngleBetween(point.angle, point2.angle)
+    let extraAngle = shortestAngleBetween(point.angle, angle2: point2.angle)
     
     return extraAngle
 }
@@ -360,7 +360,7 @@ func randomBetween(y1:CGFloat,y2:CGFloat) -> CGFloat {
 }
 
 func randomUntil(y:CGFloat) -> CGFloat {
-    return randomBetween(0, y)
+    return randomBetween(0, y2: y)
 }
 
 func randomUntil(y:CGFloat,withOffset offset:CGFloat) -> CGFloat{

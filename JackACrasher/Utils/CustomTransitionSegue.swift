@@ -12,8 +12,8 @@ class CustomTransitionSegue: UIStoryboardSegue {
 
     override func perform() {
         
-        let sVC = self.sourceViewController as! UIViewController
-        let dVC = self.destinationViewController as! UIViewController
+        let sVC = self.sourceViewController 
+        let dVC = self.destinationViewController 
         
         sVC.navigationController?.pushViewController(dVC, animated: false)
     }

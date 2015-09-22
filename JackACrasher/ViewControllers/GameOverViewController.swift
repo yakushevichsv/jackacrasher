@@ -62,7 +62,7 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
         let dScale = self.traitCollection.displayScale
         let sceneY = CGFloat(ceil(scenePosition.y / dScale))
         let xPos = CGRectGetWidth(self.view.bounds) * 0.5 //CGFloat(ceil(scenePosition.x / dScale))
-        let yPos = CGRectGetHeight(self.view.bounds) - sceneY
+        _ = CGRectGetHeight(self.view.bounds) - sceneY
         
         self.containerView.hidden = false;
         self.containerView.center = CGPointMake(xPos, self.containerView.center.y /*yPos*/)

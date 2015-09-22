@@ -26,7 +26,7 @@ func length() -> CGFloat {
         
         let length = self.length()
         
-        return length > CGFloat.min ? CGVectorMake(dx/length, dy/length) : CGVector.zeroVector
+        return length > CGFloat.min ? CGVectorMake(dx/length, dy/length) : CGVector.zero
         
     }
     
@@ -70,7 +70,7 @@ extension UIView {
     
     @IBInspectable var borderColor:UIColor! {
         get {
-            return UIColor(CGColor: self.layer.borderColor)
+            return UIColor(CGColor: self.layer.borderColor!)
         }
         set {
             self.layer.borderColor = newValue.CGColor
