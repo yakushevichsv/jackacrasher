@@ -86,7 +86,7 @@ class HUDNode: SKNode {
                 let value = k1 * x + b1
                 
                 self.updateLifeCurPercentNodeWithValue(max(lifeType(0),lifeType(value)), width: width)
-                //println("Current value \(value)")
+                //print("Current value \(value)")
             }
             
             

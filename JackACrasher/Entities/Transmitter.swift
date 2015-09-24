@@ -49,9 +49,10 @@ class Transmitter:SKNode,AssetsContainer {
     
     static func loadAssets() {
         dispatch_once(&sOne) {
-            let laser = SKEmitterNode(fileNamed: Transmitter.Constants.transmitterLaserName)
-            laser.name = self.Constants.transmitterLaserName
-            self.sLaserEmitter = laser
+            if let laser = SKEmitterNode(fileNamed: Transmitter.Constants.transmitterLaserName){
+                laser.name = self.Constants.transmitterLaserName
+                self.sLaserEmitter = laser
+            }
         }
     }
     
@@ -121,7 +122,7 @@ class Transmitter:SKNode,AssetsContainer {
             self.laserNode.particleBirthRate = 100
         }
         
-        println("Ray Path h Size \(h) Beam Height \(self.beamHeight)")
+        print("Ray Path h Size \(h) Beam Height \(self.beamHeight)")
         self.rayNode.path = UIBezierPath(rect: CGRectMake(xOrigin, 0, width, -h)).CGPath
     }
     
@@ -153,7 +154,7 @@ class Transmitter:SKNode,AssetsContainer {
         let isUnder = minX <= itemPosition.x && maxX >= itemPosition.x
         
         if (isUnder){
-            println("Under value!")
+            print("Under value!")
         }
         return isUnder
     }
@@ -305,8 +306,6 @@ class Transmitter:SKNode,AssetsContainer {
             [unowned self]
             node, time in
             
-            let ratio = NSTimeInterval(time) / duration
-            
             let w = self.size.halfWidth()
         
             self.correctRayPath(-w*0.5, width: w, time: time, duration: duration, yDiff: -self.beamHeight, yOffset: self.beamHeight)
@@ -334,13 +333,13 @@ class Transmitter:SKNode,AssetsContainer {
     }
     
     // MARK: Touches 
-    override func touchesEnded(touches: Set<NSObject>, withEvent event: UIEvent) {
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        let touch = (touches.first as! UITouch)
-        let point = touch.locationInNode(self)
+        let touch = touches.first
+        let point = touch!.locationInNode(self)
         
         if CGPathContainsPoint(self.rayNode.path, nil, point, false) {
-            let prevPoint = touch.previousLocationInNode(self)
+            let prevPoint = touch!.previousLocationInNode(self)
             
             let sTouch  = self.scene!.convertPoint(point, fromNode: self)
             let pTouch  = self.scene!.convertPoint(prevPoint, fromNode: self)

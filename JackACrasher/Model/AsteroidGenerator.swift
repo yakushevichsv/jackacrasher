@@ -145,7 +145,7 @@ class AsteroidGenerator: NSObject {
         
         let sequence =  produceSeqActionToAsteroid(sprite, asteroidSpeed: asteroidSpeed)
         
-        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size). Asteroid Size \(size)")
+        print("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(sprite.size). Asteroid Size \(size)")
         
         return (asteroid:sprite,actions:sequence)
     }
@@ -229,7 +229,7 @@ class AsteroidGenerator: NSObject {
         
         self.delegate.asteroidGenerator(self, didProduceAsteroids: [bomb], type: .Bomb)
         
-        println("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(bomb.size)")
+        print("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(bomb.size)")
     }
     
     private func produceRopeJointAsteroids() {
@@ -252,7 +252,7 @@ class AsteroidGenerator: NSObject {
         
         let aster1Pos = asteroid1.position - center
         let aster2Pos = asteroid2.position - center
-        println("Asteroid 1 position \(aster1Pos). Asteroid 2 position \(aster2Pos)")
+        print("Asteroid 1 position \(aster1Pos). Asteroid 2 position \(aster2Pos)")
         
         let isDirect = true
         var ropePtr:Rope? = nil
@@ -306,7 +306,7 @@ class AsteroidGenerator: NSObject {
         asteroid2.position = aster2Pos
         asteroid1.position = aster1Pos
         
-        println("Asteroid position \(asteroids.position)")
+        print("Asteroid position \(asteroids.position)")
 
             let moveAct = SKAction.moveToX(CGRectGetMinX(rect) - CGRectGetMaxX(rect), duration: time)
             
@@ -331,7 +331,7 @@ class AsteroidGenerator: NSObject {
         var sprites:[SKSpriteNode] = [SKSpriteNode]()
         let actName:String = "moveDelAction"
         
-        println("Scene rect \(self.playableRect)")
+        print("Scene rect \(self.playableRect)")
         
         let count = 3
         
@@ -411,7 +411,7 @@ class AsteroidGenerator: NSObject {
             sprite.anchorPoint = CGPointMake(0.5, 0.5)
             sprite.position = CGPointMake(CGRectGetWidth(self.playableRect) + xMargin, yPos)
             
-            println("Trash # \(index) sprite: \(sprite)")
+            print("Trash # \(index) sprite: \(sprite)")
             
             sprite.name = textName
             sprite.physicsBody = SKPhysicsBody(texture: texture!, size: texture!.size())
@@ -465,7 +465,7 @@ class AsteroidGenerator: NSObject {
         canFire = false
         
         var currentAstType:AsteroidType = .None
-        do {
+        repeat {
         
             let randValue = arc4random()%12
         
@@ -502,32 +502,32 @@ class AsteroidGenerator: NSObject {
         self.curAsteroidType = currentAstType
         
         
-        println("=== Produced current type \(self.curAsteroidType) === ")
+        print("=== Produced current type \(self.curAsteroidType) === ")
         
         switch currentAstType {
         case .Trash:
-            println("=== Produced current type .Trash === ")
+            print("=== Produced current type .Trash === ")
             self.produceTrashSprites()
             break
         case .RopeBased:
-            println("=== Produced current type .RopeBased === ")
+            print("=== Produced current type .RopeBased === ")
             self.produceRopeJointAsteroids()
             break
         case .Bomb:
-            println("=== Produced current type .Bomb === ")
+            print("=== Produced current type .Bomb === ")
             self.produceBomb()
             break
         case .Regular:
-            println("=== Produced current type .Regular === ")
+            print("=== Produced current type .Regular === ")
             let regSize = AsteroidGenerator.generateRegularAsteroidSize()
             self.produceRegularAsteroid(regSize)
             break
         case .Health:
-            println("=== Produced current type .Health === ")
+            print("=== Produced current type .Health === ")
             self.produceHealthUnit()
             break
         default:
-            println("=== Produced current type .Default ===  \(currentAstType) ")
+            print("=== Produced current type .Default ===  \(currentAstType) ")
             
             break
         }

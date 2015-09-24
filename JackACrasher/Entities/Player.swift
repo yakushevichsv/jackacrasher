@@ -113,9 +113,10 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             hammerSprite.name = hammerNodeName
             Player.sHammerSprite = hammerSprite
             
-            let emitter = SKEmitterNode(fileNamed: damageEmitterNode)
-            emitter.name = damageEmitterNodeName
-            Player.sDamageEmitter = emitter
+            if let emitter = SKEmitterNode(fileNamed: damageEmitterNode){
+                emitter.name = damageEmitterNodeName
+                Player.sDamageEmitter = emitter
+            }
         }
     }
     
@@ -443,7 +444,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     func throwProjectileToLocation(location:CGPoint) -> SKNode! {
        
-        println("Throw location \(location)")
+        print("Throw location \(location)")
         
         let sPosition = convertNodePositionToScene(self)
         
@@ -464,7 +465,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         self.playerCount++;
         
         if self.playerCount > 1 {
-            println("Count \(self.playerCount)")
+            print("Count \(self.playerCount)")
         }
 #endif
         

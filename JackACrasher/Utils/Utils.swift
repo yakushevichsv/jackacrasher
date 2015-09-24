@@ -307,12 +307,12 @@ func reflectionAngleFromContact2(contact:SKPhysicsContact!) -> CGFloat {
 
 func reflectionAngleFromContact(contact:SKPhysicsContact!) -> CGFloat {
     
-    var normal = contact.contactNormal
+    let normal = contact.contactNormal
     
-    var point = contact.contactPoint
+    let point = contact.contactPoint
     
     
-    var point2 = point - CGPointMake(normal.dx*10, normal.dy*10)
+    let point2 = point - CGPointMake(normal.dx*10, normal.dy*10)
     
     let extraAngle = shortestAngleBetween(point.angle, angle2: point2.angle)
     

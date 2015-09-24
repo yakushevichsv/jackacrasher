@@ -49,7 +49,7 @@ class ReturnPausePopUpAnimator: PopupAnimator {
         
         let sFrame = transitionContext.initialFrameForViewController(fromVC!)
         
-        println("From VC Initial \(transitionContext.initialFrameForViewController(fromVC!)) Final \(transitionContext.finalFrameForViewController(fromVC!)) \n From VC Final \(transitionContext.initialFrameForViewController(toVC!)) Final \(transitionContext.finalFrameForViewController(toVC!))")
+        print("From VC Initial \(transitionContext.initialFrameForViewController(fromVC!)) Final \(transitionContext.finalFrameForViewController(fromVC!)) \n From VC Final \(transitionContext.initialFrameForViewController(toVC!)) Final \(transitionContext.finalFrameForViewController(toVC!))")
         
         
         if let toViewInternal = toVC?.view {

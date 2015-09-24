@@ -38,8 +38,6 @@ class Explosion: SKSpriteNode, AssetsContainer {
         case .Small:
             exp = Explosion(explosionType: .Small)
             break
-        default:
-            break
         }
         return exp
     }
@@ -52,8 +50,8 @@ class Explosion: SKSpriteNode, AssetsContainer {
             var curTextures :[SKTexture] = []
             for i in 1...3 {
                 let texture = SKTexture(imageNamed: "explosion000\(i)")
-                assert(texture != nil, "Texture is nil")
                 curTextures.append(texture)
+            
             }
             
             SKTexture.preloadTextures(curTextures) { () -> Void in
@@ -63,7 +61,7 @@ class Explosion: SKSpriteNode, AssetsContainer {
         }
     }
     
-    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
+    override init(texture: SKTexture!, color: UIColor, size: CGSize) {
         super.init(texture: texture, color: color, size: size)
     }
     

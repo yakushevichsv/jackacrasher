@@ -156,7 +156,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let length = diff.length()
         
         if (length <= 100 ) {
-            //println("Lenght is \(diff.length())")
+            //print("Lenght is \(diff.length())")
             let angle = acos(Double((tPoint.x - sPoint.x)/length))
             
             let p2x = sPoint.x + (length*5)*CGFloat(cos(angle))

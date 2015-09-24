@@ -74,7 +74,7 @@ class CloudManager: NSObject {
     
     //MARK: Other methods
     func cloudChanged(aNotification:NSNotification!) {
-        let (token: AnyObject?,isPresent) = CloudManager.jacIsICloudAvailable()
+        let (token,isPresent) = CloudManager.jacIsICloudAvailable()
         self.userLoggedIn = isPresent
         //TODO: transfer ownership to or from CloudKit to User Defaults...
         if let tokenProtocol  = token as? NSObjectProtocol {
@@ -83,7 +83,7 @@ class CloudManager: NSObject {
                 serializeAsCurrentCloudToken(token)
                 //TODO: transfer ownership to new user, or refresh purchases....
             }
-        } else if let curToken = self.curToken as? NSObjectProtocol {
+        } else if let _ = self.curToken as? NSObjectProtocol {
             serializeAsPreviousCloudToken(self.curToken)
             serializeAsCurrentCloudToken(nil)
             //user is not logged in.
@@ -177,7 +177,7 @@ class CloudManager: NSObject {
                 
                 if (error != nil ) {
                     
-                    println("Error \(error)")
+                    print("Error \(error)")
                     
                     
                     if  CKErrorCode(rawValue: error.code) == CKErrorCode.UnknownItem  && error.domain == CKErrorDomain {
@@ -198,7 +198,7 @@ class CloudManager: NSObject {
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: Contants.SurvivalCurrentGame, predicate: predicate)
         self.privateDB.performQuery(query, inZoneWithID: nil) { results, error in
-            //println("\(error.code == CKErrorCode.InvalidArguments.rawValue) -   InvalidArguments")
+            //print("\(error.code == CKErrorCode.InvalidArguments.rawValue) -   InvalidArguments")
             if (error == nil) {
                 
                 if let lastRecord = results.last as? CKRecord {
@@ -467,7 +467,7 @@ extension CloudManager {
                 
                 if (error != nil) {
                     var pauseVal:NSTimeInterval = 0
-                    println("Error for index \(index). Error : \(error)")
+                    print("Error for index \(index). Error : \(error)")
                     
                     if error.code == CKErrorCode.RequestRateLimited.rawValue ||
                         error.code == CKErrorCode.ServiceUnavailable.rawValue {

@@ -141,10 +141,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         }
         
         // 1
-        if let pageView = pageViews[page] {
-            // Do nothing. The view is already loaded.
-        } else {
-            // 2
+        if pageViews[page] == nil {
             /*var frame = CGRectZero
             frame.size = self.scrollView.frame.size
             frame.origin.x = self.screenWidth * CGFloat(page)
@@ -178,7 +175,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             
             let newSize = CGSizeMake(size.width * scale, size.height * scale)
             
-            println("Original image size \(size)\nNew image size \(newSize)\nScroll View frame \(self.scrollView.frame)")
+            print("Original image size \(size)\nNew image size \(newSize)\nScroll View frame \(self.scrollView.frame)")
             
             var xMargin = 0.5 * (scrollSize.width - newSize.width)
             var yMargin = 0.5 * (scrollSize.height - newSize.height)
@@ -194,7 +191,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             frame.origin.x += xMargin
             frame.origin.y += yMargin
             
-            println("Frame \(frame), \nX margin \(xMargin)\n Y margin \(yMargin)")
+            print("Frame \(frame), \nX margin \(xMargin)\n Y margin \(yMargin)")
             
             newPageView.frame = frame
             scrollView.addSubview(newPageView)
@@ -211,28 +208,9 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
             newPageView.contentMode = .ScaleAspectFit
             newPageView.frame = frame
             
-            if newPageView.contentMode == .ScaleAspectFit {
-                
-                let size = newPageView.image!.size
-                var scale:CGFloat
-                let scrollSize = self.scrollView.frame.size
-                
-                let xScale = scrollSize.width/size.width
-                let yScale = scrollSize.height/size.height
-                    
-                scale = min(xScale,yScale)
-                
-                let newSize = CGSizeMake(size.width * scale, size.height * scale)
-                
-                /*let wConst = NSLayoutConstraint(item: newPageView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: round(newSize.width))
-                newPageView.addConstraint(wConst)
-                
-                let hConst = NSLayoutConstraint(item: newPageView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1.0, constant: round(newSize.height))
-                newPageView.addConstraint(hConst)*/
-            }
             
             scrollView.addSubview(newPageView)
-            println("frame \(newPageView.frame)")
+            print("frame \(newPageView.frame)")
             // 4
             pageViews[page] = newPageView
 

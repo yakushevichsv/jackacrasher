@@ -658,7 +658,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0620;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Siarhei Yakushevich";
 				TargetAttributes = {
 					21FFEAE21AD5E216000115F6 = {
@@ -890,6 +890,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -975,6 +976,7 @@
 					./OpenSSL/lib,
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sygamefun.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
@@ -1009,6 +1011,7 @@
 					./OpenSSL/lib,
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sygamefun.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
@@ -1035,6 +1038,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sygamefun.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasherTests-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1057,6 +1061,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sygamefun.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasherTests-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/JackACrasher.app/JackACrasher";

@@ -216,7 +216,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         
             let duration = (distanceBetweenPoints(sPoint, tPoint) + extraLen)/(EnemySpaceShip.Constants.laserSpeed * 5)
         
-            println("Attacker \(attacker)\n Lenght \(length) Duration \(duration)")
+            print("Attacker \(attacker)\n Lenght \(length) Duration \(duration)")
                 
                 
             let moveToAction = SKAction.moveTo(tPoint, duration: NSTimeInterval(duration))
@@ -224,7 +224,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             let removeAction = SKAction.removeFromParent()
             bullet.position = sPoint
             
-            println("Bullet from point \(sPoint) to point: \(tPoint)")
+            print("Bullet from point \(sPoint) to point: \(tPoint)")
             
             addChild(bullet)
             bullet.runAction(SKAction.sequence([SKAction.group([moveToAction,rotateAction]),removeAction]))
@@ -270,7 +270,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             playableArea = CGRect(x: 0, y: playableMargin,
                 width: size.width,
                 height: playableHeight) // 4
-            println("Area \(self.playableArea)")
+            print("Area \(self.playableArea)")
         }
     }
     

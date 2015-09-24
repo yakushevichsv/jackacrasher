@@ -228,7 +228,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     func request(request: SKRequest!, didFailWithError error: NSError!){
         if (error != nil) {
-            println("Error \(error)")
+            print("Error \(error)")
         }
         
         if (error.domain == "SSErrorDomain" && error.code == 0) {
@@ -374,7 +374,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
             case .Deferred:
                 // Do not block your UI. Allow the user to continue using your app.
-                println("Allow the user to continue using your app.")
+                print("Allow the user to continue using your app.")
                 break
                 // The purchase was successful
             case .Purchased:
@@ -382,7 +382,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     self.purchaseId = transaction.payment.productIdentifier
                     self.purchasedItems.append(transaction)
                     
-                    println("Deliver content for \(transaction.payment.productIdentifier)")
+                    print("Deliver content for \(transaction.payment.productIdentifier)")
                     // Check whether the purchased product has content hosted with Apple.
                     
                     if(transaction.downloads != nil && transaction.downloads!.count > 0) {
@@ -394,7 +394,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         self.receiptValidator.checkReceiptWithCompletionHandler{
                             [unowned self]
                             arrayAny,error in
-                            println("\(arrayAny)")
+                            print("\(arrayAny)")
                             
                             var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
                             var found:Bool = false
@@ -439,7 +439,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     self.purchaseId = transaction.payment.productIdentifier;
                     self.restored.append(transaction)
                     
-                    println("Restore content for \(transaction.payment.productIdentifier)")
+                    print("Restore content for \(transaction.payment.productIdentifier)")
                     // Send a IAPDownloadStarted notification if it has
                     var statusInter:IAPPurchaseNotificationStatus
                     
@@ -457,7 +457,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         self.receiptValidator.checkReceiptWithCompletionHandler{
                             [unowned self]
                             arrayAny,error in
-                            println("\(arrayAny)")
+                            print("\(arrayAny)")
                             
                             var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
                             var found:Bool = false
@@ -541,23 +541,23 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                 var error:NSError? = nil
                 if (!NSFileManager.defaultManager().removeItemAtURL(download.contentURL, error: &error) && error != nil) {
-                    println("Error deleting file \(error)")
+                    print("Error deleting file \(error)")
                 }
             
                 break;
                 
             case .Paused:
-                println("Download was paused")
+                print("Download was paused")
                 break;
                 
             case .Finished:
                 // Download is complete. StoreKit saves the downloaded content in the Caches directory.
-                println("Location of downloaded file \(download.contentURL)");
+                print("Location of downloaded file \(download.contentURL)");
                 finishDownloadTransaction(download.transaction,userInfo:userInfo)
                 break;
                 
             case .Waiting:
-                println("Download Waiting");
+                print("Download Waiting");
                 SKPaymentQueue.defaultQueue().startDownloads([download])
                 break;
                 
@@ -571,7 +571,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     // Logs all transactions that have been removed from the payment queue
     func paymentQueue(queue: SKPaymentQueue!, removedTransactions transactions: [AnyObject]!) {
         for transaction in transactions as! [SKPaymentTransaction!] {
-            println("\(transaction.payment.productIdentifier) was removed from the payment queue.");
+            print("\(transaction.payment.productIdentifier) was removed from the payment queue.");
         }
     }
    
@@ -589,7 +589,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     }
    
     func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
-        println("All restorable transactions have been processed by the payment queue.");
+        print("All restorable transactions have been processed by the payment queue.");
         if (self.status != .IAPDownloadStarted) {
             self.status = .IAPRestoredSucceeded
             NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self)

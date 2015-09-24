@@ -140,8 +140,6 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
             f_size = 100
             
             break
-        default:
-            break
         }
         if (!partName.isEmpty) {
             nodeName = nodeName.stringByAppendingString(partName)
@@ -209,51 +207,6 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         
         return
         
-        let field = SKFieldNode.radialGravityField()
-        
-        let mRadius = round(0.5*min(self.bgImageNode.texture!.size().width,self.bgImageNode.texture!.size().height))
-        
-        field.name = "field"
-        //field.physicsBody  = SKPhysicsBody(circleOfRadius: mRadius)
-        field.categoryBitMask = EntityCategory.RadialField
-        
-        var falloff:Float = 0
-        var animSpeed:Float = 0
-        
-        var region:SKRegion! = nil
-        
-        switch (self.asterSize) {
-            case .Big:
-                falloff = 0.8
-                animSpeed = 0.4
-                
-                region = SKRegion(radius: Float(mRadius)*1.5)
-                
-                break
-            case .Medium:
-                falloff = 0.4
-                animSpeed = 0.6
-                region = SKRegion(radius: Float(mRadius)*1.8)
-                break
-            case .Small:
-            fallthrough
-            default:
-                falloff = 0.2
-                animSpeed = 1
-                region = SKRegion(radius: Float(mRadius)*2.0)
-                break
-        }
-        
-        
-        field.falloff = falloff
-        field.animationSpeed = animSpeed
-        field.region = region
-        
-        //self.bgImageNode.addChild(field)
-        
-        self.insertChild(field, atIndex: 0)
-        
-        //lself.bgImageNode.addChild(field)
     }
     
     private func startRotation() {
@@ -347,7 +300,7 @@ class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
     private func setupPhysicsBody(){
         let texture = self.mainSprite.texture
         
-        let physBody = SKPhysicsBody(texture: texture, size: texture!.size())
+        let physBody = SKPhysicsBody(texture: texture!, size: texture!.size())
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         physBody.fieldBitMask = 0
@@ -381,7 +334,7 @@ class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
         
         fireEmitter.position = p1
         fireEmitter.targetNode = self.scene
-        fireEmitter.particleRotation = shortestAngleBetween(self.zRotation, direction.angle)
+        fireEmitter.particleRotation = shortestAngleBetween(self.zRotation, angle2: direction.angle)
         fireEmitter.zPosition = 2
         
         addChild(fireEmitter)

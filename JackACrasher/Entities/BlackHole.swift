@@ -122,7 +122,7 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
         let sequence = SKAction.sequence([fadeOut,fadeIn])
         let seqRep = SKAction.repeatAction(sequence, count: 3)
         
-        var seqArray = [seqRep,SKAction.runBlock(){
+        let seqArray = [seqRep,SKAction.runBlock(){
             [unowned self] in
             
             self.setFieldState(true)

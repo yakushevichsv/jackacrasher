@@ -25,11 +25,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         else {
             
-            let types = application.currentUserNotificationSettings().types
+            let types = application.currentUserNotificationSettings()!.types
             
             if (types == UIUserNotificationType.None)
             {
-                application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType.Alert | UIUserNotificationType.Sound | UIUserNotificationType.Badge,categories:nil))
+                application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: UIUserNotificationType(rawValue: UIUserNotificationType.Alert.rawValue | UIUserNotificationType.Sound.rawValue | UIUserNotificationType.Badge.rawValue),categories:nil))
             }
         }
         
@@ -50,21 +50,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func applicationWillTerminate(application: UIApplication) {
         
-        let types = application.currentUserNotificationSettings().types.rawValue
+        let types = application.currentUserNotificationSettings()!.types.rawValue
         
         if (types == UIUserNotificationType.None.rawValue) {
             return
         }
         
-        if (!application.scheduledLocalNotifications.isEmpty) {
-            for anyNotification in  application.scheduledLocalNotifications {
-                let aNotification = anyNotification as! UILocalNotification
+        if (!application.scheduledLocalNotifications!.isEmpty) {
+            for anyNotification in  application.scheduledLocalNotifications! {
+                let aNotification = anyNotification 
                 application.cancelLocalNotification(aNotification);
             }
         }
         
         
-        if (application.scheduledLocalNotifications.isEmpty) {
+        if (application.scheduledLocalNotifications!.isEmpty) {
             
             let localNotification = UILocalNotification()
             
@@ -80,7 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             localNotification.timeZone = NSTimeZone.localTimeZone()
             localNotification.repeatCalendar = NSCalendar.currentCalendar()
-            localNotification.repeatInterval = NSCalendarUnit.CalendarUnitWeekday
+            localNotification.repeatInterval = NSCalendarUnit.Weekday
             
             let fireInterval:NSTimeInterval = 1*24*60*60
             localNotification.fireDate = NSDate(timeIntervalSinceNow:fireInterval)
@@ -96,7 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
     }
     
-    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject?) -> Bool {
+    func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
         
         return  VKSdk.processOpenURL(url, fromApplication: sourceApplication) ||
             FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)

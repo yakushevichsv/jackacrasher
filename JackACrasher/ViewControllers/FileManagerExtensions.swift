@@ -40,7 +40,7 @@ extension NSFileManager {
             let res =  self.createDirectoryAtPath(self.jacCacheDirectory, withIntermediateDirectories: true, attributes: nil, error: &error)
             
             if (!res && error != nil){
-                println("Error \(error)")
+                print("Error \(error)")
                 return (nil,error)
             }
         }

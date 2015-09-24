@@ -38,7 +38,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         if context == &myContext {
             let isLoading:Bool = change[NSKeyValueChangeNewKey]!.boolValue
             
-            println("Date changed: \(change[NSKeyValueChangeNewKey])")
+            print("Date changed: \(change[NSKeyValueChangeNewKey])")
             
             if (!isLoading) {
                 self.waitUntilNotLoadedItem()
@@ -429,7 +429,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     //MARK: ADInterstitialAdDelegate
     
     func interstitialAd(interstitialAd: ADInterstitialAd!, didFailWithError error: NSError!) {
-        println("Error interstitialAd \(error)")
+        print("Error interstitialAd \(error)")
         let domainFault = error.domain == ADErrorDomain
         let codeFault = error.code == ADError.InventoryUnavailable.rawValue
         
@@ -459,7 +459,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     }
     
     func interstitialAdDidLoad(interstitialAd: ADInterstitialAd!) {
-        println("Did load interstitialAdDidLoad")
+        print("Did load interstitialAdDidLoad")
         
         if interstitialAd.loaded {
             presentInterlude()

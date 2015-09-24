@@ -27,7 +27,7 @@ class KamikadzeSpaceShip: EnemySpaceShip  {
     weak var delegate:EnemySpaceShipDelegate?
     weak var dataSource:EnemySpaceShipDataSource?
     
-    override init(texture: SKTexture!, color: UIColor!, size: CGSize) {
+    override init(texture: SKTexture!, color: UIColor, size: CGSize) {
         super.init(texture:texture,color:color,size:size)
         setup()
     }

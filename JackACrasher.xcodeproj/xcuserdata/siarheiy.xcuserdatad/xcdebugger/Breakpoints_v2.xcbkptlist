@@ -245,7 +245,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1971"
             endingLineNumber = "1971"
-            landmarkName = "didPlayerContactWithEdge(_:)"
+            landmarkName = "didContactOutOfRange(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -261,7 +261,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1990"
             endingLineNumber = "1990"
-            landmarkName = "didPlayerContactWithEdge(_:)"
+            landmarkName = "didPlayerContactWithHealthUnit(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -513,8 +513,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "338"
             endingLineNumber = "338"
-            landmarkName = "createPlayer()"
-            landmarkType = "5">
+            landmarkName = "GameScene"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -609,8 +609,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "838"
             endingLineNumber = "838"
-            landmarkName = "returnPlayerToScene(_:removeAsteroid:usePlayerPostion:)"
-            landmarkType = "5">
+            landmarkName = "GameScene"
+            landmarkType = "3">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -657,7 +657,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "1924"
             endingLineNumber = "1924"
-            landmarkName = "didBeginContact(_:)"
+            landmarkName = "tryToDestroyDestructableItem(_:secondNode:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -673,7 +673,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "935"
             endingLineNumber = "935"
-            landmarkName = "removePlayerFromRegularAsteroidToScene(_:)"
+            landmarkName = "didMoveOutAsteroidForGenerator(_:asteroid:withType:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
@@ -786,6 +786,38 @@
             startingLineNumber = "219"
             endingLineNumber = "219"
             landmarkName = "prepareToPlayEffect(_:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/ViewControllers/ShopDetailsViewController.swift"
+            timestampString = "464825026.373085"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "395"
+            endingLineNumber = "395"
+            landmarkName = "collectionView(_:cellForItemAtIndexPath:)"
+            landmarkType = "5">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            shouldBeEnabled = "No"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "JackACrasher/AppDelegate.swift"
+            timestampString = "464825428.784485"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "32"
+            endingLineNumber = "32"
+            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

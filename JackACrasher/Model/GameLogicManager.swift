@@ -66,13 +66,13 @@ class GameLogicManager: NSObject {
         self.getBestSurvivalScoreWithCompletionHandler { (bestScore, error) -> Void in
             if (error != nil) {
                 self.isLoading = false
-                println("Error \(error)")
+                print("Error \(error)")
                 return
             }
             else {
                 self.getTotalSurvivalScoreWithCompletionHandler({ (totalScore, error) -> Void in
                     if (error != nil) {
-                        println("Error \(error)")
+                        print("Error \(error)")
                         return
                     }
                     
@@ -111,7 +111,7 @@ class GameLogicManager: NSObject {
         }
         
         self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
-            println("GK :  Score : \(scores)")
+            print("GK :  Score : \(scores)")
             if (error != nil) {
                 completionHandler(UInt64.min,error)
                 return
@@ -138,7 +138,7 @@ class GameLogicManager: NSObject {
             return
         }
         self.centerManager.getSurvivalBestTimeScoreWithCompletionHandler({ (time, error) -> Void in
-            println("GK : Best time : \(time)")
+            print("GK : Best time : \(time)")
             if (error != nil) {
                 completionHandler(0,error)
                 return
@@ -160,7 +160,7 @@ class GameLogicManager: NSObject {
             return
         }
         self.centerManager.getSurvivalScoresWithCompletionHandler({ (scores, error) -> Void in
-            println("GK : Scores : \(scores)")
+            print("GK : Scores : \(scores)")
             if (error != nil) {
                 completionHandler(0,error)
                 return
@@ -385,7 +385,7 @@ extension GameLogicManager
                             CloudManager.sharedInstance.createSurvivalCurrentGameRecord(product, score: score, numberOfLives: amount, playedTime: playedTime, ratio: ratio) {
                                 record,error in
                                 
-                                println("Error \(error)")
+                                print("Error \(error)")
                             }
                         }
                     }
@@ -709,7 +709,7 @@ extension GameLogicManager {
                     completion(info)
                 }
                 else {
-                    println("accessSurvivalGameScores. Error \(error)")
+                    print("accessSurvivalGameScores. Error \(error)")
                     completion(nil)
                 }
             }

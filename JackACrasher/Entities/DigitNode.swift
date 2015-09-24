@@ -78,7 +78,7 @@ class DigitNode: SKNode {
     
     func updateLabel() {
        
-        var labelPtr:SKLabelNode? = childNodeWithName(self.labelNodeName) as? SKLabelNode
+        let labelPtr:SKLabelNode? = childNodeWithName(self.labelNodeName) as? SKLabelNode
         var label:SKLabelNode!
         
         if (labelPtr == nil) {

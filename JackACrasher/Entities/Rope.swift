@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-struct RopeConnection:Printable {
+struct RopeConnection:CustomStringConvertible {
     let position:CGPoint
     let node:SKNode!
     
@@ -88,7 +88,7 @@ class Rope: SKNode {
         
         if (ancestor != connection.node.parent) {
             
-            point = connection.node.parent != nil ? connection.node.parent!.convertPoint(connection.position, toNode: ancestor) : CGPoint.zeroPoint
+            point = connection.node.parent != nil ? connection.node.parent!.convertPoint(connection.position, toNode: ancestor) : CGPoint.zero
         }
         
         return point

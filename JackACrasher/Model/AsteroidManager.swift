@@ -57,8 +57,6 @@ class AsteroidInfo: NSObject {
                     
                 case .Path(path: let path):
                     _body = SKPhysicsBody(polygonFromPath: path)
-                default:
-                    _body = nil
                     break
                     
                 }
@@ -161,13 +159,11 @@ class AsteroidManager : NSObject {
         switch(itemType!) {
             case .ImageName(name: let name):
                 sprite =  SKSpriteNode(imageNamed: name)
-                break;
+                break
             case .TextureName(texture: let texture):
                 sprite = SKSpriteNode(texture: texture)
                 sprite!.size = texture.size()
-                break;
-            default:
-                break;
+                break
             }
         }
         
@@ -191,8 +187,6 @@ class AsteroidManager : NSObject {
                 case .TextureName(texture: let texture):
                     body = SKPhysicsBody(texture: texture, size: texture.size())
                     break;
-                default:
-                    break;
                 }
             }
             
@@ -200,7 +194,7 @@ class AsteroidManager : NSObject {
         }
         
         sprite?.position = info.position
-        println("Sprite position: \(info.position)")
+        print("Sprite position: \(info.position)")
         return sprite
     }
     
@@ -208,7 +202,7 @@ class AsteroidManager : NSObject {
         
         var array:[NSValue!] = []
         
-        for (let key,let value) in self.jointsArray {
+        for (key, value) in self.jointsArray {
             
             value.recalculateResistance(point, jointPoint: key.CGPointValue())
             
@@ -225,7 +219,7 @@ class AsteroidManager : NSObject {
     func createCompositeAsteroid(atPosition position:CGPoint, usingAsteroidsInfo asteroidsInfo:[AsteroidInfo], andJointsInfo jointsInto:[JointInfo]) -> SKNode? {
         
         var finalNode:SKNode? = nil
-        var aBodies:[SKPhysicsBody!] = []
+        var aBodies:[SKPhysicsBody] = []
         
         for aInfo in asteroidsInfo {
             if let sprite = self.createAsteroid(aInfo) {
@@ -234,7 +228,7 @@ class AsteroidManager : NSObject {
                 if finalNode == nil {
                     finalNode = SKNode()
                     finalNode!.position = position
-                    println("Final node position \(position)")
+                    print("Final node position \(position)")
                     self.scene.addChild(finalNode!)
                     blue = true
                 }
@@ -252,10 +246,9 @@ class AsteroidManager : NSObject {
         }
         
         if (aBodies.count != 0) {
-            finalNode!.physicsBody = SKPhysicsBody(bodies: aBodies)
+            finalNode!.physicsBody = SKPhysicsBody(bodies: aBodies) //SKPhysicsBody(bodies: aBodies)
             finalNode!.position = position
             
-            var indexPair:Int = 0
             var index:Int = 0
             let bodiesCount = asteroidsInfo.count
             
@@ -270,7 +263,7 @@ class AsteroidManager : NSObject {
                         if (bodyA != nil  && bodyB != nil ) {
                             let joint = SKPhysicsJointFixed.jointWithBodyA(bodyA!, bodyB: bodyB!, anchor: jointInfo.position)
                             
-                            println("Joint position \(jointInfo.position)")
+                            print("Joint position \(jointInfo.position)")
                             
                             scene.physicsWorld.addJoint(joint)
                             
@@ -284,8 +277,6 @@ class AsteroidManager : NSObject {
                             self.jointsArray[value] = JointState(joint: joint,node: shapeNode)
                             
                         }
-                        break;
-                    default:
                         break;
                 }
                 

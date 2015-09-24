@@ -255,7 +255,7 @@ class EnemiesGenerator: NSObject {
         let y = CGFloat(arc4random() % UInt32(CGRectGetHeight(nRect))) + CGRectGetMinY(nRect)
         
         let position = CGPointMake(x, y)
-        println("!!nRect \(nRect) Position \(position)")
+        print("!!nRect \(nRect) Position \(position)")
         hole.position = position
         
         return hole

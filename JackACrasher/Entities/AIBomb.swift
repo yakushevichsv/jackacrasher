@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class AIBomb: Bomb,Attacker {
+class AIBomb: Bomb {
    
     private let chaseRadius:CGFloat = 300
     private let maxAlertRadius:CGFloat = AIBomb.enemyAlertRadius * 2.0
@@ -46,7 +46,7 @@ class AIBomb: Bomb,Attacker {
                 
                 let position = self.positionOfNodeRelativeToOurParent(hero)
                 
-                let distance = distanceBetweenPoints(position,self.position)
+                let distance = distanceBetweenPoints(position,point2: self.position)
                 
                 if (distance < AIBomb.enemyAlertRadius && distance < heroDistance) {
                     heroDistance = distance
@@ -83,7 +83,7 @@ class AIBomb: Bomb,Attacker {
     
     private func moveTowards(position:CGPoint, withTimeInterval timeInterval: NSTimeInterval) {
         
-        let dist = distanceBetweenPoints(self.position, position)
+        let dist = distanceBetweenPoints(self.position, point2: position)
         let moveAction = SKAction.moveTo(position, duration: NSTimeInterval(dist/Bomb.Constants.speed))
         
         self.runAction(moveAction)
@@ -95,7 +95,7 @@ class AIBomb: Bomb,Attacker {
     
     private func faceTo(position:CGPoint) -> CGFloat {
     
-        let ang = radiansBetweenPoints(self.position, position)
+        let ang = radiansBetweenPoints(self.position, second: position)
         
         self.zRotation = π * 1.5 + ang
         return ang

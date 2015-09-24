@@ -145,8 +145,8 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                 let indexPath = NSIndexPath(forRow: index, inSection: 0)
             
                 if self.isViewLoaded() {
-                for vIndexPath in self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
-                    if vIndexPath == indexPath! {
+                for vIndexPath in self.collectionView.indexPathsForVisibleItems() {
+                    if vIndexPath == indexPath {
                         
                         if let info = curProduct.productInfo {
                             if !info.consumable && (!curProduct.availableForPurchase || GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
@@ -202,7 +202,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                         //self.processingCellsImages.removeValueForKey(indexPath)
                         
                         
-                        for vIndexPath in self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
+                        for vIndexPath in self.collectionView.indexPathsForVisibleItems() {
                             if vIndexPath == indexPath {
                                 
                                 if let collectionViewCell = self.collectionView.cellForItemAtIndexPath(indexPath) as? ShopDetailsCollectionViewCell {
@@ -234,7 +234,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             for product in products {
                 if (productId == product.productIdentifier) {
                     let indexPath = NSIndexPath(forRow: i, inSection: 0)
-                    for visibleIndexPath  in self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath!] {
+                    for visibleIndexPath  in self.collectionView.indexPathsForVisibleItems() {
                         if indexPath == visibleIndexPath {
                             let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as! ShopDetailsCollectionViewCell
                             deActivateIndicatorForCell(cell, atIndexPath: indexPath)
@@ -261,7 +261,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(PurchaseManager.sharedInstance)
         
-        for taskIdKey in self.processingCellsImages.keys.array {
+        for taskIdKey in self.processingCellsImages.keys {
             if let taskId = self.processingCellsImages[taskIdKey] {
                 NetworkManager.sharedManager.cancelTask(taskId)
             }
@@ -280,7 +280,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         
         if let indexPath = self.collectionView.indexPathForCell(cell) {
             
-            for curIndexPath in self.collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
+            for curIndexPath in self.collectionView.indexPathsForVisibleItems() {
                 
                 if (curIndexPath == indexPath) {
                     
@@ -356,7 +356,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         let collectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("productCell", forIndexPath: indexPath) as! ShopDetailsCollectionViewCell
         let product =  self.products[indexPath.row]
         
-        println("Product downloadable: \(product.skProduct.downloadable)")
+        print("Product downloadable: \(product.skProduct.downloadable)")
         
         //collectionViewCell.productImageView.image =
         
@@ -392,7 +392,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                                 self.processingCellsImages.removeValueForKey(indexPath)
                                 
                                 
-                                for vIndexPath in collectionView.indexPathsForVisibleItems() as! [NSIndexPath] {
+                                for vIndexPath in collectionView.indexPathsForVisibleItems() {
                                     if (vIndexPath == indexPath && collectionViewCell == collectionView.cellForItemAtIndexPath(indexPath)) {
                                         collectionViewCell.hideActivityIndicatorAfterDonwloading()
                                         
@@ -441,8 +441,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
         collectionViewCell.productDescription.text = product.skProduct.localizedDescription
         collectionViewCell.productDescription.sizeToFit()
         
-        var title:String! = nil
-        var curSymbol = product.skProduct.priceLocale.objectForKey(NSLocaleCurrencySymbol) as? String
+        let curSymbol = product.skProduct.priceLocale.objectForKey(NSLocaleCurrencySymbol) as? String
         var titleStr : String! = "Price \(product.skProduct.price)"
         
         if let cur = curSymbol {

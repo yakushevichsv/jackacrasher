@@ -466,7 +466,7 @@ class GameMainViewController: UIViewController {
             self.btnGameCenter.hidden = true
             
             sender!.superview?.bringSubviewToFront(sender!)
-            println("Original center \(self.btnSound.center)")
+            print("Original center \(self.btnSound.center)")
             
             UIView.animateWithDuration(animated ? 0.5 : 0.0, animations: { [unowned self]
                 () -> Void in
@@ -477,7 +477,7 @@ class GameMainViewController: UIViewController {
                 self.btnFB.alpha = 1.0
                 self.btnFB.layoutIfNeeded()
                 
-                println("Final 1 center \(self.btnSound.center)")
+                print("Final 1 center \(self.btnSound.center)")
                 
                 }){
                     [unowned self]
@@ -493,10 +493,10 @@ class GameMainViewController: UIViewController {
                     
                     NSLayoutConstraint.activateConstraints([attr])
                     
-                    println("Final 2 center \(self.btnSound.center)")
+                    print("Final 2 center \(self.btnSound.center)")
                     
                     //self.btnTwitter.center = self.btnFB.center
-                    println("BTN Twitter center x  \(self.btnTwitter.center.x)")
+                    print("BTN Twitter center x  \(self.btnTwitter.center.x)")
                     
                     self.twConstraint.constant = -CGRectGetMidX(self.btnFB.bounds)
                     self.btnTwitter.layoutIfNeeded()
@@ -567,7 +567,7 @@ class GameMainViewController: UIViewController {
                     [unowned self]
                     finished in
              
-                    println("Original center \(self.btnSound.center)")
+                    print("Original center \(self.btnSound.center)")
                     self.btnFB.superview?.bringSubviewToFront(self.btnFB)
                     self.btnTwitter.alpha = 1.0
                     self.btnTwitter.layoutIfNeeded()
@@ -598,7 +598,7 @@ class GameMainViewController: UIViewController {
                                 () -> Void in
                                 
                                 self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
-                                println("Final 1 center \(self.btnSound.center)")
+                                print("Final 1 center \(self.btnSound.center)")
                                 
                                 self.btnFB.center = CGPoint(x:self.btnRUpCorner.center.x,y:self.btnFB.center.y)
                                 
@@ -619,7 +619,7 @@ class GameMainViewController: UIViewController {
                                     self.btnFB.alpha  = 0.0
                                     self.btnFB.layoutIfNeeded()
                                     
-                                    println("Final 2 center \(self.btnSound.center)")
+                                    print("Final 2 center \(self.btnSound.center)")
                             }
                     }
             }
@@ -709,17 +709,17 @@ class GameMainViewController: UIViewController {
                     // Called from a UIViewController
                     composer.showFromViewController(self) { result in
                         if (result == TWTRComposerResult.Cancelled) {
-                            println("Tweet composition cancelled")
+                            print("Tweet composition cancelled")
                         }
                         else {
-                            println("Sending tweet!")
+                            print("Sending tweet!")
                             self.alertWithTitle("Success", message: "Thanks for tweeting!", actionTitle: nil)
                         }
                     }
                 }
                 // make API calls that do not require user auth
             } else {
-                println("error: \(error.localizedDescription)");
+                print("error: \(error.localizedDescription)");
             }
         }
     }

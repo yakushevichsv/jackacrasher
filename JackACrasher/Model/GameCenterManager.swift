@@ -95,7 +95,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     func showGKGameCenterViewController(viewController: UIViewController!) {
         
         if !gameCenterEnabled {
-            println("Local player is not authenticated")
+            print("Local player is not authenticated")
             return
         }
         
@@ -116,7 +116,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     //MARK: Achievements
     func reportAchievements(achievements: [GKAchievement]) {
         if !gameCenterEnabled {
-            println("Local player is not authenticated")
+            print("Local player is not authenticated")
             return
         }
         GKAchievement.reportAchievements(achievements) {(error) in
@@ -130,7 +130,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     private func reportScore(score:Int64,context:UInt64 = 0, leaderboardId: String) {
         
         if (!gameCenterEnabled) {
-            println("Game center is not available")
+            print("Game center is not available")
             return
         }
         
@@ -147,7 +147,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     private func getScoresFromLeaderboard(leaderboardId :String,completionHandler: (([AnyObject]!, AnyObject!, NSError!) -> Void)!) {
         
         if (!gameCenterEnabled) {
-            println("Game center is not available")
+            print("Game center is not available")
             return
         }
         
@@ -205,7 +205,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
             
             
             if (localPlayerScore != nil) {
-                println("Local score \(localPlayerScore)")
+                print("Local score \(localPlayerScore)")
             
                 if (maxScore < localPlayerScore.value ) {
                     maxScore = localPlayerScore.value
@@ -234,7 +234,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
                 }
             }
             
-            println("Local score \(localPlayerScore)")
+            print("Local score \(localPlayerScore)")
             
             if (maxScorePtr == nil) {
                 maxScorePtr = localPlayerScore as? GKScore
@@ -265,7 +265,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     private func getPhotoForPlayer(playerObj:AnyObject?, andSize size:GKPhotoSize, handler:(UIImage?, NSError!) -> Void) {
     
         if (!self.gameCenterEnabled) {
-            println("Local player is not authentificated")
+            print("Local player is not authentificated")
             return
         }
         
@@ -279,7 +279,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
                 player.loadPhotoForSize(size, withCompletionHandler: { (image, error) -> Void in
                   
                     if (error != nil) {
-                        println("Error \(error)")
+                        print("Error \(error)")
                         
                         handler(nil,error)
                         return
@@ -302,7 +302,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
                 GKPlayer.loadPlayersForIdentifiers([playerStr], withCompletionHandler: { (players, error) -> Void in
                     
                     if (error != nil) {
-                        println("Error \(error)")
+                        print("Error \(error)")
                         
                         handler(nil,error)
                         return

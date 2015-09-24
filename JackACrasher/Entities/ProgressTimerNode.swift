@@ -49,9 +49,6 @@ class ProgressTimerCropNode: SKCropNode {
         
         let endAngle = startAngle + prog * CGFloat(2.0 * M_PI)
         
-        let textureSize = self.size
-        
-
         let path = UIBezierPath(arcCenter: CGPointZero, radius: self.radius, startAngle: startAngle, endAngle: endAngle, clockwise: true)
         
         self.maskShapeNode.path = path.CGPath

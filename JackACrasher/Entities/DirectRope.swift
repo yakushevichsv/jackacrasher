@@ -13,7 +13,7 @@ class DirectRope: Rope {
    
     private static let sChainName = "Chain"
     
-    private var direction : CGVector = CGVector.zeroVector
+    private var direction : CGVector = CGVector.zero
     private var numberOfSteps:Int = 0
     /*private let con1:RopeConnection!
     private let con2:RopeConnection!*/
@@ -36,7 +36,7 @@ class DirectRope: Rope {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        self.direction = CGVector.zeroVector
+        self.direction = CGVector.zero
         super.init(coder: aDecoder)
     }
     
@@ -72,7 +72,7 @@ class DirectRope: Rope {
         
         let ringDiff = CGPointMake(self.direction.dx * self.ringLength,self.direction.dy * self.ringLength)
         
-        if let nodeA = self.connectionA.node as? SKSpriteNode {
+        if let _ = self.connectionA.node as? SKSpriteNode {
             jointPos += ringDiff * 0.5
         }
         
@@ -113,7 +113,7 @@ class DirectRope: Rope {
             if (i == self.numberOfSteps - 1) {
                 
                 var jointPos = self.connectionB.position
-                if let nodeB = self.connectionB.node as? SKSpriteNode {
+                if let _ = self.connectionB.node as? SKSpriteNode {
                     jointPos -= ringDiff * 0.5
                 }
                 
