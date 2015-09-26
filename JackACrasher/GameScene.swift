@@ -513,9 +513,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                     case .Small:
                                         scale = 1.0
                                         break;
-                                    default:
-                                        scale = 1.0
-                                        break;
                                     }
                                     
                                     //MARK: Continue here, create crystal, with score addition.
@@ -1312,9 +1309,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 case .Small:
                     scale = 1.0
                     break;
-                default:
-                    scale = 1.0
-                    break;
                 }
                 
                 //MARK: Continue here, create crystal, with score addition.
@@ -1700,9 +1694,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                             scale = 2.0
                             break;
                         case .Small:
-                            scale = 1.0
-                            break;
-                        default:
                             scale = 1.0
                             break;
                         }

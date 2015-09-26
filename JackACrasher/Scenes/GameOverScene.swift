@@ -16,13 +16,21 @@ import SpriteKit
 extension GameOverScene {
     class func unarchiveFromFile(file : NSString) -> SKNode? {
         if let path = NSBundle.mainBundle().pathForResource(file as String, ofType: "sks") {
-            var sceneData = NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe, error: nil)!
-            var archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
             
-            archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
-            let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameOverScene
-            archiver.finishDecoding()
-            return scene
+            do {
+               let sceneData = try  NSData(contentsOfFile: path, options: .DataReadingMappedIfSafe)
+                
+                let archiver = NSKeyedUnarchiver(forReadingWithData: sceneData)
+                
+                archiver.setClass(self.classForKeyedUnarchiver(), forClassName: "SKScene")
+                let scene = archiver.decodeObjectForKey(NSKeyedArchiveRootObjectKey) as! GameOverScene
+                archiver.finishDecoding()
+                return scene
+            }
+            catch {
+                return nil
+            }
+            
         } else {
             return nil
         }
@@ -158,7 +166,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             damage.zPosition = self.zPosition + 1
             addChild(damage)
             
-            runOneShortEmitter(damage, 0.4)
+            runOneShortEmitter(damage, duration: 0.4)
             attackerBullet?.removeFromParent()
             
             if self.playerHealthCount > 0 {
@@ -176,7 +184,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
                     interval += 0.1
                 }
                 
-                for node in self.children as! [SKNode]{
+                for node in self.children {
                     if node.name != nil && node.name! == Constants.bulletName {
                         node.removeFromParent()
                     }
@@ -204,7 +212,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
                 
             let bullet = EnemySpaceShip.sEnemyBulltet.copy() as! SKSpriteNode
             let sPoint = attacker.position
-            var tPoint = self.player.position
+            let tPoint = self.player.position
             
             let diff = tPoint - sPoint
             let extraY = abs(diff.x) >= 1 ? tPoint.x * tan(diff.angle) : tPoint.y
@@ -214,13 +222,13 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             let length = diff.length()
             
         
-            let duration = (distanceBetweenPoints(sPoint, tPoint) + extraLen)/(EnemySpaceShip.Constants.laserSpeed * 5)
+            let duration = (distanceBetweenPoints(sPoint, point2: tPoint) + extraLen)/(EnemySpaceShip.Constants.laserSpeed * 5)
         
             print("Attacker \(attacker)\n Lenght \(length) Duration \(duration)")
                 
                 
             let moveToAction = SKAction.moveTo(tPoint, duration: NSTimeInterval(duration))
-            let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,tPoint), duration: NSTimeInterval(min(duration,0.05)))
+            let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,second: tPoint), duration: NSTimeInterval(min(duration,0.05)))
             let removeAction = SKAction.removeFromParent()
             bullet.position = sPoint
             
@@ -261,7 +269,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         
         assert(self.scaleMode == .AspectFill, "Not aspect fill mode")
         
-        if let presentView = self.view {
+        if let _ = self.view {
             
             
             let maxAspectRatio:CGFloat = 16.0/9.0 // 1

@@ -375,7 +375,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                         path,error in
                         
                         if (error == nil && path != nil) {
-                            let (path,error) = NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:icon.lastPathComponent)
+                            let path = try NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:icon.lastPathComponent)
                             
                             
                             var image :UIImage?

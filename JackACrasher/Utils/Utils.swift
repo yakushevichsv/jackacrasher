@@ -384,3 +384,29 @@ func recursiveConvertPositionToScene(node:SKNode!) -> CGPoint {
     return pos
 }
 
+extension String {
+    
+    func stringByAppendingPathComponent(lastComponent:String?) -> String {
+        
+        if let lastComponent = lastComponent {
+            
+            var url = NSURL(string: self)
+            url = url?.URLByAppendingPathComponent(lastComponent)
+            return "\(url!)" 
+        }
+        else {
+            return self
+        }
+    }
+    
+    var  lastPathComponent:String? {
+        get {
+            
+            let url = NSURL(string: self)
+            
+            return url?.lastPathComponent
+        }
+    }
+    
+}
+

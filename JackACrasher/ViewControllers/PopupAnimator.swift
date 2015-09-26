@@ -22,18 +22,12 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     
-    func transitionDuration(transitionContext: UIViewControllerContextTransitioning) -> NSTimeInterval {
+    func transitionDuration(transitionContext: UIViewControllerContextTransitioning?) -> NSTimeInterval {
         return NSTimeInterval(1)
     }
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
     
-        let offsetSign:CGFloat = self.isPresenting ? 1 : -1
-        let value:CGFloat = !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
-        
-        let fromView = transitionContext.viewForKey(UITransitionContextFromViewKey)
-        let toView = transitionContext.viewForKey(UITransitionContextToViewKey)
-        
         let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)
         
         let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
@@ -44,7 +38,7 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 
                 fromVC?.view.userInteractionEnabled = false
                 
-                transitionContext.containerView().addSubview(fromViewInternal)
+                transitionContext.containerView()!.addSubview(fromViewInternal)
                 
                 UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
                     fromViewInternal.transform = CGAffineTransformMakeScale(1e-1, 1e-1)
@@ -61,15 +55,11 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
         }
         
         
-        let fFrame = transitionContext.finalFrameForViewController(toVC!)
-        
-        let sFrame = transitionContext.initialFrameForViewController(fromVC!)
-        
         print("From VC Initial \(transitionContext.initialFrameForViewController(fromVC!)) Final \(transitionContext.finalFrameForViewController(fromVC!)) \n From VC Final \(transitionContext.initialFrameForViewController(toVC!)) Final \(transitionContext.finalFrameForViewController(toVC!))")
         
         
         if let toViewInternal = toVC?.view {
-            transitionContext.containerView().addSubview(toViewInternal)
+            transitionContext.containerView()!.addSubview(toViewInternal)
             
             fromVC?.view.userInteractionEnabled = false
             

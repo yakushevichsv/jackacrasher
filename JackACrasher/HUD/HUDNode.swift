@@ -43,7 +43,7 @@ class HUDNode: SKNode {
         createBGBorder()
         createOtherNodes()
         
-        updateLifeCurPercentNode(animated: true)
+        updateLifeCurPercentNode(true)
         updateLifeNode()
     }
     
@@ -98,9 +98,6 @@ class HUDNode: SKNode {
     }
     
     private func updateLifeCurPercentNodeWithValue(value:lifeType,width w:CGFloat) {
-        
-        
-        let path = UIBezierPath(roundedRect: CGRectMake(0, 0, w, self.size.height), cornerRadius: 5)
         
         var color:SKColor? = nil
         
@@ -192,7 +189,7 @@ class HUDNode: SKNode {
                 prevLifePercent = HUDNode.sLifePercentMin
             }
             else {
-                updateLifeCurPercentNode(animated: false, prevValue: self.curLifePercent)
+                updateLifeCurPercentNode(false, prevValue: self.curLifePercent)
                 return
             }
         }
@@ -201,7 +198,7 @@ class HUDNode: SKNode {
             self.curLifePercent = HUDNode.sLifePercentMax
         }
         
-        updateLifeCurPercentNode(animated: true, prevValue: prevLifePercent)
+        updateLifeCurPercentNode(true, prevValue: prevLifePercent)
     }
     
     internal func setLifePercentUsingRatio(ratio:Float){
@@ -215,7 +212,7 @@ class HUDNode: SKNode {
             self.curLifePercent = HUDNode.sLifePercentMax
         }
         if (prevValue != self.curLifePercent) {
-            updateLifeCurPercentNode(animated: true, prevValue: prevValue)
+            updateLifeCurPercentNode(true, prevValue: prevValue)
         }
     }
 }

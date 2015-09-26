@@ -93,8 +93,11 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     internal var validProductsIds:[String]?{
         get {
             if self.managerState != .Validated { return nil }
-            
-            return validProducs.keys.array
+            var results = [String]()
+            for item in validProducs {
+                results.append(item.0)
+            }
+            return results
         }
     }
     
@@ -102,7 +105,11 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         get {
             if self.managerState != .Validated { return nil }
             
-            return validProducs.values.array
+            var results = [IAPProduct]()
+            for item in validProducs {
+                results.append(item.1)
+            }
+            return results
         }
     }
     
@@ -149,11 +156,16 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     NetworkManager.sharedManager.downloadFileFromPath(PurchaseManager.ProductsListPath) {
                         path, error in
                         if error == nil && path != nil {
+                          let defManager = NSFileManager.defaultManager()
+                           
+                            do {
+                                let path2 = try defManager.jacStoreItemToCache(path, fileName: defManager.jacProductsInfo)
                             
-                           let (path,error) =  NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:NSFileManager.defaultManager().jacProductsInfo)
-                            
-                            if (error == nil && path != nil) {
-                                self.validateProducts()
+                                if (path2 != nil) {
+                                    self.validateProducts()
+                                }
+                            } catch {
+                                
                             }
                         }
                     }
@@ -174,7 +186,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
        
         self.managerState = .Validating
         
-        var products = Set<NSObject>()
+        var products = Set<String>()
         
         for identifier in array as! [IAPProduct] {
             products.insert(identifier.productIdentifier)
@@ -188,7 +200,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     }
     
     //MARK:SKProductsRequestDelegate
-    func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
+    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
         
         let invProductsIdef = response.invalidProductIdentifiers
         
@@ -198,10 +210,10 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         if (!invProductsIdef.isEmpty){
             
             for invProductAnyObj in invProductsIdef {
-                let invProduct = invProductAnyObj as! String
+                let invProduct = invProductAnyObj 
                 
                 products = products.filter({ (productAny) -> Bool in
-                    let product = productAny as! SKProduct
+                    let product = productAny 
                 
                     return product.productIdentifier != invProduct
                 })
@@ -209,7 +221,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             }
         }
         
-        for skProduct in products as! [SKProduct] {
+        for skProduct in products {
             for iapProduct in self.products! {
                 
                 if skProduct.productIdentifier == iapProduct.productIdentifier {
@@ -226,10 +238,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         NSNotificationCenter.defaultCenter().postNotificationName(kPurchaseManagerValidatedProductsNotification, object: self)
     }
     
-    func request(request: SKRequest!, didFailWithError error: NSError!){
-        if (error != nil) {
-            print("Error \(error)")
-        }
+    func request(request: SKRequest, didFailWithError error: NSError){
         
         if (error.domain == "SSErrorDomain" && error.code == 0) {
             self.managerState = .FailedToAccessITunes
@@ -283,7 +292,9 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
         let payment = SKMutablePayment(product: product!.skProduct)
         payment.quantity = 1
-        payment.simulatesAskToBuyInSandbox = sPurchaseManagerSandBox
+        if #available(iOS 8.3, *) {
+            payment.simulatesAskToBuyInSandbox = sPurchaseManagerSandBox
+        }
         
         
         if let userName = userNameForPurchases() {
@@ -314,7 +325,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             return nil
         }
         
-        var context = UnsafeMutablePointer<CC_MD5_CTX>.alloc(1)
+        let context = UnsafeMutablePointer<CC_MD5_CTX>.alloc(1)
         var digest = Array<UInt8>(count:Int(CC_MD5_DIGEST_LENGTH), repeatedValue:0)
         CC_MD5_Init(context)
         CC_MD5_Update(context, playerID!,
@@ -334,7 +345,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         let length = min(hexString.lengthOfBytesUsingEncoding(NSUTF8StringEncoding),Int(Int32.max))
         
         
-        let index = advance(hexString.startIndex,length)
+        let index = hexString.startIndex.advancedBy(length)
         
         return hexString.substringToIndex(index)
     }
@@ -355,13 +366,12 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     //MARK: SKPaymentTransactionObserver
     
-    func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!)
+    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction])
     {
         
-        for transaction in transactions as! [SKPaymentTransaction] {
+        for transaction in transactions {
             
-            var userInfo:[NSObject:AnyObject]? = ["id":transaction.payment.productIdentifier]
-            
+            let userInfo:[NSObject:AnyObject]? = ["id":transaction.payment.productIdentifier]
             
             switch (transaction.transactionState )
             {
@@ -385,7 +395,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     print("Deliver content for \(transaction.payment.productIdentifier)")
                     // Check whether the purchased product has content hosted with Apple.
                     
-                    if(transaction.downloads != nil && transaction.downloads!.count > 0) {
+                    if(!transaction.downloads.isEmpty) {
                         completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted, userInfo:userInfo)
                     }
                     else {
@@ -441,10 +451,9 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     
                     print("Restore content for \(transaction.payment.productIdentifier)")
                     // Send a IAPDownloadStarted notification if it has
-                    var statusInter:IAPPurchaseNotificationStatus
                     
-                    if(transaction.downloads != nil && transaction.downloads.count > 0) {
-                        statusInter = .IAPDownloadStarted
+                    if(!transaction.downloads.isEmpty) {
+                        status = .IAPDownloadStarted
                     }
                     else {
                         
@@ -503,10 +512,8 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                 setPurchaseProgressState(transaction.payment.productIdentifier,inProgress: false)
                 
-                completeTransaction(transaction, status:transaction.error.code != SKErrorPaymentCancelled ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
+                completeTransaction(transaction, status:transaction.error!.code != SKErrorPaymentCancelled ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
                 
-                break;
-            default:
                 break;
             }
         }
@@ -514,11 +521,11 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     }
     
     // Called when the payment queue has downloaded content
-    func paymentQueue(queue: SKPaymentQueue!, updatedDownloads downloads: [AnyObject]!) {
+    func paymentQueue(queue: SKPaymentQueue, updatedDownloads downloads: [SKDownload]) {
         
-        for download in downloads as! [SKDownload!]
+        for download in downloads
         {
-            var userInfo:[NSObject:AnyObject]? = ["id":download.transaction.payment.productIdentifier]
+            let userInfo:[NSObject:AnyObject]? = ["id":download.transaction.payment.productIdentifier]
             switch (download.downloadState)
             {
                 // The content is being downloaded. Let's provide a download progress to the user
@@ -539,9 +546,16 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                 finishDownloadTransaction(download.transaction)
                 
-                var error:NSError? = nil
-                if (!NSFileManager.defaultManager().removeItemAtURL(download.contentURL, error: &error) && error != nil) {
-                    print("Error deleting file \(error)")
+                
+                if download.contentURL == nil {
+                    break;
+                }
+                
+                do {
+                    try NSFileManager.defaultManager().removeItemAtURL(download.contentURL!)
+                }
+                catch {
+                    print("Error deleting file \(download.contentURL)")
                 }
             
                 break;
@@ -561,21 +575,11 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 SKPaymentQueue.defaultQueue().startDownloads([download])
                 break;
                 
-            default:
-                break;
             }
         }
     }
     
-    
-    // Logs all transactions that have been removed from the payment queue
-    func paymentQueue(queue: SKPaymentQueue!, removedTransactions transactions: [AnyObject]!) {
-        for transaction in transactions as! [SKPaymentTransaction!] {
-            print("\(transaction.payment.productIdentifier) was removed from the payment queue.");
-        }
-    }
-   
-    func paymentQueue(queue: SKPaymentQueue!, restoreCompletedTransactionsFailedWithError error: NSError!) {
+    func paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: NSError) {
         
         if (error.code != SKErrorPaymentCancelled) {
             self.status = .IAPRestoredFailed
@@ -588,7 +592,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
     }
    
-    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
+    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
         print("All restorable transactions have been processed by the payment queue.");
         if (self.status != .IAPDownloadStarted) {
             self.status = .IAPRestoredSucceeded
@@ -621,7 +625,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         // A download is complete if its state is SKDownloadStateCancelled, SKDownloadStateFailed, or SKDownloadStateFinished
         // and pending, otherwise. We finish a transaction if and only if all its associated downloads are complete.
         // For the SKDownloadStateFailed case, it is recommended to try downloading the content again before finishing the transaction.
-        for download in transaction.downloads as! [SKDownload!]
+        for download in transaction.downloads
         {
             if (download.downloadState != .Cancelled &&
                 download.downloadState != .Failed &&

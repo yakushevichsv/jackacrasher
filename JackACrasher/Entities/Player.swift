@@ -113,8 +113,9 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             hammerSprite.name = hammerNodeName
             Player.sHammerSprite = hammerSprite
             
-            if let emitter = SKEmitterNode(fileNamed: damageEmitterNode){
+            if let emitter = SKEmitterNode(fileNamed: damageEmitterNode) {
                 emitter.name = damageEmitterNodeName
+            
                 Player.sDamageEmitter = emitter
             }
         }
@@ -219,26 +220,28 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     private func createEngine() -> playerDistFlyMapType {
         
-        let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks")
-        
-        let size = self.size
-        
-        engineEmitter.position = CGPoint(x: size.width * -0.5, y: size.height * -0.3)
-        engineEmitter.name = engineNodeName
-        addChild(engineEmitter)
-        
-        engineEmitter.targetNode = scene
-        
         var dic = playerDistFlyMapType()
         
-        let distance = max(self.size.width,self.size.height)*sqrt(2)
-        let eMax = engineEmitter.particleLifetime
-        dic[.Long] = (distance,eMax)
-        dic[.Middle] = (distance/1.2,eMax*0.5)
-        dic[.Short] = (distance/2,eMax*0.1)
-        
-        
-        engineEmitter.hidden = true
+        if let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks") {
+            
+            let size = self.size
+            
+            engineEmitter.position = CGPoint(x: size.width * -0.5, y: size.height * -0.3)
+            engineEmitter.name = engineNodeName
+            addChild(engineEmitter)
+            
+            engineEmitter.targetNode = scene
+            
+            
+            let distance = max(self.size.width,self.size.height)*sqrt(2)
+            let eMax = engineEmitter.particleLifetime
+            dic[.Long] = (distance,eMax)
+            dic[.Middle] = (distance/1.2,eMax*0.5)
+            dic[.Short] = (distance/2,eMax*0.1)
+            
+            
+            engineEmitter.hidden = true
+        }
         
         return dic
     }
@@ -302,9 +305,8 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         }
         
         let xDiff = point.x - self.position.x
-        let yDiff = point.y - self.position.y
         
-        let dist = distanceBetweenPoints(point, self.position)
+        let dist = distanceBetweenPoints(point, point2: self.position)
 
         if (xDiff > 0 ) {
             self.xScale = 1.0
@@ -312,7 +314,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             self.xScale = -1.0
         }
         
-        let duration = NSTimeInterval(dist/CGFloat(self.flyDurationSpeed))
         
         let moveAct =  SKAction.moveTo(point, duration: NSTimeInterval(dist/CGFloat(self.flyDurationSpeed)))
         
@@ -339,21 +340,10 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         
         let time2 = time1
         
-        let oldW = self.size.width
         
         let scaleToSmall = SKAction.resizeToWidth(0, duration:time2)
         
         let fadeOut = SKAction.fadeOutWithDuration(time2)
-        
-        let waitAction = SKAction.waitForDuration(time2)
-        
-        let moveAction = SKAction.runBlock { () -> Void in
-            self.position = point
-        }
-        
-        let fadeIn = SKAction.fadeInWithDuration(time2)
-        
-        let scaleToNormal = SKAction.resizeToWidth(oldW, duration: time2)
         
         let seq1 = SKAction.sequence([scale1,waitAction1,SKAction.group([scaleToSmall,fadeOut]),SKAction.group([scaleToSmall,fadeOut])])
         
@@ -451,7 +441,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         let xDiff = location.x - sPosition.x
         let yDiff = location.y - sPosition.y
         
-        let len = distanceBetweenPoints(location, sPosition)
+        let len = distanceBetweenPoints(location, point2: sPosition)
         
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)),sPosition:sPosition)
     }
@@ -495,7 +485,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         let isLeft = vector.dx < 0
         let isUp  = vector.dy > 0
         let signX:CGFloat = isLeft ? -1 : 1
-        let signY:CGFloat = isUp ? 1 : -1
         let xPos = sPosition.x + CGFloat(signX * (self.size.halfWidth() + 10))
         
         let position = CGPointMake(xPos, sPosition.y)
@@ -562,7 +551,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             damage.zPosition = self.zPosition + 1
             self.parent?.addChild(damage)
             
-            runOneShortEmitter(damage, 0.4)
+            runOneShortEmitter(damage, duration: 0.4)
             
             return false
         }
@@ -582,7 +571,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         
         
         let xDiff = location.x - self.position.x
-        let yDiff = location.y - self.position.y
         
         var xScale:CGFloat = 0
         

@@ -981,6 +981,7 @@
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = /Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include;
 			};
 			name = Debug;
@@ -1015,6 +1016,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
+				TARGETED_DEVICE_FAMILY = 1;
 				USER_HEADER_SEARCH_PATHS = /Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include;
 			};
 			name = Release;

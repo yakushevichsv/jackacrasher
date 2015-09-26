@@ -15,7 +15,7 @@ extension NSFileManager {
     private var jacCacheDirectory:String! {
         get {
             
-            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true) as! [String]
+            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true) 
             
             return paths.first!.stringByAppendingPathComponent(NSFileManager.sJacCacheDictory)
         }
@@ -26,7 +26,7 @@ extension NSFileManager {
     }
     
     
-    func jacStoreItemToCache(path:String!,fileName:String? = nil) -> (path:String?,error:NSError?) {
+    func jacStoreItemToCache(path:String!,fileName:String? = nil) throws -> String? {
         
         var fileName1 = path.lastPathComponent
         
@@ -35,34 +35,32 @@ extension NSFileManager {
         }
         
         var isDir:ObjCBool = false
-        var error:NSError? = nil
+        
         if (!self.fileExistsAtPath(self.jacCacheDirectory, isDirectory: &isDir)) {
-            let res =  self.createDirectoryAtPath(self.jacCacheDirectory, withIntermediateDirectories: true, attributes: nil, error: &error)
+            try self.createDirectoryAtPath(self.jacCacheDirectory, withIntermediateDirectories: true, attributes: nil)
             
-            if (!res && error != nil){
-                print("Error \(error)")
-                return (nil,error)
-            }
+            
         }
         
         let filePath = self.jacCacheDirectory.stringByAppendingPathComponent(fileName1)
         
         
         
-        let res = self.moveItemAtPath(path, toPath: filePath
-            , error: &error)
-        
-        return (path:filePath,error:error)
+        try self.moveItemAtPath(path, toPath: filePath)
+        return filePath
     }
     
-    func jacStoreItemToCache(path:String!,fileName:String? = nil ,completion:((realPah:String?,error:NSError?)->Void)?) {
+    func jacStoreItemToCache(path:String!,fileName:String? = nil ,completion:((realPah:String?)->Void)?) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)){
             [unowned self] in
-         
-            let (filePath,error) = self.jacStoreItemToCache(path, fileName: fileName)
-            
-            completion?(realPah: filePath,error: error)
+            do {
+                let filePath = try self.jacStoreItemToCache(path, fileName: fileName)
+                completion?(realPah:filePath)
+            }
+            catch {
+                completion?(realPah: nil)
+            }
         }
     }
     
@@ -73,7 +71,7 @@ extension NSFileManager {
         
         var fileName = path.lastPathComponent
         
-        if (fileName.isEmpty) {
+        if let _ =  fileName?.isEmpty {
             fileName = path
         }
         
@@ -86,7 +84,7 @@ extension NSFileManager {
         
         var fileName = path.lastPathComponent
         
-        if (fileName.isEmpty) {
+        if let _ =  fileName?.isEmpty  {
             fileName = path
         }
         
@@ -96,23 +94,27 @@ extension NSFileManager {
         return self.fileExistsAtPath(path)
     }
     
-    func jacRemoveItemFromCache(path:String!,completion:((result:Bool,error:NSError?)->Void)?) {
+    func jacRemoveItemFromCache(path:String!,completion:((result:Bool)->Void)?) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)){
             [unowned self] in
             
             var fileName = path.lastPathComponent
             
-            if (fileName.isEmpty) {
+            if let _ =  fileName?.isEmpty  {
                 fileName = path
             }
             
             
             let filePath = self.jacCacheDirectory.stringByAppendingPathComponent(fileName)
-            var error:NSError? = nil
+            do {
+            try self.removeItemAtPath(filePath)
+                completion?(result: true)
+            }
+            catch {
+                completion?(result: false)
+            }
             
-            let res = self.removeItemAtPath(filePath, error: &error)
-            completion?(result: res, error: error)
         }
     }
     
