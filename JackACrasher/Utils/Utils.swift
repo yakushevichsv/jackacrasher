@@ -386,35 +386,13 @@ func recursiveConvertPositionToScene(node:SKNode!) -> CGPoint {
 
 extension String {
     
-    func stringFileByAppendingPathComponent(lastComponent:String?) -> String {
-        
-        if let lastComponent = lastComponent {
-            
-            var url = NSURL(fileURLWithPath:self)
-            
-            print("\(self) final url \(url)")
-            
-            url = url.URLByAppendingPathComponent(lastComponent)
-            print("Final,final url \(url)")
-            
-            return "\(url)"
-        }
-        else {
-            return self
-        }
-    }
-    
     func stringByAppendingPathComponent(lastComponent:String?) -> String {
         
         if let lastComponent = lastComponent {
             
-            var url = NSURL(string: self)
-            print("\(self) final url \(url)")
+            let nsSt = self as NSString
             
-            url = url?.URLByAppendingPathComponent(lastComponent)
-            print("Final,final url \(url)")
-            
-            return "\(url)"
+            return nsSt.stringByAppendingPathComponent(lastComponent)
         }
         else {
             return self
@@ -424,9 +402,7 @@ extension String {
     var  lastPathComponent:String? {
         get {
             
-            let url = NSURL(string: self)
-            
-            return url?.lastPathComponent
+            return (self as NSString).lastPathComponent  
         }
     }
     

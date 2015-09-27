@@ -231,9 +231,9 @@ class AsteroidGenerator: NSObject {
     }
     
     private func produceRopeJointAsteroids() {
-        var (asteroid1, _) = self.produceRegularAsteroidPrivate(AsteroidGenerator.generateRegularAsteroidSize(),initialAnimation:false)
+        let (asteroid1, _) = self.produceRegularAsteroidPrivate(AsteroidGenerator.generateRegularAsteroidSize(),initialAnimation:false)
         
-        var (asteroid2, _) = self.produceRegularAsteroidPrivate(AsteroidGenerator.generateRegularAsteroidSize(),initialAnimation:false)
+        let (asteroid2, _) = self.produceRegularAsteroidPrivate(AsteroidGenerator.generateRegularAsteroidSize(),initialAnimation:false)
      
         let hRand = CGFloat(arc4random()%200 + 10) + (asteroid1.size.width + asteroid2.size.width)*0.5
         
@@ -241,8 +241,6 @@ class AsteroidGenerator: NSObject {
         asteroid2.position.x = asteroid1.position.x + hRand
        
         
-        let vRand = CGFloat(arc4random()%200 + 10) + (asteroid1.size.height + asteroid2.size.height)*0.5
-
         asteroid2.position.y = asteroid1.position.y
         
         
@@ -253,8 +251,6 @@ class AsteroidGenerator: NSObject {
         print("Asteroid 1 position \(aster1Pos). Asteroid 2 position \(aster2Pos)")
         
         let isDirect = true
-        var ropePtr:Rope? = nil
-        
             let asteroids = RopeJointAsteroids(asteroids: [asteroid1,asteroid2])
         
             if (isDirect) {
@@ -325,7 +321,7 @@ class AsteroidGenerator: NSObject {
     private func produceTrashSprites() {
         
         var minSpeed:CGFloat = CGFloat.max
-        var minIndex = 0
+        var minIndex:Int
         var sprites:[SKSpriteNode] = [SKSpriteNode]()
         let actName:String = "moveDelAction"
         

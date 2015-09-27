@@ -165,7 +165,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                                     self.validateProducts()
                                 }
                             } catch {
-                                
+                                print("Catch was gotten!")
                             }
                         }
                     }

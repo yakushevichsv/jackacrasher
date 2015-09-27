@@ -122,7 +122,7 @@ extension NSFileManager {
         
         let path = self.jacCacheDirectory
         
-        let filePath = path.stringFileByAppendingPathComponent(self.jacProductsInfo)
+        let filePath = path.stringByAppendingPathComponent(self.jacProductsInfo)
         
         if self.fileExistsAtPath(filePath) {
          
