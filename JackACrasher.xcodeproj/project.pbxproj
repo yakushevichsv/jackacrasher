@@ -958,6 +958,7 @@
 				CODE_SIGN_ENTITLEMENTS = JackACrasher/JackACrasher.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/siarheiy/Downloads/FacebookSDKs-iOS-20150810-2",
@@ -994,6 +995,7 @@
 				CODE_SIGN_ENTITLEMENTS = JackACrasher/JackACrasher.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/siarheiy/Downloads/FacebookSDKs-iOS-20150810-2",

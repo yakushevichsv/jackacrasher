@@ -60,6 +60,10 @@
 	</dict>
 	<key>FacebookAppID</key>
 	<string>480972678736201</string>
+    <key>NSAppTransportSecurity</key>
+    <dict>
+        <key>NSAllowsArbitraryLoads</key><true/>
+    </dict>
 	<key>FacebookDisplayName</key>
 	<string>JackACrasher</string>
 	<key>LSApplicationQueriesSchemes</key>

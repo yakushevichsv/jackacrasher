@@ -37,7 +37,7 @@ class ScoreNode: SKNode {
     }
     
     private func refineBorder() {
-        let path = UIBezierPath(roundedRect: CGRectMake(0, 0, label.frame.size.width + 10, label.frame.size.height + 4), cornerRadius: 5)
+        //let path = UIBezierPath(roundedRect: CGRectMake(0, 0, label.frame.size.width + 10, label.frame.size.height + 4), cornerRadius: 5)
         //path.fill()
         //path.stroke()
         //border.path = path.CGPath

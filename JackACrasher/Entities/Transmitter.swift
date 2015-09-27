@@ -141,7 +141,7 @@ class Transmitter:SKNode,AssetsContainer {
     
     internal func underRayBeam(node:SKNode!) -> Bool {
         
-        if node.parent! == self {
+        if node.parent != nil &&  node.parent! == self {
             return true
         }
         

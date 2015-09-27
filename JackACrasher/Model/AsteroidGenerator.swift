@@ -132,8 +132,6 @@ class AsteroidGenerator: NSObject {
         
         let yMargin = round(param) + 10
         
-        let duration = NSTimeInterval(CGRectGetWidth(self.playableRect)/asteroidSpeed)
-        
         let divisor = UInt32(max(CGRectGetHeight(self.playableRect) - 2*yMargin, yMargin))
         
         let yPos = randomUntil(CGFloat(divisor), withOffset: CGFloat(yMargin))

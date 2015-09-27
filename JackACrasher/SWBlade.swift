@@ -52,7 +52,7 @@ class SWBlade: SKNode,AssetsContainer {
     }
     
     class func emitterNodeWithColor(color:UIColor)->SKEmitterNode {
-        var emitterNode:SKEmitterNode = SKEmitterNode()
+        let emitterNode:SKEmitterNode = SKEmitterNode()
         let texture = SKTexture(imageNamed: "spark")
         emitterNode.particleTexture = texture
         emitterNode.particleBirthRate = 3000

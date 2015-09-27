@@ -734,7 +734,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 }
                 
                 //let playerPos = self.player.parent!.convertPoint(self.player, toNode: transmitter)
-                if transmitter.underRayBeam(self.player) && !self.player.isCaptured {
+                if !self.player.isCaptured && transmitter.underRayBeam(self.player)  {
                     
                     transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
                         [unowned self] in
