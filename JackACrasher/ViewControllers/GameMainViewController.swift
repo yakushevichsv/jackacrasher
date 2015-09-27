@@ -623,7 +623,7 @@ class GameMainViewController: UIViewController {
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) {
        
-        if segue.identifier == Optional("selectAction") {
+        if segue.identifier == Optional("selectActionUnwind") {
             
             self.needToDisplayAnimation = false
         }

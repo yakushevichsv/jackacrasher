@@ -375,34 +375,35 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                       (path,error) in
                         
                         if (error == nil && path != nil) {
+                            do {
                             let path = try NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:icon.lastPathComponent)
-                            
-                            
-                            var image :UIImage?
-                            if (error != nil || path == nil) {
-                                image = nil
-                            }
-                            else {
-                                image = UIImage(contentsOfFile: path!)!
-                            }
-                            
-                            dispatch_async(dispatch_get_main_queue()) {
-                                [unowned self] in
                                 
-                                self.processingCellsImages.removeValueForKey(indexPath)
+                                var image :UIImage?
+                                if (error != nil || path == nil) {
+                                    image = nil
+                                }
+                                else {
+                                    image = UIImage(contentsOfFile: path!)!
+                                }
                                 
-                                
-                                for vIndexPath in collectionView.indexPathsForVisibleItems() {
-                                    if (vIndexPath == indexPath && collectionViewCell == collectionView.cellForItemAtIndexPath(indexPath)) {
-                                        collectionViewCell.hideActivityIndicatorAfterDonwloading()
-                                        
-                                        collectionViewCell.setImage(image)
-                                        
-                                        return
+                                dispatch_async(dispatch_get_main_queue()) {
+                                    [unowned self] in
+                                    
+                                    self.processingCellsImages.removeValueForKey(indexPath)
+                                    
+                                    
+                                    for vIndexPath in collectionView.indexPathsForVisibleItems() {
+                                        if (vIndexPath == indexPath && collectionViewCell == collectionView.cellForItemAtIndexPath(indexPath)) {
+                                            collectionViewCell.hideActivityIndicatorAfterDonwloading()
+                                            
+                                            collectionViewCell.setImage(image)
+                                            
+                                            return
+                                        }
                                     }
                                 }
-                            }
-                            
+                                
+                            } catch {}
                         }
                     }
                     

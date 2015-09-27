@@ -390,7 +390,7 @@ extension String {
         
         if let lastComponent = lastComponent {
             
-            var url = NSURL(string: self)
+            var url = NSURL(string: "\(self)")
             url = url?.URLByAppendingPathComponent(lastComponent)
             return "\(url!)" 
         }

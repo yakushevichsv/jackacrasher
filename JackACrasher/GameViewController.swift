@@ -282,7 +282,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     //MARK: Unwind to replay
     @IBAction func unwindToReplay(sender: UIStoryboardSegue) {
         
-        if sender.identifier == Optional("selectAction") {
+        if sender.identifier == Optional("selectActionUnwindToReplay") {
             
             self.btnPlay.selected = false
             btnPressed(self.btnPlay)

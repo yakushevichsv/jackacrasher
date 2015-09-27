@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekw-zd-0cC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekw-zd-0cC">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -40,7 +41,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Muy-t8-eeK" userLabel="Right Asteroid ImageView">
                                 <rect key="frame" x="373" y="211" width="154" height="128"/>
                                 <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                 </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="lessThanOrEqual" constant="154" id="BMa-Vy-810"/>
@@ -56,7 +57,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Bzh-ay-0sk" userLabel="Left Asteroid ImageView">
                                 <rect key="frame" x="73" y="211" width="154" height="128"/>
                                 <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                 </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="Bzh-ay-0sk" secondAttribute="height" multiplier="77:64" id="4CU-jd-j2g"/>
@@ -67,7 +68,7 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="zOq-Ua-ez5" userLabel="Black Hole IV">
                                 <rect key="frame" x="245" y="120" width="110" height="116"/>
                                 <accessibility key="accessibilityConfiguration">
-                                    <accessibilityTraits key="traits" none="YES" image="YES" notEnabled="YES"/>
+                                    <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                                 </accessibility>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="110" id="3FQ-HW-AM3"/>
@@ -167,7 +168,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJb-8H-lOJ" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="549" y="0.0" width="35" height="33"/>
+                                <rect key="frame" x="545" y="0.0" width="35" height="33"/>
                                 <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
                                 <state key="normal" title="BTN">
@@ -190,7 +191,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTq-DP-qnf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="552" y="41" width="29" height="29"/>
+                                <rect key="frame" x="548" y="41" width="29" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="ArS-2F-yP6"/>
                                     <constraint firstAttribute="width" constant="29" id="mA7-i4-tNh"/>
@@ -216,7 +217,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxu-q9-Fcb" userLabel="FB Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="479" y="0.0" width="40" height="40"/>
+                                <rect key="frame" x="475" y="0.0" width="40" height="40"/>
                                 <state key="normal" image="fb-button">
                                     <color key="titleColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -237,7 +238,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AF8-Mz-FY1" userLabel="Twitter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="416" y="0.0" width="40" height="40"/>
+                                <rect key="frame" x="412" y="0.0" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="131-Va-jXM"/>
                                     <constraint firstAttribute="width" constant="40" id="ikD-u5-jr3"/>
@@ -290,7 +291,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AcO-iW-VYX" userLabel="VK Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="354" y="0.0" width="40" height="40"/>
+                                <rect key="frame" x="350" y="0.0" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="AcO-iW-VYX" secondAttribute="height" multiplier="1:1" id="Shq-VD-xFw"/>
                                     <constraint firstAttribute="width" constant="40" id="VhO-h0-jPf"/>
@@ -314,7 +315,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVr-yc-HC5" userLabel="GameCenter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="546" y="90" width="40" height="40"/>
+                                <rect key="frame" x="543" y="90" width="40" height="40"/>
                                 <state key="normal" image="game_center">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -416,11 +417,11 @@
                         <viewControllerLayoutGuide type="bottom" id="n54-lp-IOg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" verticalCompressionResistancePriority="250" id="wzo-eb-guZ" userLabel="Container View">
-                        <rect key="frame" x="1" y="0.0" width="415" height="314"/>
+                        <rect key="frame" x="0.0" y="0.0" width="415" height="314"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5o5-OH-fTw">
-                                <rect key="frame" x="0.0" y="10" width="399" height="295"/>
+                                <rect key="frame" x="0.0" y="10" width="395" height="295"/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="S2O-G5-j42">
                                     <size key="itemSize" width="402" height="294"/>
@@ -430,7 +431,7 @@
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="productCell" id="ZTf-z3-8q5" userLabel="Product Cell" customClass="ShopDetailsCollectionViewCell" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                        <rect key="frame" x="0.0" y="1" width="402" height="294"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                             <rect key="frame" x="0.0" y="0.0" width="402" height="294"/>
@@ -515,7 +516,7 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q0F-Ln-9WS">
-                                <rect key="frame" x="385" y="-5" width="29" height="30"/>
+                                <rect key="frame" x="381" y="-5" width="29" height="30"/>
                                 <state key="normal" image="close">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -559,13 +560,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" pagingEnabled="YES" showsVerticalScrollIndicator="NO" indicatorStyle="black" bouncesZoom="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BAP-tz-W4B">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="450"/>
+                                <rect key="frame" x="4" y="0.0" width="592" height="450"/>
                                 <connections>
                                     <outlet property="delegate" destination="CYZ-cS-sIm" id="O8h-1G-14j"/>
                                 </connections>
                             </scrollView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="ZY2-HO-EkQ">
-                                <rect key="frame" x="8" y="465" width="584" height="75"/>
+                                <rect key="frame" x="12" y="465" width="576" height="75"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="75" id="d2b-v7-sQz"/>
@@ -624,7 +625,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" alpha="0.69999999999999996" contentMode="scaleToFill" selected="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TGW-Qx-yrp">
-                                <rect key="frame" x="16" y="0.0" width="30" height="33"/>
+                                <rect key="frame" x="20" y="0.0" width="30" height="33"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="30" placeholder="YES" id="1qU-LX-LQn"/>
@@ -825,7 +826,7 @@
                                         </userDefinedRuntimeAttributes>
                                         <connections>
                                             <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="bGi-7d-QNG"/>
-                                            <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectAction" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
+                                            <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwind" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
@@ -880,7 +881,7 @@
                                 </state>
                                 <connections>
                                     <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="gFa-1n-AHE"/>
-                                    <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectAction" unwindAction="unwindToReplay:" id="WPM-nA-YHw"/>
+                                    <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwindToReplay" unwindAction="unwindToReplay:" id="WPM-nA-YHw"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hAt-y5-6Ux" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">

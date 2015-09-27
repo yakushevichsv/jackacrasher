@@ -20,5 +20,8 @@ class ReturnPauseTransitionDelegate: PopUpTransitioningDelegate {
     }
     
     
+    override func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController, sourceViewController source: UIViewController) -> UIPresentationController? {
+        return super.presentationControllerForPresentedViewController(presented, presentingViewController: presenting, sourceViewController: source)
+    }
     
 }

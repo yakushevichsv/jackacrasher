@@ -13,6 +13,8 @@ let SYLoggingToCloudNotification = "SYLoggingToCloudNotification"
 
 class CloudManager: NSObject {
    
+    typealias completionRecordOpBlock = (CKRecord?,NSError?) -> Void
+    
     private static let singleton = CloudManager()
     
     private  struct Contants {
@@ -141,7 +143,7 @@ class CloudManager: NSObject {
                         disUserInfo,error in
                         
                         if error == nil {
-                            self.recID = disUserInfo.userRecordID
+                            self.recID = disUserInfo?.userRecordID
                         }
                         else {
                             self.alertAboutPermissionGrant()
@@ -149,7 +151,7 @@ class CloudManager: NSObject {
                     }
                 }
                 else {
-                    self.alertAboutPermissionGrant(accountStatus: accountStatus)
+                    self.alertAboutPermissionGrant(accountStatus)
                 }
             }
         }
@@ -160,7 +162,7 @@ class CloudManager: NSObject {
     
      //MARK: Survival Current Game Record
     
-    private func addSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    private func addSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: completionRecordOpBlock!) {
         
         let noteRecordID = CKRecordID(recordName: product.productIdentifier)
         let noteRecord = CKRecord(recordType: Contants.SurvivalCurrentGame,recordID:noteRecordID)
@@ -168,23 +170,22 @@ class CloudManager: NSObject {
         updateSurvivalCurrentGameRecord(noteRecord, score: score, numberOfLives: numberOfLives, playedTime: playedTime, ratio: ratio, completionHandler: completionHandler)
     }
     
-    private func getSurvivalCurrentGameRecord(productId:String!,completion:((CKRecord?,NSError!) -> Void)!) {
+    private func getSurvivalCurrentGameRecord(productId:String!,completion:completionRecordOpBlock!) {
         
         let noteRecordID = CKRecordID(recordName: productId)
         self.container.privateCloudDatabase.fetchRecordWithID(noteRecordID){
-                [unowned self]
                 record,error in
                 
-                if (error != nil ) {
+                if let errorInnter = error {
                     
-                    print("Error \(error)")
+                    print("Error \(errorInnter)")
                     
                     
-                    if  CKErrorCode(rawValue: error.code) == CKErrorCode.UnknownItem  && error.domain == CKErrorDomain {
+                    if  CKErrorCode(rawValue: errorInnter.code) == CKErrorCode.UnknownItem  && errorInnter.domain == CKErrorDomain {
                         completion(nil,nil)
                     }
                     else {
-                        completion(nil,error)
+                        completion(nil,errorInnter)
                     }
                 }
                 else {
@@ -193,31 +194,28 @@ class CloudManager: NSObject {
         }
     }
     
-    internal func getSurvivalCurrentGameLastRecord(completion:((CKRecord?,NSError!) -> Void)!) {
+    internal func getSurvivalCurrentGameLastRecord(completion:completionRecordOpBlock!) {
         
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: Contants.SurvivalCurrentGame, predicate: predicate)
         self.privateDB.performQuery(query, inZoneWithID: nil) { results, error in
             //print("\(error.code == CKErrorCode.InvalidArguments.rawValue) -   InvalidArguments")
-            if (error == nil) {
+            if let errorInternal = error {
                 
-                if let lastRecord = results.last as? CKRecord {
-                    completion(lastRecord,nil)
-                }
-            }
-            else {
-                
-                if  CKErrorCode(rawValue: error.code) == CKErrorCode.UnknownItem  && error.domain == CKErrorDomain {
+                if  CKErrorCode(rawValue: errorInternal.code) == CKErrorCode.UnknownItem  && errorInternal.domain == CKErrorDomain {
                     completion(nil,nil)
                 }
                 else {
                     completion(nil,error)
                 }
             }
+            else if let lastRecord = results?.last  {
+                completion(lastRecord,nil)
+            }
         }
     }
     
-    private func updateSurvivalCurrentGameRecord(noteRecord:CKRecord!,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    private func updateSurvivalCurrentGameRecord(noteRecord:CKRecord!,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: completionRecordOpBlock!) {
         
         noteRecord.setSurvivalCurrentGameScore(score)
         noteRecord.setSurvivalCurrentGameNumberOfLives(numberOfLives)
@@ -228,7 +226,7 @@ class CloudManager: NSObject {
     }
     
    
-    internal func updateSurvivalCurrentGameLastRecord(score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    internal func updateSurvivalCurrentGameLastRecord(score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: completionRecordOpBlock!) {
         
         let predicate = NSPredicate(value: true)
         let query = CKQuery(recordType: Contants.SurvivalCurrentGame, predicate: predicate)
@@ -236,7 +234,7 @@ class CloudManager: NSObject {
             
             if (error == nil) {
                 
-                if let lastRecord = results.last as? CKRecord {
+                if let lastRecord = results?.last {
                     
                     if (numberOfLives == 0 && ratio == 0) {
                         let curRecID = lastRecord.recordID
@@ -256,7 +254,7 @@ class CloudManager: NSObject {
         }
     }
     
-    internal func createSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: ((CKRecord!,NSError!) -> Void)!) {
+    internal func createSurvivalCurrentGameRecord(product:IAPProduct,score:Int64,numberOfLives:Int,playedTime:NSTimeInterval,ratio:Float,completionHandler: completionRecordOpBlock!) {
     
         self.getSurvivalCurrentGameRecord(product.productIdentifier) {
             [unowned self]
@@ -345,15 +343,7 @@ extension CloudManager {
         
         let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
         
-        var fileName:String? = nil
-        
-        if let docDir = paths.last as? String {
-            
-            if let rToken = tokenName {
-                fileName = docDir.stringByAppendingPathComponent(rToken)
-            }
-        }
-        
+        let fileName:String? = paths.last?.stringByAppendingPathComponent(tokenName)
         
         if let tokenObj = token as? NSObject {
             
@@ -361,11 +351,13 @@ extension CloudManager {
                 return NSKeyedArchiver.archiveRootObject(tokenObj, toFile: fileName)
             }
         }
-        else {
-            
-              if let fileName = fileName {
-                    var error:NSError? = nil
-                    return NSFileManager.defaultManager().removeItemAtPath(fileName, error: &error)
+        else if let fileName = fileName {
+                do {
+                    try NSFileManager.defaultManager().removeItemAtPath(fileName)
+                    return true
+                }
+                catch {
+                    return false
                 }
         }
         
@@ -374,21 +366,15 @@ extension CloudManager {
     
     private class func desirializeCloudToken(tokenName:String?) -> AnyObject? {
         
-        if let rToken = tokenName {
-            
-            let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
-            
-            
-            if let docDir = paths.last as? String {
-                
-                let fileName = docDir.stringByAppendingPathComponent(rToken)
-                
-                return NSKeyedUnarchiver.unarchiveObjectWithFile(fileName)
-            }
-            
-        }
+        let paths = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)
         
-        return nil
+        if let fileName = paths.last?.stringByAppendingPathComponent(tokenName) {
+                
+            return NSKeyedUnarchiver.unarchiveObjectWithFile(fileName)
+        }
+        else {
+            return nil
+        }
     }
     
     //MARK: Previous Cloud Token
@@ -465,14 +451,14 @@ extension CloudManager {
             db.saveRecord(record) {
                 savedRecord,error in
                 
-                if (error != nil) {
+                if let errorInner = error {
                     var pauseVal:NSTimeInterval = 0
-                    print("Error for index \(index). Error : \(error)")
+                    print("Error for index \(index). Error : \(errorInner)")
                     
-                    if error.code == CKErrorCode.RequestRateLimited.rawValue ||
-                        error.code == CKErrorCode.ServiceUnavailable.rawValue {
+                    if errorInner.code == CKErrorCode.RequestRateLimited.rawValue ||
+                        errorInner.code == CKErrorCode.ServiceUnavailable.rawValue {
                             
-                            let retryAfter = error.userInfo![CKErrorRetryAfterKey] as! NSNumber
+                            let retryAfter = errorInner.userInfo[CKErrorRetryAfterKey] as! NSNumber
                             pauseVal = retryAfter.doubleValue
                     }
                     
