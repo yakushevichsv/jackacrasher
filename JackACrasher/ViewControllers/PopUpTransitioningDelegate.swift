@@ -38,7 +38,7 @@ class PopUpTransitioningDelegate: NSObject,UIViewControllerTransitioningDelegate
         return presenter
     }
     
-    func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController!, sourceViewController source: UIViewController) -> UIPresentationController? {
+    func presentationControllerForPresentedViewController(presented: UIViewController, presentingViewController presenting: UIViewController, sourceViewController source: UIViewController) -> UIPresentationController? {
         
     
         let controller = PopupPresentationController(presentedViewController: presented, presentingViewController: presenting)

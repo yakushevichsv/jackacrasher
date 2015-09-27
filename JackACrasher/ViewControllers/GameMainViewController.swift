@@ -126,7 +126,7 @@ class GameMainViewController: UIViewController {
         
         let scale = Int(self.traitCollection.displayScale != 0 ? self.traitCollection.displayScale : UIScreen.mainScreen().scale)
         
-        var template = scale == 1 ? "" : "@\(scale)x"
+        let template = scale == 1 ? "" : "@\(scale)x"
         
         var name = "VKSdkResources.bundle"
         name = name.stringByAppendingPathComponent("ic_vk_activity_logo")
@@ -394,9 +394,9 @@ class GameMainViewController: UIViewController {
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifierObj: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         
-        if let identifier = identifierObj {
+        if !identifier.isEmpty {
             if (identifier == "displayShop") {
                 
                 let canPurchase = PurchaseManager.canPurchase()
@@ -405,7 +405,7 @@ class GameMainViewController: UIViewController {
                 return canPurchase && validated
             }
         }
-        return super.shouldPerformSegueWithIdentifier(identifierObj, sender: sender)
+        return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
     }
     
     
@@ -449,11 +449,7 @@ class GameMainViewController: UIViewController {
             
             //TODO: put into Constants section...
             let yMargin:CGFloat = 40
-            let fbXSpce:CGFloat = 50
             
-            let origin = sender!.frame.origin
-            let oFrame = CGRect(origin:origin,size:self.btnSound.bounds.size)
-    
             self.btnSound.center = CGPoint(x: self.btnSound.center.x, y: self.btnRUpCorner.center.y)
             self.btnSound.hidden = false
             
@@ -487,8 +483,6 @@ class GameMainViewController: UIViewController {
                     
                     let attr = NSLayoutConstraint(item: self.btnSound, attribute: .CenterY, relatedBy: .Equal, toItem: self.btnRUpCorner, attribute: .CenterY, multiplier: 1, constant: yMargin)
                     self.btnRSoundCornerYConstraitnt = attr
-                    
-                    let xDiff = CGRectGetMaxX(self.btnFB.frame) - CGRectGetMinX(self.btnRUpCorner.frame)
                     
                     
                     NSLayoutConstraint.activateConstraints([attr])
@@ -540,7 +534,6 @@ class GameMainViewController: UIViewController {
                                 self.btnVK.alpha = 1.0
                                 
                                 }) {
-                                    [unowned self]
                                     finished in
                             
                                     
@@ -609,7 +602,7 @@ class GameMainViewController: UIViewController {
                                     self.btnSound.hidden = true
                                     self.btnFB.hidden = true
                                     
-                                    var constraint = self.btnRSoundCornerYConstraitnt
+                                    let constraint = self.btnRSoundCornerYConstraitnt
                                     if constraint != nil {
                                         NSLayoutConstraint.deactivateConstraints([constraint])
                                         self.btnRSoundCornerYConstraitnt = nil
@@ -810,8 +803,7 @@ extension GameMainViewController:VKSdkDelegate {
         
         self.btnVK.selected = true
         
-        if let vToken = self.vkToken {
-        
+        if self.vkToken != nil {
             
             let shareDialog = VKShareDialogController()
             shareDialog.text = "I am playing in JackACrasher!"
@@ -884,6 +876,6 @@ extension GameMainViewController:VKSdkDelegate {
     }
     
     func vkSdkShouldPresentViewController(controller: UIViewController!) {
-        self.navigationController!.topViewController.presentViewController(controller, animated: true, completion: nil)
+        self.navigationController?.topViewController?.presentViewController(controller, animated: true, completion: nil)
     }
 }

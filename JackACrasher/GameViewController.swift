@@ -27,21 +27,23 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     private weak var btnClose:UIButton! = nil
     private var timeInterval:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
     
-    required init(coder aDecoder: NSCoder) {
+    
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         logicManager.addObserver(self, forKeyPath: "isLoading", options: .New, context: &myContext)
     }
 
-    
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject: AnyObject], context: UnsafeMutablePointer<Void>) {
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        
         if context == &myContext {
-            let isLoading:Bool = change[NSKeyValueChangeNewKey]!.boolValue
+            if let obj = change?[NSKeyValueChangeNewKey] {
             
-            print("Date changed: \(change[NSKeyValueChangeNewKey])")
+                let isLoading:Bool = obj.boolValue
             
-            if (!isLoading) {
-                self.waitUntilNotLoadedItem()
+                if (!isLoading) {
+                    self.waitUntilNotLoadedItem()
+                }
             }
         } else {
             super.observeValueForKeyPath(keyPath, ofObject: object, change: change, context: context)
@@ -82,13 +84,13 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         sender.setImage(img, forState: UIControlState.Highlighted)
         
         if let scene = skView.scene as? GameScene {
-            scene.pauseGame(pause: !sender.selected)
+            scene.pauseGame(!sender.selected)
         }
     }
     
-    override func shouldPerformSegueWithIdentifier(identifier: String?, sender: AnyObject?) -> Bool {
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         
-        if identifier == Optional("selectAction") {
+        if identifier == "selectAction" {
             
             return !self.btnPlay.selected
         }
@@ -181,7 +183,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     
     func didMoveToBGPrivate() {
         let scene = self.skView.scene as? GameScene
-        scene?.pauseGame(pause: true)
+        scene?.pauseGame(true)
     }
     
     func willMoveToFG(aNotification:NSNotification) {
@@ -195,7 +197,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         let paused = !self.btnPlay.selected
         
         if let scene = self.skView.scene as? GameScene {
-            scene.pauseGame(pause: paused)
+            scene.pauseGame(paused)
             
         } else {
             restartGame()
@@ -205,14 +207,12 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     override func shouldAutorotate() -> Bool {
         return true
     }
-
-    override func supportedInterfaceOrientations() -> Int {
-        if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-            return Int(UIInterfaceOrientationMask.Landscape.rawValue) //Int(UIInterfaceOrientationMask.AllButUpsideDown.rawValue)
-        } else {
-            return Int(UIInterfaceOrientationMask.All.rawValue)
-        }
+    
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.Landscape
     }
+
+    
 
     override func prefersStatusBarHidden() -> Bool {
         return true
@@ -225,8 +225,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
             if identifier == "gameOver" {
                 SoundManager.sharedInstance.cancelPlayingBGMusic()
                 let dVC = segue.destinationViewController as! GameOverViewController
-                let sVC = segue.sourceViewController as! GameViewController
-               dVC.didWin = false
+                 dVC.didWin = false
                 
             } else if identifier == "selectAction" {
                 
@@ -269,7 +268,6 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         if self.logicManager.appendSurvivalGameValuesToDefaults(currentScore, time: playedTime) {
         
             self.logicManager.submitSurvivalGameValues{
-                [unowned self]
                 isError in
             }
         }
@@ -295,7 +293,7 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
         
         if let vc = sender.destinationViewController as? GameViewController {
             
-            vc.restartGame(isNew: false)
+            vc.restartGame(false)
             
             if (!GameLogicManager.sharedInstance.isAdvDisabled) {
                 
@@ -342,15 +340,9 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
             
             let containerView = UIView(frame: self.view.bounds)
             containerView.frame.origin = CGPointZero
-            containerView.setTranslatesAutoresizingMaskIntoConstraints(false)
+            containerView.translatesAutoresizingMaskIntoConstraints = false
             self.view.addSubview(containerView)
             self.adContainerView = containerView
-            
-            /*let indicator = UIActivityIndicatorView()
-            indicator.hidesWhenStopped = true
-            containerView.addSubview(indicator)
-            
-            self.activityIndicatorView = indicator*/
             
             
             let constLeft = NSLayoutConstraint(item: containerView, attribute: .Left, relatedBy: .Equal, toItem: self.view, attribute: .Left, multiplier: 1.0, constant: 0)
@@ -363,24 +355,12 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
             
             self.view.addConstraints([constLeft,constRight,constTop,constBottom])
             
-            
-            /*let constrYInd = NSLayoutConstraint(item: indicator, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 1.0, constant: 0)
-            let constrXInd = NSLayoutConstraint(item: indicator, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 1.0, constant: 0)
-            
-            
-            view.addConstraints([constrXInd,constrYInd])
-            
-            indicator.center = CGPointMake(self.view.frame.midX, self.view.frame.midY)
-            */
-            
-            
-            //indicator.startAnimating()
         }
     }
     
     private func presentInterlude() -> Bool {
         var result = false
-        if let loaded = interstitial?.loaded {
+        if self.interstitial != nil  && self.interstitial!.loaded {
             if !GameLogicManager.sharedInstance.isAdvDisabled{
                 createAdContainer()
                 if let resultNew = interstitial?.presentInView(self.adContainerView) {

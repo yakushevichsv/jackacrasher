@@ -287,8 +287,6 @@ extension GameLogicManager
     {
         let pManager = aNotification.object as! PurchaseManager
         
-        let userInfo = aNotification.userInfo
-        
         switch (pManager.status)
         {
         case .IAPPurchaseFailed:

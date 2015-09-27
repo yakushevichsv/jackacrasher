@@ -73,9 +73,6 @@ class EnemiesGenerator: NSObject {
     
     internal func start() {
         
-        //HACK
-        return
-            
         canFire = true
         if !self.timer.valid {
             redifineTimer()
@@ -217,7 +214,7 @@ class EnemiesGenerator: NSObject {
                 enemy = KamikadzeSpaceShip()
             }
             
-            let yPos = randomBetween(curPart, curPart + allowedPart - enemy.size.height)
+            let yPos = randomBetween(curPart, y2: curPart + allowedPart - enemy.size.height)
             
             let xPos = CGRectGetWidth(self.playableRect)
             enemy.position = CGPointMake(xPos, yPos)

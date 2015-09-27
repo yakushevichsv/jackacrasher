@@ -371,8 +371,8 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                 
                 if processingCellsImages[indexPath] == nil {
                     
-                    let taskId = NetworkManager.sharedManager.downloadFileFromPath(icon) {
-                        path,error in
+                    let taskId = NetworkManager.sharedManager.downloadFileFromPath(icon){
+                      (path,error) in
                         
                         if (error == nil && path != nil) {
                             let path = try NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:icon.lastPathComponent)

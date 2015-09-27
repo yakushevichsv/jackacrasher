@@ -66,7 +66,8 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
         
         if (!localPlayer.authenticated) {
             
-            localPlayer.authenticateHandler = {(viewController : UIViewController!, error : NSError!) -> Void in
+            
+            localPlayer.authenticateHandler = {(viewController : UIViewController?, error : NSError?) -> Void in
                 //handle authentication
                 print("Error \(error)")
             
@@ -190,7 +191,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
         
         getScoresFromLeaderboard(SurvivalBestScoreLbId, completionHandler: { (scores, localPlayerScore, error) -> Void in
             
-            var totalScore:UInt64 = 0
+            let totalScore:UInt64 = 0
             var maxScore:Int64 = 0
             
             if (scores != nil) {
@@ -308,16 +309,16 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
                         return
                     }
                     
-                    let rPlayers =  players as! [GKPlayer]
+                    if let rPlayers =  players {
                     
-                    if (rPlayers.isEmpty) {
-                        return
+                        if (rPlayers.isEmpty) {
+                            return
+                        }
+                        
+                        if let rPlayer = rPlayers.last {
+                            self.getPhotoForPlayer(rPlayer, andSize: size, handler: handler)
+                        }
                     }
-                    
-                    let rPlayer = rPlayers.last!
-                    
-                    self.getPhotoForPlayer(rPlayer, andSize: size, handler: handler)
-                    
                 })
             }
             else {
@@ -332,7 +333,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     
     
     // MARK: GKGameCenterControllerDelegate methods
-    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController!) {
+    func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {
         
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
     }
