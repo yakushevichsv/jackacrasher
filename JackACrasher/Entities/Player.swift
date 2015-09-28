@@ -68,19 +68,13 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     private var movementStyle:PlayerMovement = .Fly
     private var playerMode:PlayerMode = .Idle
     
-    private var hammerSprite:SKSpriteNode! = nil
     private weak var timeLeftLabel:SKLabelNode! = nil
     
     private static var sBGSprite:SKSpriteNode!
     private static var sHammerSprite:SKSpriteNode!
     internal static var sDamageEmitter:SKEmitterNode!
     
-    private static var sContext:dispatch_once_t = 0
-    
-#if DEBUG
-    private var playerCount:UInt = 0
-#endif
-    
+    private static var sContext:dispatch_once_t = 0    
     var health: ForceType = 100
     
     private var prevTimeInterval:NSTimeInterval = 0
@@ -185,35 +179,41 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     //MARK: Hammer  methods
     internal func displayHammer() {
         
-        self.hammerSprite = Player.displayHammerForSprite(self,size:self.size)
+        Player.displayHammerForSprite(self,size:self.size)
     }
     
-    internal class func displayHammerForSprite(sprite:SKSpriteNode!) -> SKSpriteNode! {
-        return displayHammerForSprite(sprite, size: sprite.size)
+    private class func displayHammerForSprite(sprite:SKSpriteNode!,size:CGSize)  {
+        displayHammerForSprite(sprite, size: sprite.size)
     }
 
     internal class func displayHammerForSprite(sprite:SKNode!,size:CGSize) -> SKSpriteNode! {
         
-        var hammerSprite:SKSpriteNode!
+        var hammerSprite = sprite.childNodeWithName(Player.sHammerSprite.name!) as? SKSpriteNode
         
-        if (sprite.childNodeWithName(Player.sHammerSprite.name!) == nil) {
+        if (hammerSprite == nil) {
             
-            hammerSprite = Player.sHammerSprite.copy() as! SKSpriteNode
-            hammerSprite.anchorPoint = CGPointZero
-            sprite.addChild(hammerSprite)
+            hammerSprite = Player.sHammerSprite.copy() as? SKSpriteNode
+            hammerSprite?.anchorPoint = CGPointZero
+            sprite.addChild(hammerSprite!)
         }
         
         let angle = (sprite.xScale > 0 ? -1.0 : 1.0 ) * CGFloat(M_PI_4)
-        hammerSprite.zRotation = angle
-        hammerSprite.hidden = false
+        hammerSprite!.zRotation = angle
+        hammerSprite!.hidden = false
         
         var xOffset : CGFloat = -CGFloat(round(size.width * 0.5))
         if (angle > 0) {
             xOffset *= -1
         }
-        hammerSprite.position = CGPointMake(xOffset, -CGFloat(round(hammerSprite.size.height * 0.0)))
+        hammerSprite!.position = CGPointMake(xOffset, -CGFloat(round(hammerSprite!.size.height * 0.0)))
         
-        return hammerSprite
+        return hammerSprite!
+    }
+    
+    internal func hideHammer() {
+        if let hammer = self.childNodeWithName(Player.sHammerSprite.name!)  {
+            hammer.hidden = true
+        }
     }
     
     //MARK: Engine methods
@@ -279,9 +279,12 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             
             if (.None == flyDistance) {
                 engineNode.hidden = true
+                engineNode.paused = true
             }
             else {
                 engineNode.hidden = false
+                engineNode.paused = false
+                engineNode.resetSimulation()
                 engineNode.particleLifetime = self.playerDistFlyMap[flyDistance]!.eParticleLifeTime
             }
         }
@@ -444,38 +447,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         let len = distanceBetweenPoints(location, point2: sPosition)
         
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)),sPosition:sPosition)
-    }
-    
-    internal func playerBGSpriteNode() -> SKSpriteNode! {
-       let sprite = Player.sBGSprite.copy() as! SKSpriteNode
-        
-       sprite.name = self.name! + "BG"
-    
-#if DEBUG
-        self.playerCount++;
-        
-        if self.playerCount > 1 {
-            print("Count \(self.playerCount)")
-        }
-#endif
-        
-       return sprite
-    }
-    
-    internal func playerBGSpriteFromNode(node:SKNode?)->SKSpriteNode? {
-#if DEBUG
-        if self.playerCount > 0 {
-            self.playerCount--;
-        }
-#endif
-        
-        
-        if !self.hidden {
-            return nil
-        }
-        
-        let name = self.name! + "BG"
-        return node?.childNodeWithName(name) as? SKSpriteNode
     }
     
     private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
