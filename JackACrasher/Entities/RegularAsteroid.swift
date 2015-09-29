@@ -51,7 +51,7 @@ extension SKNode {
     func syDisplayScore(position:CGPoint, rect playableArea:CGRect, scoreAddition:Int64) {
         self.syScoreLabel.text = "\(scoreAddition)"
         
-        let sPosition = self.scene!.convertPoint(self.position, fromNode: self.parent!)
+        let sPosition = self.parent != nil ? self.scene!.convertPoint(self.position, fromNode: self.parent!) : self.position
         
         self.syScoreLabel.position = sPosition + position
         
@@ -78,22 +78,17 @@ extension SKNode {
     }
 }
 
-class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
+class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
     private let digitNode:DigitNode!
     private let cropNode:ProgressTimerCropNode!
     private let maxLife:ForceType
     private let displayAction = "displayAction"
     private let asterSize:RegularAsteroidSize
-    private let bgImageNode:SKSpriteNode! = SKSpriteNode()
     
     
     
     internal var mainSprite:SKSpriteNode! {
-        return bgImageNode
-    }
-    
-    internal var size:CGSize {
-        return bgImageNode != nil ? bgImageNode.size : CGSizeZero
+        return self
     }
     
     internal var health:ForceType {
@@ -162,12 +157,8 @@ class RegularAsteroid: SKNode, ItemDestructable ,ItemDamaging {
         self.cropNode = ProgressTimerCropNode(size: size)
         self.asterSize = asteroid
         
-        super.init()
+        super.init(texture: texture, color: UIColor.blueColor(), size: size)
         
-        self.bgImageNode.texture = texture
-        self.bgImageNode.size = size
-        
-        self.addChild(bgImageNode)
         
         if (!isLittle) {
             self.cropNode.addChild(self.digitNode)

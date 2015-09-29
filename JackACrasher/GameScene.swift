@@ -313,7 +313,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createPlayer() {
         let player = Player(position: self.findNewInitialPositionForPlayer())
         player.alpha = 0.0
-        player.zPosition = fgZPosition
+        player.zPosition = self.fgZPosition
         self.addChild(player)
         self.player = player
         
@@ -468,14 +468,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
         
-        print("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
-        
         
         if areTouchesEndedForBlade(touches, withEvent: event) {
             return
         }
         
         let isPlayerVisible = !self.player.isCaptured || (self.player.parent as? Transmitter) != nil
+        
+        print("touchesEnded. Can cut the rope \(self.canCutRope(touches))\n Is player visible \(isPlayerVisible)\n")
+        
         
         for touch: AnyObject in touches {
             let location = touch.locationInNode(self)
@@ -495,10 +496,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 }
             } else  if (!isPlayerVisible) {
                 
+                print("Is player visible \(isPlayerVisible)\n")
+                
                 self.physicsWorld.enumerateBodiesAtPoint(location, usingBlock: { (body, pointer) -> Void in
                     
                     if let regAster = body.node as? RegularAsteroid {
-
+                        print("Reg asteroid ")
                                 if (regAster.tryToDestroyWithForce(self.player.punchForce)) {
                                     
                                     var scale:CGFloat
@@ -969,9 +972,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             break
         case .Regular:
-            if returnPlayerToScene(asteroid) {
+//HACK: #warning "HACK"
+            if self.player.parent! == asteroid {
+                self.player.removeFromParent()
+                self.player.zPosition = self.fgZPosition
+                self.player.zRotation = 0
                 self.player.hideHammer()
+                self.addChild(self.player)
             }
+            
+            //if returnPlayerToScene(asteroid) {
+            //    self.player.hideHammer()
+            //}
             
             generator.paused = false
             if asteroid.parent != nil {
@@ -1784,8 +1796,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.player.removeAllActions()
             self.player.removeFromParent()
             
-            print("Player parent \(self.player.parent)")
-            pNode.addChild(self.player)
+            print("Player parent \(self.player.parent)\n PNode parent \(pNode.parent)")
+            if self.player.parent == nil {
+                pNode.addChild(self.player)
+            }
             
             regularBody.contactTestBitMask &= ~EntityCategory.Player
             regularBody.categoryBitMask = 0
