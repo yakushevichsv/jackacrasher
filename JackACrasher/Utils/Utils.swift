@@ -219,7 +219,7 @@ extension CGPoint {
         let oX = self.x - dx
         let oY = self.y - dy
         
-        return CGRectMake(oX, oY, dx, dy)
+        return CGRectMake(oX, oY, dx*2, dy*2)
     }
     
     func integralPoint() -> CGPoint {

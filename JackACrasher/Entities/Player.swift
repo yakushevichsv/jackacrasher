@@ -61,7 +61,7 @@ private let playerNode = "playerNode"
 
 private let timerNodeName = "timerNodeName"
 
-class Player: SKNode, ItemDestructable, AssetsContainer {
+class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     private let engineNodeName = "engineEmitter"
     private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
@@ -70,7 +70,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     private weak var timeLeftLabel:SKLabelNode! = nil
     
-    private static var sBGSprite:SKSpriteNode!
+    private static var sBGSpriteTexture:SKTexture!
     private static var sHammerSprite:SKSpriteNode!
     internal static var sDamageEmitter:SKEmitterNode!
     
@@ -80,28 +80,15 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     private var prevTimeInterval:NSTimeInterval = 0
     private var projectileCount:UInt = 0
     
-    private var playerBGSprite:SKSpriteNode! {
-        return self.childNodeWithName(playerBGNodeName) as! SKSpriteNode
-    }
-    
-    internal var size :CGSize {
-        get {return Player.sBGSprite.size}
-    }
-    
     internal var isCaptured:Bool {
         get {return self.parent != self.scene }
-    }
-    
-    internal class var backgroundPlayerSprite:SKSpriteNode! {
-        return Player.sBGSprite
     }
     
     internal static func loadAssets() {
        
         dispatch_once(&sContext) { () -> Void in
-           let playerSprite = SKSpriteNode(imageNamed: playerImageName)
-            playerSprite.name = playerBGNodeName
-            Player.sBGSprite = playerSprite
+           let playerSprite = SKTexture(imageNamed: playerImageName)
+            Player.sBGSpriteTexture = playerSprite
             
             let hammerSprite = SKSpriteNode(imageNamed: hammerImageName)
             hammerSprite.name = hammerNodeName
@@ -132,13 +119,9 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     
     init(position:CGPoint) {
-        super.init()
+        let texture = Player.sBGSpriteTexture
         
-        let bgSprite = Player.sBGSprite.copy() as! SKNode
-        bgSprite.position = CGPointZero
-        
-        addChild(bgSprite)
-        
+        super.init(texture: texture.copy() as? SKTexture, color: UIColor.redColor(), size: texture.size())
         
         self.name = playerNode
         self.position = position
@@ -182,11 +165,8 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         Player.displayHammerForSprite(self,size:self.size)
     }
     
-    private class func displayHammerForSprite(sprite:SKSpriteNode!,size:CGSize)  {
-        displayHammerForSprite(sprite, size: sprite.size)
-    }
 
-    internal class func displayHammerForSprite(sprite:SKNode!,size:CGSize) -> SKSpriteNode! {
+    private class func displayHammerForSprite(sprite:SKNode!,size:CGSize) -> SKSpriteNode! {
         
         var hammerSprite = sprite.childNodeWithName(Player.sHammerSprite.name!) as? SKSpriteNode
         
@@ -216,22 +196,38 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         }
     }
     
+    private func redifineEngineEmitter() -> SKEmitterNode? {
+        self.childNodeWithName(engineNodeName)?.removeFromParent()
+        return createEngineEmitterNode()
+    }
+    
+    
+    private func  createEngineEmitterNode() -> SKEmitterNode? {
+    
+        if let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks") {
+            
+            let size = self.size
+            
+            engineEmitter.position = CGPoint(x: size.width * -self.xScale * 0.5, y: size.height * -0.3)
+            engineEmitter.name = engineNodeName
+            addChild(engineEmitter)
+            
+            engineEmitter.targetNode = nil
+            engineEmitter.hidden = true
+            return engineEmitter
+        }
+        else {
+            return nil
+        }
+    }
+    
     //MARK: Engine methods
     
     private func createEngine() -> playerDistFlyMapType {
         
         var dic = playerDistFlyMapType()
         
-        if let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks") {
-            
-            let size = self.size
-            
-            engineEmitter.position = CGPoint(x: size.width * -0.5, y: size.height * -0.3)
-            engineEmitter.name = engineNodeName
-            addChild(engineEmitter)
-            
-            engineEmitter.targetNode = scene
-            
+        if let engineEmitter = createEngineEmitterNode() {
             
             let distance = max(self.size.width,self.size.height)*sqrt(2)
             let eMax = engineEmitter.particleLifetime
@@ -239,8 +235,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             dic[.Middle] = (distance/1.2,eMax*0.5)
             dic[.Short] = (distance/2,eMax*0.1)
             
-            
-            engineEmitter.hidden = true
         }
         
         return dic
@@ -275,15 +269,23 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     func defineEngineState(flyDistance:PlayerFlyDistance) {
         
+        
+        
         if let engineNode = self.childNodeWithName(engineNodeName) as? SKEmitterNode {
             
             if (.None == flyDistance) {
                 engineNode.hidden = true
                 engineNode.paused = true
+                /*if let engine = redifineEngineEmitter() {
+                    engine.hidden = true
+                    engine.paused = true
+                }*/
+                
             }
             else {
                 engineNode.hidden = false
                 engineNode.paused = false
+                engineNode.alpha = 1.0
                 engineNode.resetSimulation()
                 engineNode.particleLifetime = self.playerDistFlyMap[flyDistance]!.eParticleLifeTime
             }
@@ -564,7 +566,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             if self.timeLeftLabel == nil {
                 let node = SKLabelNode()
                 node.fontSize = 15
-                node.position = CGPointMake(Player.sBGSprite.size.width*0.5, Player.sBGSprite.size.height*0.5)
+                node.position = CGPointMake(self.size.halfWidth(), self.size.halfHeight())
                 self.timeLeftLabel = node
                 //node.colorBlendFactor = 1.0
                 self.addChild(node)

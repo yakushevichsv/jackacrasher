@@ -52,7 +52,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private var  hudNode:HUDNode!
     
     var trashAsteroidsCount:Int = 0
-    private var player:Player!
+    private weak var player:Player!
     
     var healthRatio:Float {
         get { return Float(self.player.health % 100) }
@@ -261,7 +261,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 let blackHoleRect = size.rectAtPoint(blackHole.position)
                 
-                var playerRect = Player.backgroundPlayerSprite.size.rectAtPoint(position)
+                var playerRect = self.player.size.rectAtPoint(position)
                 
                 if CGRectIntersectsRect(playerRect, blackHoleRect) {
                     let intersect = CGRectIntersection(playerRect, blackHoleRect)
@@ -310,7 +310,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
-    func createPlayer() {
+    func createPlayer(needSpark:Bool = true) {
         let player = Player(position: self.findNewInitialPositionForPlayer())
         player.alpha = 0.0
         player.zPosition = self.fgZPosition
@@ -319,14 +319,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         storePrevPlayerPosition()
         
-        
+        if (needSpark) {
         let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")!
         sparkEmitter.zPosition = player.zPosition
         sparkEmitter.position = player.position
         addChild(sparkEmitter)
         runOneShortEmitter(sparkEmitter, duration: 0.15)
         player.runAction(SKAction.fadeInWithDuration(2.0))
-        
+        }
         //self.player.anchorPoint = CGPointZero
         //self.player.zRotation = CGFloat(140).radians
         //MARK: ee Why fade in stopped working...
@@ -498,10 +498,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 print("Is player visible \(isPlayerVisible)\n")
                 
-                self.physicsWorld.enumerateBodiesAtPoint(location, usingBlock: { (body, pointer) -> Void in
-                    
-                    if let regAster = body.node as? RegularAsteroid {
+                    if let regAster = self.player.parent as? RegularAsteroid {
                         print("Reg asteroid ")
+                        let rect = regAster.size.rectAtPoint(regAster.position)
+                        if CGRectContainsPoint(rect, location) {
                                 if (regAster.tryToDestroyWithForce(self.player.punchForce)) {
                                     
                                     var scale:CGFloat
@@ -546,9 +546,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                         self.shakeCamera(regAster, duration: 0.8)
                                     }
                                 }
-                            pointer.memory = true
                         }
-                })
+                }
             }
         }
         
@@ -569,9 +568,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         let relLocation = convertPoint(location, toNode: regAster)
         
-        if let fPlayer = self.player {
-            
-            let difX = relLocation.x - fPlayer.position.x
+        
+            let difX = relLocation.x - self.player.position.x
             
             var angle:CGFloat = 0
             var xScale:CGFloat = 1
@@ -582,16 +580,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 angle = π * 0.5
                 xScale = -1.0
             }
-            fPlayer.xScale = xScale
+            self.player.xScale = xScale
             
             let rotateAct = SKAction.rotateByAngle(angle, duration: angle != 0 ? 0.2 : 0 )
             let runBlockAct = SKAction.runBlock(runBlock)
             let rotateBackAct = rotateAct.reversedAction()
             
             let seq = SKAction.sequence([rotateAct,runBlockAct,rotateBackAct])
-            fPlayer.runAction(seq)
+            self.player.runAction(seq)
             
-        }
+        
     }
     
     func needToIgnore(location:CGPoint) ->Bool {
@@ -721,13 +719,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
              
                 if self.player.isCaptured {
                     
-                    let bgSprite = self.player
-                    if let parent = bgSprite!.parent  {
+                    if let parent = self.player!.parent  {
                         if parent == transmitter {
                             return
                         }
                         else {
-                            if (transmitter.underRayBeam(bgSprite!) && !self.player.isCaptured) {
+                            if (transmitter.underRayBeam(self.player!) && !self.player.isCaptured) {
                                 returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true)
                             }
                         }
@@ -787,21 +784,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         if self.player.isCaptured {
             
-            var position:CGPoint
-            var node:SKNode!
-            if !usePlayerPostion {
-                node = sprite
-            }
-            else {
-                node = self.player
-            }
-            
-            position = convertNodePosition(sprite, toScene: self)
+            let position = convertNodePosition(sprite, toScene: self)
             
             //print("New player posiltion \(position)")
             self.player.position = position
             
-            self.removePlayerFromRegularAsteroidToScene(node)
+            self.removePlayerFromRegularAsteroidToScene()
             
             if usePlayerPostion {
                 applyBackImpulseToNode(sprite)
@@ -834,48 +822,48 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
-    func removePlayerFromRegularAsteroidToScene(node:SKNode!) {
-        //HACK : What is that?
-        self.player.physicsBody!.contactTestBitMask &= ~EntityCategory.Player
-        self.player.zRotation = 0.0
-        self.player.zPosition = self.fgZPosition
+    func removePlayerFromRegularAsteroidToScene() {
         
-        var useNode:SKNode!
         
         if let asteroid = self.player.parent as? RegularAsteroid {
             asteroid.physicsBody?.contactTestBitMask &= ~EntityCategory.Player
             
-            let bgSprite = self.player
-            
-            useNode = bgSprite ?? node
             
             asteroid.runAction(SKAction.sequence([SKAction.waitForDuration(1),SKAction.runBlock(){
                     asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)
                 }]))
             
-        }else {
-            useNode = node
         }
         
         
             
-        var pPos = useNode.position
+        var pPos = self.player.position
         
-        if let parentParent = useNode.parent?.parent {
+        if let parentParent = self.player.parent?.parent {
             
             
-            pPos = useNode.parent!.convertPoint(pPos, toNode: parentParent)
+            pPos = self.player.parent!.convertPoint(pPos, toNode: parentParent)
             
             if (parentParent != self) {
-                pPos = useNode.parent!.convertPoint(pPos, toNode: self)
+                pPos = self.player.parent!.convertPoint(pPos, toNode: self)
             }
         }
         
         //let pPos = recursiveConvertPositionToScene(self.player)
         print("Current position \(pPos)")
         
-        self.player.removeFromParent()
-        useNode.removeFromParent()
+        if self.player.isCaptured {
+            //let player = self.player
+            self.player.removeFromParent()
+            createPlayer(false)
+            //self.addChild(player)
+            //self.player = player
+        }
+        
+        self.player.removeAllActions();
+        self.player.position = pPos
+        self.player.zRotation = 0.0
+        self.player.zPosition = self.fgZPosition
         
         var x:CGFloat = 0
         var y:CGFloat = 0
@@ -903,8 +891,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
         
         
-        self.player.removeAllActions();
-        self.addChild(self.player)
+        
         
         let newPoint = CGPointMake(x, y)
         if (!CGPointEqualToPoint(newPoint, pPos)) {
@@ -922,7 +909,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
         }])
         
-        self.runAction(actSeq)
+        self.player.runAction(actSeq)
     }
     
     //MARK: Asteroid Generator's delegate methods
@@ -973,17 +960,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             break
         case .Regular:
 //HACK: #warning "HACK"
-            if self.player.parent! == asteroid {
-                self.player.removeFromParent()
-                self.player.zPosition = self.fgZPosition
-                self.player.zRotation = 0
-                self.player.hideHammer()
-                self.addChild(self.player)
-            }
             
-            //if returnPlayerToScene(asteroid) {
-            //    self.player.hideHammer()
-            //}
+            if returnPlayerToScene(asteroid) {
+                self.player.hideHammer()
+            }
             
             generator.paused = false
             if asteroid.parent != nil {
@@ -1779,43 +1759,40 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let angle2 = reflectionAngleFromContact3(contact)
         
             //TODO: Move to the Player class
-            let playerNode = self.player
-            print("Player's z (before) rotation \(playerNode.zRotation.degree), Angle \(angle2.degree)")
+            print("Player's z (before) rotation \(self.player.zRotation.degree), Angle \(angle2.degree)")
             
             let pointInternal = self.convertPoint(contact.contactPoint, toNode: pNode)
-            playerNode.position = pointInternal
-            playerNode.zRotation = angle2
+            self.player.position = pointInternal
+            self.player.zRotation = angle2
             
-            pNode.physicsBody?.contactTestBitMask &= ~self.player.physicsBody!.categoryBitMask
+            pNode.physicsBody!.contactTestBitMask &= ~self.player.physicsBody!.categoryBitMask
             
-            
-            print("placing player at position \(pointInternal)")
-            self.player.disableGravityReceptivity()
-            self.player.position = playerNode.position
-            print("\(self.player.physicsBody!.contactTestBitMask)")
+            print("Player parent \(self.player.parent)\n PNode parent \(pNode.parent)")
+            let player = self.player
             self.player.removeAllActions()
             self.player.removeFromParent()
             
-            print("Player parent \(self.player.parent)\n PNode parent \(pNode.parent)")
-            if self.player.parent == nil {
-                pNode.addChild(self.player)
-            }
+            pNode.addChild(player)
+            self.player = player
             
-            regularBody.contactTestBitMask &= ~EntityCategory.Player
-            regularBody.categoryBitMask = 0
+            print("placing player at position \(pointInternal)")
+            self.player.disableGravityReceptivity()
+            print("\(self.player.physicsBody!.contactTestBitMask)")
+            self.player.zPosition = self.fgZPosition
+            self.player.zRotation = 0
+            
+            
             
             if let bNode = regularBody.node as? RegularAsteroid {
                 bNode.removeField()
             }
             
-            if (self.player != playerNode) {
-                pNode.addChild(playerNode)
-            }
+            
             self.player.displayHammer()
             
             //check the node....
-            if needToCorrectRotation(playerNode) {
-                playerNode.zRotation += π
+            if needToCorrectRotation(self.player) {
+                self.player.zRotation += π
                 /*if needToCorrectRotation(playerNode) {
                     playerNode.zRotation += π
                 }*/
@@ -1923,10 +1900,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 if self.tryToDestroyPlayer(damage) {
                     self.terminateGame()
                 }
-                else {
-                    self.player.removeFromParent()
-                    self.createPlayer()
-                }
                 return
             }
             
@@ -2018,9 +1991,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             print("Player contacted with left edge")
             
-            if let bgSprite = self.player {
-            //HACK: Error is here....
-                let bgSpritePos = self.player.parent != nil ? self.player.parent!.convertPoint(bgSprite.position, toNode:self) : self.player.position
+                let bgSpritePos = self.player.parent != nil ? self.player.parent!.convertPoint(self.player.position, toNode:self) : self.player.position
             
                 let result = CGRectContainsPoint(self.playableArea, bgSpritePos)
             
@@ -2028,7 +1999,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     return true
                 }
                 
-            }
+            
             
             if (self.returnPlayerToScene(self.player.parent!, removeAsteroid: false)) {
                 
@@ -2156,9 +2127,9 @@ extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
         
         let seq = SKAction.sequence([SKAction.waitForDuration(minTime),SKAction.runBlock(){
             [unowned self] in
-            if let wPlayer = self.player {
+            
                 
-                let playerPos = wPlayer.parent!.convertPoint(wPlayer.position, toNode: self)
+                let playerPos = self.player.parent!.convertPoint(self.player.position, toNode: self)
                 
                 let dist = distanceBetweenPoints(shipPosition, point2: playerPos)
                 
@@ -2172,17 +2143,16 @@ extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
                         self.terminateGame()
                     }
                 }
-            }
+            
             
             },SKAction.waitForDuration(maxTime - minTime),SKAction.runBlock(){
                 [unowned self] in
-                if let wPlayer = self.player {
-                    
+                
                     if emitter.particleBirthRate == 0 {
                         return
                     }
                     
-                    let playerPos = wPlayer.parent!.convertPoint(wPlayer.position, toNode: self)
+                    let playerPos = self.player.parent!.convertPoint(self.player.position, toNode: self)
                     
                     let dist = distanceBetweenPoints(shipPosition, point2: playerPos)
                     
@@ -2195,7 +2165,7 @@ extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
                             self.terminateGame()
                         }
                     }
-                }
+                
                 
             }, SKAction.removeFromParent()])
         
