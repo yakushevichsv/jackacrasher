@@ -22,11 +22,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     weak var gameSceneDelegate:GameSceneDelegate?
     private var prevPlayerPosition:CGPoint = CGPointZero
     private var lastUpdateTimeInterval:CFTimeInterval
-    private weak var blade:SWBlade! = nil
-    private weak var blade1:SWBlade! = nil
-    private weak var blade2:SWBlade! = nil
-    private weak var blade3:SWBlade! = nil
-    private weak var blade4:SWBlade! = nil
+    
+    private var blades:[SWBlade]! = []
     
     private var delta = CGPointZero
     
@@ -2186,23 +2183,28 @@ extension GameScene {
         let node = SWBlade(position: position, target: self, color: UIColor.whiteColor())
         node.enablePhysics(EntityCategory.Blade, contactTestBitmask: EntityCategory.Rope, collisionBitmask: EntityCategory.RegularAsteroid)
         self.addChild(node)
-        self.blade = node
+        self.removeBladesOnly()
+        self.blades.append(node)
+        node.position = position
     }
     
     // This will help us to remove our blade and reset the delta value
     private  func removeBlade() {
         delta = CGPointZero
-        self.removedBlade = blade != nil
-        blade?.removeFromParent()
-        blade = nil
-        blade1?.removeFromParent()
-        blade2?.removeFromParent()
-        blade1 = nil
-        blade2 = nil
-        blade3?.removeFromParent()
-        blade4?.removeFromParent()
-        blade3 = nil
-        blade4 = nil
+        self.removedBlade = !self.blades.isEmpty
+        
+        self.removeBladesOnly()
+    }
+    
+    
+    private func removeBladesOnly() {
+        if !self.blades.isEmpty {
+            
+            for blade in self.blades {
+                blade.removeFromParent()
+            }
+            self.blades.removeAll()
+        }
     }
     
     private func areTouchesMovedForBlade(touches: Set<NSObject>, withEvent event: UIEvent?) -> Bool {
@@ -2233,7 +2235,8 @@ extension GameScene {
                     return true
                 }
                 
-                if self.blade == nil {
+                if self.blades.isEmpty
+                {
                     self.presentBladeAtPosition(position)
                 }
                 
@@ -2248,7 +2251,7 @@ extension GameScene {
     private func areTouchesEndedForBlade(touches: Set<UITouch>, withEvent event: UIEvent?) -> Bool {
         
         print("touchesEnded. Can cut the rope \(self.canCutRope(touches))")
-        let flag = self.removedBlade || self.blade != nil
+        let flag = self.removedBlade || !self.blades.isEmpty
         removeBlade()
     
         if self.canCutRope(touches) && flag {
@@ -2259,47 +2262,26 @@ extension GameScene {
     }
     
     private func updateForBlade(currentTime:CFTimeInterval) {
-        if blade != nil {
+        if !self.blades.isEmpty {
             // Here you add the delta value to the blade position
-            let newPosition = CGPoint(x: blade!.position.x + delta.x, y: blade!.position.y + delta.y)
-            // Set the new position
-            let newPosition1 = CGPoint(x: blade!.position.x + delta.x*0.2, y: blade!.position.y + delta.y*0.2)
-            let newPosition2 = CGPoint(x: blade!.position.x + delta.x*0.4, y: blade!.position.y + delta.y*0.4)
-            let newPosition3 = CGPoint(x: blade!.position.x + delta.x*0.6, y: blade!.position.y + delta.y*0.6)
-            let newPosition4 = CGPoint(x: blade!.position.x + delta.x*0.8, y: blade!.position.y + delta.y*0.8)
             
-            if (blade2 == nil) {
-                let copy = blade.copy() as! SWBlade
-                addChild(copy)
-                self.blade2 = copy
+            var initCount = self.blades.count
+            for var index = initCount; index < 6; index++ {
+                if let lastCopy = self.blades.last?.copy() as? SWBlade {
+                    addChild(lastCopy)
+                    self.blades.insert(lastCopy, atIndex:0)
+                }
             }
-            blade2?.position = newPosition2
             
-            if (blade1 == nil) {
-                let copy = blade.copy() as! SWBlade
-                addChild(copy)
-                self.blade1 = copy
+            initCount = self.blades.count
+            
+            for var index = 0; index < initCount; index++ {
+                
+                let mult = CGFloat(index+1)/CGFloat(initCount)
+                let position = self.blades.last!.position  + (delta * mult)
+                self.blades[index].position = position
+                print("POsition \(position) Mult \(mult)")
             }
-            blade1?.position = newPosition1
-            
-            
-            if (blade3 == nil) {
-                let copy = blade.copy() as! SWBlade
-                addChild(copy)
-                self.blade3 = copy
-            }
-            blade3?.position = newPosition3
-
-            if (blade4 == nil) {
-                let copy = blade.copy() as! SWBlade
-                addChild(copy)
-                self.blade4 = copy
-            }
-            blade4?.position = newPosition4
-            
-            blade?.position = newPosition
-            
-        
             
             // it's important to reset delta at this point,
             // You are telling the blade to only update his position when touchesMoved is called
