@@ -208,7 +208,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
             
             let size = self.size
             
-            engineEmitter.position = CGPoint(x: size.width * -self.xScale * 0.5, y: size.height * -0.3)
+            engineEmitter.position = CGPoint(x: size.width * -self.xScale * 0.5, y: size.height * -0.4)
             engineEmitter.name = engineNodeName
             addChild(engineEmitter)
             

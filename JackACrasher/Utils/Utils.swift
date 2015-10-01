@@ -25,6 +25,20 @@ func convertNodePosition(node:SKNode!,toScene scene:SKScene!) -> CGPoint {
     return node.parent!.convertPoint(node.position, toNode: scene)
 }
 
+func convertNodePositionUntilScene(node:SKNode!) -> CGPoint {
+    
+    var pos = node.position
+    var nodeParent = node.parent
+    while (nodeParent != node.scene){
+        
+        if let posNew = nodeParent?.convertPoint(pos, toNode:(nodeParent?.parent)!) {
+            pos = posNew
+            nodeParent = nodeParent?.parent
+        }
+    }
+    return pos
+}
+
 func + (left: CGPoint, right: CGPoint) -> CGPoint {
     return CGPoint(x: left.x + right.x, y: left.y + right.y)
 }

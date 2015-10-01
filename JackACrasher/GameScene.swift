@@ -23,6 +23,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private var prevPlayerPosition:CGPoint = CGPointZero
     private var lastUpdateTimeInterval:CFTimeInterval
     private weak var blade:SWBlade! = nil
+    private weak var blade1:SWBlade! = nil
+    private weak var blade2:SWBlade! = nil
+    private weak var blade3:SWBlade! = nil
+    private weak var blade4:SWBlade! = nil
+    
     private var delta = CGPointZero
     
     private var ropeBasedArray = [RopeJointAsteroids]()
@@ -321,12 +326,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         if (needSpark) {
         let sparkEmitter = SKEmitterNode(fileNamed: "Spawn")!
-        sparkEmitter.zPosition = player.zPosition
-        sparkEmitter.position = player.position
-        addChild(sparkEmitter)
-        runOneShortEmitter(sparkEmitter, duration: 0.15)
-        player.runAction(SKAction.fadeInWithDuration(2.0))
+            sparkEmitter.zPosition = player.zPosition
+            sparkEmitter.position = player.position
+            addChild(sparkEmitter)
+            runOneShortEmitter(sparkEmitter, duration: 0.15)
+            player.runAction(SKAction.fadeInWithDuration(2.0))
         }
+        player.anchorPoint = CGPointMake(0.5, 0.5)
+        
         //self.player.anchorPoint = CGPointZero
         //self.player.zRotation = CGFloat(140).radians
         //MARK: ee Why fade in stopped working...
@@ -500,7 +507,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                     if let regAster = self.player.parent as? RegularAsteroid {
                         print("Reg asteroid ")
-                        let rect = regAster.size.rectAtPoint(regAster.position)
+                        let regAsterPos = convertNodePositionUntilScene(regAster)
+                        let rect = regAster.size.rectAtPoint(regAsterPos)
                         if CGRectContainsPoint(rect, location) {
                                 if (regAster.tryToDestroyWithForce(self.player.punchForce)) {
                                     
@@ -785,11 +793,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if self.player.isCaptured {
             
             let position = convertNodePosition(sprite, toScene: self)
-            
-            //print("New player posiltion \(position)")
-            self.player.position = position
-            
-            self.removePlayerFromRegularAsteroidToScene()
+            self.removePlayerFromRegularAsteroidToScene(position)
             
             if usePlayerPostion {
                 applyBackImpulseToNode(sprite)
@@ -822,8 +826,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
-    func removePlayerFromRegularAsteroidToScene() {
+    func removePlayerFromRegularAsteroidToScene(pos:CGPoint) {
         
+        let pPos:CGPoint = pos
         
         if let asteroid = self.player.parent as? RegularAsteroid {
             asteroid.physicsBody?.contactTestBitMask &= ~EntityCategory.Player
@@ -837,19 +842,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         
             
-        var pPos = self.player.position
-        
-        if let parentParent = self.player.parent?.parent {
-            
-            
-            pPos = self.player.parent!.convertPoint(pPos, toNode: parentParent)
-            
-            if (parentParent != self) {
-                pPos = self.player.parent!.convertPoint(pPos, toNode: self)
-            }
-        }
-        
-        //let pPos = recursiveConvertPositionToScene(self.player)
+                //let pPos = recursiveConvertPositionToScene(self.player)
         print("Current position \(pPos)")
         
         if self.player.isCaptured {
@@ -1772,6 +1765,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.player.removeAllActions()
             self.player.removeFromParent()
             
+            player.anchorPoint = CGPoint.zero
             pNode.addChild(player)
             self.player = player
             
@@ -2201,6 +2195,14 @@ extension GameScene {
         self.removedBlade = blade != nil
         blade?.removeFromParent()
         blade = nil
+        blade1?.removeFromParent()
+        blade2?.removeFromParent()
+        blade1 = nil
+        blade2 = nil
+        blade3?.removeFromParent()
+        blade4?.removeFromParent()
+        blade3 = nil
+        blade4 = nil
     }
     
     private func areTouchesMovedForBlade(touches: Set<NSObject>, withEvent event: UIEvent?) -> Bool {
@@ -2261,7 +2263,44 @@ extension GameScene {
             // Here you add the delta value to the blade position
             let newPosition = CGPoint(x: blade!.position.x + delta.x, y: blade!.position.y + delta.y)
             // Set the new position
-            blade!.position = newPosition
+            let newPosition1 = CGPoint(x: blade!.position.x + delta.x*0.2, y: blade!.position.y + delta.y*0.2)
+            let newPosition2 = CGPoint(x: blade!.position.x + delta.x*0.4, y: blade!.position.y + delta.y*0.4)
+            let newPosition3 = CGPoint(x: blade!.position.x + delta.x*0.6, y: blade!.position.y + delta.y*0.6)
+            let newPosition4 = CGPoint(x: blade!.position.x + delta.x*0.8, y: blade!.position.y + delta.y*0.8)
+            
+            if (blade2 == nil) {
+                let copy = blade.copy() as! SWBlade
+                addChild(copy)
+                self.blade2 = copy
+            }
+            blade2?.position = newPosition2
+            
+            if (blade1 == nil) {
+                let copy = blade.copy() as! SWBlade
+                addChild(copy)
+                self.blade1 = copy
+            }
+            blade1?.position = newPosition1
+            
+            
+            if (blade3 == nil) {
+                let copy = blade.copy() as! SWBlade
+                addChild(copy)
+                self.blade3 = copy
+            }
+            blade3?.position = newPosition3
+
+            if (blade4 == nil) {
+                let copy = blade.copy() as! SWBlade
+                addChild(copy)
+                self.blade4 = copy
+            }
+            blade4?.position = newPosition4
+            
+            blade?.position = newPosition
+            
+        
+            
             // it's important to reset delta at this point,
             // You are telling the blade to only update his position when touchesMoved is called
             delta = CGPointZero
