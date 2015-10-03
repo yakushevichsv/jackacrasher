@@ -168,10 +168,9 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJb-8H-lOJ" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="545" y="0.0" width="35" height="33"/>
-                                <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                <rect key="frame" x="542" y="0.0" width="38" height="38"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
-                                <state key="normal" title="BTN">
+                                <state key="normal" image="btnSettings">
                                     <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -191,7 +190,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTq-DP-qnf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="548" y="41" width="29" height="29"/>
+                                <rect key="frame" x="547" y="46" width="29" height="29"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="29" id="ArS-2F-yP6"/>
                                     <constraint firstAttribute="width" constant="29" id="mA7-i4-tNh"/>
@@ -217,7 +216,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxu-q9-Fcb" userLabel="FB Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="475" y="0.0" width="40" height="40"/>
+                                <rect key="frame" x="472" y="3" width="40" height="40"/>
                                 <state key="normal" image="fb-button">
                                     <color key="titleColor" name="keyboardFocusIndicatorColor" catalog="System" colorSpace="catalog"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -238,7 +237,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AF8-Mz-FY1" userLabel="Twitter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="412" y="0.0" width="40" height="40"/>
+                                <rect key="frame" x="409" y="3" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="40" id="131-Va-jXM"/>
                                     <constraint firstAttribute="width" constant="40" id="ikD-u5-jr3"/>
@@ -291,7 +290,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AcO-iW-VYX" userLabel="VK Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="350" y="0.0" width="40" height="40"/>
+                                <rect key="frame" x="347" y="3" width="40" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="AcO-iW-VYX" secondAttribute="height" multiplier="1:1" id="Shq-VD-xFw"/>
                                     <constraint firstAttribute="width" constant="40" id="VhO-h0-jPf"/>
@@ -315,7 +314,7 @@
                                 </connections>
                             </button>
                             <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVr-yc-HC5" userLabel="GameCenter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="543" y="90" width="40" height="40"/>
+                                <rect key="frame" x="542" y="95" width="40" height="40"/>
                                 <state key="normal" image="game_center">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
@@ -958,6 +957,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="btnSettings" width="38" height="38"/>
         <image name="close" width="29" height="29"/>
         <image name="fb-button" width="40" height="40"/>
         <image name="game_center" width="40" height="40"/>

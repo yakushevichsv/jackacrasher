@@ -10,7 +10,7 @@
 		<key>productIdentifier</key>
 		<string>sy.gamefun.jackACrasher.ExtraLife</string>
 		<key>icon</key>
-		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/medkit.png</string>
+		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/medkit@%01dx.png</string>
 		<key>consumable</key>
 		<true/>
 		<key>consumableAmount</key>
@@ -20,7 +20,7 @@
 		<key>productIdentifier</key>
 		<string>sy.gamefun.jackACrasher.NoAds</string>
 		<key>icon</key>
-		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/NoAds.jpg</string>
+		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/NoAds@%01dx.jpg</string>
 		<key>consumable</key>
 		<false/>
 	</dict>

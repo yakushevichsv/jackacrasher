@@ -403,7 +403,9 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                                     }
                                 }
                                 
-                            } catch {}
+                            } catch {
+                                print("Catch error")
+                            }
                         }
                     }
                     

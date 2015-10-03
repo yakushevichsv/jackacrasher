@@ -386,10 +386,11 @@ class Transmitter:SKNode,AssetsContainer {
                 }
             })
             
-            if (self.transmitNode.parent! != self) {
-                let sPoint = self.transmitNode.parent!.convertPoint(self.transmitNode.position, toNode: self)
-                self.transmitNode.removeFromParent()
-                self.transmitNode.position = sPoint
+            if (self.transmitNode.parent == nil ||  self.transmitNode.parent! != self) {
+                if let sPoint = self.transmitNode.parent?.convertPoint(self.transmitNode.position, toNode: self) {
+                    self.transmitNode.removeFromParent()
+                    self.transmitNode.position = sPoint
+                }
                 addChild(self.transmitNode)
             }
             

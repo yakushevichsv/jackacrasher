@@ -118,7 +118,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         var position = node.position
         
         if (node.parent != self.parent) {
-            position = node.parent!.convertPoint(position, toNode: self.parent!)
+            position = self.parent != nil ? node.parent!.convertPoint(position, toNode: self.parent!) : node.position
         }
         
         return position
