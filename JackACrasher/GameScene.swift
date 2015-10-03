@@ -102,7 +102,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private func initPrivate() {
         self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         self.physicsWorld.contactDelegate = self
-        self.backgroundColor = UIColor.lightGrayColor()
+        self.backgroundColor = UIColor.blackColor()
         self.asteroidManager = AsteroidManager(scene: self)
     }
 
