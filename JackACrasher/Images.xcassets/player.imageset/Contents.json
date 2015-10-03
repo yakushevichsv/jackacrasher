@@ -6,11 +6,12 @@
     },
     {
       "idiom" : "iphone",
-      "filename" : "astronaut@3x.png",
+      "filename" : "astronaut@2x.png",
       "scale" : "2x"
     },
     {
       "idiom" : "iphone",
+      "filename" : "astronaut@3x copy.png",
       "scale" : "3x"
     }
   ],
