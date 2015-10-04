@@ -71,8 +71,10 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     private weak var timeLeftLabel:SKLabelNode! = nil
     
     private static var sBGSpriteTexture:SKTexture!
-    private static var sHammerSprite:SKSpriteNode!
     internal static var sDamageEmitter:SKEmitterNode!
+    private static var hammerAttackAction:SKAction!
+    
+    private static var spritesAtlas:SKTextureAtlas!
     
     private static var sContext:dispatch_once_t = 0    
     var health: ForceType = 100
@@ -90,14 +92,29 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
            let playerSprite = SKTexture(imageNamed: playerImageName)
             Player.sBGSpriteTexture = playerSprite
             
-            let hammerSprite = SKSpriteNode(imageNamed: hammerImageName)
-            hammerSprite.name = hammerNodeName
-            Player.sHammerSprite = hammerSprite
             
             if let emitter = SKEmitterNode(fileNamed: damageEmitterNode) {
                 emitter.name = damageEmitterNodeName
             
                 Player.sDamageEmitter = emitter
+                
+                
+                var textures:[SKTexture] = []
+                
+                var totalTime:NSTimeInterval = 0.0
+                let timePerFrame:NSTimeInterval = 0.2
+                
+                self.spritesAtlas = SKTextureAtlas(named: "player")
+                
+                for var index = 0 ; index < 5; index++ {
+                    let texture = self.spritesAtlas.textureNamed("astr\(index+1)")
+                    textures.append(texture)
+                    totalTime += timePerFrame
+                }
+                
+                let texturesAct = SKAction.animateWithTextures(textures, timePerFrame: timePerFrame)
+                
+                self.hammerAttackAction = texturesAct
             }
         }
     }
@@ -159,46 +176,28 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         self.physicsBody?.fieldBitMask = enabled ? (EntityCategory.RadialField & EntityCategory.BlakHoleField)  : EntityCategory.BlakHoleField
     }
     
-    //MARK: Hammer  methods
-    internal func displayHammer() {
-        
-        Player.displayHammerForSprite(self,size:self.size)
-    }
-    
-
-    private class func displayHammerForSprite(sprite:SKNode!,size:CGSize) -> SKSpriteNode! {
-        
-        var hammerSprite = sprite.childNodeWithName(Player.sHammerSprite.name!) as? SKSpriteNode
-        
-        if (hammerSprite == nil) {
-            
-            hammerSprite = Player.sHammerSprite.copy() as? SKSpriteNode
-            hammerSprite?.anchorPoint = CGPointZero
-            sprite.addChild(hammerSprite!)
-        }
-        
-        let angle = (sprite.xScale > 0 ? -1.0 : 1.0 ) * CGFloat(M_PI_4)
-        hammerSprite!.zRotation = angle
-        hammerSprite!.hidden = false
-        
-        var xOffset : CGFloat = -CGFloat(round(size.width * 0.5))
-        if (angle > 0) {
-            xOffset *= -1
-        }
-        hammerSprite!.position = CGPointMake(xOffset, -CGFloat(round(hammerSprite!.size.height * 0.0)))
-        
-        return hammerSprite!
-    }
-    
-    internal func hideHammer() {
-        if let hammer = self.childNodeWithName(Player.sHammerSprite.name!)  {
-            hammer.hidden = true
-        }
-    }
     
     private func redifineEngineEmitter() -> SKEmitterNode? {
         self.childNodeWithName(engineNodeName)?.removeFromParent()
         return createEngineEmitterNode()
+    }
+    
+    func animeAsteroidHammerAttack(runBlock:dispatch_block_t) {
+        
+        self.runAction(SKAction.sequence([SKAction.runBlock {
+                [unowned self] in
+                self.size = Player.spritesAtlas.textureNamed("astr1").size()
+            },Player.hammerAttackAction,SKAction.runBlock(runBlock),SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock {
+                [unowned self] in
+                self.size = Player.sBGSpriteTexture.size()
+            }]), withKey: "attackHammer")
+    }
+    
+    func hideHammer() {
+        
+        if self.actionForKey("attackHammer") != nil {
+            removeActionForKey("attackHammer")
+        }
     }
     
     

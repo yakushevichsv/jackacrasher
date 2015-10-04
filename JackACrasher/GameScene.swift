@@ -35,7 +35,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
            self.setTotalScoreLabelValue()
         }
     }
-
+    
     private struct Constants {
         static let LeftEdge  = "leftEdge"
         static let RightEdge = "rightEdge"
@@ -102,7 +102,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private func initPrivate() {
         self.physicsWorld.gravity = CGVectorMake(0.0, 0.0)
         self.physicsWorld.contactDelegate = self
-        self.backgroundColor = UIColor.blackColor()
+        self.backgroundColor = UIColor.lightGrayColor()
         self.asteroidManager = AsteroidManager(scene: self)
     }
 
@@ -576,25 +576,26 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
             let difX = relLocation.x - self.player.position.x
             
-            var angle:CGFloat = 0
-            var xScale:CGFloat = 1
+            //var angle:CGFloat = 0
+            var xScale:CGFloat = 1.0
             
             if (difX > 0) {
-                angle = -π * 0.5
+                //angle = -π * 0.5
+                xScale = 1.0
             } else if (difX < 0) {
-                angle = π * 0.5
+                //angle = π * 0.5
                 xScale = -1.0
             }
             self.player.xScale = xScale
             
-            let rotateAct = SKAction.rotateByAngle(angle, duration: angle != 0 ? 0.2 : 0 )
+            /*let rotateAct = SKAction.rotateByAngle(angle, duration: angle != 0 ? 0.2 : 0 )
             let runBlockAct = SKAction.runBlock(runBlock)
             let rotateBackAct = rotateAct.reversedAction()
             
             let seq = SKAction.sequence([rotateAct,runBlockAct,rotateBackAct])
-            self.player.runAction(seq)
-            
+            self.player.runAction(seq)*/
         
+            self.player.animeAsteroidHammerAttack(runBlock)
     }
     
     func needToIgnore(location:CGPoint) ->Bool {
@@ -1776,10 +1777,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if let bNode = regularBody.node as? RegularAsteroid {
                 bNode.removeField()
+                self.player.animeAsteroidHammerAttack{
+                    [unowned self] in
+                    self.shakeCamera(bNode,duration:0.8)
+                }
             }
-            
-            
-            self.player.displayHammer()
             
             //check the node....
             if needToCorrectRotation(self.player) {

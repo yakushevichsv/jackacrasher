@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
@@ -22,9 +23,11 @@
                     <subviews>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="asteroid-large" translatesAutoresizingMaskIntoConstraints="NO" id="QQC-q2-0gO">
                             <rect key="frame" x="62" y="21" width="490" height="373"/>
+                            <animations/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemyShip" translatesAutoresizingMaskIntoConstraints="NO" id="vu7-XZ-82a">
                             <rect key="frame" x="236" y="35" width="103" height="95"/>
+                            <animations/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="vu7-XZ-82a" secondAttribute="height" multiplier="103:95" id="QP8-B3-Nrc"/>
                                 <constraint firstAttribute="width" constant="103" id="tHJ-nI-LzW">
@@ -34,6 +37,7 @@
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemyShip" translatesAutoresizingMaskIntoConstraints="NO" id="zjT-x4-a4d">
                             <rect key="frame" x="102" y="267" width="103" height="95"/>
+                            <animations/>
                             <constraints>
                                 <constraint firstAttribute="width" secondItem="zjT-x4-a4d" secondAttribute="height" multiplier="103:95" id="I5c-yg-1eD"/>
                                 <constraint firstAttribute="width" constant="103" id="TbN-c4-6gl">
@@ -43,12 +47,15 @@
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot-45" translatesAutoresizingMaskIntoConstraints="NO" id="Dct-cY-Kbt">
                             <rect key="frame" x="321" y="98" width="62" height="62"/>
+                            <animations/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot45" translatesAutoresizingMaskIntoConstraints="NO" id="vcF-bs-0j6">
                             <rect key="frame" x="177" y="233" width="62" height="62"/>
+                            <animations/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="player-flipped" translatesAutoresizingMaskIntoConstraints="NO" id="0J7-xQ-kJw">
                             <rect key="frame" x="403" y="199" width="94" height="97"/>
+                            <animations/>
                             <constraints>
                                 <constraint firstAttribute="width" constant="94" id="kL5-pT-TkA">
                                     <variation key="heightClass=compact" constant="80"/>
@@ -58,6 +65,7 @@
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="explosion0001" translatesAutoresizingMaskIntoConstraints="NO" id="usc-Vb-D9E">
                             <rect key="frame" x="279" y="162" width="200" height="200"/>
+                            <animations/>
                             <constraints>
                                 <constraint firstAttribute="height" constant="200" id="MHh-Ge-0L7"/>
                                 <constraint firstAttribute="width" constant="200" id="UeB-nw-dYm"/>
@@ -71,11 +79,14 @@
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot45" translatesAutoresizingMaskIntoConstraints="NO" id="rmF-bk-H4h">
                             <rect key="frame" x="247" y="199" width="62" height="62"/>
+                            <animations/>
                         </imageView>
                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet-rot-45" translatesAutoresizingMaskIntoConstraints="NO" id="ZHL-9m-M56">
                             <rect key="frame" x="369" y="164" width="62" height="62"/>
+                            <animations/>
                         </imageView>
                     </subviews>
+                    <animations/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                     <constraints>
                         <constraint firstItem="Dct-cY-Kbt" firstAttribute="top" secondItem="vu7-XZ-82a" secondAttribute="bottom" constant="-32" id="6Ff-4g-PJP"/>
@@ -105,17 +116,20 @@
                 </view>
                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="  Copyright (c) 2015 Siarhei Yakushevich. All rights reserved." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="9" translatesAutoresizingMaskIntoConstraints="NO" id="8ie-xW-0ye">
                     <rect key="frame" x="20" y="439" width="441" height="21"/>
+                    <animations/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="JackACrasher" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7av-FA-Z31">
                     <rect key="frame" x="87" y="147" width="306" height="50"/>
+                    <animations/>
                     <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="44"/>
                     <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
             </subviews>
+            <animations/>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="8ie-xW-0ye" firstAttribute="top" secondItem="NdV-FT-hDJ" secondAttribute="bottom" priority="750" constant="17" id="2Xs-Ug-jlP"/>
@@ -136,8 +150,8 @@
         <image name="asteroid-large" width="208" height="225"/>
         <image name="enemy-bullet-rot-45" width="62" height="62"/>
         <image name="enemy-bullet-rot45" width="62" height="62"/>
-        <image name="enemyShip" width="45" height="50"/>
+        <image name="enemyShip" width="62" height="57"/>
         <image name="explosion0001" width="200" height="200"/>
-        <image name="player-flipped" width="27" height="40"/>
+        <image name="player-flipped" width="33" height="54"/>
     </resources>
 </document>
