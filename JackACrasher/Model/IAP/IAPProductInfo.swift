@@ -16,8 +16,10 @@ class IAPProductInfo: NSObject {
     internal var consumableIdentifier:String?
     internal var consumableAmount:Int = 0
     internal var bundleDir:String? = nil
+    private let scale:CGFloat
     
-    init(dic:[NSObject:AnyObject]) {
+    init(scale:CGFloat,dic:[NSObject:AnyObject]) {
+        self.scale = scale
         super.init()
         
         if let productId = dic["productIdentifier"] as? String {
@@ -25,7 +27,7 @@ class IAPProductInfo: NSObject {
         }
         
         if let iconPath = dic["icon"] as? String {
-            self.icon = !iconPath.isEmpty ? iconPath : nil
+            self.icon = !iconPath.isEmpty ? String(format: iconPath, arguments: [Int(scale)])   : nil
         }
         
         if let consumable = dic["consumable"] as? Bool {

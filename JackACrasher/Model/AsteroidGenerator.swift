@@ -321,7 +321,6 @@ class AsteroidGenerator: NSObject {
     private func produceTrashSprites() {
         
         var minSpeed:CGFloat = CGFloat.max
-        var minIndex:Int
         var sprites:[SKSpriteNode] = [SKSpriteNode]()
         let actName:String = "moveDelAction"
         
@@ -353,7 +352,6 @@ class AsteroidGenerator: NSObject {
             
             if (minSpeed < speed) {
                 minSpeed = speed
-                minIndex = index - 1
             }
             
             let time:NSTimeInterval = NSTimeInterval(CGRectGetWidth(self.playableRect)/speed)
@@ -490,7 +488,7 @@ class AsteroidGenerator: NSObject {
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         //HACK
-        currentAstType = .RopeBased
+        currentAstType = .Trash
         
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType

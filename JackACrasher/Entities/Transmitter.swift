@@ -159,11 +159,29 @@ class Transmitter:SKNode,AssetsContainer {
         return isUnder
     }
     
+    private func appendToChildren(item:SKNode!) {
+        if item.parent! == self {
+            return
+        }
+        
+        let sPosition = item.parent!.convertPoint(item.position, toNode:scene!)
+        let nPosition = scene!.convertPoint(sPosition, toNode: self)
+        
+        item.position = nPosition
+        item.zPosition = self.zPosition
+        
+        item.removeFromParent()
+        addChild(item)
+    }
+    
+    
     internal func transmitAnItem(item node:Player!,itemSize:CGSize, toPosition destPosition:CGPoint, completion:(()->Void)!) {
         
         if self.userInteractionEnabled {
             return
         }
+        
+        
         
         if EnabledDisplayDebugLabel {
             //appendDebugLabel()
@@ -191,6 +209,8 @@ class Transmitter:SKNode,AssetsContainer {
         
         let duration = NSTimeInterval(yDiff/Transmitter.Constants.beamSpeed)
        
+        
+        //appendToChildren(node)
         
         let custAction = SKAction.customActionWithDuration(duration) {
             [unowned self]
@@ -366,10 +386,11 @@ class Transmitter:SKNode,AssetsContainer {
                 }
             })
             
-            if (self.transmitNode.parent! != self) {
-                let sPoint = self.transmitNode.parent!.convertPoint(self.transmitNode.position, toNode: self)
-                self.transmitNode.removeFromParent()
-                self.transmitNode.position = sPoint
+            if (self.transmitNode.parent == nil ||  self.transmitNode.parent! != self) {
+                if let sPoint = self.transmitNode.parent?.convertPoint(self.transmitNode.position, toNode: self) {
+                    self.transmitNode.removeFromParent()
+                    self.transmitNode.position = sPoint
+                }
                 addChild(self.transmitNode)
             }
             

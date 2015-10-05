@@ -19,13 +19,25 @@ class SWBlade: SKNode,AssetsContainer {
        whiteEmitterNode = emitterNodeWithColor(UIColor.whiteColor())
     }
     
+    override init()
+    {
+        super.init()
+        
+        setup()
+    }
+    
     init(position:CGPoint, target:SKNode?, color:UIColor) {
         super.init()
         
+        setup(color,position:position,target:target)
+    }
+    
+    private func setup(color:UIColor = UIColor.whiteColor(),position:CGPoint = CGPointZero,target:SKNode? = nil)
+    {
         self.name = "skblade"
         self.position = position
         
-        let tip:SKSpriteNode = SKSpriteNode(color: color, size: CGSizeMake(25, 25))
+        let tip:SKSpriteNode = SKSpriteNode(color: color, size: CGSizeMake(10, 10))
         tip.zRotation = 0.785398163
         tip.zPosition = 10
         self.addChild(tip)
@@ -36,7 +48,8 @@ class SWBlade: SKNode,AssetsContainer {
         tip.addChild(emitter1)
         self.emitter = emitter1
         
-        self.setScale(0.6)
+        self.setScale(0.5)
+    
     }
     
     var particleLifeTime:NSTimeInterval {

@@ -61,62 +61,71 @@ private let playerNode = "playerNode"
 
 private let timerNodeName = "timerNodeName"
 
-class Player: SKNode, ItemDestructable, AssetsContainer {
+class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     private let engineNodeName = "engineEmitter"
-    private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
     private var movementStyle:PlayerMovement = .Fly
     private var playerMode:PlayerMode = .Idle
     
-    private var hammerSprite:SKSpriteNode! = nil
     private weak var timeLeftLabel:SKLabelNode! = nil
     
-    private static var sBGSprite:SKSpriteNode!
-    private static var sHammerSprite:SKSpriteNode!
+    private static var sBGSpriteTexture:SKTexture!
     internal static var sDamageEmitter:SKEmitterNode!
+    private static var hammerAttackAction:SKAction!
+    private static var displayShowGunAction:SKAction!
+    private static var spritesAtlas:SKTextureAtlas!
     
-    private static var sContext:dispatch_once_t = 0
-    
-#if DEBUG
-    private var playerCount:UInt = 0
-#endif
-    
+    private static var sContext:dispatch_once_t = 0    
     var health: ForceType = 100
     
     private var prevTimeInterval:NSTimeInterval = 0
     private var projectileCount:UInt = 0
     
-    private var playerBGSprite:SKSpriteNode! {
-        return self.childNodeWithName(playerBGNodeName) as! SKSpriteNode
-    }
-    
-    internal var size :CGSize {
-        get {return Player.sBGSprite.size}
-    }
-    
     internal var isCaptured:Bool {
         get {return self.parent != self.scene }
-    }
-    
-    internal class var backgroundPlayerSprite:SKSpriteNode! {
-        return Player.sBGSprite
     }
     
     internal static func loadAssets() {
        
         dispatch_once(&sContext) { () -> Void in
-           let playerSprite = SKSpriteNode(imageNamed: playerImageName)
-            playerSprite.name = playerBGNodeName
-            Player.sBGSprite = playerSprite
+           let playerSprite = SKTexture(imageNamed: playerImageName)
+            Player.sBGSpriteTexture = playerSprite
             
-            let hammerSprite = SKSpriteNode(imageNamed: hammerImageName)
-            hammerSprite.name = hammerNodeName
-            Player.sHammerSprite = hammerSprite
             
             if let emitter = SKEmitterNode(fileNamed: damageEmitterNode) {
                 emitter.name = damageEmitterNodeName
             
                 Player.sDamageEmitter = emitter
+                
+                
+                var textures:[SKTexture] = []
+                
+                var totalTime:NSTimeInterval = 0.0
+                let timePerFrame:NSTimeInterval = 0.2
+                
+                self.spritesAtlas = SKTextureAtlas(named: "player")
+                
+                for var index = 0 ; index < 5; index++ {
+                    let texture = self.spritesAtlas.textureNamed("astr\(index+1)")
+                    textures.append(texture)
+                    totalTime += timePerFrame
+                }
+                
+                let texturesAct = SKAction.animateWithTextures(textures, timePerFrame: timePerFrame)
+                
+                self.hammerAttackAction = texturesAct
+                
+                
+                var flyTextures:[SKTexture] = []
+                totalTime = 0
+                for var index = 0 ; index < 2; index++ {
+                    let texture = self.spritesAtlas.textureNamed("astronaut-fly\(index+1)")
+                    flyTextures.append(texture)
+                    totalTime += timePerFrame
+                }
+                
+                let flyAct = SKAction.animateWithTextures(flyTextures, timePerFrame: timePerFrame)
+                self.displayShowGunAction = flyAct
             }
         }
     }
@@ -138,13 +147,9 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     
     init(position:CGPoint) {
-        super.init()
+        let texture = Player.sBGSpriteTexture
         
-        let bgSprite = Player.sBGSprite.copy() as! SKNode
-        bgSprite.position = CGPointZero
-        
-        addChild(bgSprite)
-        
+        super.init(texture: texture.copy() as? SKTexture, color: UIColor.redColor(), size: texture.size())
         
         self.name = playerNode
         self.position = position
@@ -152,7 +157,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         self.playerDistFlyMap = createEngine()
         
         createPhysicsBody()
-        createProjectileGun()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -182,38 +186,48 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         self.physicsBody?.fieldBitMask = enabled ? (EntityCategory.RadialField & EntityCategory.BlakHoleField)  : EntityCategory.BlakHoleField
     }
     
-    //MARK: Hammer  methods
-    internal func displayHammer() {
-        
-        self.hammerSprite = Player.displayHammerForSprite(self,size:self.size)
+    
+    private func redifineEngineEmitter() -> SKEmitterNode? {
+        self.childNodeWithName(engineNodeName)?.removeFromParent()
+        return createEngineEmitterNode()
     }
     
-    internal class func displayHammerForSprite(sprite:SKSpriteNode!) -> SKSpriteNode! {
-        return displayHammerForSprite(sprite, size: sprite.size)
+    func animeAsteroidHammerAttack(runBlock:dispatch_block_t) {
+        
+        self.runAction(SKAction.sequence([SKAction.runBlock {
+                [unowned self] in
+                self.size = Player.spritesAtlas.textureNamed("astr1").size()
+            },Player.hammerAttackAction,SKAction.runBlock(runBlock),SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock {
+                [unowned self] in
+                self.size = Player.sBGSpriteTexture.size()
+            }]), withKey: "attackHammer")
     }
-
-    internal class func displayHammerForSprite(sprite:SKNode!,size:CGSize) -> SKSpriteNode! {
+    
+    func hideHammer() {
         
-        var hammerSprite:SKSpriteNode!
-        
-        if (sprite.childNodeWithName(Player.sHammerSprite.name!) == nil) {
+        if self.actionForKey("attackHammer") != nil {
+            removeActionForKey("attackHammer")
+        }
+    }
+    
+    
+    private func  createEngineEmitterNode() -> SKEmitterNode? {
+    
+        if let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks") {
             
-            hammerSprite = Player.sHammerSprite.copy() as! SKSpriteNode
-            hammerSprite.anchorPoint = CGPointZero
-            sprite.addChild(hammerSprite)
+            let size = self.size
+            
+            engineEmitter.position = CGPoint(x: size.width * -self.xScale * 0.5, y: size.height * -0.4)
+            engineEmitter.name = engineNodeName
+            addChild(engineEmitter)
+            
+            engineEmitter.targetNode = nil
+            engineEmitter.hidden = true
+            return engineEmitter
         }
-        
-        let angle = (sprite.xScale > 0 ? -1.0 : 1.0 ) * CGFloat(M_PI_4)
-        hammerSprite.zRotation = angle
-        hammerSprite.hidden = false
-        
-        var xOffset : CGFloat = -CGFloat(round(size.width * 0.5))
-        if (angle > 0) {
-            xOffset *= -1
+        else {
+            return nil
         }
-        hammerSprite.position = CGPointMake(xOffset, -CGFloat(round(hammerSprite.size.height * 0.0)))
-        
-        return hammerSprite
     }
     
     //MARK: Engine methods
@@ -222,16 +236,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         
         var dic = playerDistFlyMapType()
         
-        if let engineEmitter = SKEmitterNode(fileNamed: "Engine.sks") {
-            
-            let size = self.size
-            
-            engineEmitter.position = CGPoint(x: size.width * -0.5, y: size.height * -0.3)
-            engineEmitter.name = engineNodeName
-            addChild(engineEmitter)
-            
-            engineEmitter.targetNode = scene
-            
+        if let engineEmitter = createEngineEmitterNode() {
             
             let distance = max(self.size.width,self.size.height)*sqrt(2)
             let eMax = engineEmitter.particleLifetime
@@ -239,8 +244,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             dic[.Middle] = (distance/1.2,eMax*0.5)
             dic[.Short] = (distance/2,eMax*0.1)
             
-            
-            engineEmitter.hidden = true
         }
         
         return dic
@@ -275,13 +278,24 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     func defineEngineState(flyDistance:PlayerFlyDistance) {
         
+        
+        
         if let engineNode = self.childNodeWithName(engineNodeName) as? SKEmitterNode {
             
             if (.None == flyDistance) {
                 engineNode.hidden = true
+                engineNode.paused = true
+                /*if let engine = redifineEngineEmitter() {
+                    engine.hidden = true
+                    engine.paused = true
+                }*/
+                
             }
             else {
                 engineNode.hidden = false
+                engineNode.paused = false
+                engineNode.alpha = 1.0
+                engineNode.resetSimulation()
                 engineNode.particleLifetime = self.playerDistFlyMap[flyDistance]!.eParticleLifeTime
             }
         }
@@ -361,25 +375,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     
     //MARK: Projectile (Shooting) methods
     
-    private func createProjectileGun() {
-    
-        let texuteProjectile = SKTexture(imageNamed: "projectile")
-        var size = texuteProjectile.size()
-        
-        size.width *= 0.8
-        size.height *= 0.8
-        
-        let miniProjectile = SKSpriteNode(texture: texuteProjectile, size: size)
-        miniProjectile.anchorPoint = CGPointMake(0.5, 0.5)
-        miniProjectile.name = projectileNodeName
-        miniProjectile.hidden = true
-        
-        let point = CGPointMake(size.width*0.5, size.height*0.5)
-        miniProjectile.position = point
-        
-        addChild(miniProjectile)
-    }
-    
     internal func canThrowProjectile() -> Bool {
         return self.playerMode == .CanFire 
     }
@@ -414,16 +409,34 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
     }
     
     private func defineProjectileGunState(hidden:Bool) {
-        if let node = self.childNodeWithName(projectileNodeName) {
-            node.hidden = hidden
-            self.numberOfThrownProjectiles = 0
-            
+        
             if (hidden) {
+                if self.actionForKey("displayShowGunAction") != nil {
+                    self.removeActionForKey("displayShowGunAction")
+                }
+                
+                let texture = Player.sBGSpriteTexture
+                
+                self.texture = texture
+                self.size = texture.size()
+                
                 self.playerMode = .Idle
             } else {
                 self.playerMode = .CanFire
+                
+                if self.actionForKey("displayShowGunAction") == nil {
+                    self.runAction(SKAction.sequence([Player.displayShowGunAction,SKAction.runBlock{
+                        [unowned self] in
+                        
+                        let texture = Player.spritesAtlas.textureNamed("astronaut-fly2")
+                        
+                        self.texture = texture
+                        self.size = texture.size()
+                        
+                        } ]), withKey:"displayShowGunAction")
+                }
             }
-        }
+        
     }
     
     internal func updateNumberOfLives(extraLives numberOfLives:Int) {
@@ -444,38 +457,6 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
         let len = distanceBetweenPoints(location, point2: sPosition)
         
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)),sPosition:sPosition)
-    }
-    
-    internal func playerBGSpriteNode() -> SKSpriteNode! {
-       let sprite = Player.sBGSprite.copy() as! SKSpriteNode
-        
-       sprite.name = self.name! + "BG"
-    
-#if DEBUG
-        self.playerCount++;
-        
-        if self.playerCount > 1 {
-            print("Count \(self.playerCount)")
-        }
-#endif
-        
-       return sprite
-    }
-    
-    internal func playerBGSpriteFromNode(node:SKNode?)->SKSpriteNode? {
-#if DEBUG
-        if self.playerCount > 0 {
-            self.playerCount--;
-        }
-#endif
-        
-        
-        if !self.hidden {
-            return nil
-        }
-        
-        let name = self.name! + "BG"
-        return node?.childNodeWithName(name) as? SKSpriteNode
     }
     
     private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
@@ -593,7 +574,7 @@ class Player: SKNode, ItemDestructable, AssetsContainer {
             if self.timeLeftLabel == nil {
                 let node = SKLabelNode()
                 node.fontSize = 15
-                node.position = CGPointMake(Player.sBGSprite.size.width*0.5, Player.sBGSprite.size.height*0.5)
+                node.position = CGPointMake(self.size.halfWidth(), self.size.halfHeight())
                 self.timeLeftLabel = node
                 //node.colorBlendFactor = 1.0
                 self.addChild(node)

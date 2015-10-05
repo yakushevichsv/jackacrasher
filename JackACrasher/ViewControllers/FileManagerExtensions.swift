@@ -148,6 +148,7 @@ extension NSFileManager {
         }
         
         let path = self.jacCacheDirectory
+        let scale = UIScreen.mainScreen().scale
         
         let filePath = path.stringByAppendingPathComponent(self.jacProductsInfo)
         var result:[IAPProduct]? = nil
@@ -159,7 +160,7 @@ extension NSFileManager {
             
                 for i in 1...array!.count - 1  {
                     if let dic = array?[i] as? [NSObject:AnyObject]{
-                        let info = IAPProductInfo(dic: dic)
+                        let info = IAPProductInfo(scale: scale,dic: dic)
                         let product = IAPProduct()
                         product.productInfo = info
                         

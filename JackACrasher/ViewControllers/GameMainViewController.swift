@@ -152,6 +152,7 @@ class GameMainViewController: UIViewController {
             self.ivExplosion.stopAnimating()
         }
         self.ivExplosion.hidden = true
+        self.view.layoutIfNeeded()
         
     }
     
@@ -177,6 +178,7 @@ class GameMainViewController: UIViewController {
             self.ivAsteroidR.layoutIfNeeded()
             self.ivAsteroidR.transform = CGAffineTransformMakeRotation(CGFloat(Double(rand() % 7 + 1) *  M_PI_4));
             self.ivAsteroidL.transform = CGAffineTransformMakeRotation(CGFloat(Double(rand() % 7 + 1) *  M_PI_4));
+            self.view.layoutIfNeeded()
             
             }){[unowned self]
                 _ in
