@@ -63,7 +63,6 @@ private let timerNodeName = "timerNodeName"
 
 class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     private let engineNodeName = "engineEmitter"
-    private let projectileNodeName = "projectileNode"
     private var numberOfThrownProjectiles = 0
     private var movementStyle:PlayerMovement = .Fly
     private var playerMode:PlayerMode = .Idle
@@ -73,7 +72,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     private static var sBGSpriteTexture:SKTexture!
     internal static var sDamageEmitter:SKEmitterNode!
     private static var hammerAttackAction:SKAction!
-    
+    private static var displayShowGunAction:SKAction!
     private static var spritesAtlas:SKTextureAtlas!
     
     private static var sContext:dispatch_once_t = 0    
@@ -115,6 +114,18 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 let texturesAct = SKAction.animateWithTextures(textures, timePerFrame: timePerFrame)
                 
                 self.hammerAttackAction = texturesAct
+                
+                
+                var flyTextures:[SKTexture] = []
+                totalTime = 0
+                for var index = 0 ; index < 2; index++ {
+                    let texture = self.spritesAtlas.textureNamed("astronaut-fly\(index+1)")
+                    flyTextures.append(texture)
+                    totalTime += timePerFrame
+                }
+                
+                let flyAct = SKAction.animateWithTextures(flyTextures, timePerFrame: timePerFrame)
+                self.displayShowGunAction = flyAct
             }
         }
     }
@@ -146,7 +157,6 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         self.playerDistFlyMap = createEngine()
         
         createPhysicsBody()
-        createProjectileGun()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -365,25 +375,6 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     //MARK: Projectile (Shooting) methods
     
-    private func createProjectileGun() {
-    
-        let texuteProjectile = SKTexture(imageNamed: "projectile")
-        var size = texuteProjectile.size()
-        
-        size.width *= 0.8
-        size.height *= 0.8
-        
-        let miniProjectile = SKSpriteNode(texture: texuteProjectile, size: size)
-        miniProjectile.anchorPoint = CGPointMake(0.5, 0.5)
-        miniProjectile.name = projectileNodeName
-        miniProjectile.hidden = true
-        
-        let point = CGPointMake(size.width*0.5, size.height*0.5)
-        miniProjectile.position = point
-        
-        addChild(miniProjectile)
-    }
-    
     internal func canThrowProjectile() -> Bool {
         return self.playerMode == .CanFire 
     }
@@ -418,16 +409,34 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     }
     
     private func defineProjectileGunState(hidden:Bool) {
-        if let node = self.childNodeWithName(projectileNodeName) {
-            node.hidden = hidden
-            self.numberOfThrownProjectiles = 0
-            
+        
             if (hidden) {
+                if self.actionForKey("displayShowGunAction") != nil {
+                    self.removeActionForKey("displayShowGunAction")
+                }
+                
+                let texture = Player.sBGSpriteTexture
+                
+                self.texture = texture
+                self.size = texture.size()
+                
                 self.playerMode = .Idle
             } else {
                 self.playerMode = .CanFire
+                
+                if self.actionForKey("displayShowGunAction") == nil {
+                    self.runAction(SKAction.sequence([Player.displayShowGunAction,SKAction.runBlock{
+                        [unowned self] in
+                        
+                        let texture = Player.spritesAtlas.textureNamed("astronaut-fly2")
+                        
+                        self.texture = texture
+                        self.size = texture.size()
+                        
+                        } ]), withKey:"displayShowGunAction")
+                }
             }
-        }
+        
     }
     
     internal func updateNumberOfLives(extraLives numberOfLives:Int) {
