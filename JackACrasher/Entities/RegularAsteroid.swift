@@ -49,13 +49,14 @@ extension SKNode {
     }
     
     func syDisplayScore(position:CGPoint, rect playableArea:CGRect, scoreAddition:Int64) {
-        self.syScoreLabel.text = "\(scoreAddition)"
+        let label = self.syScoreLabel
+        label.text = "\(scoreAddition)"
         
         let sPosition = self.parent != nil ? self.scene!.convertPoint(self.position, fromNode: self.parent!) : self.position
         
-        self.syScoreLabel.position = sPosition + position
+        label.position = sPosition + position
         
-        self.scene?.addChild(self.syScoreLabel)
+        self.scene?.addChild(label)
         
         var yDiff:CGFloat = 30
         var sign:CGFloat
@@ -70,11 +71,16 @@ extension SKNode {
         
         yDiff *= sign
         
-        self.syScoreLabel.runAction(SKAction.sequence([
+        label.runAction(SKAction.sequence([
             SKAction.moveByX(0, y: yDiff, duration: 1.0),
             SKAction.fadeOutWithDuration(1.0),
             SKAction.removeFromParent()
             ]))
+        
+        if let gameScoreScene = self.scene as? GameScoreItem {
+            gameScoreScene.currentGameScore += scoreAddition
+            gameScoreScene.totalGameScore += UInt64(scoreAddition)
+        }
     }
 }
 

@@ -13,7 +13,13 @@ import SpriteKit
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64,playedTime:NSTimeInterval,needToContinue:Bool)
 }
 
-class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate,AssetsContainer {
+@objc protocol GameScoreItem
+{
+    var currentGameScore:Int64 {get set}
+    var totalGameScore:UInt64 {get set}
+}
+
+class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SKPhysicsContactDelegate,AssetsContainer,GameScoreItem {
     
     var asteroidManager:AsteroidManager!
     var asteroidGenerator:AsteroidGenerator!
@@ -29,8 +35,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     private var ropeBasedArray = [RopeJointAsteroids]()
     
-     var currentGameScore:Int64 = 0
-    private var totalGameScore:UInt64 = 0 {
+    var currentGameScore:Int64 = 0
+    var totalGameScore:UInt64 = 0 {
         didSet {
            self.setTotalScoreLabelValue()
         }
@@ -2049,17 +2055,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             let expType = self.trashAsteroidsCount == 0 ? ExplosionType.Large : ExplosionType.Small
             
-            trashAster!.node?.removeFromParent()
             laser?.node?.removeAllActions()
             
             if 0 == self.trashAsteroidsCount {
                 createExplosion(expType, position: scenePoint)
-                node.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
+                trashAster?.node?.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
                 
                 let timeInterval = NSDate.timeIntervalSinceReferenceDate()
                 self.lastProjectileExp = (timeInterval,scenePoint)
+                trashAster?.node?.removeFromParent()
             }
             else {
+                trashAster?.node?.removeFromParent()
                 createExplosion(expType, position: scenePoint)
                 
                 if let lNode = laser?.node  {

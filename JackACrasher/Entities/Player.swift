@@ -101,11 +101,11 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 var textures:[SKTexture] = []
                 
                 var totalTime:NSTimeInterval = 0.0
-                let timePerFrame:NSTimeInterval = 0.2
+                let timePerFrame:NSTimeInterval = 0.1
                 
                 self.spritesAtlas = SKTextureAtlas(named: "player")
                 
-                for var index = 0 ; index < 5; index++ {
+                for var index = 0 ; index < 6; index++ {
                     let texture = self.spritesAtlas.textureNamed("astr\(index+1)")
                     textures.append(texture)
                     totalTime += timePerFrame
@@ -196,8 +196,8 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         
         self.runAction(SKAction.sequence([SKAction.runBlock {
                 [unowned self] in
-                self.size = Player.spritesAtlas.textureNamed("astr1").size()
-            },Player.hammerAttackAction,SKAction.runBlock(runBlock),SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock {
+                self.size = Player.spritesAtlas.textureNamed("astr6").size()
+            },Player.hammerAttackAction,SKAction.runBlock(runBlock),SKAction.waitForDuration(0.1), SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock {
                 [unowned self] in
                 self.size = Player.sBGSpriteTexture.size()
             }]), withKey: "attackHammer")
@@ -461,7 +461,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
         
-        let projectile = SKSpriteNode(imageNamed: "projectile")
+        let projectile = SKSpriteNode(imageNamed: "enemy-bullet")
         
         let isLeft = vector.dx < 0
         let isUp  = vector.dy > 0
@@ -497,6 +497,8 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         
         let fadeIn = SKAction.fadeInWithDuration(0.2)
         let moveTo = SKAction.moveTo(positionFinal, duration: length/Double(self.projectileSpeed))
+        
+        projectile.zRotation = vector.angle
         
         projectile.runAction(SKAction.sequence([fadeIn,moveTo,SKAction.removeFromParent()]))
         projectile.position = position

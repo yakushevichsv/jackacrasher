@@ -714,7 +714,7 @@ class GameMainViewController: UIViewController {
                 }
                 // make API calls that do not require user auth
             } else {
-                print("error: \(error.localizedDescription)");
+                print("error: \(error?.localizedDescription)");
             }
         }
     }
