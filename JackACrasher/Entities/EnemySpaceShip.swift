@@ -118,6 +118,11 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         var position = node.position
         
         if (node.parent != self.parent) {
+            
+            if node.parent == nil {
+                return node.position
+            }
+            
             position = self.parent != nil ? node.parent!.convertPoint(position, toNode: self.parent!) : node.position
         }
         
@@ -145,7 +150,8 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let bullet = EnemySpaceShip.sEnemyBulltet.copy() as! SKSpriteNode
         
         let sPoint = self.parent!.convertPoint(self.position, toNode:self.scene!)
-        var tPoint = self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!)
+        
+        var tPoint = self.target?.parent != nil ? self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!) : self.position
         
         let diff = tPoint - sPoint
         

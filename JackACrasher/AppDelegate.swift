@@ -33,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
         
-        Fabric.with([Twitter()])
+        //Fabric.with([Twitter()])
         
         appWillStart()
         return true

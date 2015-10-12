@@ -27,7 +27,22 @@ class IAPProductInfo: NSObject {
         }
         
         if let iconPath = dic["icon"] as? String {
-            self.icon = !iconPath.isEmpty ? String(format: iconPath, arguments: [Int(scale)])   : nil
+            
+            if (!iconPath.isEmpty) {
+                
+                if let fileName = iconPath.lastPathComponent {
+                    let str = fileName as NSString
+                    let ext = str.pathExtension as NSString
+                    let name = str.substringToIndex(str.length - ext.length - 1)
+                    
+                    let newName = name.stringByAppendingString("@\(Int(scale))x.\(ext)")
+                    
+                    self.icon = iconPath.stringByReplacingOccurrencesOfString(fileName, withString: newName)
+                }
+            }
+            else {
+                self.icon = nil
+            }
         }
         
         if let consumable = dic["consumable"] as? Bool {

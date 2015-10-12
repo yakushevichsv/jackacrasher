@@ -45,6 +45,10 @@ class AsteroidGenerator: NSObject {
 
     private var healthUnitProdTime:NSTimeInterval =  NSDate.timeIntervalSinceReferenceDate()
     
+    private lazy var bombFactory:BombFactory = {
+       return BombFactory()
+    }()
+    
     internal var paused:Bool = false {
         didSet {
             let didChange = (paused != oldValue)
@@ -200,8 +204,9 @@ class AsteroidGenerator: NSObject {
     
     private func produceBomb() {
         
-        let isAIBomb = arc4random() % 2 == 0
-        let bomb = !isAIBomb ? Bomb() : AIBomb()
+        let bomb = bombFactory.createRandomBomb()
+        
+        let isAIBomb = bomb is AIBomb
         
         let param = bomb.size.halfMaxSizeParam()
         
@@ -332,12 +337,15 @@ class AsteroidGenerator: NSObject {
         
         for index in 1...count {
             
-            let textName = "trash_asteroid_\(index)"
+            let sprite:SKSpriteNode!
+            
+            let textName = "space debris (\(index))".syEncodeStringURL()!
             
             let texture = trashAtlas?.textureNamed(textName)
             
-            let sprite = SKSpriteNode(texture: texture)
+            sprite = SKSpriteNode(texture: texture)
             sprite.size = texture!.size()
+            
             
             var speed = self.trashAvg
             if (arc4random()%3 == 1) {
@@ -377,7 +385,7 @@ class AsteroidGenerator: NSObject {
             let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
             
             var yPos  = CGFloat(arc4random() % divisor) + yMargin
-            let xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
+            var xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
             
             var curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
             
@@ -388,6 +396,7 @@ class AsteroidGenerator: NSObject {
                 var wasInside = false
                 
                 while (CGRectIntersectsRect(prevFrame, curFrame)) {
+                    xMargin -= CGFloat(arc4random() % UInt32(sprite.size.width))
                     yPos =  CGFloat(arc4random() % divisor) + yMargin
                     curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
                     wasInside = true
@@ -488,7 +497,7 @@ class AsteroidGenerator: NSObject {
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         //HACK
-        currentAstType = .Trash
+        currentAstType = .Health
         
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType
@@ -541,4 +550,14 @@ class AsteroidGenerator: NSObject {
         
         return regSize
     }
+}
+
+extension String {
+    
+    func syEncodeStringURL() -> String?
+    {
+        let escapedString = self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
+        return escapedString
+    }
+
 }

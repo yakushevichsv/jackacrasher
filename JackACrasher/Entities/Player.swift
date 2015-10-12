@@ -118,11 +118,14 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 
                 var flyTextures:[SKTexture] = []
                 totalTime = 0
-                for var index = 0 ; index < 2; index++ {
-                    let texture = self.spritesAtlas.textureNamed("astronaut-fly\(index+1)")
-                    flyTextures.append(texture)
+                    let texture1 = self.spritesAtlas.textureNamed("astronaut1")
+                    flyTextures.append(texture1)
                     totalTime += timePerFrame
-                }
+                
+                
+                let texture2 = self.spritesAtlas.textureNamed("astronaut")
+                flyTextures.append(texture2)
+                totalTime += timePerFrame
                 
                 let flyAct = SKAction.animateWithTextures(flyTextures, timePerFrame: timePerFrame)
                 self.displayShowGunAction = flyAct
@@ -194,12 +197,12 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     func animeAsteroidHammerAttack(runBlock:dispatch_block_t) {
         
-        self.runAction(SKAction.sequence([SKAction.runBlock {
+        self.runAction(SKAction.sequence([SKAction.runBlock(){
+            [unowned self] in
+            self.size = SKTexture(imageNamed: "ast1").size()
+            },Player.hammerAttackAction,SKAction.waitForDuration(0.1), SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock(){
                 [unowned self] in
-                self.size = Player.spritesAtlas.textureNamed("astr6").size()
-            },Player.hammerAttackAction,SKAction.runBlock(runBlock),SKAction.waitForDuration(0.1), SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock {
-                [unowned self] in
-                self.size = Player.sBGSpriteTexture.size()
+                self.size = SKTexture(imageNamed: "astronaut2").size()
             }]), withKey: "attackHammer")
     }
     
@@ -425,15 +428,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 self.playerMode = .CanFire
                 
                 if self.actionForKey("displayShowGunAction") == nil {
-                    self.runAction(SKAction.sequence([Player.displayShowGunAction,SKAction.runBlock{
-                        [unowned self] in
-                        
-                        let texture = Player.spritesAtlas.textureNamed("astronaut-fly2")
-                        
-                        self.texture = texture
-                        self.size = texture.size()
-                        
-                        } ]), withKey:"displayShowGunAction")
+                    self.runAction(SKAction.sequence([Player.displayShowGunAction]), withKey:"displayShowGunAction")
                 }
             }
         
@@ -461,7 +456,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
         
-        let projectile = SKSpriteNode(imageNamed: "enemy-bullet")
+        let projectile = SKSpriteNode(imageNamed: "projectile")
         
         let isLeft = vector.dx < 0
         let isUp  = vector.dy > 0

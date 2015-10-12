@@ -383,7 +383,8 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                                     image = nil
                                 }
                                 else {
-                                    image = UIImage(contentsOfFile: path!)!
+                                    let fURL = NSURL(fileURLWithPath: path!)
+                                    image = UIImage(contentsOfFile: fURL.path!)
                                 }
                                 
                                 dispatch_async(dispatch_get_main_queue()) {
@@ -422,6 +423,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                 
             }
             else {
+                collectionViewCell.hideActivityIndicatorAfterDonwloading()
                 collectionViewCell.setImage(NSFileManager.defaultManager().jacGetImageFromCache(icon))
             }
             

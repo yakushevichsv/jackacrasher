@@ -40,6 +40,10 @@
 		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
+		2160E7311BCBA5AF00F7A886 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E72D1BCBA5AF00F7A886 /* Crashlytics.framework */; settings = {ASSET_TAGS = (); }; };
+		2160E7321BCBA5AF00F7A886 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E72E1BCBA5AF00F7A886 /* Fabric.framework */; settings = {ASSET_TAGS = (); }; };
+		2160E7331BCBA5AF00F7A886 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E72F1BCBA5AF00F7A886 /* TwitterCore.framework */; settings = {ASSET_TAGS = (); }; };
+		2160E7341BCBA5B000F7A886 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E7301BCBA5AF00F7A886 /* TwitterKit.framework */; settings = {ASSET_TAGS = (); }; };
 		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
 		2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */; };
 		2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C71B3BFF39003253C5 /* CloudManager.swift */; };
@@ -55,10 +59,6 @@
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
 		217360F91B87260C00713E82 /* lap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217360F81B87260C00713E82 /* lap.wav */; };
 		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
-		217EDC961B7CC4710002E013 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EDC921B7CC4710002E013 /* Fabric.framework */; };
-		217EDC971B7CC4710002E013 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EDC931B7CC4710002E013 /* TwitterKit.framework */; };
-		217EDC981B7CC4710002E013 /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 217EDC941B7CC4710002E013 /* TwitterKitResources.bundle */; };
-		217EDC991B7CC4710002E013 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 217EDC951B7CC4710002E013 /* TwitterCore.framework */; };
 		2188A5CF1B9F9FB900612BEC /* SWBlade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188A5CE1B9F9FB900612BEC /* SWBlade.swift */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
 		218B92EE1B79F3C500444918 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 218B92ED1B79F3C500444918 /* sprites.atlas */; };
@@ -162,6 +162,10 @@
 		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
+		2160E72D1BCBA5AF00F7A886 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		2160E72E1BCBA5AF00F7A886 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		2160E72F1BCBA5AF00F7A886 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
+		2160E7301BCBA5AF00F7A886 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
 		2163A8C21B3BE6C5003253C5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudUserInfo.swift; path = Model/iCloud/CloudUserInfo.swift; sourceTree = "<group>"; };
@@ -178,10 +182,6 @@
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
 		217360F81B87260C00713E82 /* lap.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lap.wav; sourceTree = "<group>"; };
 		217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopUpTransitioningDelegate.swift; path = ViewControllers/PopUpTransitioningDelegate.swift; sourceTree = "<group>"; };
-		217EDC921B7CC4710002E013 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = SOURCE_ROOT; };
-		217EDC931B7CC4710002E013 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = SOURCE_ROOT; };
-		217EDC941B7CC4710002E013 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = SOURCE_ROOT; };
-		217EDC951B7CC4710002E013 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = SOURCE_ROOT; };
 		2188A5CE1B9F9FB900612BEC /* SWBlade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWBlade.swift; sourceTree = "<group>"; };
 		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
 		218B92ED1B79F3C500444918 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
@@ -251,17 +251,18 @@
 			files = (
 				21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */,
 				2171B32B1B7B9F46007733BA /* Social.framework in Frameworks */,
-				217EDC971B7CC4710002E013 /* TwitterKit.framework in Frameworks */,
 				2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */,
 				2101EFC61B7B651E00516086 /* FBSDKCoreKit.framework in Frameworks */,
 				212A2F241B36F24400B31482 /* libssl.a in Frameworks */,
-				217EDC991B7CC4710002E013 /* TwitterCore.framework in Frameworks */,
 				2171B3291B7B92B6007733BA /* FBSDKShareKit.framework in Frameworks */,
-				217EDC961B7CC4710002E013 /* Fabric.framework in Frameworks */,
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
 				210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */,
 				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
+				2160E7311BCBA5AF00F7A886 /* Crashlytics.framework in Frameworks */,
+				2160E7321BCBA5AF00F7A886 /* Fabric.framework in Frameworks */,
+				2160E7331BCBA5AF00F7A886 /* TwitterCore.framework in Frameworks */,
+				2160E7341BCBA5B000F7A886 /* TwitterKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -575,13 +576,13 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2160E72D1BCBA5AF00F7A886 /* Crashlytics.framework */,
+				2160E72E1BCBA5AF00F7A886 /* Fabric.framework */,
+				2160E72F1BCBA5AF00F7A886 /* TwitterCore.framework */,
+				2160E7301BCBA5AF00F7A886 /* TwitterKit.framework */,
 				21CEEFAA1B9CCB2D008937A2 /* iAd.framework */,
 				210CE8731B8BC93C00C9F288 /* VKSdk.framework */,
 				210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */,
-				217EDC921B7CC4710002E013 /* Fabric.framework */,
-				217EDC931B7CC4710002E013 /* TwitterKit.framework */,
-				217EDC941B7CC4710002E013 /* TwitterKitResources.bundle */,
-				217EDC951B7CC4710002E013 /* TwitterCore.framework */,
 				212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */,
 				212A2F201B36F24400B31482 /* libcrypto.a */,
 				212A2F211B36F24400B31482 /* libssl.a */,
@@ -709,7 +710,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				217EDC981B7CC4710002E013 /* TwitterKitResources.bundle in Resources */,
 				211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */,
 				21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */,
 				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
@@ -766,7 +766,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "./Fabric.framework/run e352f5b447cd421c290f4b320fb95db6e5e74213 908e8b3d8e40a5d99270247a65460d6cf60179fc7f733a4fbe1e203ccbfe9015";
+			shellScript = "## ./Fabric.framework/run e352f5b447cd421c290f4b320fb95db6e5e74213 908e8b3d8e40a5d99270247a65460d6cf60179fc7f733a4fbe1e203ccbfe9015";
 		};
 /* End PBXShellScriptBuildPhase section */
 

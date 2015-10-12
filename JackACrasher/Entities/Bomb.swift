@@ -19,20 +19,33 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker {
     }
     
     
-    private static var sBombTexture:SKTexture! = nil
+    internal static var sBombTexture:SKTexture! = nil
+    internal static var sBombTexture2:SKTexture! = nil
+    
     private static var sOnce:dispatch_once_t = 0
     
     static func loadAssets() {
         dispatch_once(&Bomb.sOnce) {
             Bomb.sBombTexture = SKTexture(imageNamed: "cartoon-bomb")
+            Bomb.sBombTexture2 = SKTexture(imageNamed: "cartoon-bomb2")
         }
     }
     
     init(){
         super.init(texture: Bomb.sBombTexture, color: UIColor.blackColor(), size: Bomb.sBombTexture.size())
         
-        self.xScale = 0.25
-        self.zRotation = π * 0.5
+        setup()
+    }
+    
+    override init(texture: SKTexture?, color: UIColor, size: CGSize) {
+        super.init(texture: texture, color: color, size: size)
+        
+        setup()
+        
+    }
+    
+    private func setup() {
+        
         let body = SKPhysicsBody(texture: self.texture!, size: self.size)
         
         body.collisionBitMask = 0
@@ -49,7 +62,8 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker {
     }
 
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder: aDecoder)
+        setup()
     }
     
     //MARK: Abstract Method

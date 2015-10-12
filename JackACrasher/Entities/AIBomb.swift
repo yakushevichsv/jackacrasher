@@ -17,8 +17,16 @@ class AIBomb: Bomb {
     
     override init() {
         super.init()
-        self.xScale *= 2
-        self.yScale *= 0.5
+        
+        setup()
+    }
+    
+    override init(texture: SKTexture?, color: UIColor, size: CGSize) {
+        super.init(texture: texture, color: color, size: size)
+        setup()
+    }
+    
+    private func setup() {
         
         let action = SKAction.colorizeWithColorBlendFactor(0.7, duration:1)
         let backAction = action.reversedAction()
@@ -29,6 +37,8 @@ class AIBomb: Bomb {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        setup()
     }
     
     override func updateWithTimeSinceLastUpdate(interval:NSTimeInterval) {
@@ -105,4 +115,39 @@ class AIBomb: Bomb {
         get {return true}
     }
     
+}
+
+class BombFactory {
+    
+    func createRandomBomb() -> Bomb {
+        
+        let isAIBomb = arc4random() % 2 == 0
+        
+        return isAIBomb ? createAIBomb() : createBomb()
+    }
+    
+    private func createAIBomb() ->Bomb {
+        
+        return createBombWithIndex(1)
+    }
+    
+    private func createBomb() -> Bomb {
+        
+        return createBombWithIndex(0)
+    }
+    
+    private func createBombWithIndex(index:UInt) -> Bomb {
+        
+        if (index == 1) {
+            
+            let texture = Bomb.sBombTexture2
+            
+            return AIBomb(texture: texture, color: UIColor.whiteColor(), size: texture.size())
+        } else {
+            
+            let texture = Bomb.sBombTexture
+            
+            return Bomb(texture: texture, color: UIColor.whiteColor(), size: texture.size())
+        }
+    }
 }
