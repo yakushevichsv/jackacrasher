@@ -378,20 +378,23 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                             do {
                             let path = try NSFileManager.defaultManager().jacStoreItemToCache(path,fileName:icon.lastPathComponent)
                                 
+                                self.processingCellsImages.removeValueForKey(indexPath)
                                 var image :UIImage?
                                 if (error != nil || path == nil) {
                                     image = nil
                                 }
                                 else {
-                                    let fURL = NSURL(fileURLWithPath: path!)
-                                    image = UIImage(contentsOfFile: fURL.path!)
+                                    image = UIImage(contentsOfFile: path!)
+                                    if (image == nil){
+                                        
+                                        NSFileManager.defaultManager().jacRemoveItemFromCache(path, completion: nil)
+                                    }
                                 }
                                 
                                 dispatch_async(dispatch_get_main_queue()) {
                                     [unowned self] in
                                     
                                     self.processingCellsImages.removeValueForKey(indexPath)
-                                    
                                     
                                     for vIndexPath in collectionView.indexPathsForVisibleItems() {
                                         if (vIndexPath == indexPath && collectionViewCell == collectionView.cellForItemAtIndexPath(indexPath)) {
@@ -406,6 +409,7 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                                 
                             } catch {
                                 print("Catch error")
+                                collectionViewCell.hideActivityIndicatorAfterDonwloading()
                             }
                         }
                     }
@@ -417,7 +421,10 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                 }
                 else {
                     if let taskId = processingCellsImages[indexPath] {
-                        NetworkManager.sharedManager.resumeSuspendedTask(taskId)
+                        if (!NetworkManager.sharedManager.resumeSuspendedTask(taskId)) {
+                            processingCellsImages.removeValueForKey(indexPath)
+                            collectionViewCell.hideActivityIndicatorAfterDonwloading()
+                        }
                     }
                 }
                 

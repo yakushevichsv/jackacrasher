@@ -28,10 +28,13 @@ extension NSFileManager {
     
     func jacStoreItemToCache(path:String!,fileName:String? = nil) throws -> String? {
         
-        var fileName1 = path.lastPathComponent
+        var fileName1:String? = nil
         
         if (fileName != nil) {
             fileName1 = fileName!.lastPathComponent
+        }
+        else {
+            fileName1 = path.lastPathComponent
         }
         
         var isDir:ObjCBool = false
@@ -44,9 +47,9 @@ extension NSFileManager {
         
         let filePath = self.jacCacheDirectory.stringByAppendingPathComponent(fileName1)
         
-        
-        
-        try self.moveItemAtPath(path, toPath: filePath)
+        if !self.fileExistsAtPath(filePath) {
+            try self.moveItemAtPath(path, toPath: filePath)
+        }
         return filePath
     }
     
