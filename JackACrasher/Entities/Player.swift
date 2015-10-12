@@ -197,13 +197,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     func animeAsteroidHammerAttack(runBlock:dispatch_block_t) {
         
-        self.runAction(SKAction.sequence([SKAction.runBlock(){
-            [unowned self] in
-            self.size = SKTexture(imageNamed: "ast1").size()
-            },Player.hammerAttackAction,SKAction.waitForDuration(0.1), SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2),SKAction.runBlock(){
-                [unowned self] in
-                self.size = SKTexture(imageNamed: "astronaut2").size()
-            }]), withKey: "attackHammer")
+        self.runAction(SKAction.sequence([Player.hammerAttackAction,SKAction.waitForDuration(0.1), SKAction.animateWithTextures([Player.sBGSpriteTexture], timePerFrame: 1e-2)]), withKey: "attackHammer")
     }
     
     func hideHammer() {
