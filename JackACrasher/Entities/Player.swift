@@ -455,7 +455,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         let isLeft = vector.dx < 0
         let isUp  = vector.dy > 0
         let signX:CGFloat = isLeft ? -1 : 1
-        let xPos = sPosition.x + CGFloat(signX * (self.size.halfWidth() + 10))
+        let xPos = sPosition.x + CGFloat(signX * (self.size.width * 0.2))
         
         let position = CGPointMake(xPos, sPosition.y)
         projectile.alpha = 0.0
