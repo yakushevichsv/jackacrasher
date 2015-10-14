@@ -370,6 +370,29 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         self.setTotalScoreLabelValue()
         
+        
+        /*let shipScene = PyramidScene.pyramidScene()
+        
+        let  s = CGSizeMake(1000,500);
+        let tdNode = SK3DNode(viewportSize: s)
+        let center = self.player.position//CGPointMake(self.frame.midX, self.frame.midY)
+        tdNode.name = "3d node"
+        tdNode.position = center
+        tdNode.scnScene = shipScene
+        tdNode.zPosition = self.bgZPosition - 5
+        tdNode.pointOfView = shipScene.camera
+        //[self.tdNode setPointOfView:self.shipScene.camera];
+        tdNode.alpha = 0.5
+    
+        //tdNode.valueForKey("scnRenderer")
+        
+        addChild(tdNode)*/
+        
+        /*{
+        #warning This code is very important in iOS 8.1. Without these lines (which presumably initiate the SCNRenderer, the app crashes immediately.
+        id s1 = [self.tdNode valueForKey:@"_scnRenderer"];
+        NSLog(@"%@", s1);
+        }*/
     }
     
     func createLeftBorderEdge() {

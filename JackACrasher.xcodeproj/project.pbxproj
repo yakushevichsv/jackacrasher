@@ -89,6 +89,7 @@
 		21DDE5491B6A5A6300B41A91 /* Bomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE5481B6A5A6300B41A91 /* Bomb.swift */; };
 		21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE54A1B6A619E00B41A91 /* AIBomb.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
+		21E053051BCEAF2700F7E4AD /* PyramidScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E053041BCEAF2700F7E4AD /* PyramidScene.swift */; settings = {ASSET_TAGS = (); }; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
 		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
 		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
@@ -209,6 +210,7 @@
 		21DDE5481B6A5A6300B41A91 /* Bomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bomb.swift; path = Entities/Bomb.swift; sourceTree = "<group>"; };
 		21DDE54A1B6A619E00B41A91 /* AIBomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AIBomb.swift; path = Entities/AIBomb.swift; sourceTree = "<group>"; };
 		21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Game_Robot.ttf; sourceTree = "<group>"; };
+		21E053041BCEAF2700F7E4AD /* PyramidScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PyramidScene.swift; sourceTree = "<group>"; };
 		21E56B2C1ADA93BB0071A217 /* Engine.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = Engine.sks; path = JackACrasher/Particles/Engine.sks; sourceTree = "<group>"; };
 		21E56B2D1ADA93BB0071A217 /* spark.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = spark.png; path = JackACrasher/Particles/spark.png; sourceTree = "<group>"; };
 		21E56B311ADA9C2A0071A217 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = Entities/Player.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				21FFEAEC1AD5E216000115F6 /* GameScene.swift */,
 				217340FF1AFE54AB009E934A /* GameOverScene.sks */,
 				217341011AFE54C1009E934A /* GameOverScene.swift */,
+				21E053061BCEAF2E00F7E4AD /* SCNScene */,
 			);
 			name = Scenes;
 			sourceTree = "<group>";
@@ -457,6 +460,14 @@
 				210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		21E053061BCEAF2E00F7E4AD /* SCNScene */ = {
+			isa = PBXGroup;
+			children = (
+				21E053041BCEAF2700F7E4AD /* PyramidScene.swift */,
+			);
+			name = SCNScene;
 			sourceTree = "<group>";
 		};
 		21E56B301ADA93C10071A217 /* Particles */ = {
@@ -745,6 +756,7 @@
 				218F24B31B35AF56008C085F /* NetworkManager.swift in Sources */,
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
+				21E053051BCEAF2700F7E4AD /* PyramidScene.swift in Sources */,
 				21F7956A1B555788003464BF /* SurvivalGameInfo.swift in Sources */,
 				217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */,
 				21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */,
