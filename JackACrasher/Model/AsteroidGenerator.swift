@@ -346,6 +346,12 @@ class AsteroidGenerator: NSObject {
             sprite = SKSpriteNode(texture: texture)
             sprite.size = texture!.size()
             
+            sprite.name = textName
+            sprite.physicsBody = SKPhysicsBody(texture: texture!, size: texture!.size())
+            //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+            sprite.physicsBody!.categoryBitMask = EntityCategory.TrashAsteroid
+            sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
+            sprite.physicsBody!.collisionBitMask = EntityCategory.TrashAsteroid
             
             var speed = self.trashAvg
             if (arc4random()%3 == 1) {
@@ -379,13 +385,12 @@ class AsteroidGenerator: NSObject {
             let moveDelAction = SKAction.group([SKAction.sequence([moveAct,SKAction.runBlock({ () -> Void in
                 self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: sprite, withType: .Trash)
             }),SKAction.removeFromParent()]), rotateAlways,blinkInOut])
-            sprite.runAction(moveDelAction,withKey: actName )
             
             let yMargin = round(1.2*max(sprite.size.width,sprite.size.height)) + 10
             let divisor = UInt32(CGRectGetHeight(self.playableRect) - 2*yMargin)
             
             var yPos  = CGFloat(arc4random() % divisor) + yMargin
-            var xMargin = sprite.zRotation != 0 ? sprite.size.height : sprite.size.width
+            var xMargin = (sprite.zRotation != 0 ? sprite.size.height : sprite.size.width)
             
             var curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
             
@@ -396,7 +401,7 @@ class AsteroidGenerator: NSObject {
                 var wasInside = false
                 
                 while (CGRectIntersectsRect(prevFrame, curFrame)) {
-                    xMargin -= CGFloat(arc4random() % UInt32(sprite.size.width))
+                    xMargin += CGFloat(arc4random() % UInt32(sprite.size.width))
                     yPos =  CGFloat(arc4random() % divisor) + yMargin
                     curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
                     wasInside = true
@@ -411,15 +416,10 @@ class AsteroidGenerator: NSObject {
             
             sprite.anchorPoint = CGPointMake(0.5, 0.5)
             sprite.position = CGPointMake(CGRectGetWidth(self.playableRect) + xMargin, yPos)
+            sprite.runAction(moveDelAction,withKey: actName )
             
             print("Trash # \(index) sprite: \(sprite)")
             
-            sprite.name = textName
-            sprite.physicsBody = SKPhysicsBody(texture: texture!, size: texture!.size())
-            //sprite.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
-            sprite.physicsBody!.categoryBitMask = EntityCategory.TrashAsteroid
-            sprite.physicsBody!.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
-            sprite.physicsBody!.collisionBitMask = EntityCategory.TrashAsteroid
             
             sprites.append(sprite)
         }
