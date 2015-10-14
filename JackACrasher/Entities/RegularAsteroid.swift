@@ -115,7 +115,7 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         var f_size:CGFloat
         
         var isLittle:Bool = false
-        var multiplicator:CGFloat = 1.0
+        let multiplicator:CGFloat = 1.0
         switch (asteroid) {
         case .Medium:
             partName = "medium"
@@ -135,15 +135,14 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
             break
         case .Big:
             partName = "large"
-            multiplicator = 0.8
-            w_R = 20
-            w_r = 14
-            f_size = 100
+            w_R = 10
+            w_r = 6
+            f_size = 50
             
             break
         }
         if (!partName.isEmpty) {
-            nodeName = nodeName.stringByAppendingString(partName)
+            nodeName = nodeName.stringByAppendingFormat("%@@%dx", partName,Int(UIScreen.mainScreen().scale))
         }
         
         self.maxLife = maxLife
@@ -165,6 +164,10 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         
         super.init(texture: texture, color: UIColor.blueColor(), size: size)
         
+        let shapeNode = SKShapeNode(rectOfSize: self.size)
+        shapeNode.strokeColor = UIColor.redColor()
+        shapeNode.position = CGPointZero// CGPointMake(self.size.halfWidth(), self.size.halfHeight())
+        addChild(shapeNode)
         
         if (!isLittle) {
             self.cropNode.addChild(self.digitNode)

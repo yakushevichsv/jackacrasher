@@ -45,15 +45,15 @@ class DirectRope: Rope {
             
             var vectDiff = (self.connectionB.position - self.connectionA.position)
             
-            var length = vectDiff.length()
+            let length = vectDiff.length()
             
-            if let node1 = self.connectionB.node as? SKSpriteNode {
+            /*if let node1 = self.connectionB.node as? SKSpriteNode {
                 length -= node1.size.width * 0.5
-            }
+            }*/
             
-            if let node2 = self.connectionA.node as? SKSpriteNode {
+            /*if let node2 = self.connectionA.node as? SKSpriteNode {
                 length -= node2.size.width * 0.5
-            }
+            }*/
             
             self.numberOfSteps = Int(ceilf(Float(length/self.ringLength)))
             vectDiff = vectDiff.normalized()

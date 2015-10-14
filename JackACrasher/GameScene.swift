@@ -375,14 +375,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createLeftBorderEdge() {
         
         let lEdge:SKNode = SKNode()
-        let w1 = CGRectGetMinX(self.playableArea) - (self.player.size.maxSizeParam()*0.5)
+        let w1 = CGRectGetMinX(self.playableArea)
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
         lEdge.name = Constants.LeftEdge
         lEdge.physicsBody = SKPhysicsBody(edgeFromPoint: p1, toPoint: p2)
         lEdge.physicsBody!.contactTestBitMask = EntityCategory.Player
-        lEdge.physicsBody!.collisionBitMask = 0
+        lEdge.physicsBody!.collisionBitMask = EntityCategory.Player
         lEdge.physicsBody!.categoryBitMask = EntityCategory.LeftEdgeBorder
         lEdge.physicsBody!.dynamic = false
         addChild(lEdge)
