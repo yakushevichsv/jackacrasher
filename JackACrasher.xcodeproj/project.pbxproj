@@ -40,10 +40,6 @@
 		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
-		2160E7311BCBA5AF00F7A886 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E72D1BCBA5AF00F7A886 /* Crashlytics.framework */; settings = {ASSET_TAGS = (); }; };
-		2160E7321BCBA5AF00F7A886 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E72E1BCBA5AF00F7A886 /* Fabric.framework */; settings = {ASSET_TAGS = (); }; };
-		2160E7331BCBA5AF00F7A886 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E72F1BCBA5AF00F7A886 /* TwitterCore.framework */; settings = {ASSET_TAGS = (); }; };
-		2160E7341BCBA5B000F7A886 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2160E7301BCBA5AF00F7A886 /* TwitterKit.framework */; settings = {ASSET_TAGS = (); }; };
 		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
 		2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */; };
 		2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C71B3BFF39003253C5 /* CloudManager.swift */; };
@@ -162,10 +158,6 @@
 		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
-		2160E72D1BCBA5AF00F7A886 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
-		2160E72E1BCBA5AF00F7A886 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
-		2160E72F1BCBA5AF00F7A886 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = "<group>"; };
-		2160E7301BCBA5AF00F7A886 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = "<group>"; };
 		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
 		2163A8C21B3BE6C5003253C5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 		2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudUserInfo.swift; path = Model/iCloud/CloudUserInfo.swift; sourceTree = "<group>"; };
@@ -259,10 +251,6 @@
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
 				210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */,
 				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
-				2160E7311BCBA5AF00F7A886 /* Crashlytics.framework in Frameworks */,
-				2160E7321BCBA5AF00F7A886 /* Fabric.framework in Frameworks */,
-				2160E7331BCBA5AF00F7A886 /* TwitterCore.framework in Frameworks */,
-				2160E7341BCBA5B000F7A886 /* TwitterKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -576,10 +564,6 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				2160E72D1BCBA5AF00F7A886 /* Crashlytics.framework */,
-				2160E72E1BCBA5AF00F7A886 /* Fabric.framework */,
-				2160E72F1BCBA5AF00F7A886 /* TwitterCore.framework */,
-				2160E7301BCBA5AF00F7A886 /* TwitterKit.framework */,
 				21CEEFAA1B9CCB2D008937A2 /* iAd.framework */,
 				210CE8731B8BC93C00C9F288 /* VKSdk.framework */,
 				210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */,

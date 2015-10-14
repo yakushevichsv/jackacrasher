@@ -8,8 +8,6 @@
 
 import UIKit
 import FBSDKCoreKit
-import Fabric
-import TwitterKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

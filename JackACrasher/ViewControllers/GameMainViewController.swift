@@ -8,8 +8,8 @@
 
 import UIKit
 import GameKit
+import Social
 import FBSDKShareKit
-import TwitterKit
 
 class GameMainViewController: UIViewController {
 
@@ -692,31 +692,30 @@ class GameMainViewController: UIViewController {
     //MARK: Twitter's methos
     private func shareOnTweeter() {
         
-        Twitter.sharedInstance().logInWithCompletion() {[unowned self]
-            session, error in
-            if (session != nil) {
-                if self.view.window != nil {
-                    let composer = TWTRComposer()
-                    
-                    composer.setText("I am playing on JackACrasher!")
-                    composer.setImage(UIImage(named: "player"))
-                    composer.setURL(NSURL(string: "https://developers.facebook.com"))
-                    // Called from a UIViewController
-                    composer.showFromViewController(self) { result in
-                        if (result == TWTRComposerResult.Cancelled) {
-                            print("Tweet composition cancelled")
-                        }
-                        else {
-                            print("Sending tweet!")
-                            self.alertWithTitle("Success", message: "Thanks for tweeting!", actionTitle: nil)
-                        }
-                    }
-                }
-                // make API calls that do not require user auth
-            } else {
-                print("error: \(error?.localizedDescription)");
+        if !SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
+            
+            self.alertWithTitle("Sorry", message: "You can\'t send a tweet right now,\n make sure your device has an internet connection and you have\n at least one Twitter account setup", actionTitle: "OK", completion: nil)
+            return
+        }
+        
+        let tweetSheet = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
+        tweetSheet.setInitialText("I am playing on JackACrasher!")
+        tweetSheet.addImage(UIImage(named: "enemyShip"))
+        tweetSheet.addURL(NSURL(string: "https://developers.facebook.com"))
+        
+        tweetSheet.completionHandler = {
+            (result) in
+            
+            if result == SLComposeViewControllerResult.Cancelled {
+                print("Tweet composition cancelled")
+            }
+            else {
+                print("Sending tweet!")
+                self.alertWithTitle("Success", message: "Thanks for tweeting!", actionTitle: nil)
             }
         }
+        
+        self.presentViewController(tweetSheet, animated: true, completion: nil)
     }
     
 
