@@ -168,7 +168,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     private func createPhysicsBody() {
     
-        let aPhysBody = SKPhysicsBody(rectangleOfSize: self.size)
+        let aPhysBody =  SKPhysicsBody(texture: self.texture!, size: self.size)
         aPhysBody.categoryBitMask = EntityCategory.Player
         aPhysBody.contactTestBitMask =  EntityCategory.BlackHole
         aPhysBody.collisionBitMask = 0

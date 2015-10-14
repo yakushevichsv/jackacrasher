@@ -115,16 +115,8 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         var f_size:CGFloat
         
         var isLittle:Bool = false
-        let multiplicator:CGFloat = 1.0
+        var multiplicator:CGFloat = 1.0
         switch (asteroid) {
-        case .Medium:
-            partName = "medium"
-            
-            w_R = 10
-            w_r = 5
-            f_size = 30
-            
-            break
         case .Small:
             partName = "small"
             
@@ -133,7 +125,16 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
             f_size = 10
             isLittle = true
             break
+        case .Medium:
+            multiplicator = 1.5
+            partName = "large"
+            w_R = 10
+            w_r = 6
+            f_size = 50
+            
+            break
         case .Big:
+            multiplicator = 2.0
             partName = "large"
             w_R = 10
             w_r = 6

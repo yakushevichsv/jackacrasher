@@ -375,7 +375,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     func createLeftBorderEdge() {
         
         let lEdge:SKNode = SKNode()
-        let w1 = CGRectGetMinX(self.playableArea)
+        let w1 = CGRectGetMinX(self.playableArea) - self.player.size.halfWidth()
         let p1 = CGPointMake(w1, 0)
         let p2 = CGPointMake(w1, CGRectGetHeight(self.playableArea))
         
