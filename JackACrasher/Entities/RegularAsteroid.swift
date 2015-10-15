@@ -124,21 +124,21 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
             w_r = 2
             f_size = 10
             isLittle = true
+            
             break
         case .Medium:
-            multiplicator = 1.5
-            partName = "large"
-            w_R = 10
-            w_r = 6
-            f_size = 50
+            partName = "medium"
+            w_R = 8
+            w_r = 4
+            f_size = 30
             
             break
         case .Big:
-            multiplicator = 2.0
+            multiplicator = 1.0
             partName = "large"
-            w_R = 10
-            w_r = 6
-            f_size = 50
+            w_R = 8
+            w_r = 4
+            f_size = 30
             
             break
         }
@@ -157,6 +157,9 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
             w_R *= multiplicator
             w_r *= multiplicator
             f_size *= multiplicator
+            f_size = round(f_size)
+            w_r = round(w_r)
+            w_R = round(w_R)
         }
         
         self.digitNode = DigitNode(size: size, digit: maxLife,params:[w_R,w_r,f_size])
