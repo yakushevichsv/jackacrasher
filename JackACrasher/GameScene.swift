@@ -1077,6 +1077,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             generator.paused = false
             break
         case .Regular:
+            
+            for node in didProduceAsteroids {
+                if let regAster = node as? RegularAsteroid {
+                    if self.player.canThrowProjectile() && regAster.maxLife != 0 {
+                        regAster.maxLife = 1.0
+                    }
+                }
+            }
+            
             if self.childNodeWithName(Transmitter.NodeName) == nil {
                 self.player.disableProjectileGun()
             }
@@ -1740,6 +1749,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         
                     }
                     else {
+                        entityBody?.node?.removeFromParent()
                            self.shakeCamera(regAster, duration: 0.8)
                     }
                 }

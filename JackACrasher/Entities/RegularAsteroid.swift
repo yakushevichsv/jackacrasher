@@ -87,7 +87,11 @@ extension SKNode {
 class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
     private let digitNode:DigitNode!
     private let cropNode:ProgressTimerCropNode!
-    private let maxLife:ForceType
+    var maxLife:ForceType {
+        didSet {
+            self.digitNode?.digit = maxLife
+        }
+    }
     private let displayAction = "displayAction"
     private let asterSize:RegularAsteroidSize
     
@@ -256,6 +260,16 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         if (result < 0) {
             result = 0
         }
+        
+        
+        if (result == 0 && maxLife > 1){
+            maxLife -= 1
+            result = maxLife
+        }
+        else {
+            maxLife = result
+        }
+        
         self.health = result
         
         return result == 0
