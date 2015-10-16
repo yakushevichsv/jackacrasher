@@ -49,7 +49,7 @@ enum PlayerFlyDistance {
 }
 
 private let playerBGNodeName = "playerBGNode"
-private let playerImageName = "player"
+private let playerImageName = "astronaut2"
 
 private let hammerImageName = "throw_hammer"
 private let hammerNodeName = "throwHammer"
@@ -88,9 +88,6 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     internal static func loadAssets() {
        
         dispatch_once(&sContext) { () -> Void in
-           let playerSprite = SKTexture(imageNamed: playerImageName)
-            Player.sBGSpriteTexture = playerSprite
-            
             
             if let emitter = SKEmitterNode(fileNamed: damageEmitterNode) {
                 emitter.name = damageEmitterNodeName
@@ -114,6 +111,9 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 let texturesAct = SKAction.animateWithTextures(textures, timePerFrame: timePerFrame)
                 
                 self.hammerAttackAction = texturesAct
+                
+                let playerSprite = self.spritesAtlas.textureNamed(playerImageName)
+                Player.sBGSpriteTexture = playerSprite
                 
                 
                 var flyTextures:[SKTexture] = []

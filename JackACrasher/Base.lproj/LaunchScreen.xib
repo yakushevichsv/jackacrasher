@@ -150,8 +150,8 @@
         <image name="asteroid-large" width="208" height="225"/>
         <image name="enemy-bullet-rot-45" width="62" height="62"/>
         <image name="enemy-bullet-rot45" width="62" height="62"/>
-        <image name="enemyShip" width="62" height="57"/>
+        <image name="enemyShip" width="69" height="63"/>
         <image name="explosion0001" width="200" height="200"/>
-        <image name="player-flipped" width="33" height="54"/>
+        <image name="player-flipped" width="43" height="62"/>
     </resources>
 </document>

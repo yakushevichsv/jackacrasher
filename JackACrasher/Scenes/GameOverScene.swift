@@ -132,8 +132,17 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
     private func createMoveActionForEnemy(attacker:SKSpriteNode!) {
         
         let playerPos = self.player.position
+        let distDiff = (attacker.position - playerPos)
         
-        let distance = (attacker.position - playerPos).length()
+        let distance = distDiff.length()
+        
+        if distDiff.x > 0 {
+            attacker.xScale = 1.0
+        }
+        else {
+            attacker.xScale = -1.0
+        }
+        
         let act = SKAction.moveTo(playerPos, duration: NSTimeInterval(distance/EnemySpaceShip.Constants.speed))
         attacker.runAction(act)
     }
@@ -228,15 +237,14 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
                 
                 
             let moveToAction = SKAction.moveTo(tPoint, duration: NSTimeInterval(duration))
-            let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,second: tPoint), duration: NSTimeInterval(min(duration,0.05)))
             let removeAction = SKAction.removeFromParent()
             bullet.position = sPoint
             
             print("Bullet from point \(sPoint) to point: \(tPoint)")
             
             addChild(bullet)
-            bullet.runAction(SKAction.sequence([SKAction.group([moveToAction,rotateAction]),removeAction]))
-            
+            bullet.runAction(SKAction.sequence([moveToAction,removeAction]))
+            bullet.zRotation = diff.angle
             bullet.name = Constants.bulletName
                 
             }

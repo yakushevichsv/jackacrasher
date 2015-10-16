@@ -935,6 +935,16 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     //MARK: Asteroid Generator's delegate methods
     func didMoveOutAsteroidForGenerator(generator: AsteroidGenerator, asteroid: SKNode, withType type: AsteroidType) {
         
+        /*let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter
+        
+        var isUnderTransmitter:Bool
+        if let value = transmitter?.transmitterKeepsAPlayer() {
+            isUnderTransmitter = value
+        }
+        else {
+            isUnderTransmitter = false
+        }*/
+        
         switch (type) {
         case .Trash:
             if (self.trashAsteroidsCount != 0 && asteroid.parent != nil) {
@@ -981,7 +991,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         case .Regular:
 //HACK: #warning "HACK"
             
-            if returnPlayerToScene(asteroid) {
+            if self.player.parent == asteroid && returnPlayerToScene(asteroid) {
                 self.player.hideHammer()
             }
             

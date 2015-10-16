@@ -36,7 +36,7 @@ class Transmitter:SKNode,AssetsContainer {
     private weak var basementNode:SKShapeNode! = nil
     private weak var rayNode:SKShapeNode! = nil
     private weak var laserNode:SKEmitterNode! = nil
-    private weak var transmitNode:Player! = nil
+    private var transmitNode:Player! = nil
     
     private static var sLaserEmitter:SKEmitterNode!
     private static var sOne:dispatch_once_t = 0
@@ -45,7 +45,7 @@ class Transmitter:SKNode,AssetsContainer {
     private let size:CGSize
     private let beamHeight:CGFloat
     
-    private var capturedNodeName:String = "CapturedNodeName"
+    private var capturedNodeName:String! = ""
     
     static func loadAssets() {
         dispatch_once(&sOne) {
@@ -139,6 +139,11 @@ class Transmitter:SKNode,AssetsContainer {
         
     }
     
+    /*internal func transmitterKeepsAPlayer() -> Bool {
+        
+        return self.transmitNode.parent == Optional<SKNode>(self)
+    }*/
+    
     internal func underRayBeam(node:SKNode!) -> Bool {
         
         if node.parent != nil &&  node.parent! == self {
@@ -159,19 +164,24 @@ class Transmitter:SKNode,AssetsContainer {
         return isUnder
     }
     
-    private func appendToChildren(item:SKNode!) {
-        if item.parent! == self {
+    private func appendToChildren(item:Player!,scenePosition:CGPoint) {
+        if item.parent == Optional<SKNode>(self) {
             return
         }
         
-        let sPosition = item.parent!.convertPoint(item.position, toNode:scene!)
-        let nPosition = scene!.convertPoint(sPosition, toNode: self)
-        
-        item.position = nPosition
-        item.zPosition = self.zPosition
-        
+        let location = item.scene!.convertPoint(item.position, toNode: self)
         item.removeFromParent()
-        addChild(item)
+        item.position = location
+        self.addChild(item)
+        var location2 = item.scene!.convertPoint(scenePosition, toNode: self)
+        location2.x  += item.size.halfWidth()
+        item.moveToPoint(location2)
+        
+        item.enableProjectileGun()
+        
+        if item.name != nil && !item.name!.isEmpty {
+            self.capturedNodeName = item.name!
+        }
     }
     
     
@@ -205,12 +215,12 @@ class Transmitter:SKNode,AssetsContainer {
         
         self.transmitNode = node
         
+        appendToChildren(node, scenePosition: position)
+        
         let yDiff = fabs(self.position.y - position.y + itemSize.halfHeight())
         
         let duration = NSTimeInterval(yDiff/Transmitter.Constants.beamSpeed)
        
-        
-        //appendToChildren(node)
         
         let custAction = SKAction.customActionWithDuration(duration) {
             [unowned self]
@@ -226,29 +236,6 @@ class Transmitter:SKNode,AssetsContainer {
         }
         array.append(custAction)
 
-        let moveOwnership = SKAction.runBlock(){
-            [unowned self] in
-            
-            if self.exitActionForNode(node, completion: completion) {
-                return
-            }
-            
-            let location = node.parent!.convertPoint(node.position, toNode: self)
-            node.removeFromParent()
-            node.position = location
-            self.state = .Transferring
-            
-            if node.name != nil && !node.name!.isEmpty {
-                self.capturedNodeName = node.name!
-            }
-            else {
-                assertionFailure("Name was empty!")
-            }
-            
-            self.addChild(node)
-        }
-        
-        array.append(moveOwnership)
         
         let moveAction = SKAction.moveToX(destPosition.x, duration: NSTimeInterval(fabs(position.x - destPosition.x)/Transmitter.Constants.movingSpeed) )
         array.append(moveAction)
@@ -261,7 +248,6 @@ class Transmitter:SKNode,AssetsContainer {
         let expandBeamAction = SKAction.customActionWithDuration(duration2) {
             [unowned self]
             node, time in
-            
             if self.exitActionForNode(node, completion: completion) {
                 return
             }
@@ -293,11 +279,13 @@ class Transmitter:SKNode,AssetsContainer {
     
     
     private func restoreCapturedNode() {
-        if let capturedNode = self.childNodeWithName(self.capturedNodeName) {
+        if let capturedNode = self.capturedNodeName != nil ? self.childNodeWithName(self.capturedNodeName) : self.transmitNode {
             let sPosition = self.convertPoint(capturedNode.position, toNode: self.scene!)
             capturedNode.position = sPosition
             capturedNode.removeFromParent()
             self.scene!.addChild(capturedNode)
+            self.capturedNodeName = nil
+            self.transmitNode = nil
         }
     }
     
@@ -386,12 +374,20 @@ class Transmitter:SKNode,AssetsContainer {
                 }
             })
             
-            if (self.transmitNode.parent == nil ||  self.transmitNode.parent! != self) {
+            if (self.transmitNode.parent != Optional<SKNode>(self)) {
                 if let sPoint = self.transmitNode.parent?.convertPoint(self.transmitNode.position, toNode: self) {
-                    self.transmitNode.removeFromParent()
                     self.transmitNode.position = sPoint
                 }
-                addChild(self.transmitNode)
+                self.transmitNode.removeFromParent()
+                self.addChild(self.transmitNode)
+                self.transmitNode.enableProjectileGun()
+                
+                if transmitNode.name != nil && !transmitNode.name!.isEmpty {
+                    self.capturedNodeName = transmitNode.name!
+                }
+                else {
+                    assertionFailure("Name was empty!")
+                }
             }
             
             

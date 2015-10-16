@@ -71,6 +71,8 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     //MARK: Attacker protocol
     func updateWithTimeSinceLastUpdate(interval: NSTimeInterval) {
         
+        self.zRotation = 0
+        
         if self.target == nil {
             return
         }
@@ -151,7 +153,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         
         let sPoint = self.parent!.convertPoint(self.position, toNode:self.scene!)
         
-        var tPoint = self.target?.parent != nil ? self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!) : self.position
+        var tPoint = self.target?.parent != nil ? self.target!.parent!.convertPoint(self.target!.position, toNode: self.scene!) : self.target!.position
         
         let diff = tPoint - sPoint
         
@@ -178,14 +180,13 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let tPoint2 = CGPointMake(0, tPoint.y - extraY)
         
         let moveToAction = SKAction.moveTo(tPoint2, duration: NSTimeInterval(duration))
-        let rotateAction = SKAction.rotateToAngle(radiansBetweenPoints(sPoint,second: tPoint), duration: 0)
         let removeAction = SKAction.removeFromParent()
         bullet.position = sPoint
         
         
         print("Bullet from point \(sPoint) to point: \(tPoint)")
-       
-        bullet.runAction(SKAction.sequence([rotateAction,moveToAction,removeAction]))
+        bullet.zRotation = diff.angle
+        bullet.runAction(SKAction.sequence([moveToAction,removeAction]))
         
         self.scene?.addChild(bullet)
        
@@ -210,7 +211,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
             let node = SKSpriteNode(texture: texture)
             let body = SKPhysicsBody(texture: texture, size: texture.size())
             body.categoryBitMask = EntityCategory.EnemySpaceShipLaser
-            body.collisionBitMask = EntityCategory.EnemySpaceShip | EntityCategory.EnemySpaceShipLaser
+            body.collisionBitMask = 0
             body.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
             body.fieldBitMask = 0
             node.physicsBody = body
