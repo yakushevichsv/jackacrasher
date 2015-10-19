@@ -105,9 +105,10 @@ class AIBomb: Bomb {
     
     private func faceTo(position:CGPoint) -> CGFloat {
     
-        let ang = radiansBetweenPoints(self.position, second: position)
+        let diff = self.position - position
+        let ang = diff.angle
         
-        self.zRotation = π * 1.5 + ang
+        self.zRotation = ang
         return ang
     }
     

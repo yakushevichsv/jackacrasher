@@ -79,7 +79,6 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     var health: ForceType = 100
     
     private var prevTimeInterval:NSTimeInterval = 0
-    private var projectileCount:UInt = 0
     
     internal var isCaptured:Bool {
         get {return self.parent != self.scene }
@@ -570,7 +569,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
             if self.timeLeftLabel == nil {
                 let node = SKLabelNode()
                 node.fontSize = 15
-                node.position = CGPointMake(self.size.halfWidth(), self.size.halfHeight())
+                node.position = CGPointMake(self.size.halfWidth() * 0.6, self.size.halfHeight())
                 self.timeLeftLabel = node
                 //node.colorBlendFactor = 1.0
                 self.addChild(node)
@@ -587,18 +586,18 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
             self.xScale = xScale
         }
         
-        var margin = now - self.prevTimeInterval
+        let margin = now - self.prevTimeInterval
+        let upperBorder:Double = 3
         
-        if margin >= 2 {
+        if margin >= upperBorder {
             self.prevTimeInterval = now
                 throwProjectileToLocation(location)
-                self.projectileCount++
-                margin = 0
-                if (self.projectileCount == 10) {
-                    self.prevTimeInterval += 1
-                }
+            
+            self.timeLeftLabel.hidden = true
         }
-        self.timeLeftLabel.text = "\(UInt(2 - margin + 1))"
+        else {
+            self.timeLeftLabel.text = "\(UInt(upperBorder - margin + 1))"
+        }
         
     }
     
