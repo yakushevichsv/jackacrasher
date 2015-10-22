@@ -73,7 +73,7 @@ class EnemiesGenerator: NSObject {
     
     internal func start() {
         
-        return
+        //return
             
         canFire = true
         if !self.timer.valid {
@@ -270,6 +270,20 @@ class EnemiesGenerator: NSObject {
                     [unowned self] in
                     self.delegate?.didDissappearItemForEnemiesGenerator(self,item:hole,type:.BlackHole)
                 }
+                
+            }
+        }
+    }
+    
+    //MARK: Debug functions
+    
+    internal func appendToSceneBlackHoleAtPosition(position:CGPoint) {
+    
+        let node = produceBlackHoleItem() as! BlackHole
+        node.position = position
+        if let scene = self.delegate as? GameScene {
+            scene.addChild(node)
+            node.presentHole() {
                 
             }
         }

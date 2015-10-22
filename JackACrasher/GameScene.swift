@@ -60,7 +60,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private var  hudNode:HUDNode!
     
     var trashAsteroidsCount:Int = 0
-    private weak var player:Player!
+    private  var player:Player!
     
     var healthRatio:Float {
         get { return Float(self.player.health % 100) }
@@ -759,6 +759,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                             return
                         }
                         else {
+                            
+                            if self.player.isUnderBlackHole() {
+                                return
+                            }
+                            
                             if (transmitter.underRayBeam(self.player!) && !self.player.isCaptured) {
                                 returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true)
                             }
@@ -773,7 +778,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     transmitter.transmitAnItem(item: self.player, itemSize: self.player.size, toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y)) {
                         [unowned self] in
                         self.enemyGenerator.paused = false
-                    }
+                        //#if DEBUG
+                           self.enemyGenerator.appendToSceneBlackHoleAtPosition(self.player.parent!.convertPoint(self.player.position, toNode: self))
+                        //#endif
+                        }
                 }
             }
     }
@@ -1270,6 +1278,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if (asteroid.isFiring) {
                 
+                if let contactTime  = asteroid.userData?.valueForKey("syContactTime") {
+                    
+                    if NSDate.timeIntervalSinceReferenceDate() - contactTime.doubleValue! < 1 {
+                        return true
+                    }
+                }
+                
                 let damageForce = asteroid.damageForce
                 
                 if (self.tryToDestroyPlayer(damageForce)) {
@@ -1298,8 +1313,24 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             if (!CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
                 let posNormalized = (self.player.position - self.prevPlayerPosition)
                 self.player.placeAtPoint(contact.contactPoint)
+                self.player.removeAllActions()
                 impulse = CGVector(dx: posNormalized.x, dy: posNormalized.y)
             }
+            
+            impulse.dx *= contact.collisionImpulse
+            impulse.dy *= contact.collisionImpulse
+            
+            asteroid.physicsBody?.applyImpulse(impulse)
+            
+            
+            if asteroid.userData == nil {
+                asteroid.userData = ["syContactTime":NSDate.timeIntervalSinceReferenceDate()]
+            }
+            else {
+               let mUserData = asteroid.userData!
+                mUserData.setObject(NSDate.timeIntervalSinceReferenceDate(), forKey: "syContactTime")
+            }
+            
             emulateImpulse(forAsteroid: asteroid, direction: impulse)
             
             asteroid.startFiringAtDirection(impulse, point: self.convertPoint(contact.contactPoint, toNode: asteroid))
@@ -1908,27 +1939,30 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         parent.runAction(SKAction.sequence([scaleAction,SKAction.removeFromParent()]))
                     }
                 }
+                let itemPos = contact.contactPoint
                 
-                let itemPos = secondNode.parent?.convertPoint(secondNode.position, toNode: blackHoleNode.parent!)
+                
                 secondNode.removeFromParent()
-                blackHoleNode.parent?.addChild(secondNode)
-                secondNode.position = itemPos!
+                secondNode.removeAllActions()
+                secondNode.position = itemPos
+                addChild(secondNode)
             }
             
             
-            
-            secondNode.physicsBody?.categoryBitMask = 0
+            if self.player == secondNode {
+                self.player.influencedByBlackHole()
+            }
+            else {
+                secondNode.physicsBody?.categoryBitMask = 0
+            }
         }
 
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
         
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-            Int64(durationToWait * Double(NSEC_PER_SEC)))
-        
-        dispatch_after(delayTime, dispatch_get_main_queue()){
-            [unowned self] in 
+        blackHoleNode.runAction(SKAction.sequence([SKAction.waitForDuration(durationToWait),SKAction.runBlock(){
+            [unowned self] in
             self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
-        }
+            }]))
         
         return true
     }
@@ -1979,6 +2013,11 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
+    }
+    
+    func didEndContact(contact: SKPhysicsContact) {
+        
+         print("\(contact)")
     }
     
     

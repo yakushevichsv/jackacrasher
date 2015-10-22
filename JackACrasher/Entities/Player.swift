@@ -167,12 +167,28 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     private func createPhysicsBody() {
     
-        let aPhysBody =  SKPhysicsBody(texture: self.texture!, size: self.size)
+       let size = CGSizeMake(40, 64);
+        let center = CGPointMake(-8, self.texture!.size().halfHeight()*0.05)
+        
+        var origin = center
+        origin.x -= size.halfWidth()
+        origin.y -= size.halfHeight()
+        
+        let path = UIBezierPath(ovalInRect: CGRect(origin: origin, size: size))
+        
+        let aPhysBody =  SKPhysicsBody(polygonFromPath: path.CGPath)
+        
         aPhysBody.categoryBitMask = EntityCategory.Player
-        aPhysBody.contactTestBitMask =  EntityCategory.BlackHole
+        aPhysBody.contactTestBitMask =  0
         aPhysBody.collisionBitMask = 0
         enableGravityReceptivity()
         self.physicsBody = aPhysBody
+        
+        
+        let shapeNode = SKShapeNode(path: path.CGPath)
+        shapeNode.position = center
+        shapeNode.strokeColor = UIColor.redColor()
+        addChild(shapeNode)
     }
     
     //MARK:Player's gravity receptivity
@@ -600,6 +616,17 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         }
         
     }
+    
+    //MARK: Black Hole affection 
+    
+    func influencedByBlackHole() {
+        self.physicsBody?.categoryBitMask = 0
+    }
+    
+    func isUnderBlackHole()-> Bool {
+        return self.physicsBody?.categoryBitMask == Optional<UInt32>(0)
+    }
+    
     
     //MARK: Laser force 
     class var laserForce : ForceType {

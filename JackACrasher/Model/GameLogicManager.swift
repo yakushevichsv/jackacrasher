@@ -723,14 +723,14 @@ extension GameLogicManager {
     
     internal func storeGameSoundInfo(noSound:Bool) -> Bool {
         let def = NSUserDefaults.standardUserDefaults()
-        let key = getPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+        let key = "Me".stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
         def.setBool(noSound, forKey: key)
         return def.synchronize()
     }
     
     internal func gameSoundDisabled() -> Bool {
         let def = NSUserDefaults.standardUserDefaults()
-        let key = getPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+        let key = "Me".stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
         
         return def.boolForKey(key)
     }

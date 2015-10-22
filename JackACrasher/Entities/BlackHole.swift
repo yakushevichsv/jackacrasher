@@ -13,12 +13,17 @@ import SpriteKit
 
 class BlackHole: SKNode,ItemDamaging,AssetsContainer {
     private static let gravityNodeName = "gravityNode"
-    private weak var springField:SKFieldNode!
-    
     private static var radius:CGFloat = 0
     private static var animAction:SKAction! = nil
     private static var sTextures:[SKTexture]!
     private static var sContext:dispatch_once_t = 0
+    
+    private let time1 = NSTimeInterval(2)
+    private let time2 = NSTimeInterval(1)
+    private let count = 3
+    private let time3 = NSTimeInterval(4)
+    
+    private var presentTime:NSTimeInterval = 0
     
     private weak var bgNode:SKSpriteNode!
     
@@ -26,7 +31,6 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
         super.init()
        
         self.definePhysBody()
-        self.appendGravity()
         self.appendBGSprite()
         
         setFieldState(false)
@@ -58,35 +62,18 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
         let body = SKPhysicsBody(circleOfRadius: BlackHole.radius)
         body.dynamic = false
         body.categoryBitMask = 0
-        body.contactTestBitMask = 0
+        body.contactTestBitMask = EntityCategory.Player
         body.collisionBitMask = 0
         body.fieldBitMask = 0
         self.physicsBody = body
         self.name = blackHoleName
     }
     
-    private func appendGravity() {
-        let field = SKFieldNode.springField()
-        field.categoryBitMask = EntityCategory.BlakHoleField
-        field.region = SKRegion(radius: round(Float(BlackHole.radius * 2.0)))
-        field.exclusive = true
-        addChild(field)
-        self.springField = field
-    }
     
     private func setFieldState(enabled:Bool) {
-        self.springField.enabled = enabled
         if let pBody = self.physicsBody {
             pBody.categoryBitMask = enabled ? EntityCategory.BlackHole : 0
         }
-    }
-    
-    override func removeFromParent() {
-        
-        self.setFieldState(false)
-        self.springField.removeFromParent()
-        
-        super.removeFromParent()
     }
     
     internal static func  loadAssets() {
@@ -116,35 +103,39 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
         
         self.setFieldState(false)
         
-        let fadeIn = SKAction.fadeInWithDuration(2)
-        let fadeOut = SKAction.fadeOutWithDuration(1)
+        let fadeIn = SKAction.fadeInWithDuration(time1)
+        let fadeOut = SKAction.fadeOutWithDuration(time2)
         
         let sequence = SKAction.sequence([fadeOut,fadeIn])
-        let seqRep = SKAction.repeatAction(sequence, count: 3)
+        let seqRep = SKAction.repeatAction(sequence, count: count)
         
         let seqArray = [seqRep,SKAction.runBlock(){
             [unowned self] in
             
             self.setFieldState(true)
             
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            /*let delayTime = dispatch_time(DISPATCH_TIME_NOW,
                 Int64(4 * Double(NSEC_PER_SEC)))
             
             dispatch_after(delayTime, dispatch_get_main_queue()){
                 completion()
-            }
+            }*/
             
+            },SKAction.waitForDuration(time3),SKAction.runBlock(){
+                completion()
             }]
         
         runAction(SKAction.sequence(seqArray))
+        
+        self.presentTime = NSDate.timeIntervalSinceReferenceDate()
     }
     
     internal func moveItemToCenterOfField(item:SKNode!) -> NSTimeInterval {
         
-        let duration = NSTimeInterval(2)
+        let duration = max(0,min(NSTimeInterval(1.5), NSDate.timeIntervalSinceReferenceDate() - self.presentTime))
         
         let rotate = SKAction.repeatActionForever(SKAction.rotateByAngle(π, duration: duration/2))
-        let move = SKAction.moveTo(self.position, duration: duration)
+        let move = SKAction.moveTo(item.parent == Optional<SKNode>(self) ? CGPointZero : self.position, duration: duration)
         let shrink = SKAction.scaleTo(0.2, duration: duration)
         
         

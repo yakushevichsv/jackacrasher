@@ -123,7 +123,7 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         switch (asteroid) {
         case .Small:
             partName = "small"
-            
+            multiplicator = 1.2
             w_R = 5
             w_r = 2
             f_size = 10
@@ -172,17 +172,18 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         
         super.init(texture: texture, color: UIColor.blueColor(), size: size)
         
-        let shapeNode = SKShapeNode(rectOfSize: self.size)
-        shapeNode.strokeColor = UIColor.redColor()
-        shapeNode.position = CGPointZero// CGPointMake(self.size.halfWidth(), self.size.halfHeight())
-        addChild(shapeNode)
         
-        if (!isLittle) {
-            self.cropNode.addChild(self.digitNode)
-            addChild(self.cropNode)
-        }
         
-        let physBody = SKPhysicsBody(texture: texture, size: size)
+        let center = CGPointMake(0.0, 0)
+        
+        var origin = center
+        origin.x -= size.halfWidth()
+        origin.y -= size.halfHeight()
+        
+        let path = UIBezierPath(ovalInRect: CGRect(origin: origin, size: size))
+        
+        let physBody =  SKPhysicsBody(polygonFromPath: path.CGPath)
+
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
         physBody.collisionBitMask = 0
@@ -190,6 +191,17 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         
         self.physicsBody = physBody
         //self.physicsBody!.fieldBitMask = 0
+        
+        let shapeNode = SKShapeNode(path: path.CGPath)
+        shapeNode.strokeColor = UIColor.redColor()
+        shapeNode.position = center
+        addChild(shapeNode)
+        
+        if (!isLittle) {
+            self.cropNode.addChild(self.digitNode)
+            addChild(self.cropNode)
+        }
+
         
         self.appendRadialGravityToAsteroid()
         

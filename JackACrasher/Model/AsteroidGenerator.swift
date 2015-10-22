@@ -497,7 +497,7 @@ class AsteroidGenerator: NSObject {
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
         //HACK
-        currentAstType = .Bomb
+        currentAstType = .Regular
         
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType

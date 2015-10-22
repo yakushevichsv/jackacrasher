@@ -187,7 +187,7 @@ class Transmitter:SKNode,AssetsContainer {
     
     internal func transmitAnItem(item node:Player!,itemSize:CGSize, toPosition destPosition:CGPoint, completion:(()->Void)!) {
         
-        if self.userInteractionEnabled {
+        if self.userInteractionEnabled || node.isUnderBlackHole() {
             return
         }
         
