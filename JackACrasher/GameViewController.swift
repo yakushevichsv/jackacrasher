@@ -8,26 +8,14 @@
 
 import UIKit
 import SpriteKit
-import iAd
 
-
-
-class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDelegate {
+class GameViewController: UIViewController,GameSceneDelegate {
     @IBOutlet weak var btnPlay: UIButton!
     private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
     private lazy var returnPauseTransDelegate = ReturnPauseTransitionDelegate()
     
-    private static let simulateDisableAdv:Bool = false
-    
     private var myContext = 0
-    private var adWillBeDisplayed:Bool = false
-    private var interstitial:ADInterstitialAd!
-    private weak var adContainerView:UIView! = nil
-    //private weak var activityIndicatorView:UIActivityIndicatorView! = nil
-    private weak var btnClose:UIButton! = nil
-    private var timeInterval:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
-    
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
@@ -101,26 +89,11 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if GameViewController.simulateDisableAdv  {
-            GameLogicManager.sharedInstance.disableAdv()
-        }
-        
-        if !GameLogicManager.sharedInstance.isAdvDisabled {
-            cycleInterstitial()
-            //self.btnPlay.hidden = true
-        }
-        
-        
         restartGame()
     }
     
     //MARK: - Public function
     func restartGame(isNew:Bool = true) {
-        
-        isDisabledAdv()
-        //activityIndicatorView?.stopAnimating()
-        adContainerView?.hidden = true
-        btnClose?.hidden = true
         
         self.btnPlay.hidden = false
         // Configure the view.
@@ -153,11 +126,6 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        
-        if self.adWillBeDisplayed {
-            self.adWillBeDisplayed = false
-            willMoveToFGPrivate()
-        }
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationWillResignActiveNotification, object: nil)
         
@@ -291,165 +259,6 @@ class GameViewController: UIViewController,GameSceneDelegate,ADInterstitialAdDel
             
             vc.restartGame(false)
             
-            if (!GameLogicManager.sharedInstance.isAdvDisabled) {
-                
-                let interval = NSDate.timeIntervalSinceReferenceDate() - self.timeInterval
-                let present = interval > 10 && self.presentInterlude()
-                
-                if !(present || self.interstitial.actionInProgress) {
-                    cycleInterstitial()
-                }
-            }
         }
-    }
-    //MARK:Interstitial Management
-    
-    private func isDisabledAdv() -> Bool {
-        
-        if GameLogicManager.sharedInstance.isAdvDisabled{
-            self.adContainerView?.removeFromSuperview()
-            self.btnClose?.removeFromSuperview()
-            return true
-        }
-        return false
-    }
-    
-    private func cycleInterstitial() {
-        
-        interstitial?.cancelAction()
-        interstitial?.delegate = nil
-        interstitial = nil
-        
-        if isDisabledAdv(){
-            return
-        }
-        
-        let ad = ADInterstitialAd()
-        ad.delegate = self
-        interstitial = ad
-        self.interstitialPresentationPolicy = .Manual
-        //UIViewController.prepareInterstitialAds()
-    }
-    
-    private func createAdContainer() {
-        if (self.adContainerView == nil) {
-            
-            let containerView = UIView(frame: self.view.bounds)
-            containerView.frame.origin = CGPointZero
-            containerView.translatesAutoresizingMaskIntoConstraints = false
-            self.view.addSubview(containerView)
-            self.adContainerView = containerView
-            
-            
-            let constLeft = NSLayoutConstraint(item: containerView, attribute: .Left, relatedBy: .Equal, toItem: self.view, attribute: .Left, multiplier: 1.0, constant: 0)
-            
-            let constRight = NSLayoutConstraint(item: containerView, attribute: .Right, relatedBy: .Equal, toItem: self.view, attribute: .Right, multiplier: 1.0, constant: 0)
-            
-            let constTop = NSLayoutConstraint(item: containerView, attribute: .Top, relatedBy: .Equal, toItem: self.view, attribute: .Top, multiplier: 1.0, constant: 0)
-            
-            let constBottom = NSLayoutConstraint(item: containerView, attribute: .Bottom, relatedBy: .Equal, toItem: self.view, attribute: .Bottom, multiplier: 1.0, constant: 0)
-            
-            self.view.addConstraints([constLeft,constRight,constTop,constBottom])
-            
-        }
-    }
-    
-    private func presentInterlude() -> Bool {
-        var result = false
-        if self.interstitial != nil  && self.interstitial!.loaded {
-            if !GameLogicManager.sharedInstance.isAdvDisabled{
-                createAdContainer()
-                if let resultNew = interstitial?.presentInView(self.adContainerView) {
-                    result = resultNew
-                    
-                    if result && self.skView.scene != nil {
-                        didMoveToBGPrivate()
-                            self.btnPlay.hidden = true
-                            self.timeInterval = NSDate.timeIntervalSinceReferenceDate()
-                            if self.btnClose == nil {
-                                
-                                let btn = UIButton()
-                                btn.setImage(UIImage(named: "close"), forState: .Normal)
-                                btn.addTarget(self, action: "closePressed:", forControlEvents: UIControlEvents.TouchUpInside)
-                                let btnCenter = CGPointMake(CGRectGetWidth(self.view.bounds) * 0.9, CGRectGetHeight(self.view.bounds)*0.1)
-                                btn.center = btnCenter
-                                btn.bounds = CGRectMake(0, 0, btn.imageForState(.Normal)!.size.width, btn.imageForState(.Normal)!.size.height)
-                                self.view.insertSubview(btn, belowSubview: self.adContainerView)
-                                
-                                self.adContainerView.hidden = false
-                                
-                                self.view.addSubview(btn)
-                                self.view.bringSubviewToFront(btn)
-                                self.btnClose = btn
-                            }
-                            //activityIndicatorView?.stopAnimating()
-                    }
-                    else {
-                        self.btnPlay.hidden = false
-                    }
-                    
-                }
-            }
-        }
-        return result
-    }
-    
-    func closePressed(sender:UIButton!) {
-        sender?.removeFromSuperview()
-        interstitial?.cancelAction()
-        interstitialAdActionDidFinish(interstitial)
-        adContainerView?.hidden = true
-        //self.activityIndicatorView?.stopAnimating()
-    }
-    
-    //MARK: ADInterstitialAdDelegate
-    
-    func interstitialAd(interstitialAd: ADInterstitialAd!, didFailWithError error: NSError!) {
-        print("Error interstitialAd \(error)")
-        let domainFault = error.domain == ADErrorDomain
-        let codeFault = error.code == ADError.InventoryUnavailable.rawValue
-        
-        //activityIndicatorView?.stopAnimating()
-        btnClose?.hidden = true
-        
-        if !(domainFault && codeFault) {
-            cycleInterstitial()
-        }
-        
-        self.willMoveToFGPrivate()
-    }
-    
-    func interstitialAdActionShouldBegin(interstitialAd: ADInterstitialAd!, willLeaveApplication willLeave: Bool) -> Bool {
-        if !willLeave {
-            adContainerView.hidden = true
-            self.btnClose.hidden = true
-        }
-        return true
-    }
-    
-    func interstitialAdDidUnload(interstitialAd: ADInterstitialAd!) {
-        
-        cycleInterstitial()
-        
-        self.willMoveToFGPrivate()
-    }
-    
-    func interstitialAdDidLoad(interstitialAd: ADInterstitialAd!) {
-        print("Did load interstitialAdDidLoad")
-        
-        if interstitialAd.loaded {
-            presentInterlude()
-        }
-    }
-    
-    override var shouldPresentInterstitialAd:Bool {
-        get { return !GameLogicManager.sharedInstance.isAdvDisabled}
-    }
-    
-    func interstitialAdActionDidFinish(interstitialAd: ADInterstitialAd!) {
-        self.willMoveToFGPrivate()
-        adContainerView?.hidden = true
-        
-        self.btnClose?.removeFromSuperview()
     }
 }
