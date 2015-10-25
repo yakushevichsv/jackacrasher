@@ -204,6 +204,14 @@ class AsteroidGenerator: NSObject {
     
     private func produceBomb() {
         
+        let bomb = produceBombInternal()
+        
+        self.delegate.asteroidGenerator(self, didProduceAsteroids: [bomb], type: .Bomb)
+    }
+    
+    
+    internal func produceBombInternal() -> SKSpriteNode! {
+        
         let bomb = bombFactory.createRandomBomb()
         
         let isAIBomb = bomb is AIBomb
@@ -227,12 +235,13 @@ class AsteroidGenerator: NSObject {
         let moveOutAct = SKAction.moveToX(-xMargin, duration: duration)
         let sequence = SKAction.sequence([moveOutAct,SKAction.runBlock(){ [unowned self] in
             self.delegate.didMoveOutAsteroidForGenerator(self, asteroid: bomb, withType: .Bomb)
-        },SKAction.removeFromParent()])
+            },SKAction.removeFromParent()])
         bomb.runAction(sequence)
         
-        self.delegate.asteroidGenerator(self, didProduceAsteroids: [bomb], type: .Bomb)
         
         print("Y position \(yPos) and  Scene height \(CGRectGetHeight(self.playableRect)) Sprite size \(bomb.size)")
+        
+        return bomb
     }
     
     private func produceRopeJointAsteroids() {
@@ -520,7 +529,9 @@ class AsteroidGenerator: NSObject {
             break
         case .Regular:
             print("=== Produced current type .Regular === ")
-            let regSize = AsteroidGenerator.generateRegularAsteroidSize()
+            var regSize = AsteroidGenerator.generateRegularAsteroidSize()
+            //MARK: HACK
+            regSize = .Small
             self.produceRegularAsteroid(regSize)
             break
         case .Health:

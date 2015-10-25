@@ -1111,7 +1111,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         }
     }
     
-    func emulateImpulse(forAsteroid asteroid:RegularAsteroid!,direction:CGVector)  {
+    func emulateImpulse(forAsteroid asteroid:RegularAsteroid!,direction:CGVector) -> NSTimeInterval {
         
         let vector = vectorFromPoint(asteroid.position, usingDirection: direction, inRect: self.playableArea)
         
@@ -1137,6 +1137,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         let group = SKAction.group([seg1,seg2])
         
         asteroid.runAction(group)
+        
+        return durMin
     }
     
     //MARK: Enemies Generator's methods
@@ -1277,10 +1279,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if let asteroid = regAsteroid as? SmallRegularAsteroid {
             
             if (asteroid.isFiring) {
-                
+            
                 if let contactTime  = asteroid.userData?.valueForKey("syContactTime") {
                     
-                    if NSDate.timeIntervalSinceReferenceDate() - contactTime.doubleValue! < 1 {
+                    if NSDate.timeIntervalSinceReferenceDate() - contactTime.doubleValue! < 2 {
                         return true
                     }
                 }
@@ -1300,26 +1302,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             }
             
             asteroid.removeAllActions()
-            asteroid.physicsBody!.categoryBitMask = 0
-            asteroid.physicsBody!.contactTestBitMask = 0 //UInt32.max // contacts with all objects...
+            asteroid.physicsBody!.contactTestBitMask &= ~EntityCategory.Player //UInt32.max // contacts with all objects...
             //asteroid.physicsBody!.fieldBitMask = EntityCategory.BlakHoleField
+            
+
             
             if (checkNodeAndDestroyParentOnNeed(regAsteroid, isRope: false)) {
                 self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: regAsteroid, withType: .RopeBased)
             }
             
             var impulse = contact.contactNormal
-            
             if (!CGPointEqualToPoint(self.prevPlayerPosition, self.player.position)) {
-                let posNormalized = (self.player.position - self.prevPlayerPosition)
+                let posNormalized = (self.player.position - self.prevPlayerPosition).normalized()
                 self.player.placeAtPoint(contact.contactPoint)
                 self.player.removeAllActions()
                 impulse = CGVector(dx: posNormalized.x, dy: posNormalized.y)
             }
             
-            impulse.dx *= contact.collisionImpulse
-            impulse.dy *= contact.collisionImpulse
-            
+            if (contact.collisionImpulse != 0)
+            {
+                impulse.dx *= contact.collisionImpulse
+                impulse.dy *= contact.collisionImpulse
+            }
             asteroid.physicsBody?.applyImpulse(impulse)
             
             
@@ -1331,7 +1335,42 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 mUserData.setObject(NSDate.timeIntervalSinceReferenceDate(), forKey: "syContactTime")
             }
             
-            emulateImpulse(forAsteroid: asteroid, direction: impulse)
+            /*if !asteroid.isFiring {
+                
+                //MARK: HACK remove this!!
+                let bomb = self.asteroidGenerator.produceBombInternal()
+                    
+                bomb.removeAllActions()
+                    
+                
+                var newPos = contact.contactPoint +  CGPointMake(impulse.dx * 1000, impulse.dy * 1000)
+                
+                newPos.x = max(min(newPos.x,CGRectGetMaxX(self.playableArea)),CGRectGetMinX(self.playableArea))
+                
+                newPos.y = max(min(newPos.y,CGRectGetMaxY(self.playableArea)),CGRectGetMinY(self.playableArea))
+                
+                bomb.position = newPos
+                bomb.zPosition = self.fgZPosition 
+
+                print(" Bomb new position \(newPos)")
+                
+                print("Impulse dx \(impulse.dx)\n Impulse dy \(impulse.dx)" )
+                
+                addChild(bomb)
+                
+                bomb.physicsBody?.contactTestBitMask = 0xffffffff
+                
+                assert(bomb.physicsBody != nil)
+            }
+            */
+            let asteroidTime = emulateImpulse(forAsteroid: asteroid, direction: impulse)
+            
+            let time2 = asteroidTime * 0.2
+            
+            asteroid.runAction(SKAction.sequence([SKAction.waitForDuration(time2),SKAction.runBlock(){
+                    asteroid.physicsBody?.contactTestBitMask |= EntityCategory.Player
+                }]))
+            
             
             asteroid.startFiringAtDirection(impulse, point: self.convertPoint(contact.contactPoint, toNode: asteroid))
             
@@ -1690,6 +1729,69 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return false
     }
     
+    func didEntityContactWithFireingSmallAsteroid(contact:SKPhysicsContact) -> Bool
+    {
+        let bodyA = contact.bodyA
+        let bodyB = contact.bodyB
+        
+        var asteroidBody:SKPhysicsBody? = nil
+        var entityBody: SKPhysicsBody? = nil
+        
+        if bodyA.categoryBitMask == EntityCategory.RegularAsteroid {
+            asteroidBody = bodyA
+            entityBody = bodyB
+        }
+        else if bodyB.categoryBitMask == EntityCategory.RegularAsteroid {
+            asteroidBody = bodyB
+            entityBody = bodyA
+        }
+        
+        if let smallRegAster = asteroidBody?.node as? SmallRegularAsteroid {
+            
+            if smallRegAster.isFiring {
+
+                if (entityBody?.categoryBitMask != EntityCategory.BlackHole) {
+                    
+                    if let item = entityBody?.node as? ItemDestructable {
+                        
+                        if entityBody?.node == self.player {
+                            
+                            if let contactTime  = smallRegAster.userData?.valueForKey("syContactTime") {
+                                
+                                let timeDiff = NSDate.timeIntervalSinceReferenceDate() - contactTime.doubleValue!
+                                
+                                print("Time Diff \(timeDiff)")
+                                
+                                if timeDiff < 2 {
+                                    return false
+                                }
+                            }
+                            
+                            if self.tryToDestroyPlayer(smallRegAster.damageForce) {
+                                self.terminateGame()
+                            }
+                            
+                        }
+                        else if (smallRegAster.destroyItem(item)) {
+                            if (entityBody?.categoryBitMask != EntityCategory.Bomb) {
+                                self.createExplosion(.Large, position: contact.contactPoint)
+                            }
+                            entityBody?.node?.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
+                        }
+                    }
+                }
+                
+                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: smallRegAster, withType: .Regular)
+                
+                return true
+            }
+            
+        }
+        
+        return false
+        
+    }
+    
     func didEntityContactWithRegularAsteroid(contact: SKPhysicsContact) -> Bool
     {
         let bodyA = contact.bodyA
@@ -2001,7 +2103,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
-        if (didContactContainBomb(contact) || didContactContainTrash(contact)) {
+        if (didEntityContactWithFireingSmallAsteroid(contact) || didContactContainBomb(contact) || didContactContainTrash(contact)) {
             return
         }
         

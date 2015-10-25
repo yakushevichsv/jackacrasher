@@ -483,6 +483,9 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         var yDiff:CGFloat = 0.0
         
         if (isUp) {
+            
+            //MARK: Fails here....
+            
             yDiff = self.scene!.size.height + projectile.size.halfHeight() - position.y
         }
         else if (vector.dy != 0){

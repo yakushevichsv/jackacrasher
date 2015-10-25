@@ -9,7 +9,7 @@
 import UIKit
 import SpriteKit
 
-class Bomb: SKSpriteNode, AssetsContainer,Attacker {
+class Bomb: SKSpriteNode, AssetsContainer,Attacker, ItemDestructable {
     
     internal weak var target:Player?
     
@@ -18,6 +18,7 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker {
         static let name = "Bomb"
     }
     
+    private var _health:ForceType = ForceType(1)
     
     internal static var sBombTexture:SKTexture! = nil
     internal static var sBombTexture2:SKTexture! = nil
@@ -87,4 +88,28 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker {
     var canAttack:Bool {
         get {return false}
     }
+    
+    //MARK: Item Destructable
+    
+    func tryToDestroyWithForce(forceValue: ForceType) -> Bool {
+        
+        health -= forceValue
+        
+        if health < 0 {
+            health = 0.0
+        }
+        let result = health == 0.0
+        
+        return result
+    }
+    
+    var health:ForceType {
+        get {
+            return _health
+        }
+        set {
+            _health = newValue
+        }
+    }
+    
 }
