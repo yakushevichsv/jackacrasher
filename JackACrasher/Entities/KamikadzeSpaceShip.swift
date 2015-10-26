@@ -50,7 +50,12 @@ class KamikadzeSpaceShip: EnemySpaceShip  {
         }
         
         if let explosionXPositionObj = dataSource?.detectXExplosionPositionForEnemySpaceShip(self) {
-            explosionXPosition = explosionXPositionObj
+            if explosionXPositionObj < 0 {
+                explosionXPosition = self.position.x
+            }
+            else {
+                explosionXPosition = explosionXPositionObj
+            }
         }
         
         if explosionXPosition >= self.position.x {

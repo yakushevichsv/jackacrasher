@@ -73,8 +73,6 @@ class EnemiesGenerator: NSObject {
     
     internal func start() {
         
-        return
-            
         canFire = true
         if !self.timer.valid {
             redifineTimer()
@@ -96,7 +94,7 @@ class EnemiesGenerator: NSObject {
                 lTimer.invalidate()
             }
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "generateItem", userInfo: nil, repeats: true)
     }
     
     internal func generateItem() {

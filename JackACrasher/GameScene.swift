@@ -2361,10 +2361,13 @@ extension GameScene:EnemySpaceShipDelegate , EnemySpaceShipDataSource {
     //MARK: Data Source
     func detectXExplosionPositionForEnemySpaceShip(ship: EnemySpaceShip!) -> CGFloat {
         
-        let transmitter = self.childNodeWithName(Transmitter.NodeName) as! Transmitter
-        let xPos = transmitter.position.x + transmitter.transmitterSize.halfWidth()
+        if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
+            let xPos = transmitter.position.x + transmitter.transmitterSize.halfWidth()
         
-        return xPos
+            return xPos
+        } else {
+            return -1
+        }
     }
 }
 

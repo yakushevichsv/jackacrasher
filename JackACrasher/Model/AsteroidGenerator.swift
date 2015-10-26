@@ -94,7 +94,7 @@ class AsteroidGenerator: NSObject {
     
     private func redifineTimer() {
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(2, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "generateItem", userInfo: nil, repeats: true)
     }
     
     internal func produceSeqActionToAsteroid(asteroid:RegularAsteroid,asteroidSpeed:CGFloat = 30.0) -> SKAction! {
@@ -505,8 +505,6 @@ class AsteroidGenerator: NSObject {
             
         } while (currentAstType == self.prevAsteroidType || currentAstType == .None)
         
-        //HACK
-        currentAstType = .Regular
         
         self.prevAsteroidType = self.curAsteroidType
         self.curAsteroidType = currentAstType
@@ -529,9 +527,7 @@ class AsteroidGenerator: NSObject {
             break
         case .Regular:
             print("=== Produced current type .Regular === ")
-            var regSize = AsteroidGenerator.generateRegularAsteroidSize()
-            //MARK: HACK
-            regSize = .Small
+            let regSize = AsteroidGenerator.generateRegularAsteroidSize()
             self.produceRegularAsteroid(regSize)
             break
         case .Health:
