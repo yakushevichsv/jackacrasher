@@ -51,9 +51,6 @@ enum PlayerFlyDistance {
 private let playerBGNodeName = "playerBGNode"
 private let playerImageName = "astronaut2"
 
-private let hammerImageName = "throw_hammer"
-private let hammerNodeName = "throwHammer"
-
 private let damageEmitterNode = "Damage"
 private let damageEmitterNodeName = "damageNode"
 

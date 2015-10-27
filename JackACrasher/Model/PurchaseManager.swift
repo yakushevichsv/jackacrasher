@@ -512,7 +512,9 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                 setPurchaseProgressState(transaction.payment.productIdentifier,inProgress: false)
                 
-                completeTransaction(transaction, status:transaction.error!.code != SKErrorPaymentCancelled ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
+                let code = transaction.error!.code
+                
+                completeTransaction(transaction, status:code != SKErrorPaymentCancelled && code != SKErrorUnknown ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
                 
                 break;
             }

@@ -25,8 +25,6 @@ struct RopeConnection:CustomStringConvertible {
     }
 }
 
-private let sRingTexture = SKTexture(imageNamed: "rope_ring")
-
 class Rope: SKNode {
     
     private let con1: RopeConnection
@@ -35,7 +33,8 @@ class Rope: SKNode {
     private var ropeRings:[SKNode]?
     private var rLength:CGFloat = 0.0
     static var onceRingLengthToken: dispatch_once_t = 0
-    
+    private static var sContext:dispatch_once_t = 0
+    private static var sRingTexture:SKTexture! = nil
     
     init(connection1:RopeConnection,connection2:RopeConnection) {
         let ancestorPtr = Rope.findAncestorforNodes(connection1.node, nodeB: connection2.node)
@@ -130,7 +129,7 @@ class Rope: SKNode {
         get {
         
             if (self.rLength == 0) {
-                self.rLength =  sqrt(pow(sRingTexture.size().width,2) + pow(sRingTexture.size().height,2))
+                self.rLength =  sqrt(pow(ringTexture.size().width,2) + pow(ringTexture.size().height,2))
         }
             
             return self.rLength
@@ -138,7 +137,13 @@ class Rope: SKNode {
     }
     
     internal var ringTexture:SKTexture {
-        get {return sRingTexture}
+        get {
+           dispatch_once(&Rope.sContext) {
+                let image = UIImage.spriteWithContentsOfAtlas("sprites", name: "rope_ring.png")
+                Rope.sRingTexture = SKTexture(image: image)
+            }
+            return Rope.sRingTexture
+        }
     }
 
 }
