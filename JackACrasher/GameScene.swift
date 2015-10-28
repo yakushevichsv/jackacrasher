@@ -1087,7 +1087,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         case .Regular:
             
             for node in didProduceAsteroids {
-                if let regAster = node as? RegularAsteroid {
+                if node is SmallRegularAsteroid {
+                    generator.paused = false
+                }
+                else if let regAster = node as? RegularAsteroid {
                     if self.player.canThrowProjectile() && regAster.maxLife != 0 {
                         regAster.maxLife = 1.0
                     }
@@ -2061,11 +2064,21 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
 
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
         
+        if secondNode == self.player {
+            self.player.runAction(SKAction.sequence([SKAction.waitForDuration(durationToWait),SKAction.runBlock(){
+                [unowned self] in
+                    if self.tryToDestroyPlayer(blackHoleNode.damageForce) {
+                        self.terminateGame()
+                        self.player?.removeFromParent()
+                    }
+                }]))
+        }
+        else {
         blackHoleNode.runAction(SKAction.sequence([SKAction.waitForDuration(durationToWait),SKAction.runBlock(){
             [unowned self] in
             self.tryToDestroyDestructableItem(blackHoleNode, secondNode: secondNode)
             }]))
-        
+        }
         return true
     }
     

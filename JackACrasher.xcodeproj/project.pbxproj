@@ -55,6 +55,7 @@
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; };
 		217360F91B87260C00713E82 /* lap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217360F81B87260C00713E82 /* lap.wav */; };
 		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
+		217FB12F1BE16E7800D71228 /* help.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 217FB12E1BE16E7800D71228 /* help.atlas */; };
 		2188A5CF1B9F9FB900612BEC /* SWBlade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188A5CE1B9F9FB900612BEC /* SWBlade.swift */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
 		218B92EE1B79F3C500444918 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 218B92ED1B79F3C500444918 /* sprites.atlas */; };
@@ -79,7 +80,7 @@
 		21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF9C271B89E0A60002AEAC /* HelpViewController.swift */; };
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
 		21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */; };
-		21C5BDF41BC1711D0066042B /* player.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21C5BDF31BC1711D0066042B /* player.atlas */; settings = {ASSET_TAGS = (); }; };
+		21C5BDF41BC1711D0066042B /* player.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21C5BDF31BC1711D0066042B /* player.atlas */; };
 		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
 		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
 		21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CEEFAA1B9CCB2D008937A2 /* iAd.framework */; };
@@ -89,7 +90,7 @@
 		21DDE5491B6A5A6300B41A91 /* Bomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE5481B6A5A6300B41A91 /* Bomb.swift */; };
 		21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE54A1B6A619E00B41A91 /* AIBomb.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
-		21E053051BCEAF2700F7E4AD /* PyramidScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E053041BCEAF2700F7E4AD /* PyramidScene.swift */; settings = {ASSET_TAGS = (); }; };
+		21E053051BCEAF2700F7E4AD /* PyramidScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E053041BCEAF2700F7E4AD /* PyramidScene.swift */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
 		21E56B2F1ADA93BB0071A217 /* spark.png in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2D1ADA93BB0071A217 /* spark.png */; };
 		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
@@ -175,6 +176,7 @@
 		217341031AFE5674009E934A /* lose.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lose.wav; sourceTree = "<group>"; };
 		217360F81B87260C00713E82 /* lap.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = lap.wav; sourceTree = "<group>"; };
 		217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopUpTransitioningDelegate.swift; path = ViewControllers/PopUpTransitioningDelegate.swift; sourceTree = "<group>"; };
+		217FB12E1BE16E7800D71228 /* help.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = help.atlas; sourceTree = "<group>"; };
 		2188A5CE1B9F9FB900612BEC /* SWBlade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWBlade.swift; sourceTree = "<group>"; };
 		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
 		218B92ED1B79F3C500444918 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
@@ -381,6 +383,7 @@
 		218B92EC1B79F3A500444918 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				217FB12E1BE16E7800D71228 /* help.atlas */,
 				21C5BDF31BC1711D0066042B /* player.atlas */,
 				218B92F11B79F3DA00444918 /* blackhole.atlas */,
 				218B92EF1B79F3D000444918 /* trash.atlas */,
@@ -732,6 +735,7 @@
 				21FF6C121B51724F00256A63 /* backgroundMusic.mp3 in Resources */,
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
 				2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */,
+				217FB12F1BE16E7800D71228 /* help.atlas in Resources */,
 				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
 				218B92F01B79F3D000444918 /* trash.atlas in Resources */,
 				212A2F2B1B36F98700B31482 /* AppleIncRootCertificate.cer in Resources */,

@@ -2,25 +2,17 @@
   "images" : [
     {
       "idiom" : "iphone",
-      "scale" : "1x",
-      "filename" : "explosion0001.png"
+      "scale" : "1x"
     },
     {
       "idiom" : "iphone",
+      "filename" : "explosion0001.png",
       "scale" : "2x"
     },
     {
       "idiom" : "iphone",
+      "filename" : "explosion0001@2x~ipad.png",
       "scale" : "3x"
-    },
-    {
-      "idiom" : "ipad",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "filename" : "explosion0001@2x~ipad.png"
     }
   ],
   "info" : {
