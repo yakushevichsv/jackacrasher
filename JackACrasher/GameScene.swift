@@ -815,7 +815,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             affectedNode = affectedNode.parent
         }
         
-        affectedNode.physicsBody?.applyImpulse(vector)
+        affectedNode?.physicsBody?.applyImpulse(vector)
     }
     
     private func applyBackImpulseToNode(sprite:SKNode!) {

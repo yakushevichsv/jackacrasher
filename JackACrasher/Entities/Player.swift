@@ -471,8 +471,8 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         
         let isLeft = vector.dx < 0
         let isUp  = vector.dy > 0
-        let signX:CGFloat = isLeft ? -1 : 1
-        let xPos = sPosition.x + CGFloat(signX * (self.size.width * 0.2))
+
+        let xPos = sPosition.x +  CGFloat(self.size.width * 0.2)
         
         let position = CGPointMake(xPos, sPosition.y)
         projectile.alpha = 0.0
@@ -508,6 +508,22 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         let moveTo = SKAction.moveTo(positionFinal, duration: length/Double(self.projectileSpeed))
         
         projectile.zRotation = vector.angle
+
+        if vector.angle >= π/6 || vector.angle <= -π/6 {
+            
+            var defPoint = projectile.anchorPoint
+            let pointX =  ((vector.angle/π + 1/6) + 1) * 0.5
+            defPoint.x = pointX
+            
+            projectile.anchorPoint = defPoint
+        }
+
+        
+
+        //more than 30 degrees throw... less than -30 degree than also throw....
+        //more than 110 values....
+
+        print("Projectile value \(projectile.zRotation) \nVector value \(vector.angle * 180.0/π)\n Anchor Point \(projectile.anchorPoint)")
         
         projectile.runAction(SKAction.sequence([fadeIn,moveTo,SKAction.removeFromParent()]))
         projectile.position = position
