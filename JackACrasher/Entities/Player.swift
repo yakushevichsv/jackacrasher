@@ -56,8 +56,6 @@ private let damageEmitterNodeName = "damageNode"
 
 private let playerNode = "playerNode"
 
-private let timerNodeName = "timerNodeName"
-
 class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     private let engineNodeName = "engineEmitter"
     private var numberOfThrownProjectiles = 0
@@ -436,6 +434,10 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 
                 self.playerMode = .Idle
             } else {
+                if self.playerMode == .CanFireAndMove {
+                    return
+                }
+                
                 self.playerMode = .CanFire
                 
                 if self.actionForKey("displayShowGunAction") == nil {
