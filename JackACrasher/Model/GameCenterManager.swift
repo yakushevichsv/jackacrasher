@@ -18,10 +18,10 @@ import GameKit
 let SurvivalBestScoreLbId  = "com.sygamefun.survival_best_score"
 let SurvivalLongestTimeLbId = "sygame.com.survival_longest_game_time"
 
-let GameCenterManagerViewController = "GameCenterManagerViewController"
-let singleton = GameCenterManager()
+let GameCenterManagerViewController = "SYGameCenterManagerViewController"
+let GameCenterManagerDidChangeAuth  = "SYGameCenterManagerDidChangeAuth"
 
-let kGameCenterManagerNeedToAuthPlayer = "kGameCenterManagerNeedToAuthPlayer"
+let singleton = GameCenterManager()
 
 class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
    
@@ -33,6 +33,16 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     {
         self.gameCenterEnabled = true
         super.init()
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeAuth", name:
+            GKPlayerAuthenticationDidChangeNotificationName
+            , object: GKLocalPlayer.localPlayer())
+    }
+    
+    deinit {
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "didChangeAuth", object: GKLocalPlayer.localPlayer())
+        
     }
     
     weak var delegate: GameCenterManagerDelegate?
@@ -45,12 +55,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
         get {
             let player = GKLocalPlayer.localPlayer()
             
-            if (player.authenticated) {
-                return player.playerID
-            }
-            else {
-                return player.displayName
-            }
+            return player.playerID ?? player.displayName
         }
     }
     
@@ -85,8 +90,6 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
                 } else {
                     //5
                     self.gameCenterEnabled = false
-                    
-                    NSNotificationCenter.defaultCenter().postNotificationName(kGameCenterManagerNeedToAuthPlayer, object: self)
                 }
 
             }
@@ -336,5 +339,12 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
     func gameCenterViewControllerDidFinish(gameCenterViewController: GKGameCenterViewController) {
         
         gameCenterViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    //MARK: Auth change 
+    func didChangeAuth() {
+        if self.isLocalUserAuthentificated {
+           NSNotificationCenter.defaultCenter().postNotificationName(GameCenterManagerDidChangeAuth, object: self)
+        }
     }
 }

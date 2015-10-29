@@ -10,6 +10,7 @@ import UIKit
 import CloudKit
 
 let SYLoggingToCloudNotification = "SYLoggingToCloudNotification"
+let SYiCloudAuthStatusChangeNotification = "SYiCloudAuthStatusChangeNotification"
 
 class CloudManager: NSObject {
    
@@ -83,13 +84,13 @@ class CloudManager: NSObject {
             if !tokenProtocol.isEqual(self.curToken) {
                 serializeAsPreviousCloudToken(self.curToken)
                 serializeAsCurrentCloudToken(token)
-                //TODO: transfer ownership to new user, or refresh purchases....
+                NSNotificationCenter.defaultCenter().postNotificationName(SYiCloudAuthStatusChangeNotification, object: self)
             }
         } else if let _ = self.curToken as? NSObjectProtocol {
             serializeAsPreviousCloudToken(self.curToken)
             serializeAsCurrentCloudToken(nil)
             //user is not logged in.
-            //TODO: transfer purhases of the previous user....
+            NSNotificationCenter.defaultCenter().postNotificationName(SYiCloudAuthStatusChangeNotification, object: self)
         } else {
             serializeAsCurrentCloudToken(nil)
         }

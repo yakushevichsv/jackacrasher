@@ -13,6 +13,10 @@ enum GameLogicSelectedStrategy : Int {
     case None = 0, Survival = 1, Company = 2, Help = 3
 }
 
+enum AuthCase : Int {
+    case None = 0, iCloud = 1, GameCenter = 2
+}
+
 
 class GameLogicManager: NSObject {
     
@@ -36,7 +40,21 @@ class GameLogicManager: NSObject {
         self.state = .None
     }
     
+    override init() {
+        super.init()
+        
+        cloudChangedAuth()
+        //gameCenterChangedAuth()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "cloudChangedAuth", name: SYiCloudAuthStatusChangeNotification, object: self.cloudManager)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameCenterChangedAuth", name: GameCenterManagerDidChangeAuth, object: self.centerManager)
+    }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: SYiCloudAuthStatusChangeNotification, object: self.cloudManager)
+        
+          NSNotificationCenter.defaultCenter().removeObserver(self, name: GameCenterManagerDidChangeAuth, object: self.centerManager)
+    }
     
     internal static var sharedInstance:GameLogicManager
         {
@@ -399,16 +417,38 @@ extension GameLogicManager {
     
     internal func getPlayerId() -> String! {
         
-        if let recName = self.cloudManager.recordID?.recordName {
+        let authCase = getAuthCase()
+        
+        if let recName = getCloundPlayerId() {
+            if (authCase != .iCloud) {
+                storeAuthCase(authCase)
+            }
             return recName
-        } else if let playerID = GameCenterManager.sharedInstance.playerID {
+        } else if let playerID = getGameCenterPlayerId() {
+            if (authCase != .GameCenter) {
+                storeAuthCase(authCase)
+            }
             return playerID
         } else {
-            return "guest"
+            if (authCase != .None) {
+                storeAuthCase(authCase)
+            }
+            return getAnonymousPlayerId()
         }
     }
     
+    
+    private func getCloundPlayerId() -> String? {
+        return self.cloudManager.recordID?.recordName
+    }
 
+    private func getGameCenterPlayerId() -> String? {
+        return GameCenterManager.sharedInstance.playerID
+    }
+    
+    private func getAnonymousPlayerId() -> String {
+        return "guest"
+    }
         
     private func submitSurvivalItems(items:[[String:AnyObject]],completionHandler:((isError:Bool,delayInTime:UInt64)->Void)!) {
         
@@ -596,6 +636,11 @@ extension GameLogicManager {
     
     internal func storeCurrentSurvivalGameInfoInDefaults(info:SurvivalGameInfo!) -> Bool {
         
+        return GameLogicManager.storeCurrentSurvivalGameInfoInDefaultsWithKey(getPlayerId(), info: info)
+    }
+    
+    private class func storeCurrentSurvivalGameInfoInDefaultsWithKey(keyPart:String, info:SurvivalGameInfo!) -> Bool {
+        
         var resultDic = [String:AnyObject]()
         
         resultDic[ConstantsSurvivalGameLogic.scoreKey] = NSNumber(longLong: info.currentScore)
@@ -603,7 +648,7 @@ extension GameLogicManager {
         resultDic[ConstantsSurvivalGameLogic.ratioKey] = NSNumber(float: info.ratio)
         resultDic[ConstantsSurvivalGameLogic.liveKey] = info.numberOfLives
         
-        let key = getPlayerId().stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
+        let key = keyPart.stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
         NSUserDefaults.standardUserDefaults().setObject(resultDic, forKey: key)
         
         return NSUserDefaults.standardUserDefaults().synchronize()
@@ -636,9 +681,15 @@ extension GameLogicManager {
         }
     }
     
-    internal func getCurrentSurvivalGameInfoFromDefaults() -> SurvivalGameInfo? {
+    internal func getCurrentSurvivalGameInfoFromDefaults() -> SurvivalGameInfo?{
         
-        let key = getPlayerId().stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
+        return GameLogicManager.getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(getPlayerId())
+    }
+    
+    
+    private class func getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(playerId:String) -> SurvivalGameInfo? {
+        
+        let key = playerId.stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
         
         if let resultDic = NSUserDefaults.standardUserDefaults().objectForKey(key) as? [String:AnyObject] {
             
@@ -775,4 +826,97 @@ extension GameLogicManager {
         }
         return userDef.synchronize()
     }
+}
+
+//MARK: Auth Logic & it's change for Purchases...
+
+extension GameLogicManager {
+    
+    private static let sCurrentAuthCaseKey = "sy.gamefun.jackACrasher.authCase"
+    
+    
+    func storeAuthCase(authCase : AuthCase) -> Bool {
+        
+        NSUserDefaults.standardUserDefaults().setInteger(authCase.rawValue, forKey: GameLogicManager.sCurrentAuthCaseKey)
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    func getAuthCase() -> AuthCase {
+        let retInt = NSUserDefaults.standardUserDefaults().integerForKey(GameLogicManager.sCurrentAuthCaseKey)
+        
+        return AuthCase(rawValue: retInt)!
+    }
+
+    
+    func transferOwnerShipOnNeed(authCase:AuthCase) -> Bool  {
+        
+        let oldAuthCase = getAuthCase()
+        
+        if (authCase == oldAuthCase) {
+            return true
+        }
+        
+        var oldAuthId : String? = nil
+        
+        switch oldAuthCase {
+            case .GameCenter:
+                
+                oldAuthId = getGameCenterPlayerId()
+                
+                break
+            case .iCloud:
+                oldAuthId = getCloundPlayerId()
+                break
+            default :
+                oldAuthId = getAnonymousPlayerId()
+                break
+        }
+        
+        if let oldAuthId = oldAuthId {
+            
+            if let info = GameLogicManager.getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(oldAuthId) {
+                
+                return storeCurrentSurvivalGameInfoInDefaults(info) || storeAuthCase(authCase)
+            }
+        }
+        
+        
+        return storeAuthCase(authCase)
+    }
+    
+    func cloudChangedAuth() {
+        
+        self.cloudManager.userLoggedIn() {
+            [unowned self]
+            loggedIn in
+            
+            if (loggedIn) {
+                self.transferOwnerShipOnNeed(.iCloud)
+            }
+            else  if self.centerManager.isLocalUserAuthentificated {
+                //TODO: Determine if there is GC record...
+                self.transferOwnerShipOnNeed(.GameCenter)
+            }
+            else {
+                self.transferOwnerShipOnNeed(.None)
+            }
+        }
+        
+    }
+    
+    func gameCenterChangedAuth() {
+        
+        if !self.centerManager.isLocalUserAuthentificated {
+            
+            cloudChangedAuth()
+        }
+        else {
+            cloudChangedAuth()
+        }
+        
+    }
+    
+    
+    
 }
