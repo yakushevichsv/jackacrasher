@@ -848,7 +848,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 sprite.removeFromParent()
             }
             else {
-                sprite.physicsBody!.contactTestBitMask = EntityCategory.PlayerLaser
+                sprite.physicsBody?.contactTestBitMask = EntityCategory.PlayerLaser
             }
             return true
         }
@@ -884,6 +884,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             //let player = self.player
             self.player.removeFromParent()
             createPlayer(false)
+            self.player.health = 0.0
+            self.player.updateNumberOfLives(extraLives: self.hudNode.life)
+            self.player.health += ForceType(self.hudNode.curLifePercent)
             //self.addChild(player)
             //self.player = player
         }
@@ -2070,6 +2073,21 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     if self.tryToDestroyPlayer(blackHoleNode.damageForce) {
                         self.terminateGame()
                         self.player?.removeFromParent()
+                    } else {
+                        self.player?.removeAllActions()
+                        if self.player.parent == nil {
+                            self.addChild(self.player)
+                        }
+                        self.player.physicsBody?.categoryBitMask = EntityCategory.Player
+                        self.userInteractionEnabled = true
+                        
+                        if self.player.xScale != 1.0 {
+                            self.player.xScale = 1.0
+                            self.player.yScale = 1.0
+                        }
+                        //TODO: hide hammer if it is not needed.....
+                        blackHoleNode?.removeAllActions()
+                        blackHoleNode?.removeFromParent()
                     }
                 }]))
         }

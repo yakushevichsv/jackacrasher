@@ -146,7 +146,7 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
     
     //MARK: Item damaging
     var damageForce:ForceType {
-        return ForceType.max
+        return ForceType(100)
     }
     
     func destroyItem(item:ItemDestructable) -> Bool {

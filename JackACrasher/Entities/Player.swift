@@ -548,11 +548,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         self.health -= forceValue
         
         if (self.health > 0) {
-            
-            if self.health > ForceType(100) {
-                self.health = ForceType(100)
-            }
-            
+        
             let damage = Player.sDamageEmitter.copy() as! SKEmitterNode
             if (forceValue < 0) {
                 damage.particleColor = UIColor.greenColor()

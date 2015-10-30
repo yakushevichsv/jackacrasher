@@ -201,7 +201,12 @@ class HUDNode: SKNode {
         updateLifeCurPercentNode(true, prevValue: prevLifePercent)
     }
     
-    internal func setLifePercentUsingRatio(ratio:Float){
+    internal func setLifePercentUsingRatio(var ratio:Float){
+        
+        if (ratio > 1) {
+            ratio = ratio/100.0
+        }
+        
         assert(ratio >= 0 && ratio <= 1)
         
         let prevValue = self.curLifePercent

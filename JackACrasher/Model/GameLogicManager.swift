@@ -372,7 +372,20 @@ extension GameLogicManager
                                 dispatch_async(dispatch_get_main_queue()) {
                                     if let navVC = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UINavigationController {
                                         if let mainVC = navVC.topViewController {
-                                            mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK")
+                                            if let preseneted = mainVC.presentedViewController {
+                                                preseneted.dismissViewControllerAnimated(true) {
+                                                    mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK"){
+                                                        
+                                                        mainVC.view.userInteractionEnabled = true
+                                                    }
+                                                }
+                                            }
+                                            else {
+                                                mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK"){
+                                                    mainVC.view.userInteractionEnabled = true
+                                                }
+                                            }
+                                            
                                         }
                                     }
                                 }
@@ -585,10 +598,6 @@ extension GameLogicManager {
         return true
     }
     
-    internal var needToDisplayAdv:Bool {
-        get { return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.sNoAdProductId) }
-    }
-    
     internal func hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId:String) -> Bool {
         let key = getPlayerId().stringByAppendingString(productId)
         return NSUserDefaults.standardUserDefaults().boolForKey(key)
@@ -792,13 +801,11 @@ extension GameLogicManager {
 
 extension GameLogicManager {
     
-    private struct AdConstants {
-        static let AdKey = "AdKey"
-    }
-    
     var isAdvDisabled:Bool {
         get {
-            return NSUserDefaults.standardUserDefaults().boolForKey(GameLogicManager.AdConstants.AdKey)
+            let key = getPlayerId().stringByAppendingString(GameLogicManager.sNoAdProductId)
+            
+            return NSUserDefaults.standardUserDefaults().boolForKey(key)
         }
     }
     
@@ -813,7 +820,7 @@ extension GameLogicManager {
     
     private func setAdvState(disabled:Bool) -> Bool {
         let userDef = NSUserDefaults.standardUserDefaults()
-        let key = GameLogicManager.AdConstants.AdKey
+        let key = getPlayerId().stringByAppendingString(GameLogicManager.sNoAdProductId)
         
         if (!disabled) {
             //enabled... 
