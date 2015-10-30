@@ -1049,7 +1049,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         for node in didProduceAsteroids {
             node.zPosition = self.fgZPosition
-            addChild(node)
+            
+            if node.parent != Optional<SKNode>(self) {
+                addChild(node)
+            }
             
             //assert(CGRectGetHeight(self.playableArea) > CGRectGetHeight(node.frame) && CGRectGetHeight(node.frame) > CGRectGetMinY(self.playableArea), "Doesn't contain frame!")
             
@@ -2038,6 +2041,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if secondNode.parent != blackHoleNode.parent {
             
+                //HACK: failed here....
                 assert(self.player == secondNode)
                 
                 if self.player.isCaptured {
