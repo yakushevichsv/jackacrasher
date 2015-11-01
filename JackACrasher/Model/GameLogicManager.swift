@@ -224,23 +224,24 @@ extension GameLogicManager
     
     //MARK: Survival
     private func storeInDefaultsSurvivalTotalScore(score:UInt64,synch:Bool = true) -> Bool {
-        NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: Constants.SurvivalTotalScore)
-        if (synch) {
-            return NSUserDefaults.standardUserDefaults().synchronize()
-        }
-        return true
+        return storeInDefaultsScoreForExtraKeyParam(Constants.SurvivalTotalScore, score: score, synch: synch)
     }
     
     private func storeInDefaultsSurvivalBestScore(score:Int64,synch:Bool = true) -> Bool {
-        NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: Constants.SurvivalBestScore)
-        if (synch) {
-            return NSUserDefaults.standardUserDefaults().synchronize()
-        }
-        return true
+        
+        return storeInDefaultsScoreForExtraKeyParam(Constants.SurvivalBestScore, score: UInt64(score), synch: synch)
     }
     
     private func storeInDefaultsLongesTimeScore(score:Int64,synch:Bool = true) -> Bool {
-        NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: Constants.SurvivalLongestGame)
+        
+        return storeInDefaultsScoreForExtraKeyParam(Constants.SurvivalLongestGame, score: UInt64(score), synch: synch)
+    }
+    
+    private func storeInDefaultsScoreForExtraKeyParam(keypart:String,score:UInt64,synch:Bool = true) -> Bool {
+        
+        let key = getPlayerId().stringByAppendingString(keypart)
+        
+        NSUserDefaults.standardUserDefaults().setDouble(Double( score), forKey: key)
         if (synch) {
             return NSUserDefaults.standardUserDefaults().synchronize()
         }
@@ -267,21 +268,24 @@ extension GameLogicManager
     
     private func getFromDefaultsLongestGameTimeSurvivalScore() -> Int64 {
         
-        let total = Int64(NSUserDefaults.standardUserDefaults().doubleForKey(Constants.SurvivalLongestGame))
-        
-        return total
+        return Int64(getFromDefaultsScoreWithKeyPart(getPlayerId(), keyPart: Constants.SurvivalLongestGame))
     }
     
     private func getFromDefaultsBestSurvivalScore() -> Int64 {
         
-        let best = Int64(NSUserDefaults.standardUserDefaults().doubleForKey(Constants.SurvivalBestScore))
-        
-        return best
+        return Int64(getFromDefaultsScoreWithKeyPart(getPlayerId(), keyPart: Constants.SurvivalBestScore))
     }
     
     private func getFromDefaultsTotalSurvivalScore() -> UInt64 {
         
-        let total = UInt64(NSUserDefaults.standardUserDefaults().doubleForKey(Constants.SurvivalTotalScore))
+        return getFromDefaultsScoreWithKeyPart(getPlayerId(), keyPart: Constants.SurvivalTotalScore)
+    }
+    
+    private func getFromDefaultsScoreWithKeyPart(mainKey:String, keyPart:String) -> UInt64 {
+        
+        let key = mainKey.stringByAppendingString(keyPart)
+        
+        let total = UInt64(NSUserDefaults.standardUserDefaults().doubleForKey(key))
         
         return total
     }
@@ -430,24 +434,14 @@ extension GameLogicManager {
     
     internal func getPlayerId() -> String! {
         
-        let authCase = getAuthCase()
-        
         if let recName = getCloundPlayerId() {
-            if (authCase != .iCloud) {
-                storeAuthCase(authCase)
-            }
             return recName
-        } else if let playerID = getGameCenterPlayerId() {
-            if (authCase != .GameCenter) {
-                storeAuthCase(authCase)
+        } else if self.centerManager.isLocalUserAuthentificated {
+            if let playerID = getGameCenterPlayerId() {
+                return playerID
             }
-            return playerID
-        } else {
-            if (authCase != .None) {
-                storeAuthCase(authCase)
-            }
-            return getAnonymousPlayerId()
         }
+        return getAnonymousPlayerId()
     }
     
     
@@ -742,7 +736,12 @@ extension GameLogicManager {
         
         if let gameInfo = getCurrentSurvivalGameInfoFromDefaults() {
             
-            completion(gameInfo)
+            if gameInfo.isExpired {
+                completion(nil)
+            }
+            else {
+                completion(gameInfo)
+            }
             return
         }
         
@@ -764,7 +763,12 @@ extension GameLogicManager {
                     info.currentScore = score
                     self.storeCurrentSurvivalGameInfoInDefaults(info)
                     
-                    completion(info)
+                    if info.isExpired {
+                        completion(nil)
+                    }
+                    else {
+                        completion(info)
+                    }
                 }
                 else {
                     print("accessSurvivalGameScores. Error \(error)")
@@ -783,18 +787,21 @@ extension GameLogicManager {
     
     internal func storeGameSoundInfo(noSound:Bool) -> Bool {
         let def = NSUserDefaults.standardUserDefaults()
-        let key = "Me".stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+        let key = getPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
         def.setBool(noSound, forKey: key)
         return def.synchronize()
     }
     
     internal func gameSoundDisabled() -> Bool {
+        return GameLogicManager.gameSoundDisabledForKey(getPlayerId())
+    }
+    
+    internal class func gameSoundDisabledForKey(keyPart:String) -> Bool {
         let def = NSUserDefaults.standardUserDefaults()
-        let key = "Me".stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+        let key = keyPart.stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
         
         return def.boolForKey(key)
     }
-    
 }
 
 // MARK: Adv Logic 
@@ -803,10 +810,15 @@ extension GameLogicManager {
     
     var isAdvDisabled:Bool {
         get {
-            let key = getPlayerId().stringByAppendingString(GameLogicManager.sNoAdProductId)
-            
-            return NSUserDefaults.standardUserDefaults().boolForKey(key)
+           return isAdvDisabledForKey(getPlayerId())
         }
+    }
+    
+    func isAdvDisabledForKey(keyPart:String) -> Bool {
+        
+        let key = keyPart.stringByAppendingString(GameLogicManager.sNoAdProductId)
+        
+        return NSUserDefaults.standardUserDefaults().boolForKey(key)
     }
     
     func disableAdv() -> Bool {
@@ -870,7 +882,7 @@ extension GameLogicManager {
             case .GameCenter:
                 
                 oldAuthId = getGameCenterPlayerId()
-                
+            
                 break
             case .iCloud:
                 oldAuthId = getCloundPlayerId()
@@ -880,12 +892,27 @@ extension GameLogicManager {
                 break
         }
         
+        
+        storeAuthCase(authCase)
         if let oldAuthId = oldAuthId {
             
+            //current survival info score...
             if let info = GameLogicManager.getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(oldAuthId) {
                 
-                return storeCurrentSurvivalGameInfoInDefaults(info) || storeAuthCase(authCase)
+                if info.isExpired {
+                    
+                    //MARK: Need to remove that stuff....
+                    
+                    return true
+                }
+                
+                return storeCurrentSurvivalGameInfoInDefaults(info)
             }
+            
+            //no sound settings....
+            let noSound = GameLogicManager.gameSoundDisabledForKey(oldAuthId)
+            
+            return storeGameSoundInfo(noSound)
         }
         
         

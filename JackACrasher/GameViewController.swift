@@ -97,7 +97,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         self.btnPlay.hidden = false
         // Configure the view.
-        let skView = self.view as! SKView
+        let skView = self.skView
         let scene = GameScene(size: skView.bounds.size)
         
         skView.showsFPS = true

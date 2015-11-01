@@ -25,10 +25,6 @@ class ScoreNode: SKNode {
         label.position = point
         addChild(label)
         
-        //border.fillColor = SKColor.greenColor()
-        //border.strokeColor = SKColor.blackColor()
-        //addChild(border)
-        
         setScore(score)
     }
 
@@ -36,21 +32,11 @@ class ScoreNode: SKNode {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private func refineBorder() {
-        //let path = UIBezierPath(roundedRect: CGRectMake(0, 0, label.frame.size.width + 10, label.frame.size.height + 4), cornerRadius: 5)
-        //path.fill()
-        //path.stroke()
-        //border.path = path.CGPath
-    }
-    
     internal func setScore(var score:UInt64) {
         if (score < 0) {
             score = 0
         }
         label.text = "Score : \(score)"
-        refineBorder()
-        
     }
-    
     
 }

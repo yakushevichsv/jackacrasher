@@ -17,4 +17,22 @@ class SurvivalGameInfo: NSObject {
     internal var ratio:Float = 0
     internal var numberOfLives:survivalNumberOfLives = 0
     
+    
+    internal var isExpired:Bool {
+        get {
+            return numberOfLives == 0 && ratio == 0
+        }
+    }
+    
+    //MARK : Description
+    
+    override internal var description:String {
+        get {
+            return "Number of lives \(numberOfLives) \n" +
+                    "Current score \(currentScore)\n" +
+                    "Played Time \(playedTime)\n" +
+                    "Ratio \(ratio)"
+            
+        }
+    }
 }

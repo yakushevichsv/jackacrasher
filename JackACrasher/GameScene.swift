@@ -71,8 +71,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     private var endPoint:CGPoint = CGPointZero
     private var removedBlade:Bool = false
     
-    private let scoreLabel = SKLabelNode(fontNamed: "gamerobot")
-    
     private var playableArea:CGRect = CGRectZero
     private var gameScoreNode:ScoreNode!
     

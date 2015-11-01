@@ -375,6 +375,7 @@ class Transmitter:SKNode,AssetsContainer {
             })
             
             if (self.transmitNode.parent != Optional<SKNode>(self)) {
+                //MARK: HACK Fails here sometimes.....
                 if let sPoint = self.transmitNode.parent?.convertPoint(self.transmitNode.position, toNode: self) {
                     self.transmitNode.position = sPoint
                 }
