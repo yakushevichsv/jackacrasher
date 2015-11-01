@@ -135,18 +135,22 @@ class HUDNode: SKNode {
     
     private func createOtherNodes() {
         
-        
-        
         addChild(lifeCurPercentNode)
         
         let midX = CGFloat(round(self.size.width  * 0.5))
-        let midY = CGFloat(round(self.size.height * 0.5))
         
-        lifeLabelNode.position = CGPointMake(midX, midY)
         lifeLabelNode.fontColor = SKColor.blackColor()
         lifeLabelNode.fontSize = 20
+        lifeLabelNode.verticalAlignmentMode = .Bottom
         
         addChild(lifeLabelNode)
+        
+        lifeLabelNode.text = "10000"
+        
+        let yOffset = round(0.5*(self.size.height - CGRectGetHeight(lifeLabelNode.frame)))
+        
+        lifeLabelNode.position = CGPointMake(midX, yOffset)
+        lifeLabelNode.text = ""
     }
 
     required init?(coder aDecoder: NSCoder) {
