@@ -103,11 +103,6 @@ class GameMainViewController: UIViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
         
-        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
-        
-        self.btnSound.selected = !disabled
-        self.btnPressed(self.btnSound)
-        
         self.performActionOnRMainButton(nil,animated:false)
         
         let btn = self.btnGameCenter
@@ -211,8 +206,21 @@ class GameMainViewController: UIViewController {
         }
     }
     
+    func correctSoundButton() {
+        
+        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
+        
+        self.btnSound.selected = !disabled
+        self.btnPressed(self.btnSound)
+    }
+    
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "correctSoundButton", name: SYGameLogicManagerSoundNotification, object: GameLogicManager.sharedInstance)
+        
+        
+        correctSoundButton()
         
         if (!self.needToDisplayAnimation) {
             self.scheduleAnimation()
@@ -221,15 +229,15 @@ class GameMainViewController: UIViewController {
         
         foreverAsterAnim()
         
-        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
-        self.btnSound.selected = disabled
-        
         displayCloudKitAuthStatus()
     }
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         self.hideAsters()
+        
+    
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: SYGameLogicManagerSoundNotification, object: GameLogicManager.sharedInstance)
     }
     
     deinit {

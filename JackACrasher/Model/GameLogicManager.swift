@@ -17,6 +17,7 @@ enum AuthCase : Int {
     case None = 0, iCloud = 1, GameCenter = 2
 }
 
+let SYGameLogicManagerSoundNotification = "SYGameLogicManagerSoundNotification"
 
 class GameLogicManager: NSObject {
     
@@ -787,7 +788,7 @@ extension GameLogicManager {
     
     internal func storeGameSoundInfo(noSound:Bool) -> Bool {
         let def = NSUserDefaults.standardUserDefaults()
-        let key = getPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+        let key = currentSoundKey
         def.setBool(noSound, forKey: key)
         return def.synchronize()
     }
@@ -801,6 +802,12 @@ extension GameLogicManager {
         let key = keyPart.stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
         
         return def.boolForKey(key)
+    }
+    
+    internal var currentSoundKey:String {
+        get {
+            return getPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+        }
     }
 }
 
@@ -946,6 +953,8 @@ extension GameLogicManager {
             cloudChangedAuth()
         }
         else {
+            
+            NSNotificationCenter.defaultCenter().postNotificationName(SYGameLogicManagerSoundNotification, object: self)
             cloudChangedAuth()
         }
         
