@@ -95,12 +95,6 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
     private let displayAction = "displayAction"
     private let asterSize:RegularAsteroidSize
     
-    
-    
-    internal var mainSprite:SKSpriteNode! {
-        return self
-    }
-    
     internal var health:ForceType {
         get { return self.digitNode.digit }
         set { self.digitNode.digit = newValue}
@@ -328,7 +322,7 @@ class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
     }
     
     private func setupPhysicsBody(){
-        let texture = self.mainSprite.texture
+        let texture = self.texture
         
         let physBody = SKPhysicsBody(texture: texture!, size: texture!.size())
         physBody.categoryBitMask = EntityCategory.RegularAsteroid

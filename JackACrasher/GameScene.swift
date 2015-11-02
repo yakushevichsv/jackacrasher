@@ -341,6 +341,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         player.alpha = 1.0
         print("Z rotation \(self.player.zRotation)")
         self.player.hidden = false
+        
+        if let transmitter = self.childNodeWithName(Transmitter.NodeName) as? Transmitter {
+            transmitter.transmitNode = self.player
+        }
     }
 
     
@@ -871,6 +875,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     asteroid.physicsBody?.contactTestBitMask |= (EntityCategory.Player | EntityCategory.PlayerLaser)
                 }]))
             
+        }
+        else {
+            return
         }
         
         
@@ -2035,6 +2042,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
 
         self.userInteractionEnabled = !(secondNode is Player)
         
+        var isTransmitter = false
+        var wasAsteroid = false
+        
         if !self.userInteractionEnabled {
             
             if secondNode.parent != blackHoleNode.parent {
@@ -2045,17 +2055,23 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 if self.player.isCaptured {
                     
                     if let parent = self.player.parent as? RegularAsteroid {
+                        wasAsteroid = true
                         let scaleAction = SKAction.scaleTo(0.2, duration: 0.2)
                         parent.runAction(SKAction.sequence([scaleAction,SKAction.removeFromParent()]))
                     }
+                    else {
+                        isTransmitter = self.player.parent is Transmitter
+                    }
                 }
+                
                 let itemPos = contact.contactPoint
                 
                 
                 secondNode.removeFromParent()
+                addChild(secondNode)
+                
                 secondNode.removeAllActions()
                 secondNode.position = itemPos
-                addChild(secondNode)
             }
             
             
@@ -2078,8 +2094,28 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     } else {
                         self.player?.removeAllActions()
                         if self.player.parent == nil {
-                            self.addChild(self.player)
+                            
+                            if (isTransmitter) {
+                                
+                                if let transmitter = self.childNodeWithName(Transmitter.NodeName) {
+                                    
+                                    let posTrans =  self.player.parent!.convertPoint(self.player.position, toNode: transmitter)
+                                    
+                                    self.player.position = CGPointMake(0,posTrans.y)
+                                    self.player.removeFromParent()
+                                    transmitter.addChild(self.player)
+                                }
+                                
+                            }
+                            else {
+                                self.addChild(self.player)
+                            }
                         }
+                        
+                        if wasAsteroid {
+                            self.player.hideHammer()
+                        }
+                        
                         self.player.physicsBody?.categoryBitMask = EntityCategory.Player
                         self.userInteractionEnabled = true
                         

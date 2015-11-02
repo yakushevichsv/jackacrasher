@@ -36,7 +36,7 @@ class Transmitter:SKNode,AssetsContainer {
     private weak var basementNode:SKShapeNode! = nil
     private weak var rayNode:SKShapeNode! = nil
     private weak var laserNode:SKEmitterNode! = nil
-    private var transmitNode:Player! = nil
+    internal var transmitNode:Player! = nil
     
     private static var sLaserEmitter:SKEmitterNode!
     private static var sOne:dispatch_once_t = 0
@@ -146,6 +146,11 @@ class Transmitter:SKNode,AssetsContainer {
     
     internal func underRayBeam(node:SKNode!) -> Bool {
         
+        var nSize = CGSizeZero
+        if let sNode = node as? SKSpriteNode {
+            nSize = sNode.size
+        }
+        
         if node.parent != nil &&  node.parent! == self {
             return true
         }
@@ -156,7 +161,17 @@ class Transmitter:SKNode,AssetsContainer {
         let maxX = sPosition.x + size.halfWidth()
         let minX = sPosition.x - size.halfWidth()
         
-        let isUnder = minX <= itemPosition.x && maxX >= itemPosition.x
+        var isUnder:Bool
+        
+        if !CGSizeEqualToSize(CGSizeZero, nSize) {
+            
+            let x = itemPosition.x - nSize.halfWidth()
+            
+            isUnder = minX <= x && maxX >= x
+            
+        } else {
+            isUnder = minX <= itemPosition.x && maxX >= itemPosition.x
+        }
         
         if (isUnder){
             print("Under value!")
@@ -173,9 +188,6 @@ class Transmitter:SKNode,AssetsContainer {
         item.removeFromParent()
         item.position = location
         self.addChild(item)
-        var location2 = item.scene!.convertPoint(scenePosition, toNode: self)
-        location2.x  += item.size.halfWidth()
-        item.moveToPoint(location2)
         
         item.enableProjectileGun()
         
