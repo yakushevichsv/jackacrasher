@@ -543,6 +543,10 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         return projectile
     }
     
+    func willBeDestroyedWithFore(forceValue: ForceType) -> Bool {
+        return self.health - forceValue <= 0
+    }
+    
     
     func tryToDestroyWithForce(forceValue: ForceType) -> Bool {
         self.health -= forceValue

@@ -377,7 +377,8 @@ extension GameLogicManager
                                 dispatch_async(dispatch_get_main_queue()) {
                                     if let navVC = UIApplication.sharedApplication().delegate?.window??.rootViewController as? UINavigationController {
                                         if let mainVC = navVC.topViewController {
-                                            if let preseneted = mainVC.presentedViewController {
+                                            if let preseneted = mainVC.presentedViewController as? ShopDetailsViewController {
+                                                preseneted.prepareForDispose()
                                                 preseneted.dismissViewControllerAnimated(true) {
                                                     mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK"){
                                                         

@@ -781,7 +781,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         [unowned self] in
                         self.enemyGenerator.paused = false
                         //#if DEBUG
-                           self.enemyGenerator.appendToSceneBlackHoleAtPosition(self.player.parent!.convertPoint(self.player.position, toNode: self))
+                           //self.enemyGenerator.appendToSceneBlackHoleAtPosition(self.player.parent!.convertPoint(self.player.position, toNode: self))
                         //#endif
                         }
                 }
@@ -2064,14 +2064,23 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     }
                 }
                 
-                let itemPos = contact.contactPoint
+                let blackHoleWon = self.player.willBeDestroyedWithFore(blackHoleNode.damageForce)
                 
+                if (wasAsteroid || blackHoleWon) {
+                    let itemPos = contact.contactPoint
+                    
+                    secondNode.removeFromParent()
+                    addChild(secondNode)
                 
-                secondNode.removeFromParent()
-                addChild(secondNode)
+                    secondNode.removeAllActions()
+                    secondNode.position = itemPos
+                }
                 
-                secondNode.removeAllActions()
-                secondNode.position = itemPos
+                if !blackHoleWon {
+                    self.tryToDestroyPlayer(blackHoleNode.damageForce)
+                    self.restartGameForPlayer(wasAsteroid,blackHoleNode: blackHoleNode,isTransmitter: isTransmitter)
+                    return true
+                }
             }
             
             
@@ -2081,6 +2090,14 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             else {
                 secondNode.physicsBody?.categoryBitMask = 0
             }
+        }
+        
+        let blackHoleWon = self.player.willBeDestroyedWithFore(blackHoleNode.damageForce)
+        
+        if !blackHoleWon {
+            self.tryToDestroyPlayer(blackHoleNode.damageForce)
+            self.restartGameForPlayer(wasAsteroid,blackHoleNode: blackHoleNode,isTransmitter: isTransmitter)
+            return true
         }
 
         let durationToWait = blackHoleNode.moveItemToCenterOfField(secondNode)
@@ -2092,40 +2109,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         self.terminateGame()
                         self.player?.removeFromParent()
                     } else {
-                        self.player?.removeAllActions()
-                        if self.player.parent == nil {
-                            
-                            if (isTransmitter) {
-                                
-                                if let transmitter = self.childNodeWithName(Transmitter.NodeName) {
-                                    
-                                    let posTrans =  self.player.parent!.convertPoint(self.player.position, toNode: transmitter)
-                                    
-                                    self.player.position = CGPointMake(0,posTrans.y)
-                                    self.player.removeFromParent()
-                                    transmitter.addChild(self.player)
-                                }
-                                
-                            }
-                            else {
-                                self.addChild(self.player)
-                            }
-                        }
-                        
-                        if wasAsteroid {
-                            self.player.hideHammer()
-                        }
-                        
-                        self.player.physicsBody?.categoryBitMask = EntityCategory.Player
-                        self.userInteractionEnabled = true
-                        
-                        if self.player.xScale != 1.0 {
-                            self.player.xScale = 1.0
-                            self.player.yScale = 1.0
-                        }
-                        //TODO: hide hammer if it is not needed.....
-                        blackHoleNode?.removeAllActions()
-                        blackHoleNode?.removeFromParent()
+                        self.restartGameForPlayer(wasAsteroid,blackHoleNode: blackHoleNode,isTransmitter: isTransmitter)
                     }
                 }]))
         }
@@ -2138,6 +2122,45 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         return true
     }
     
+    
+    private func restartGameForPlayer(wasAsteroid:Bool,blackHoleNode:SKNode!,isTransmitter:Bool) {
+        
+        self.player?.removeAllActions()
+        if self.player.parent == nil {
+            
+            if (isTransmitter) {
+                
+                if let transmitter = self.childNodeWithName(Transmitter.NodeName) {
+                    
+                    let posTrans =  self.player.parent!.convertPoint(self.player.position, toNode: transmitter)
+                    
+                    self.player.position = CGPointMake(0,posTrans.y)
+                    self.player.removeFromParent()
+                    transmitter.addChild(self.player)
+                }
+                
+            }
+            else {
+                self.addChild(self.player)
+            }
+        }
+        
+        if wasAsteroid {
+            self.player.hideHammer()
+        }
+        
+        self.player.physicsBody?.categoryBitMask = EntityCategory.Player
+        self.userInteractionEnabled = true
+        
+        if self.player.xScale != 1.0 {
+            self.player.xScale = 1.0
+            self.player.yScale = 1.0
+        }
+            //TODO: hide hammer if it is not needed.....
+            blackHoleNode?.removeAllActions()
+            blackHoleNode?.removeFromParent()
+    }
+
     private func tryToDestroyDestructableItem(blackHoleNode:BlackHole, secondNode:SKNode!) {
         
         if let destNode = secondNode as? ItemDestructable {

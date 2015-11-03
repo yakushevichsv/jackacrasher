@@ -259,7 +259,13 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
     }
     
     deinit {
+        prepareForDispose()
+    }
+    
+    func prepareForDispose() {
         NSNotificationCenter.defaultCenter().removeObserver(PurchaseManager.sharedInstance)
+        
+        self.products.removeAll()
         
         for taskIdKey in self.processingCellsImages.keys {
             if let taskId = self.processingCellsImages[taskIdKey] {
@@ -394,7 +400,13 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
                                 dispatch_async(dispatch_get_main_queue()) {
                                     [unowned self] in
                                     
-                                    self.processingCellsImages.removeValueForKey(indexPath)
+                                    if self.view.window == nil {
+                                        return 
+                                    }
+                                    
+                                    if (!self.processingCellsImages.isEmpty) {
+                                        self.processingCellsImages.removeValueForKey(indexPath)
+                                    }
                                     
                                     for vIndexPath in collectionView.indexPathsForVisibleItems() {
                                         if (vIndexPath == indexPath && collectionViewCell == collectionView.cellForItemAtIndexPath(indexPath)) {
