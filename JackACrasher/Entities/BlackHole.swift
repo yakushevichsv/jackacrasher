@@ -132,6 +132,8 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
     
     internal func moveItemToCenterOfField(item:SKNode!) -> NSTimeInterval {
         
+        print("Move item \(item) at position \(item.position) ") 
+        
         let duration = max(0,min(NSTimeInterval(1.5), NSDate.timeIntervalSinceReferenceDate() - self.presentTime))
         
         let rotate = SKAction.repeatActionForever(SKAction.rotateByAngle(π, duration: duration/2))

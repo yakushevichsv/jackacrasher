@@ -38,6 +38,7 @@
 		2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */; };
 		2138E0BA1B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */; };
 		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
+		213920941BEA2A3900C403A0 /* crack.fsh in Resources */ = {isa = PBXBuildFile; fileRef = 213920931BEA2A3900C403A0 /* crack.fsh */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
@@ -158,6 +159,7 @@
 		2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PauseReturnViewController.swift; path = ViewControllers/PauseReturnViewController.swift; sourceTree = "<group>"; };
 		2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPauseTransitionDelegate.swift; path = ViewControllers/ReturnPauseTransitionDelegate.swift; sourceTree = "<group>"; };
 		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
+		213920931BEA2A3900C403A0 /* crack.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = crack.fsh; path = Shaders/crack.fsh; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
@@ -280,6 +282,14 @@
 				210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */,
 			);
 			name = IAP;
+			sourceTree = "<group>";
+		};
+		213920921BEA2A0F00C403A0 /* Shaders */ = {
+			isa = PBXGroup;
+			children = (
+				213920931BEA2A3900C403A0 /* crack.fsh */,
+			);
+			name = Shaders;
 			sourceTree = "<group>";
 		};
 		214007A51B0D2D1A00072C9F /* Nodes */ = {
@@ -552,6 +562,7 @@
 		21FFEAE51AD5E216000115F6 /* JackACrasher */ = {
 			isa = PBXGroup;
 			children = (
+				213920921BEA2A0F00C403A0 /* Shaders */,
 				21B2C99A1B85281F0008FEED /* External */,
 				2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */,
 				218D5A811B317C5B007ABE63 /* Categories */,
@@ -721,6 +732,7 @@
 				21948BBE1B1DBAE000C438F6 /* Damage.sks in Resources */,
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
 				21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */,
+				213920941BEA2A3900C403A0 /* crack.fsh in Resources */,
 				21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */,
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
 				212B55FA1B8E52F400B816FD /* enemyDeath.sks in Resources */,
@@ -892,7 +904,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -929,7 +941,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -959,6 +971,7 @@
 					/Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include,
 				);
 				INFOPLIST_FILE = JackACrasher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					./OpenSSL/lib,
@@ -996,6 +1009,7 @@
 					/Users/siarheiy/Developer/Projects/SY_Working/JackACrasher/JackACrasher/OpenSSL/include,
 				);
 				INFOPLIST_FILE = JackACrasher/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = (
 					./OpenSSL/lib,

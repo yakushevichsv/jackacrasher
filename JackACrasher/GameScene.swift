@@ -349,6 +349,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
 
     
     override func didMoveToView(view: SKView) {
+        
         SoundManager.sharedInstance.prepareToPlayBGMusic()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willTerminateApp", name: UIApplicationWillTerminateNotification, object: UIApplication.sharedApplication())
         
@@ -395,6 +396,20 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         id s1 = [self.tdNode valueForKey:@"_scnRenderer"];
         NSLog(@"%@", s1);
         }*/
+        
+        
+        /*let shaderContainer = SKSpriteNode(imageNamed: "spark")
+        print("Texture \(shaderContainer.texture!)")
+        //shaderContainer.name = kNodeNameTransitionShaderNode
+        shaderContainer.zPosition = 9999 // something arbitrarily large to ensure it's in the foreground
+        shaderContainer.position = CGPointMake(size.width / 2, size.height / 2)
+        shaderContainer.size = CGSizeMake(size.width, size.height)
+        shaderContainer.shader = GameScene.crackShader*/
+        //self.addChild(shaderContainer)
+        
+        self.shader = GameScene.crackShader
+        //self.shader = GameScene.crackShader
+        
     }
     
     func createLeftBorderEdge() {
@@ -781,7 +796,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                         [unowned self] in
                         self.enemyGenerator.paused = false
                         //#if DEBUG
-                           //self.enemyGenerator.appendToSceneBlackHoleAtPosition(self.player.parent!.convertPoint(self.player.position, toNode: self))
+                           self.enemyGenerator.appendToSceneBlackHoleAtPosition(self.player.parent!.convertPoint(self.player.position, toNode: self))
                         //#endif
                         }
                 }
@@ -2683,6 +2698,12 @@ extension GameScene {
         return isRope
     }
 
+}
+
+//MARK: Shader
+extension GameScene {
+    
+    private static var crackShader = SKShader(fileNamed: "crack")
 }
 
  
