@@ -114,13 +114,6 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
             
             self.setFieldState(true)
             
-            /*let delayTime = dispatch_time(DISPATCH_TIME_NOW,
-                Int64(4 * Double(NSEC_PER_SEC)))
-            
-            dispatch_after(delayTime, dispatch_get_main_queue()){
-                completion()
-            }*/
-            
             },SKAction.waitForDuration(time3),SKAction.runBlock(){
                 completion()
             }]
@@ -132,14 +125,31 @@ class BlackHole: SKNode,ItemDamaging,AssetsContainer {
     
     internal func moveItemToCenterOfField(item:SKNode!) -> NSTimeInterval {
         
+        var neItem:SKSpriteNode! = nil
+        
+        if let item2 = item as? SKSpriteNode {
+            neItem = SKSpriteNode(texture: item2.texture)
+            neItem.position = item.position
+            item.parent!.addChild(neItem)
+        }
+        
+        item.hidden = true
+        item.removeAllActions()
+        
+        
+        let destPosition = item.parent == Optional<SKNode>(self) ? CGPointZero : self.position
+        
+        print("Move item from position \(item.position) to position \(destPosition) ")
+        
         let duration = max(0,min(NSTimeInterval(1.5), NSDate.timeIntervalSinceReferenceDate() - self.presentTime))
         
         let rotate = SKAction.repeatActionForever(SKAction.rotateByAngle(π, duration: duration/2))
-        let move = SKAction.moveTo(item.parent == Optional<SKNode>(self) ? CGPointZero : self.position, duration: duration)
+        let move = SKAction.moveTo(destPosition, duration: duration)
         let shrink = SKAction.scaleTo(0.2, duration: duration)
         
         
-        item.runAction(SKAction.group([rotate,move,shrink]))
+        neItem.runAction(SKAction.group([rotate,move,shrink]))
+        neItem.hidden = false
         
         return duration
     }

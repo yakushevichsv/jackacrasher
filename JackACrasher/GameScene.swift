@@ -880,7 +880,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             return
         }
         
-        
+        self.player.hideHammer()
             
                 //let pPos = recursiveConvertPositionToScene(self.player)
         print("Current position \(pPos)")

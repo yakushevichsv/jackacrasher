@@ -75,6 +75,10 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     private var prevTimeInterval:NSTimeInterval = 0
     
+    override init(texture: SKTexture?, color: UIColor, size: CGSize) {
+        super.init(texture: texture, color: color, size: size)
+    }
+    
     internal var isCaptured:Bool {
         get {return self.parent != self.scene }
     }
