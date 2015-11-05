@@ -766,8 +766,12 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                                 return
                             }
                             
-                            if (transmitter.underRayBeam(self.player!) && !self.player.isCaptured) {
-                                returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true)
+                            if (transmitter.underRayBeam(self.player!) && self.player.isCaptured) {
+                                let returned = returnPlayerToScene(parent, removeAsteroid: false,usePlayerPostion:true,needToExplode: true)
+                                
+                                if returned {
+                                    return
+                                }
                             }
                         }
                         
@@ -825,14 +829,18 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         applyImpulseToNode(sprite, vector: CGVector(dx: -40, dy: 0.0))
     }
     
-    func returnPlayerToScene(sprite:SKNode,removeAsteroid:Bool = true,usePlayerPostion:Bool = false) -> Bool {
+    func returnPlayerToScene(sprite:SKNode,removeAsteroid:Bool = true,usePlayerPostion:Bool = false, needToExplode:Bool = false) -> Bool {
         
         if self.player.isCaptured {
             
             let position = convertNodePosition(sprite, toScene: self)
             self.removePlayerFromRegularAsteroidToScene(position)
             
-            if usePlayerPostion {
+            if needToExplode {
+                createRocksExplosion(position, scale: 2.0)
+                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: sprite, withType: .Regular)
+            }
+            else if usePlayerPostion {
                 applyBackImpulseToNode(sprite)
             }
             
@@ -1199,6 +1207,24 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             self.asteroidGenerator.paused = true
             
             if let transmitter = didProduceItems.last as? Transmitter {
+                
+                // HACK: produce regular Asteroid
+                
+                let aster = RegularAsteroid(asteroid: .Big, maxLife:3,needToAnimate:false)
+                let action = self.asteroidGenerator.produceSeqActionToAsteroid(aster,asteroidSpeed:2)
+                aster.runAction(action)
+                
+                aster.position = transmitter.position - CGPoint(x: 100, y: 0)
+                
+                aster.position.y = self.player.position.y
+                
+                self.asteroidGenerator(self.asteroidGenerator, didProduceAsteroids: [aster], type: .Regular)
+                
+                
+                // END HACK...
+                
+                
+                
                 self.player.enableProjectileGun()
                 if (!transmitter.moveToPosition(toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y))) {
                     //TODO: Transfer ownership of the player to transmitter
