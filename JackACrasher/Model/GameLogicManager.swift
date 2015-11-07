@@ -498,9 +498,9 @@ extension GameLogicManager {
         }
     }
     
-    internal func appendSurvivalGameValuesToDefaults(score:Int64,time:NSTimeInterval) -> Bool {
+    internal class func appendSurvivalGameValuesToDefaults(keyPart:String,score:Int64,time:NSTimeInterval) -> Bool {
         
-        let key = getPlayerId().stringByAppendingString(Constants.SurvivalScores)
+        let key = keyPart.stringByAppendingString(Constants.SurvivalScores)
         
         var array:[AnyObject]! = NSUserDefaults.standardUserDefaults().arrayForKey(key)
         
@@ -515,11 +515,32 @@ extension GameLogicManager {
         return NSUserDefaults.standardUserDefaults().synchronize()
     }
     
-    internal func submitSurvivalGameValues(completionHandler:((isError:Bool)->Void)!) {
+    internal func appendSurvivalGameValuesToDefaults(score:Int64,time:NSTimeInterval) -> Bool {
         
-        let newKey = getPlayerId().stringByAppendingString(Constants.SurvivalScores)
+       return GameLogicManager.appendSurvivalGameValuesToDefaults(getPlayerId(), score: score, time: time)
+    }
+    
+    internal func storeSurvivalGameValuesToDefaults(items:[[String:AnyObject]]) -> Bool {
+        
+        let key = getPlayerId().stringByAppendingString(Constants.SurvivalScores)
+        
+        
+        NSUserDefaults.standardUserDefaults().setObject(items, forKey: key)
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    internal class func getSurvivalGameValuesFromDefaults(keyPair:String) -> [[String:AnyObject]]? {
+        
+        let newKey = keyPair.stringByAppendingString(Constants.SurvivalScores)
         
         let items = NSUserDefaults.standardUserDefaults().arrayForKey(newKey) as? [[String:AnyObject]]
+        
+        return items
+    }
+    
+    internal func submitSurvivalGameValues(completionHandler:((isError:Bool)->Void)!) {
+        
+        let items = GameLogicManager.getSurvivalGameValuesFromDefaults(getPlayerId())
         
         if let items = items {
             
@@ -691,6 +712,14 @@ extension GameLogicManager {
         return GameLogicManager.getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(getPlayerId())
     }
     
+    private class func removeCurrentSurvivalGameInfoFromDefaultsWithPlayerId(playerId:String) -> Bool {
+        
+        let key = playerId.stringByAppendingString(Constants.SurvivalCurrentGameInfoAdditionKey)
+        
+        NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
     
     private class func getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(playerId:String) -> SurvivalGameInfo? {
         
@@ -901,26 +930,31 @@ extension GameLogicManager {
         }
         
         
-        storeAuthCase(authCase)
         if let oldAuthId = oldAuthId {
             
             //current survival info score...
             if let info = GameLogicManager.getCurrentSurvivalGameInfoFromDefaultsWithPlayerId(oldAuthId) {
                 
                 if info.isExpired {
-                    
-                    //MARK: Need to remove that stuff....
-                    
-                    return true
+                    GameLogicManager.removeCurrentSurvivalGameInfoFromDefaultsWithPlayerId(oldAuthId)
                 }
-                
-                return storeCurrentSurvivalGameInfoInDefaults(info)
+                else {
+                    storeCurrentSurvivalGameInfoInDefaults(info)
+                }
             }
             
             //no sound settings....
             let noSound = GameLogicManager.gameSoundDisabledForKey(oldAuthId)
             
-            return storeGameSoundInfo(noSound)
+            storeGameSoundInfo(noSound)
+            
+            // transfer score & played time....
+            if let items = GameLogicManager.getSurvivalGameValuesFromDefaults(oldAuthId) {
+                self.storeSurvivalGameValuesToDefaults(items)
+            }
+            
+            return true
+            
         }
         
         
