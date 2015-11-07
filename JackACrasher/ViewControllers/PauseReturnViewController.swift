@@ -17,6 +17,8 @@ class PauseReturnViewController: UIViewController {
     @IBOutlet weak var btnSound:UIButton!
     
     
+    var exitCompletion:dispatch_block_t? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -46,6 +48,12 @@ class PauseReturnViewController: UIViewController {
             return
         }
         else {
+            
+            if sender == self.btnExit && exitCompletion != nil {
+                exitCompletion!()
+                exitCompletion = nil
+            }
+            
             self.dismissViewControllerAnimated(true, completion:nil)
         }
     }

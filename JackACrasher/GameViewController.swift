@@ -195,6 +195,14 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 
                 let dVC = segue.destinationViewController as! PauseReturnViewController
                 
+                dVC.exitCompletion = {
+                    [unowned self]
+                    ()->Void in
+                    
+                    if let scene = self.skView.scene as? GameScene {
+                        scene.willTerminateApp()
+                    }
+                }
                 
                 let transDelegate = self.returnPauseTransDelegate
                 transDelegate.rect = self.view.bounds

@@ -420,10 +420,6 @@ extension CloudManager {
 extension CloudManager {
     
     private struct GameConstants {
-        static let TimeRecord = "Time"
-        static let TimeRecordTimeKey = "Time"
-        static let ScoreRecord = "Score"
-        static let ScoreRecordScoreKey = "Score"
         static let SurvivalRecord = "SurvivalRecord"
         static let ScoreKey = "Score"
         static let TimeKey = "Time"

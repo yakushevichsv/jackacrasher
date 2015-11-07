@@ -431,7 +431,15 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     }
     
     func willTerminateApp() {
-        terminateGame(false)
+        if let sPlayer = self.player {
+            var fractHealth = sPlayer.health % 100
+            if fractHealth == 0  {
+               fractHealth = ForceType(100)
+            }
+            if self.tryToDestroyPlayer(ForceType(fractHealth)) {
+                terminateGame(false)
+            }
+        }
     }
     
     private func terminateGame(needToContinue:Bool = true) {
