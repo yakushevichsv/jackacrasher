@@ -39,6 +39,11 @@ class CloudManager: NSObject {
         self.userInfo.getUserId(){
             recordID,error in
         }
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didBecomeActive:", name: UIApplicationDidBecomeActiveNotification, object: nil)
+    }
+    
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
     }
     
     internal var recordID:CKRecordID? {
@@ -76,6 +81,10 @@ class CloudManager: NSObject {
     }
     
     //MARK: Other methods
+    func didBecomeActive(aNotification:NSNotification!) {
+        cloudChanged(aNotification)
+    }
+    
     func cloudChanged(aNotification:NSNotification!) {
         let (token,isPresent) = CloudManager.jacIsICloudAvailable()
         self.userLoggedIn = isPresent
