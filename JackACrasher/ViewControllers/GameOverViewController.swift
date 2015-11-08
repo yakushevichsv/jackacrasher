@@ -13,7 +13,6 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
 
     @IBOutlet weak var containerView:UIView!
     @IBOutlet weak var btnReplay:UIButton!
-    @IBOutlet weak var bntShop:UIButton!
     @IBOutlet weak var btnMainMenu:UIButton!
     
     var didWin:Bool = false {
@@ -52,7 +51,6 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
             self.btnMainMenu.superview?.bringSubviewToFront(self.btnMainMenu)
             
             self.btnReplay.superview?.bringSubviewToFront(self.btnReplay)
-            self.bntShop.superview?.bringSubviewToFront(self.bntShop)
         }
     }
     

@@ -22,7 +22,6 @@
             <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
-            <string>gamerobot</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -111,6 +110,9 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="rvc-9G-ulH"/>
+                                </connections>
                             </button>
                             <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="261" y="410" width="79" height="46"/>
@@ -707,7 +709,7 @@
                                 <rect key="frame" x="120" y="438" width="360" height="132"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="q2p-pw-i4f" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="215" y="78" width="116" height="46"/>
+                                        <rect key="frame" x="212" y="78" width="116" height="46"/>
                                         <animations/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="116" id="wSN-I6-qSK"/>
@@ -733,35 +735,8 @@
                                             <segue destination="0GO-4n-zFX" kind="unwind" unwindAction="unwindToReplay:" id="Plg-oS-MIj"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="qMM-Zo-ova" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="143" y="14" width="74" height="46"/>
-                                        <animations/>
-                                        <constraints>
-                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="74" id="Aqo-rk-a2t"/>
-                                        </constraints>
-                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
-                                        <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
-                                        <state key="normal" title="Shop">
-                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="5"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="btnPressed:" destination="qda-7r-HQm" eventType="touchUpInside" id="qF8-T5-P7G"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hIE-rY-cmt" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="8" y="78" width="170" height="46"/>
+                                        <rect key="frame" x="5" y="78" width="170" height="46"/>
                                         <animations/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="170" id="JDL-Wg-yB7"/>
@@ -790,13 +765,11 @@
                                 </subviews>
                                 <animations/>
                                 <constraints>
+                                    <constraint firstItem="hIE-rY-cmt" firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" multiplier="0.5" id="5K2-yv-8ag"/>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="top" secondItem="hIE-rY-cmt" secondAttribute="top" id="88D-Gg-l8I"/>
-                                    <constraint firstItem="q2p-pw-i4f" firstAttribute="leading" secondItem="qMM-Zo-ova" secondAttribute="trailing" constant="-2" id="JMl-gl-nH3"/>
                                     <constraint firstAttribute="bottom" secondItem="hIE-rY-cmt" secondAttribute="bottom" constant="8" id="RYb-ni-jbK"/>
-                                    <constraint firstItem="hIE-rY-cmt" firstAttribute="top" secondItem="qMM-Zo-ova" secondAttribute="bottom" constant="18" id="ftP-8o-WJM"/>
-                                    <constraint firstItem="qMM-Zo-ova" firstAttribute="leading" secondItem="hIE-rY-cmt" secondAttribute="trailing" constant="-35" id="k85-gg-lgr"/>
                                     <constraint firstAttribute="height" constant="132" id="oVe-gq-jNl"/>
-                                    <constraint firstAttribute="centerX" secondItem="qMM-Zo-ova" secondAttribute="centerX" id="wnE-dV-3t3"/>
+                                    <constraint firstItem="q2p-pw-i4f" firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" multiplier="1.5" id="vnQ-WK-HDn"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -808,7 +781,6 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="bntShop" destination="qMM-Zo-ova" id="GnX-Gh-Sjy"/>
                         <outlet property="btnMainMenu" destination="hIE-rY-cmt" id="V7q-K9-ZLS"/>
                         <outlet property="btnReplay" destination="q2p-pw-i4f" id="5YX-aW-i6I"/>
                         <outlet property="containerView" destination="u7c-lb-ttF" id="ewR-Uw-6Bb"/>

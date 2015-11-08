@@ -138,6 +138,8 @@ class GameMainViewController: UIViewController {
         
         self.btnVK.setImage(UIImage(named:name), forState: .Normal)
         
+        self.btnCompany.setTitleColor(self.btnCompany.titleColorForState(.Disabled), forState: .Normal)
+        
         processAdv()
     }
 
@@ -219,12 +221,15 @@ class GameMainViewController: UIViewController {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "correctSoundButton", name: SYGameLogicManagerSoundNotification, object: GameLogicManager.sharedInstance)
         
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationWillEnterForegroundNotification, object: nil)
         
         correctSoundButton()
         
         if (!self.needToDisplayAnimation) {
             self.scheduleAnimation()
             self.needToDisplayAnimation = true
+        } else if self.btnStrategy.enabled {
+            shakeStrategyBtn()
         }
         
         foreverAsterAnim()
@@ -238,6 +243,14 @@ class GameMainViewController: UIViewController {
         
     
         NSNotificationCenter.defaultCenter().removeObserver(self, name: SYGameLogicManagerSoundNotification, object: GameLogicManager.sharedInstance)
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: UIApplicationWillEnterForegroundNotification, object: nil)
+    }
+    
+    func willMoveToFG(aNotification:NSNotification) {
+        if self.btnStrategy.enabled {
+            shakeStrategyBtn()
+        }
     }
     
     deinit {
@@ -341,6 +354,8 @@ class GameMainViewController: UIViewController {
             
             dispatch_async(dispatch_get_main_queue(), { () -> Void in
                 if (didAnimated) {
+                    
+                    
                     self.enableButtons()
                 }
                 else {
@@ -353,12 +368,61 @@ class GameMainViewController: UIViewController {
                 self.shiftInButtons()
             }, completion: { (finished) -> Void in
                 if (didLoadAssets) {
+                    self.shakeStrategyBtn()
                     self.enableButtons()
                 }
                 else {
                     didAnimated = true
                 }
         })
+    }
+    
+    private func shakeStrategyBtn() {
+        
+        if self.view.gestureRecognizers == nil || self.view.gestureRecognizers!.isEmpty {
+            let recog = UITapGestureRecognizer(target: self, action: "handlePress:")
+            self.view.addGestureRecognizer(recog)
+        }
+        
+        if CGAffineTransformEqualToTransform(self.btnStrategy.transform, CGAffineTransformIdentity) {
+            self.btnStrategy.transform = CGAffineTransformMakeRotation(-π/90)
+            self.btnStrategy.userInteractionEnabled = false
+        }
+        
+        UIView.animateWithDuration(0.25, delay: 0.0, options: UIViewAnimationOptions(rawValue: UIViewAnimationOptions.Repeat.rawValue | UIViewAnimationOptions.Autoreverse.rawValue), animations: {
+            [unowned self]
+            () -> Void in
+                self.btnStrategy.clipsToBounds = true
+                self.btnStrategy.transform = CGAffineTransformMakeRotation(π/90)
+            }) {
+                [unowned self]
+                (finisehd) in
+                self.btnStrategy.clipsToBounds = false
+                self.btnStrategy.transform = CGAffineTransformIdentity
+                self.btnStrategy.userInteractionEnabled = true
+        }
+    }
+    
+    func handlePress(recognizer:UITapGestureRecognizer) {
+        
+        if (recognizer.state == UIGestureRecognizerState.Ended) {
+            
+            let count = recognizer.numberOfTouches()
+            
+            for index  in 0...count-1 {
+               let location = recognizer.locationOfTouch(index, inView: self.view)
+                
+                if (CGRectContainsPoint(self.btnStrategy.frame, location)) {
+                    
+                    btnPressed(self.btnStrategy)
+                    
+                    self.view.removeGestureRecognizer(recognizer)
+                    
+                    break
+                }
+            }
+            
+        }
     }
     
     //MARK: eee  Why it is not called?
@@ -666,6 +730,11 @@ class GameMainViewController: UIViewController {
         
         unwindForAd()
         
+        
+        if self.btnStrategy.enabled {
+            self.shakeStrategyBtn()
+        }
+        
     }
     
     @IBAction  func btnPressed(sender: UIButton) {
@@ -675,6 +744,11 @@ class GameMainViewController: UIViewController {
                 self.performSegueWithIdentifier("startSurvival", sender: self)
                 sender.enabled = true
             })
+            sender.userInteractionEnabled = true
+        } else if (sender == self.btnCompany) {
+            
+           self.alertWithTitle("Sorry", message: "That functionality hasn't been implemented yet")
+            
         } else if (sender == self.btnGameCenter) {
             
             if !self.displayOnNeedGameKitAuthStatus() {
