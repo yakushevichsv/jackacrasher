@@ -57,6 +57,16 @@ extension UIViewController {
                 let font = UIFont(name: fontName,  size: pSize)
                 bView.titleLabel?.font = font
             }
+            else if let tView = subView as? UITextField {
+                let font = UIFont(name: fontName, size: tView.font!.pointSize)
+                tView.font = font
+                correctFontOfChildViews(tView)
+            }
+            else if let tView = subView as? UITextView {
+                let font = UIFont(name: fontName, size: tView.font!.pointSize)
+                tView.font = font
+                correctFontOfChildViews(tView)
+            }
             else {
                 correctFontOfChildViews(subView)
             }

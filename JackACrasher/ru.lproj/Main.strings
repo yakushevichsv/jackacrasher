@@ -24,7 +24,7 @@
 "fjR-H4-NMu.normalTitle" = "Выживание";
 
 /* Class = "UIButton"; normalTitle = "Main Menu"; ObjectID = "hIE-rY-cmt"; */
-"hIE-rY-cmt.normalTitle" = "Главное Меню";
+"hIE-rY-cmt.normalTitle" = "Меню";
 
 /* Class = "UIButton"; normalTitle = "Pause"; ObjectID = "mvV-T3-331"; */
 "mvV-T3-331.normalTitle" = "Пауза";
@@ -33,7 +33,7 @@
 "nd9-3T-vrx.normalTitle" = "Компания";
 
 /* Class = "UIButton"; normalTitle = "Replay"; ObjectID = "q2p-pw-i4f"; */
-"q2p-pw-i4f.normalTitle" = "Переиграть";
+"q2p-pw-i4f.normalTitle" = "Играть ещё";
 
 /* Class = "UILabel"; text = "Please select the action"; ObjectID = "w7g-AR-pH7"; */
 "w7g-AR-pH7.text" = "Пожалуйста выберите действие";
