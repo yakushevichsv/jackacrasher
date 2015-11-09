@@ -463,7 +463,7 @@ class GameMainViewController: UIViewController {
                 var images = [UIImage]()
                 
                 for index in start...end {
-                    let name = "heltp-page00\(index).png"
+                    let name = "help-page00\(index).png"
                     let image = UIImage(named: name)
                     images.append(image!)
                 }

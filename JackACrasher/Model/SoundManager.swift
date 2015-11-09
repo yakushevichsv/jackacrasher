@@ -80,6 +80,7 @@ class SoundManager: NSObject, AVAudioPlayerDelegate {
         
         if prepared && player != nil {
             self.backgroundMusicPlayer = player
+            player?.numberOfLoops = -1
         }
         
         return prepared

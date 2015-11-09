@@ -78,10 +78,10 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker, ItemDestructable {
         let label = NORLabelNode(fontNamed: "gamerobot")
         label.text = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically"
         label.fontColor = SKColor.redColor()
-        label.fontSize = 40
+        label.fontSize = 25
         label.lineSpacing = 3
-        label.position = CGPointMake(-Bomb.sBombTexture.size().halfWidth()+50, Bomb.sBombTexture.size().halfHeight() + 20)
-        label.zRotation = CGFloat(-M_PI_2)
+        label.position = CGPointMake(-Bomb.sBombTexture.size().halfWidth()+50, Bomb.sBombTexture.size().halfHeight() - 40)
+        label.zRotation = CGFloat(0)
         addChild(label)
     }
     

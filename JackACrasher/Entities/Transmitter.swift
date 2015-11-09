@@ -206,8 +206,8 @@ class Transmitter:SKNode,AssetsContainer {
         
         
         if EnabledDisplayDebugLabel {
-            //appendDebugLabel()
-            appendRows()
+            appendDebugLabel()
+            //appendRows()
         }
         
         

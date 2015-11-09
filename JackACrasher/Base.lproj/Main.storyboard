@@ -114,37 +114,6 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="rvc-9G-ulH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="261" y="410" width="79" height="46"/>
-                                <animations/>
-                                <constraints>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="79" id="nST-Pv-pPT"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
-                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
-                                <state key="normal" title="Shop">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="disabled">
-                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                        <real key="value" value="5"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                        <real key="value" value="1"/>
-                                    </userDefinedRuntimeAttribute>
-                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                        <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                                <connections>
-                                    <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="CWo-wD-shJ"/>
-                                    <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="syR-z3-A5T"/>
-                                </connections>
-                            </button>
                             <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="382" y="410" width="137" height="46"/>
                                 <animations/>
@@ -316,8 +285,8 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="262" y="505" width="76" height="46"/>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="262" y="504" width="76" height="46"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="0r0-lm-6Hw"/>
@@ -346,6 +315,37 @@
                                     <segue destination="CYZ-cS-sIm" kind="show" identifier="help" id="Fr3-ne-v48"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="261" y="410" width="79" height="46"/>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="79" id="nST-Pv-pPT"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
+                                <inset key="titleEdgeInsets" minX="3" minY="0.0" maxX="3" maxY="0.0"/>
+                                <state key="normal" title="Shop">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="disabled">
+                                    <color key="titleColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="CWo-wD-shJ"/>
+                                    <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="syR-z3-A5T"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <animations/>
                         <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
@@ -354,7 +354,7 @@
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
                             <constraint firstAttribute="centerX" secondItem="1XG-Tp-FSs" secondAttribute="centerX" id="3aD-dm-1vj"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="FSu-Xs-tHM" secondAttribute="bottom" constant="58" id="3jx-WZ-5n9">
-                                <variation key="heightClass=compact" constant="29"/>
+                                <variation key="heightClass=compact" constant="18"/>
                             </constraint>
                             <constraint firstAttribute="centerY" secondItem="zOq-Ua-ez5" secondAttribute="centerY" constant="122" id="4nG-Qg-QlL"/>
                             <constraint firstAttribute="centerX" secondItem="FSu-Xs-tHM" secondAttribute="centerX" id="7AU-2s-Toc"/>
@@ -368,6 +368,7 @@
                             <constraint firstItem="12G-JR-etf" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" id="LmO-pu-8R1"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="top" secondItem="VOQ-0L-H4x" secondAttribute="bottom" id="MUV-dg-Xbs"/>
                             <constraint firstAttribute="centerX" secondItem="zOq-Ua-ez5" secondAttribute="centerX" id="OwL-my-HiC"/>
+                            <constraint firstItem="12G-JR-etf" firstAttribute="top" secondItem="1XG-Tp-FSs" secondAttribute="bottom" constant="15" id="PBT-RJ-zhb"/>
                             <constraint firstItem="PTq-DP-qnf" firstAttribute="top" secondItem="FJb-8H-lOJ" secondAttribute="bottom" constant="8" id="RpX-Nk-vWo"/>
                             <constraint firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="25" id="Rzo-jh-lUh"/>
                             <constraint firstItem="AF8-Mz-FY1" firstAttribute="leading" secondItem="AcO-iW-VYX" secondAttribute="trailing" constant="22" id="THO-Uc-mEI"/>
@@ -378,22 +379,31 @@
                                 <variation key="widthClass=compact" constant="-15.5"/>
                             </constraint>
                             <constraint firstItem="nd9-3T-vrx" firstAttribute="top" secondItem="Bzh-ay-0sk" secondAttribute="bottom" constant="71" id="bh6-Ni-Jg4">
-                                <variation key="heightClass=compact" constant="39"/>
+                                <variation key="heightClass=compact" constant="28"/>
                             </constraint>
                             <constraint firstAttribute="centerY" secondItem="Muy-t8-eeK" secondAttribute="centerY" constant="25" id="cFN-KV-9Po"/>
-                            <constraint firstItem="Pbc-g6-Gbe" firstAttribute="top" relation="lessThanOrEqual" secondItem="12G-JR-etf" secondAttribute="bottom" constant="50" id="etp-GV-7mr"/>
+                            <constraint firstItem="Pbc-g6-Gbe" firstAttribute="top" relation="greaterThanOrEqual" secondItem="12G-JR-etf" secondAttribute="bottom" constant="50" id="etp-GV-7mr">
+                                <variation key="heightClass=compact" constant="20"/>
+                            </constraint>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" multiplier="1.5" id="fOS-Hh-QcS">
                                 <variation key="widthClass=compact" constant="16.5"/>
                             </constraint>
                             <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="-8" id="nRk-5x-Ka9"/>
                             <constraint firstItem="Muy-t8-eeK" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" constant="150" id="ozB-y0-7hy"/>
                             <constraint firstItem="Bzh-ay-0sk" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" constant="-150" id="q6V-hm-i0M"/>
-                            <constraint firstItem="12G-JR-etf" firstAttribute="top" secondItem="nd9-3T-vrx" secondAttribute="bottom" constant="49" id="umh-HP-xfO">
-                                <variation key="heightClass=compact" constant="15"/>
-                            </constraint>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="wlH-qY-d4N"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="centerY" secondItem="bxu-q9-Fcb" secondAttribute="centerY" constant="-3.5" id="zzU-73-hWY"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="PBT-RJ-zhb"/>
+                            </mask>
+                        </variation>
+                        <variation key="heightClass=compact">
+                            <mask key="constraints">
+                                <include reference="PBT-RJ-zhb"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="K0h-BY-mGD"/>
                     <connections>
@@ -806,14 +816,37 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1WM-vX-PYK" userLabel="Container View">
                                 <rect key="frame" x="16" y="20" width="268" height="174"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please select the action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Please select the action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
                                         <rect key="frame" x="-8" y="62" width="284" height="19"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="176" y="109" width="51" height="33"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
+                                        <state key="normal" title="Pause">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="11" y="109" width="113" height="33"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
@@ -837,38 +870,22 @@
                                             <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwind" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="176" y="109" width="51" height="33"/>
-                                        <animations/>
-                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
-                                        <state key="normal" title="Pause">
-                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="5"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
-                                        </connections>
-                                    </button>
                                 </subviews>
                                 <animations/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="0.5" id="1T6-Cm-aXW"/>
-                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="28" id="32q-EG-sAu"/>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="0.5" id="1T6-Cm-aXW">
+                                        <variation key="heightClass=compact" constant="5.5"/>
+                                    </constraint>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="28" id="32q-EG-sAu">
+                                        <variation key="heightClass=compact" constant="13"/>
+                                    </constraint>
                                     <constraint firstAttribute="trailing" secondItem="w7g-AR-pH7" secondAttribute="trailing" constant="-8" id="84V-OI-M2J"/>
-                                    <constraint firstItem="mvV-T3-331" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="1.5" id="FRL-Ow-jQe"/>
-                                    <constraint firstItem="w7g-AR-pH7" firstAttribute="top" secondItem="1WM-vX-PYK" secondAttribute="top" constant="62" id="Kdg-SA-3hl"/>
+                                    <constraint firstItem="mvV-T3-331" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="1.5" id="FRL-Ow-jQe">
+                                        <variation key="heightClass=compact" constant="-6.5"/>
+                                    </constraint>
+                                    <constraint firstItem="w7g-AR-pH7" firstAttribute="centerY" secondItem="1WM-vX-PYK" secondAttribute="centerY" id="Iwv-P7-iYg"/>
+                                    <constraint firstItem="w7g-AR-pH7" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" id="YTb-ob-Fwt"/>
                                     <constraint firstItem="w7g-AR-pH7" firstAttribute="leading" secondItem="1WM-vX-PYK" secondAttribute="leading" constant="-8" id="bKz-kx-gs1"/>
                                     <constraint firstItem="JJb-zX-zeW" firstAttribute="centerY" secondItem="mvV-T3-331" secondAttribute="centerY" id="jfG-nL-kWx"/>
                                 </constraints>
@@ -883,6 +900,18 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="default">
+                                    <mask key="constraints">
+                                        <exclude reference="Iwv-P7-iYg"/>
+                                        <exclude reference="YTb-ob-Fwt"/>
+                                    </mask>
+                                </variation>
+                                <variation key="heightClass=compact">
+                                    <mask key="constraints">
+                                        <include reference="Iwv-P7-iYg"/>
+                                        <include reference="YTb-ob-Fwt"/>
+                                    </mask>
+                                </variation>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="gyq-mg-j3U">
                                 <rect key="frame" x="270" y="5" width="29" height="29"/>

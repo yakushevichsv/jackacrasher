@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "heltp-page002.png"
+      "filename" : "help-page002.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",
