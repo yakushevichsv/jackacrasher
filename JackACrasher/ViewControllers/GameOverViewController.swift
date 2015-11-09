@@ -52,6 +52,8 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
             
             self.btnReplay.superview?.bringSubviewToFront(self.btnReplay)
         }
+        
+        self.correctFontOfChildViews(self.view)
     }
     
     

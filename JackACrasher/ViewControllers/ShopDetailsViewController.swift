@@ -9,7 +9,7 @@
 import UIKit
 import StoreKit
 
-class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UICollectionViewDelegate,UICollectionViewDataSource {
+class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UICollectionViewDelegate,UICollectionViewDataSource {
     
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var closeButton:UIButton!
@@ -58,6 +58,8 @@ class ShopDetailsViewController:UIViewController,ShopDetailsCellDelegate,UIColle
             rotatePrivateForSize(self.view.frame.size)
         }
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePurchasesNotification:", name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
+        
+        correctFontOfChildViews(self.view)
     }
     
     

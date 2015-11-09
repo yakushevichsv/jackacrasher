@@ -418,7 +418,7 @@ class Transmitter:SKNode,AssetsContainer {
             return
         }
         
-        let label = NORLabelNode(fontNamed: "gamerobot")
+        let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
         label.text = "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies"
         label.fontColor = SKColor.redColor()
         label.fontSize = 15
@@ -435,7 +435,7 @@ class Transmitter:SKNode,AssetsContainer {
             return
         }
         
-        let label = NORLabelNode(fontNamed: "gamerobot")
+        let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
         label.text = "In a Beam\nMove up &down\nAttack enemies"
         label.fontColor = SKColor.redColor()
         label.fontSize = 15

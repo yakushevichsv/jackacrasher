@@ -1,0 +1,41 @@
+/* 
+  Localizable.strings
+  JackACrasher
+
+  Created by Siarhei Yakushevich on 11/9/15.
+  Copyright © 2015 Siarhei Yakushevich. All rights reserved.
+*/
+
+"FontName" = "gamerobot";
+"HelpPage1" = "Player can't move\n Attack trash asteroids";
+"HelpPage2" = "Player can't move\n Destroy trash - asteroids";
+"HelpPage3" = "When there is a bomb\n Destroy it,being under the transmitter\n";
+"HelpPage4" = "When there is a bomb\n  Wait specified time interval to destroy it automatically";
+"HelpPage5" = "The transmitter transmits the player to the left corner\n You can shot under the ray beam";
+"HelpPage6" = "In a beam move up & down\n Destroy enemies";
+"ADenied" = "Access denied";
+"OK" = "OK";
+"Success" = "Success";
+"Attention" = "Attention";
+"Sorry" = "Sorry";
+"SorryTwitter" = "You can\'t send a tweet right now,\n make sure your device has an internet connection and you have\n at least one Twitter account setup";
+"Error" = "Error";
+"ErrorTimeLine" = "Error posting on the timeline.\n Please try again latter";
+"ThanksVK" = "Thanks for posting on VK!";
+"ThanksTweeting" = "Thanks for tweeting!";
+"ThanksPosting" = "Thanks for posting";
+"LogoText" = "I am playing in JackACrasher!";
+"FBDecsr" = "Have fun!. Help Jack to crash as much as you can!";
+"NoImplement" = "That functionality hasn't been implemented yet";
+"NoITunesStore" = "Couldn't access iTunes Store";
+"EnableIAP" = "For purchasing things please enable IAP";
+"EnableIAPTitle" = "Please enable In-App-Purchases";
+"EnableGC" = "Please enable Game Center!";
+"GCDisabledTitle"="Game Center is disabled";
+"GCDisabledMessage"="To participate in Leaderboard\nPlease enable it";
+
+"CKDisabledTitle"="iCloud is disabled";
+"CKDisabledMessage"="Please log in to iCloud or create account for keeping purchases' information";
+
+"Score" = "Score";
+"Game Over" = "Game Over";

@@ -94,6 +94,7 @@ class GameMainViewController: UIViewController {
         }
     }
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -141,6 +142,8 @@ class GameMainViewController: UIViewController {
         self.btnCompany.setTitleColor(self.btnCompany.titleColorForState(.Disabled), forState: .Normal)
         
         processAdv()
+        
+        correctFontOfChildViews(self.view)
     }
 
     private func hideAsters() {
@@ -296,7 +299,7 @@ class GameMainViewController: UIViewController {
     
     func needToEnableCloudKit() {
         
-        let alertVC = UIAlertController(title: "iCloud is disabled", message: "Please log in to iCloud or create account for keeping purchases' information", preferredStyle: .Alert)
+        let alertVC = UIAlertController(title: NSLocalizedString("CKDisabledTitle", comment:""), message: NSLocalizedString("CKDisabledMessage", comment:""), preferredStyle: .Alert)
         
         self.presentViewController(alertVC, animated: true, completion: nil)
         
@@ -334,11 +337,11 @@ class GameMainViewController: UIViewController {
     
     func needToEnableGC() {
         
-        needToDisplayGC("Game Center is disabled", message: "To participate in Leaderboard\nPlease enable it")
+        needToDisplayGC(NSLocalizedString("GCDisabledTitle", comment:"Game Center is disabled"), message:NSLocalizedString("GCDisabledMessage", comment: "To participate in Leaderboard\nPlease enable it"))
     }
     
     func needToAuthPlayerToGC() {
-        needToDisplayGC("Attention", message: "Please enable Game Center!")
+        needToDisplayGC(NSLocalizedString("Attention", comment:"Attention"), message:NSLocalizedString("Attention", comment:"EnableGC") )
     }
     
     //MARK: -
@@ -474,7 +477,19 @@ class GameMainViewController: UIViewController {
                 let dVC = segue.destinationViewController as! HelpViewController
                 
                 dVC.pageImages = images
-                dVC.pageDescriptions = ["Player can't move\n Attack trash asteroids","Player can't move\n Destroy trash - asteroids","When there is a bomb\n Destroy it,being under the transmitter\n","When there is a bomb\n  Wait specified time interval to destroy it automatically","The transmitter transmits the player to the left corner\n You can shot under the ray beam","In a beam move up & down\n Destroy enemies"]
+                let p1 = NSLocalizedString("HelpPage1", comment: "Player can't move\n Attack trash asteroids")
+                
+                let p2 = NSLocalizedString("HelpPage2", comment: "Player can't move\n Destroy trash - asteroids")
+                
+                let p3 = NSLocalizedString("HelpPage3", comment:"When there is a bomb\n Destroy it,being under the transmitter\n")
+                
+                let p4 = NSLocalizedString("HelpPage4", comment:"When there is a bomb\n  Wait specified time interval to destroy it automatically")
+                
+                let p5 = NSLocalizedString("HelpPage5", comment:"")
+                
+                let p6 = NSLocalizedString("HelpPage6", comment:"")
+                
+                dVC.pageDescriptions = [p1,p2,p3,p4,p5,p6]
             }
         }
     }
@@ -518,11 +533,11 @@ class GameMainViewController: UIViewController {
         var message:String!
         
         if (!canPurhase) {
-            title = "Please enable In-App-Purchases"
-            message = "For purchasing things please enable IAP"
+            title = NSLocalizedString("EnableIAPTitle", comment:"Please enable In-App-Purchases")
+            message = NSLocalizedString("EnableIAP", comment: "For purchasing things please enable IAP")
         } else if (!isValid) {
-            title = "Error"
-            message = "Couldn't access iTunes Store"
+            title = NSLocalizedString("Error", comment: "Error")
+            message = NSLocalizedString("NoITunesStore", comment: "Couldn't access iTunes Store")
         }
         else {
             return false
@@ -747,7 +762,7 @@ class GameMainViewController: UIViewController {
             sender.userInteractionEnabled = true
         } else if (sender == self.btnCompany) {
             
-           self.alertWithTitle("Sorry", message: "That functionality hasn't been implemented yet")
+           self.alertWithTitle(NSLocalizedString("Sorry",comment:"Sorry"), message: NSLocalizedString("NoImplement",comment:"That functionality hasn't been implemented yet"))
             
         } else if (sender == self.btnGameCenter) {
             
@@ -805,12 +820,12 @@ class GameMainViewController: UIViewController {
         
         if !SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
             
-            self.alertWithTitle("Sorry", message: "You can\'t send a tweet right now,\n make sure your device has an internet connection and you have\n at least one Twitter account setup", actionTitle: "OK", completion: nil)
+            self.alertWithTitle(NSLocalizedString("Sorry",comment:"Sorry"), message: NSLocalizedString("SorryTwitter", comment: "You can\'t send a tweet right now,\n make sure your device has an internet connection and you have\n at least one Twitter account setup"), actionTitle: NSLocalizedString("OK",comment:"OK"), completion: nil)
             return
         }
         
         let tweetSheet = SLComposeViewController(forServiceType: SLServiceTypeTwitter)
-        tweetSheet.setInitialText("I am playing on JackACrasher!")
+        tweetSheet.setInitialText( NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!"))
         tweetSheet.addImage(UIImage(named: "enemyShip"))
         tweetSheet.addURL(NSURL(string: "https://developers.facebook.com"))
         
@@ -822,7 +837,7 @@ class GameMainViewController: UIViewController {
             }
             else {
                 print("Sending tweet!")
-                self.alertWithTitle("Success", message: "Thanks for tweeting!", actionTitle: nil)
+                self.alertWithTitle(NSLocalizedString("Success",comment:"Success"), message: NSLocalizedString("ThanksTweeting",comment:"Thanks for tweeting!"), actionTitle: nil)
             }
         }
         
@@ -835,9 +850,9 @@ class GameMainViewController: UIViewController {
     private func shareOnFB() {
         
         let content = FBSDKShareLinkContent()
-        content.contentTitle = "I am playing on JackACrasher!"
+        content.contentTitle = NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!")
         content.contentURL = NSURL(string: "https://developers.facebook.com")
-        content.contentDescription = "Have fun!. Help Jack to crash as much as you can!"
+        content.contentDescription = NSLocalizedString("FBDecsr", comment:  "Have fun!. Help Jack to crash as much as you can!")
         
         
         content.imageURL = NSURL(string:"http://www.nasa.gov/sites/default/files/images/685735main_pia15678-43_full.jpg")
@@ -875,13 +890,13 @@ extension GameMainViewController: FBSDKSharingDelegate {
     func sharer(sharer: FBSDKSharing!, didFailWithError error: NSError!) {
         
         if error != nil {
-            self.alertWithTitle("Error", message: "Error posting on the timeline.\n Please try again latter", actionTitle: "OK")
+            self.alertWithTitle(NSLocalizedString("Error",comment:""), message: NSLocalizedString("ErrorTimeLine",comment:""), actionTitle: NSLocalizedString("OK",comment:""))
         }
     }
     
     func sharer(sharer: FBSDKSharing!, didCompleteWithResults results: [NSObject : AnyObject]!) {
         if (!results.isEmpty){
-            self.alertWithTitle("Success", message: "Thanks for posting", actionTitle: nil)
+            self.alertWithTitle(NSLocalizedString("Success", comment: "Success"), message:  NSLocalizedString("ThanksPosting",comment:"Thanks for posting"), actionTitle: nil)
         }
         else {
             sharerDidCancel(sharer)
@@ -918,7 +933,7 @@ extension GameMainViewController:VKSdkDelegate {
         if self.vkToken != nil {
             
             let shareDialog = VKShareDialogController()
-            shareDialog.text = "I am playing in JackACrasher!"
+            shareDialog.text = NSLocalizedString("LogoText", comment: "I am playing in JackACrasher!")
             
             /*shareDialog.shareLink    = [[VKShareLink alloc] initWithTitle:@"Super puper link, but nobody knows" link:[NSURL URLWithString:@"https://vk.com/dev/ios_sdk"]];*/
             
@@ -930,7 +945,9 @@ extension GameMainViewController:VKSdkDelegate {
                     self.btnVK.selected = false
                     
                     if result == .Done {
-                        self.alertWithTitle("Success", message: "Thanks for posting on VK!", actionTitle: nil)
+                        let str = NSLocalizedString("Success", comment: "Success")
+                        let str2 = NSLocalizedString("ThanksVK", comment: "Thanks for posting on VK!")
+                        self.alertWithTitle(str, message: str2, actionTitle: nil)
                     }
                 }
             }
@@ -979,7 +996,9 @@ extension GameMainViewController:VKSdkDelegate {
     
     func vkSdkUserDeniedAccess(authorizationError: VKError!) {
         if self.btnVK.selected && authorizationError.errorCode != Int(VK_API_CANCELED) {
-            self.alertWithTitle("Access denied", message: authorizationError.description, actionTitle: "OK") {
+            let aDenied = NSLocalizedString("aDenied", comment: "Access denied")
+            let ok = NSLocalizedString("OK", comment: "OK")
+            self.alertWithTitle(aDenied, message: authorizationError.description, actionTitle: ok) {
                 [unowned self ] in
                 self.navigationController?.popToRootViewControllerAnimated(true)
             }

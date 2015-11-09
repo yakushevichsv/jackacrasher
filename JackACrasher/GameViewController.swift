@@ -90,6 +90,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
         super.viewDidLoad()
         
         restartGame()
+        
+        correctFontOfChildViews(self.view)
+
     }
     
     //MARK: - Public function

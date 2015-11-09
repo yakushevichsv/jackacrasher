@@ -47,6 +47,8 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         
         setCurrentPage(pageControl.currentPage)
         //loadPage(pageControl.currentPage)
+        
+        correctFontOfChildViews(self.view)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -83,7 +85,9 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     private func setCurrentPage(page:Int) {
         pageControl.currentPage = page
         
-        self.textView?.text = pageDescriptions[page]
+        let text = pageDescriptions[page]
+        self.textView?.text = text
+        print("Current text in Help \(text)")
         
     }
     

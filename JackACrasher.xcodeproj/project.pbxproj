@@ -22,10 +22,12 @@
 		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
 		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
 		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
+		2116A1E81BF1597200CC45F0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2116A1EA1BF1597200CC45F0 /* InfoPlist.strings */; };
 		2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0A1AFFE88100067348 /* GameMainViewController.swift */; };
 		2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */; };
 		211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211BFC901B34872A0053ED9A /* FileManagerExtensions.swift */; };
 		211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211C4C6F1B16FFA4005F50B8 /* Fire.sks */; };
+		211F5FDD1BF0E700008591D7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 211F5FDF1BF0E700008591D7 /* Localizable.strings */; };
 		212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
 		212A2F231B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
 		212A2F241B36F24400B31482 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F211B36F24400B31482 /* libssl.a */; };
@@ -142,10 +144,14 @@
 		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
 		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
 		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
+		2116A1E91BF1597200CC45F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		2116A1EB1BF1597F00CC45F0 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2118AD0A1AFFE88100067348 /* GameMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameMainViewController.swift; path = ViewControllers/GameMainViewController.swift; sourceTree = "<group>"; };
 		2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RoundCornerButton.swift; path = Views/RoundCornerButton.swift; sourceTree = "<group>"; };
 		211BFC901B34872A0053ED9A /* FileManagerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FileManagerExtensions.swift; path = ViewControllers/FileManagerExtensions.swift; sourceTree = "<group>"; };
 		211C4C6F1B16FFA4005F50B8 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
+		211F5FDE1BF0E700008591D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
+		211F5FE01BF0E708008591D7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		212A2F201B36F24400B31482 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = OpenSSL/lib/libcrypto.a; sourceTree = SOURCE_ROOT; };
 		212A2F211B36F24400B31482 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = OpenSSL/lib/libssl.a; sourceTree = SOURCE_ROOT; };
 		212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasherTests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -181,6 +187,8 @@
 		218B92EF1B79F3D000444918 /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
 		218B92F11B79F3DA00444918 /* blackhole.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = blackhole.atlas; sourceTree = "<group>"; };
 		218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtensions.swift; path = ViewControllers/UIViewControllerExtensions.swift; sourceTree = "<group>"; };
+		218D65AA1BF0BA0C00AA8758 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
+		218D65AB1BF0BA0D00AA8758 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		218F24B21B35AF56008C085F /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = Model/NetworkManager.swift; sourceTree = "<group>"; };
 		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
 		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
@@ -568,6 +576,7 @@
 				218B92EC1B79F3A500444918 /* Assets */,
 				21FFEAE61AD5E216000115F6 /* Supporting Files */,
 				21E56B341ADA9D8F0071A217 /* Images.xcassets */,
+				211F5FDF1BF0E700008591D7 /* Localizable.strings */,
 			);
 			path = JackACrasher;
 			sourceTree = "<group>";
@@ -590,6 +599,7 @@
 				21CCA14D1B0A881C004419A2 /* GameKit.framework */,
 				21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */,
 				21FFEAE71AD5E216000115F6 /* Info.plist */,
+				2116A1EA1BF1597200CC45F0 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -687,6 +697,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 21FFEADA1AD5E216000115F6;
 			productRefGroup = 21FFEAE41AD5E216000115F6 /* Products */;
@@ -709,6 +720,7 @@
 				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
 				217341041AFE5674009E934A /* lose.wav in Resources */,
 				218B92EE1B79F3C500444918 /* sprites.atlas in Resources */,
+				2116A1E81BF1597200CC45F0 /* InfoPlist.strings in Resources */,
 				210CE8721B8BC7B900C9F288 /* VKSdkResources.bundle in Resources */,
 				217360F91B87260C00713E82 /* lap.wav in Resources */,
 				2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */,
@@ -720,6 +732,7 @@
 				21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */,
 				21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */,
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
+				211F5FDD1BF0E700008591D7 /* Localizable.strings in Resources */,
 				212B55FA1B8E52F400B816FD /* enemyDeath.sks in Resources */,
 				21C5BDF41BC1711D0066042B /* player.atlas in Resources */,
 				2192CCE21AF6574800518F97 /* realStar.png in Resources */,
@@ -834,10 +847,29 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		2116A1EA1BF1597200CC45F0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2116A1E91BF1597200CC45F0 /* Base */,
+				2116A1EB1BF1597F00CC45F0 /* ru */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		211F5FDF1BF0E700008591D7 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				211F5FDE1BF0E700008591D7 /* Base */,
+				211F5FE01BF0E708008591D7 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
 		21FFEAF01AD5E216000115F6 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				21FFEAF11AD5E216000115F6 /* Base */,
+				218D65AA1BF0BA0C00AA8758 /* ru */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -846,6 +878,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				21FFEAF61AD5E216000115F6 /* Base */,
+				218D65AB1BF0BA0D00AA8758 /* ru */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";

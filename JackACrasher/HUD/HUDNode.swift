@@ -14,7 +14,7 @@ class HUDNode: SKNode {
     typealias lifeType = Int
     
     private let lifeCurPercentNode = SKShapeNode()
-    private let lifeLabelNode = SKLabelNode(fontNamed: "gamerobot")
+    private let lifeLabelNode = SKLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
     private let bgNode = SKShapeNode()
     
     private static let sLifePercentMax = lifeType(100)

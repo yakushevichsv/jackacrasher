@@ -1,0 +1,9 @@
+/* 
+  InfoPlist.strings
+  JackACrasher
+
+  Created by Siarhei Yakushevich on 11/10/15.
+  Copyright © 2015 Siarhei Yakushevich. All rights reserved.
+*/
+"JackACrasher" = "JackACrasher";
+"CFBundleDisplayName" = "JackACrasher";

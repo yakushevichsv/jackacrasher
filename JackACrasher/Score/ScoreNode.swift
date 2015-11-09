@@ -19,7 +19,7 @@ class ScoreNode: SKNode {
         super.init()
         
         label.fontColor = SKColor.blackColor()
-        label.fontName = "gamerobot"
+        label.fontName = NSLocalizedString("FontName",comment:"")
         label.fontSize = 40
         label.horizontalAlignmentMode = .Left
         label.position = point
@@ -36,7 +36,8 @@ class ScoreNode: SKNode {
         if (score < 0) {
             score = 0
         }
-        label.text = "Score : \(score)"
+        let scoreText = NSLocalizedString("Score", comment: "Score")
+        label.text = "\(scoreText) : \(score)"
     }
     
 }

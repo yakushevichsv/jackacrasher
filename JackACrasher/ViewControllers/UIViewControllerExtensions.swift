@@ -39,4 +39,27 @@ extension UIViewController {
             }
         }
     }
+    
+
+   func correctFontOfChildViews(currentView:UIView!) {
+        
+        let fontName = NSLocalizedString("FontName", comment: "Font Name")
+        
+        for subView in currentView.subviews {
+            
+            if let lView = subView as? UILabel {
+                let font = UIFont(name: fontName, size: lView.font!.pointSize)
+                lView.font = font
+                correctFontOfChildViews(lView)
+            }
+            else if let bView = subView as? UIButton {
+                let pSize  = bView.titleLabel!.font.pointSize
+                let font = UIFont(name: fontName,  size: pSize)
+                bView.titleLabel?.font = font
+            }
+            else {
+                correctFontOfChildViews(subView)
+            }
+        }
+    }
 }

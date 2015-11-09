@@ -6,11 +6,6 @@
         <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
-    <customFonts key="customFonts">
-        <mutableArray key="Game_Robot.ttf">
-            <string>gamerobot</string>
-        </mutableArray>
-    </customFonts>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
@@ -81,9 +76,9 @@
                     <nil key="highlightedColor"/>
                 </label>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="750" verticalHuggingPriority="750" horizontalCompressionResistancePriority="1000" verticalCompressionResistancePriority="1000" text="JackACrasher" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7av-FA-Z31">
-                    <rect key="frame" x="87" y="147" width="306" height="50"/>
+                    <rect key="frame" x="88" y="144" width="305" height="55"/>
                     <animations/>
-                    <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="44"/>
+                    <fontDescription key="fontDescription" name="TimesNewRomanPS-BoldMT" family="Times New Roman" pointSize="49"/>
                     <color key="textColor" red="1" green="0.5" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -96,7 +91,7 @@
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="explosion0001" translatesAutoresizingMaskIntoConstraints="NO" id="VLe-Uu-hRO">
-                    <rect key="frame" x="172" y="137" width="136" height="200"/>
+                    <rect key="frame" x="172" y="139" width="136" height="196"/>
                     <animations/>
                     <constraints>
                         <constraint firstAttribute="width" constant="136" id="TOr-1f-ogW"/>

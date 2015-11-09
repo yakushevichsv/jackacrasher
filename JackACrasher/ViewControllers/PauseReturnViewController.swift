@@ -22,10 +22,14 @@ class PauseReturnViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        correctFontOfChildViews(self.view)
+        
         let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
         
         self.btnSound.selected = !disabled
         self.buttonPressed(self.btnSound)
+        
+        correctFontOfChildViews(self.view)
     }
     
     @IBAction func buttonPressed(sender:UIButton) {

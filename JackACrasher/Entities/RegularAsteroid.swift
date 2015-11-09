@@ -24,12 +24,28 @@ let duration = (M_PI*2)/digitAppearanceSpeed
     func destroyItem(item:ItemDestructable) -> Bool
 }
 
+extension SKScene {
+    
+    func correctLabelText() {
+        
+        for child in self.children {
+            
+            if let labelNode = child as? SKLabelNode {
+                labelNode.fontName = NSLocalizedString("FontName", comment: "FontName")
+                if let text = labelNode.text {
+                    labelNode.text = NSLocalizedString(text, comment: text)
+                }
+            }
+        }
+    }
+}
+
 extension SKNode {
     
     private var syScoreLabel:SKLabelNode! {
         get {
             
-            let label = SKLabelNode(fontNamed: "gamerobot")
+            let label = SKLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
             label.alpha = 1.0
             label.text = ""
             label.fontSize = 30.0

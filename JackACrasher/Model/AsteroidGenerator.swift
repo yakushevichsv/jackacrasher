@@ -456,7 +456,7 @@ class AsteroidGenerator: NSObject {
     private func appendDebugLabels(node:SKSpriteNode!) {
         
         
-        let label = NORLabelNode(fontNamed: "gamerobot")
+        let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
         label.text = "Can't move\n Attack trash asteroids"
         label.fontColor = SKColor.redColor()
         label.fontSize = 40
@@ -565,6 +565,10 @@ extension String {
     {
         let escapedString = self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!
         return escapedString
+    }
+    
+    var syLocalizedString:String {
+        return NSLocalizedString(self,comment:self)
     }
 
 }

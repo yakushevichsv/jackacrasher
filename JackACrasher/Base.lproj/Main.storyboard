@@ -110,6 +110,9 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="82" y="267" width="137" height="46"/>
+                                </variation>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="rvc-9G-ulH"/>
                                 </connections>
@@ -141,11 +144,14 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="382" y="267" width="137" height="46"/>
+                                </variation>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="JcH-uk-xDZ"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJb-8H-lOJ" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FJb-8H-lOJ" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="542" y="0.0" width="38" height="38"/>
                                 <animations/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
@@ -168,7 +174,7 @@
                                     <action selector="btnRightUpCornerPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="chb-RZ-ri4"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTq-DP-qnf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PTq-DP-qnf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="547" y="46" width="29" height="29"/>
                                 <animations/>
                                 <constraints>
@@ -195,7 +201,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="wdR-uP-XfQ"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxu-q9-Fcb" userLabel="FB Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bxu-q9-Fcb" userLabel="FB Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="472" y="3" width="40" height="40"/>
                                 <animations/>
                                 <state key="normal" image="fb-button">
@@ -217,7 +223,7 @@
                                     <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="iD5-Iv-dtN"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AF8-Mz-FY1" userLabel="Twitter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AF8-Mz-FY1" userLabel="Twitter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="409" y="3" width="40" height="40"/>
                                 <animations/>
                                 <constraints>
@@ -242,7 +248,7 @@
                                     <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="JYK-Ca-CEt"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AcO-iW-VYX" userLabel="VK Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AcO-iW-VYX" userLabel="VK Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="347" y="3" width="40" height="40"/>
                                 <animations/>
                                 <constraints>
@@ -267,7 +273,7 @@
                                     <action selector="sharingPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="Pyg-6o-f9I"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVr-yc-HC5" userLabel="GameCenter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cVr-yc-HC5" userLabel="GameCenter Button" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="542" y="95" width="40" height="40"/>
                                 <animations/>
                                 <state key="normal" image="game_center">
@@ -285,8 +291,8 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                <rect key="frame" x="262" y="504" width="76" height="46"/>
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                <rect key="frame" x="262" y="471" width="76" height="46"/>
                                 <animations/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="76" id="0r0-lm-6Hw"/>
@@ -311,6 +317,9 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="262" y="328" width="76" height="46"/>
+                                </variation>
                                 <connections>
                                     <segue destination="CYZ-cS-sIm" kind="show" identifier="help" id="Fr3-ne-v48"/>
                                 </connections>
@@ -341,6 +350,9 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <variation key="heightClass=compact" misplaced="YES">
+                                    <rect key="frame" x="261" y="267" width="79" height="46"/>
+                                </variation>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="CWo-wD-shJ"/>
                                     <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="syR-z3-A5T"/>
@@ -394,16 +406,6 @@
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="wlH-qY-d4N"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="centerY" secondItem="bxu-q9-Fcb" secondAttribute="centerY" constant="-3.5" id="zzU-73-hWY"/>
                         </constraints>
-                        <variation key="default">
-                            <mask key="constraints">
-                                <exclude reference="PBT-RJ-zhb"/>
-                            </mask>
-                        </variation>
-                        <variation key="heightClass=compact">
-                            <mask key="constraints">
-                                <include reference="PBT-RJ-zhb"/>
-                            </mask>
-                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="K0h-BY-mGD"/>
                     <connections>
@@ -822,6 +824,9 @@
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
+                                        <variation key="heightClass=compact" misplaced="YES">
+                                            <rect key="frame" x="-8" y="78" width="284" height="19"/>
+                                        </variation>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="176" y="109" width="51" height="33"/>
@@ -842,6 +847,9 @@
                                                 <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <variation key="heightClass=compact" misplaced="YES">
+                                            <rect key="frame" x="169" y="110" width="51" height="33"/>
+                                        </variation>
                                         <connections>
                                             <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
                                         </connections>
@@ -865,6 +873,9 @@
                                                 <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
+                                        <variation key="heightClass=compact" misplaced="YES">
+                                            <rect key="frame" x="16" y="110" width="113" height="33"/>
+                                        </variation>
                                         <connections>
                                             <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="bGi-7d-QNG"/>
                                             <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwind" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
@@ -877,9 +888,7 @@
                                     <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="0.5" id="1T6-Cm-aXW">
                                         <variation key="heightClass=compact" constant="5.5"/>
                                     </constraint>
-                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="28" id="32q-EG-sAu">
-                                        <variation key="heightClass=compact" constant="13"/>
-                                    </constraint>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="13" id="32q-EG-sAu"/>
                                     <constraint firstAttribute="trailing" secondItem="w7g-AR-pH7" secondAttribute="trailing" constant="-8" id="84V-OI-M2J"/>
                                     <constraint firstItem="mvV-T3-331" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" multiplier="1.5" id="FRL-Ow-jQe">
                                         <variation key="heightClass=compact" constant="-6.5"/>
