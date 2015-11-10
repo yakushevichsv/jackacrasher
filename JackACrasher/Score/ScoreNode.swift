@@ -34,7 +34,15 @@ class ScoreNode: SKNode {
             score = 0
         }
         let scoreText = NSLocalizedString("Score", comment: "Score")
-        label.text = "\(scoreText) : \(score)"
+        
+        let numFormatter = NSNumberFormatter()
+        numFormatter.numberStyle = .DecimalStyle
+        let numAsString = numFormatter.stringFromNumber(NSNumber(unsignedLongLong: score))
+        
+        var scoreTextFinal = "\(scoreText) : "
+        scoreTextFinal = scoreTextFinal.stringByAppendingString(numAsString!)
+        
+        label.text = scoreTextFinal
     }
     
 }

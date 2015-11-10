@@ -70,7 +70,12 @@ extension SKNode {
     
     func syDisplayScore(position:CGPoint, rect playableArea:CGRect, scoreAddition:Int64) {
         let label = self.syScoreLabel
-        label.text = "\(scoreAddition)"
+        
+        let numFormatter = NSNumberFormatter()
+        numFormatter.numberStyle = .DecimalStyle
+        let numAsString = numFormatter.stringFromNumber(NSNumber(longLong:scoreAddition))
+        
+        label.text = numAsString
         
         let sPosition = self.parent != nil ? self.scene!.convertPoint(self.position, fromNode: self.parent!) : self.position
         
