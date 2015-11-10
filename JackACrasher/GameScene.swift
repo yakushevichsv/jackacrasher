@@ -396,7 +396,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         NSLog(@"%@", s1);
         }*/
         
-        correctLabelText()
+        correctLabelText(self)
     }
     
     func createLeftBorderEdge() {

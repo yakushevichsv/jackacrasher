@@ -53,7 +53,12 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
             self.btnReplay.superview?.bringSubviewToFront(self.btnReplay)
         }
         
-        self.correctFontOfChildViews(self.view)
+        if UIApplication.sharedApplication().isRussian {
+            self.correctFontOfChildViews(self.view,reduction:10)
+        }
+        else {
+            self.correctFontOfChildViews(self.view)
+        }
     }
     
     

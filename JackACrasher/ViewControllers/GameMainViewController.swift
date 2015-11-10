@@ -143,7 +143,8 @@ class GameMainViewController: UIViewController {
         
         processAdv()
         
-        correctFontOfChildViews(self.view)
+        correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 5 : 0)
+        
     }
 
     private func hideAsters() {

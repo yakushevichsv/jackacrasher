@@ -109,7 +109,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             attackPlayer()
         }
         
-        correctLabelText()
+        correctLabelText(self)
     }
     
     private func attackPlayer() {

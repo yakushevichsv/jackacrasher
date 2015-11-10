@@ -26,15 +26,19 @@ let duration = (M_PI*2)/digitAppearanceSpeed
 
 extension SKScene {
     
-    func correctLabelText() {
-        
-        for child in self.children {
+    func correctLabelText(node:SKNode!) {
+    
+        for child in node.children {
             
             if let labelNode = child as? SKLabelNode {
-                labelNode.fontName = NSLocalizedString("FontName", comment: "FontName")
+                let fontName = NSLocalizedString("FontName", comment: "FontName")
+                labelNode.fontName = fontName
                 if let text = labelNode.text {
                     labelNode.text = NSLocalizedString(text, comment: text)
                 }
+            }
+            else {
+                correctLabelText(child)
             }
         }
     }

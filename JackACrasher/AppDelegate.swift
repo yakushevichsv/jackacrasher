@@ -126,3 +126,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+extension UIApplication {
+    
+    var isRussian:Bool {
+        get {
+            return NSLocalizedString("FontName", comment: "") != "gamerobot"
+        }
+    }
+}
+

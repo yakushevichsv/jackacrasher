@@ -12,14 +12,11 @@ import SpriteKit
 class ScoreNode: SKNode {
    
     private let label:SKLabelNode! = SKLabelNode()
-    //private let border:SKShapeNode! = SKShapeNode()
-    
     
     init(point:CGPoint,score:UInt64 = 0) {
         super.init()
         
         label.fontColor = SKColor.blackColor()
-        label.fontName = NSLocalizedString("FontName",comment:"")
         label.fontSize = 40
         label.horizontalAlignmentMode = .Left
         label.position = point

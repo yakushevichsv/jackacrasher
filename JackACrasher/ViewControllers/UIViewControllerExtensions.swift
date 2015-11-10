@@ -39,37 +39,58 @@ extension UIViewController {
             }
         }
     }
-    
 
-   func correctFontOfChildViews(currentView:UIView!) {
-        
+    func correctFontOfChildViews(currentView:UIView!,reduction:CGFloat = 0) {
+    
         let fontName = NSLocalizedString("FontName", comment: "Font Name")
-        
+    
         for subView in currentView.subviews {
             
             if let lView = subView as? UILabel {
                 let font = UIFont(name: fontName, size: lView.font!.pointSize)
                 lView.font = font
-                correctFontOfChildViews(lView)
             }
             else if let bView = subView as? UIButton {
-                let pSize  = bView.titleLabel!.font.pointSize
-                let font = UIFont(name: fontName,  size: pSize)
-                bView.titleLabel?.font = font
+                //var correction:CGFloat = 0
+                //var lblSize = bView.bounds.size
+                //lblSize.width -= (bView.contentEdgeInsets.left + bView.contentEdgeInsets.right)
+                
+                //while (true) {
+                    let pSize  = bView.titleLabel!.font.pointSize - reduction
+                
+                    let font = UIFont(name: fontName,  size: pSize)
+                    bView.titleLabel?.font = font
+                
+                    /*if let lbl = bView.titleLabel {
+                        lbl.font = font
+                        
+                        
+                        
+                        let size = lbl.sizeThatFits(lblSize)
+                        
+                        if (size.width <= lblSize.width) {
+                            break
+                        }
+                        else {
+                            correction++
+                        }
+                        
+                        var frame =  bView.frame
+                        frame.size = size
+                        bView.frame = frame
+                    }*/
+                //}
             }
             else if let tView = subView as? UITextField {
                 let font = UIFont(name: fontName, size: tView.font!.pointSize)
                 tView.font = font
-                correctFontOfChildViews(tView)
             }
             else if let tView = subView as? UITextView {
                 let font = UIFont(name: fontName, size: tView.font!.pointSize)
                 tView.font = font
-                correctFontOfChildViews(tView)
             }
-            else {
-                correctFontOfChildViews(subView)
-            }
+            
+            correctFontOfChildViews(subView)
         }
     }
 }
