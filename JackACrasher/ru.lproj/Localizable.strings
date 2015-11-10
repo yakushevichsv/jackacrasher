@@ -9,8 +9,8 @@
 "FontName" = "Arial-BoldMT";
 "HelpPage1" = "Игрок не может пошевелиться\n Атакуйте мусор";
 "HelpPage2" = "Игрок неподвижен\n Уничтожте красные астеройды";
-"HelpPage3" = "When there is a bomb\n Destroy it,being under the transmitter\n";
-"HelpPage4" = "When there is a bomb\n  Wait specified time interval to destroy it automatically";
+"HelpPage3" = "При появлении ракеты\n Уничтож её находясь в луче трансмиттера\n";
+"HelpPage4" = "При появлении ракеты\n  Ожидайте в течении интервала на старт автоуничтожения";
 "HelpPage5" = "The transmitter transmits the player to the left corner\n You can shot under the ray beam";
 "HelpPage6" = "In a beam move up & down\n Destroy enemies";
 "ADenied" = "Access denied";
@@ -34,8 +34,8 @@
 "GCDisabledTitle"="Game Center is disabled";
 "GCDisabledMessage"="To participate in Leaderboard\nPlease enable it";
 
-"CKDisabledTitle"="iCloud is disabled";
-"CKDisabledMessage"="Please log in to iCloud or create account for keeping purchases' information";
+"CKDisabledTitle"="Активируйте iCloud ";
+"CKDisabledMessage"="Пожалуйста активируйте iCloud уч запись\n iCloud запись сохраняет в себе результаты";
 
 "Score" = "Очки";
 "Game Over" = "Конец игры!";
