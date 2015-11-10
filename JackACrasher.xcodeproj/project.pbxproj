@@ -188,7 +188,6 @@
 		218B92F11B79F3DA00444918 /* blackhole.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = blackhole.atlas; sourceTree = "<group>"; };
 		218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtensions.swift; path = ViewControllers/UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		218D65AA1BF0BA0C00AA8758 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
-		218D65AB1BF0BA0D00AA8758 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		218F24B21B35AF56008C085F /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = Model/NetworkManager.swift; sourceTree = "<group>"; };
 		2192CCDF1AF6567E00518F97 /* Spawn.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Spawn.sks; sourceTree = "<group>"; };
 		2192CCE11AF6574800518F97 /* realStar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = realStar.png; sourceTree = "<group>"; };
@@ -878,7 +877,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				21FFEAF61AD5E216000115F6 /* Base */,
-				218D65AB1BF0BA0D00AA8758 /* ru */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
