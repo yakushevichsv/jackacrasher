@@ -468,7 +468,18 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
         collectionViewCell.productDescription.sizeToFit()
         
         let curSymbol = product.skProduct.priceLocale.objectForKey(NSLocaleCurrencySymbol) as? String
-        var titleStr : String! = "Price \(product.skProduct.price)"
+        
+        let numFormatter = NSNumberFormatter()
+        numFormatter.numberStyle = .DecimalStyle
+        var titleStr = ""
+        if let numAsString = numFormatter.stringFromNumber(product.skProduct.price) {
+        
+            
+            let scoreTextFinal = "Price ".syLocalizedString
+            
+            titleStr = scoreTextFinal.stringByAppendingString(numAsString)
+            
+        }
         
         if let cur = curSymbol {
             titleStr = titleStr.stringByAppendingFormat(" %@",cur)

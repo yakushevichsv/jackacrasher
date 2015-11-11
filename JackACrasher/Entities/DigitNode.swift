@@ -94,7 +94,11 @@ class DigitNode: SKNode {
             label = labelPtr!
         }
         
-        label.text = "\(Int(self.digit))"
+        let numFormatter = NSNumberFormatter()
+        numFormatter.numberStyle = .DecimalStyle
+        if let numAsString = numFormatter.stringFromNumber(NSNumber(integer: Int(self.digit))) {
+            label.text = numAsString
+        }
     }
     
 }

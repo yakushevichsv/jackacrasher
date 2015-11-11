@@ -457,7 +457,7 @@ class AsteroidGenerator: NSObject {
         
         
         let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
-        label.text = "Can't move\n Attack trash asteroids"
+        label.text = "Can't move\n Attack trash asteroids".syLocalizedString
         label.fontColor = SKColor.redColor()
         label.fontSize = 40
         label.lineSpacing = 2

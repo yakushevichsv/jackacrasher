@@ -10,7 +10,7 @@ import UIKit
 
 extension UIViewController {
     
-    func alertWithTitle(title:String?, message:String?,actionTitle:String! = "OK",completion: (() -> Void)? = nil)
+    func alertWithTitle(title:String?, message:String?,actionTitle:String! = "OK".syLocalizedString,completion: (() -> Void)? = nil)
     {
         let vc = UIAlertController(title: title, message: message, preferredStyle: .Alert)
         var needToDisp:Bool = false

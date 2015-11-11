@@ -11,13 +11,13 @@
 "HelpPage2" = "Игрок неподвижен\n Уничтожте красные астеройды";
 "HelpPage3" = "При появлении ракеты\n Уничтож её находясь в луче трансмиттера\n";
 "HelpPage4" = "При появлении ракеты\n  Ожидайте в течении интервала на старт автоуничтожения";
-"HelpPage5" = "The transmitter transmits the player to the left corner\n You can shot under the ray beam";
-"HelpPage6" = "In a beam move up & down\n Destroy enemies";
-"ADenied" = "Access denied";
+"HelpPage5" = "Трансмиттер переносит игрока в левую часть экрана\n  Находясь в луче можно стрелять";
+"HelpPage6" = "В луче двигайтесь вверх, вниз\n Уничтожайте врагов";
+"ADenied" = "Доступ запрещён";
 "OK" = "OK";
-"Success" = "Success";
-"Attention" = "Attention";
-"Sorry" = "Sorry";
+"Success" = "Всё хорошо";
+"Attention" = "Внимание";
+"Sorry" = "Извините";
 "SorryTwitter" = "You can\'t send a tweet right now,\n make sure your device has an internet connection and you have\n at least one Twitter account setup";
 "Error" = "Error";
 "ErrorTimeLine" = "Error posting on the timeline.\n Please try again latter";
@@ -39,3 +39,14 @@
 
 "Score" = "Очки";
 "Game Over" = "Конец игры!";
+
+"Start crashing" = "Начните крушите";
+"Let's crash something!" = "Пора крушить!";
+"You didn't play for a while!" = "You didn't play for a while!";
+"Can't move\n Attack trash asteroids" = "Can't move\n Attack trash asteroids";
+"When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically" = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically";
+"In a Beam\nMove up &down\nAttack enemies" = "In a Beam\nMove up &down\nAttack enemies";
+"Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies" =  "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies";
+
+"Price " = "Price ";
+"Purchase of %@ failed" = "Purchase of %@ failed";

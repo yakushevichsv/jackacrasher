@@ -76,7 +76,7 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker, ItemDestructable {
         
         
         let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
-        label.text = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically"
+        label.text = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically".syLocalizedString
         label.fontColor = SKColor.redColor()
         label.fontSize = 25
         label.lineSpacing = 3

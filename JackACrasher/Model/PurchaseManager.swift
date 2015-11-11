@@ -508,7 +508,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 // The transaction failed
             case .Failed:
                 
-                self.message = "Purchase of \(transaction.payment.productIdentifier) failed."
+                self.message =  String(format: "Purchase of %@ failed".syLocalizedString, "\(transaction.payment.productIdentifier)")
                 
                 setPurchaseProgressState(transaction.payment.productIdentifier,inProgress: false)
                 

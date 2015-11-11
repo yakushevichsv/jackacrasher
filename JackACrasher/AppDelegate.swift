@@ -71,9 +71,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             
             if (types & UIUserNotificationType.Alert.rawValue != 0) {
-                localNotification.alertAction = "Start crashing"
-                localNotification.alertBody   = "Let's crash something!"
-                localNotification.alertTitle  = "You didn't play for a while!"
+                localNotification.alertAction = "Start crashing".syLocalizedString
+                localNotification.alertBody   = "Let's crash something!".syLocalizedString
+                localNotification.alertTitle  = "You didn't play for a while!".syLocalizedString
             }
             
             localNotification.timeZone = NSTimeZone.localTimeZone()

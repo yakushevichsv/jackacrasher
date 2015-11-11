@@ -39,3 +39,14 @@
 
 "Score" = "Score";
 "Game Over" = "Game Over";
+
+"Start crashing" = "Start crashing";
+"Let's crash something!" = "Let's crash something!";
+"You didn't play for a while!" = "You didn't play for a while!";
+"Can't move\n Attack trash asteroids" = "Can't move\n Attack trash asteroids";
+"When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically" = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically";
+"In a Beam\nMove up &down\nAttack enemies" = "In a Beam\nMove up &down\nAttack enemies";
+ "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies" =  "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies";
+
+"Price " = "Price ";
+"Purchase of %@ failed" = "Purchase of %@ failed";

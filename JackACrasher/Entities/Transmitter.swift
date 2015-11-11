@@ -419,7 +419,7 @@ class Transmitter:SKNode,AssetsContainer {
         }
         
         let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
-        label.text = "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies"
+        label.text = "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies".syLocalizedString
         label.fontColor = SKColor.redColor()
         label.fontSize = 15
         label.lineSpacing = 2
@@ -436,7 +436,7 @@ class Transmitter:SKNode,AssetsContainer {
         }
         
         let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
-        label.text = "In a Beam\nMove up &down\nAttack enemies"
+        label.text = "In a Beam\nMove up &down\nAttack enemies".syLocalizedString
         label.fontColor = SKColor.redColor()
         label.fontSize = 15
         label.lineSpacing = 2
