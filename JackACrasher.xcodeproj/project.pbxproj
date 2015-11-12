@@ -59,9 +59,6 @@
 		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
 		2188A5CF1B9F9FB900612BEC /* SWBlade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188A5CE1B9F9FB900612BEC /* SWBlade.swift */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
-		218B92EE1B79F3C500444918 /* sprites.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 218B92ED1B79F3C500444918 /* sprites.atlas */; };
-		218B92F01B79F3D000444918 /* trash.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 218B92EF1B79F3D000444918 /* trash.atlas */; };
-		218B92F21B79F3DA00444918 /* blackhole.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 218B92F11B79F3DA00444918 /* blackhole.atlas */; };
 		218D5A831B317C7F007ABE63 /* UIViewControllerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */; };
 		218F24B31B35AF56008C085F /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218F24B21B35AF56008C085F /* NetworkManager.swift */; };
 		2192CCE01AF6567E00518F97 /* Spawn.sks in Resources */ = {isa = PBXBuildFile; fileRef = 2192CCDF1AF6567E00518F97 /* Spawn.sks */; };
@@ -81,7 +78,6 @@
 		21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF9C271B89E0A60002AEAC /* HelpViewController.swift */; };
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
 		21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */; };
-		21C5BDF41BC1711D0066042B /* player.atlas in Resources */ = {isa = PBXBuildFile; fileRef = 21C5BDF31BC1711D0066042B /* player.atlas */; };
 		21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */; };
 		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
 		21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CEEFAA1B9CCB2D008937A2 /* iAd.framework */; };
@@ -183,9 +179,6 @@
 		217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopUpTransitioningDelegate.swift; path = ViewControllers/PopUpTransitioningDelegate.swift; sourceTree = "<group>"; };
 		2188A5CE1B9F9FB900612BEC /* SWBlade.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SWBlade.swift; sourceTree = "<group>"; };
 		218B375B1B02959A00B9085C /* GameLogicManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameLogicManager.swift; path = Model/GameLogicManager.swift; sourceTree = "<group>"; };
-		218B92ED1B79F3C500444918 /* sprites.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = sprites.atlas; sourceTree = "<group>"; };
-		218B92EF1B79F3D000444918 /* trash.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = trash.atlas; sourceTree = "<group>"; };
-		218B92F11B79F3DA00444918 /* blackhole.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = blackhole.atlas; sourceTree = "<group>"; };
 		218D5A821B317C7F007ABE63 /* UIViewControllerExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIViewControllerExtensions.swift; path = ViewControllers/UIViewControllerExtensions.swift; sourceTree = "<group>"; };
 		218D65AA1BF0BA0C00AA8758 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		218F24B21B35AF56008C085F /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkManager.swift; path = Model/NetworkManager.swift; sourceTree = "<group>"; };
@@ -207,7 +200,6 @@
 		21BF9C271B89E0A60002AEAC /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ViewControllers/HelpViewController.swift; sourceTree = "<group>"; };
 		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
 		21C3561A1B766E37009BE4F1 /* EnemySpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemySpaceShip.swift; path = Entities/EnemySpaceShip.swift; sourceTree = "<group>"; };
-		21C5BDF31BC1711D0066042B /* player.atlas */ = {isa = PBXFileReference; lastKnownFileType = folder.skatlas; path = player.atlas; sourceTree = "<group>"; };
 		21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JackACrasherNavigationController.swift; path = Model/JackACrasherNavigationController.swift; sourceTree = "<group>"; };
 		21CCA14D1B0A881C004419A2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		21CEEFAA1B9CCB2D008937A2 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
@@ -383,17 +375,6 @@
 				2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */,
 			);
 			name = "Transitions&Presentations";
-			sourceTree = "<group>";
-		};
-		218B92EC1B79F3A500444918 /* Assets */ = {
-			isa = PBXGroup;
-			children = (
-				21C5BDF31BC1711D0066042B /* player.atlas */,
-				218B92F11B79F3DA00444918 /* blackhole.atlas */,
-				218B92EF1B79F3D000444918 /* trash.atlas */,
-				218B92ED1B79F3C500444918 /* sprites.atlas */,
-			);
-			name = Assets;
 			sourceTree = "<group>";
 		};
 		218D5A811B317C5B007ABE63 /* Categories */ = {
@@ -572,7 +553,6 @@
 				21FFEAE81AD5E216000115F6 /* AppDelegate.swift */,
 				21FFEAF01AD5E216000115F6 /* Main.storyboard */,
 				21FFEAF51AD5E216000115F6 /* LaunchScreen.xib */,
-				218B92EC1B79F3A500444918 /* Assets */,
 				21FFEAE61AD5E216000115F6 /* Supporting Files */,
 				21E56B341ADA9D8F0071A217 /* Images.xcassets */,
 				211F5FDF1BF0E700008591D7 /* Localizable.strings */,
@@ -718,7 +698,6 @@
 				21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */,
 				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
 				217341041AFE5674009E934A /* lose.wav in Resources */,
-				218B92EE1B79F3C500444918 /* sprites.atlas in Resources */,
 				2116A1E81BF1597200CC45F0 /* InfoPlist.strings in Resources */,
 				210CE8721B8BC7B900C9F288 /* VKSdkResources.bundle in Resources */,
 				217360F91B87260C00713E82 /* lap.wav in Resources */,
@@ -733,9 +712,7 @@
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
 				211F5FDD1BF0E700008591D7 /* Localizable.strings in Resources */,
 				212B55FA1B8E52F400B816FD /* enemyDeath.sks in Resources */,
-				21C5BDF41BC1711D0066042B /* player.atlas in Resources */,
 				2192CCE21AF6574800518F97 /* realStar.png in Resources */,
-				218B92F21B79F3DA00444918 /* blackhole.atlas in Resources */,
 				211243611AEAE070006B5487 /* Rock.png in Resources */,
 				211243631AEAE07A006B5487 /* Explosion.sks in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
@@ -745,7 +722,6 @@
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
 				2199B6861AE3FF2B00DDDB9F /* explosion_small.wav in Resources */,
 				21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */,
-				218B92F01B79F3D000444918 /* trash.atlas in Resources */,
 				212A2F2B1B36F98700B31482 /* AppleIncRootCertificate.cer in Resources */,
 				21689F651ADAD696001456D6 /* BGStarts.sks in Resources */,
 			);
