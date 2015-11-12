@@ -457,7 +457,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     }
     
     
-    func throwProjectileToLocation(location:CGPoint) -> SKNode! {
+    func throwProjectileToLocation(location:CGPoint) -> SKNode? {
        
         print("Throw location \(location)")
         
@@ -471,7 +471,11 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         return throwProjectileAtDirection(CGVectorMake((xDiff != 0 ? xDiff/len : 0) , (yDiff != 0 ? yDiff/len :0)),sPosition:sPosition)
     }
     
-    private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode! {
+    private func throwProjectileAtDirection(vector:CGVector,sPosition:CGPoint) -> SKNode? {
+        
+        if self.scene == nil {
+            return nil
+        }
         
         let projectile = SKSpriteNode(imageNamed: "projectile")
         
@@ -486,9 +490,6 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         var yDiff:CGFloat = 0.0
         
         if (isUp) {
-            
-            //MARK: Fails here....
-            
             yDiff = self.scene!.size.height + projectile.size.halfHeight() - position.y
         }
         else if (vector.dy != 0){

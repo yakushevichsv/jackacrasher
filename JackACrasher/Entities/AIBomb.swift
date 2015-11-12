@@ -84,8 +84,10 @@ class AIBomb: Bomb {
         
         var position = node.position
         
-        if (node.parent != self.parent) {
-            position = node.parent!.convertPoint(position, toNode: self.parent!)
+        if (node.parent != self.parent && self.parent != nil) {
+            if let nPosition = node.parent?.convertPoint(position, toNode: self.parent!) {
+                position = nPosition
+            }
         }
         
         return position

@@ -402,7 +402,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                                 dispatch_async(dispatch_get_main_queue()) {
                                     [unowned self] in
                                     
-                                    if self.view.window == nil {
+                                    if self.products.isEmpty {
                                         return 
                                     }
                                     
