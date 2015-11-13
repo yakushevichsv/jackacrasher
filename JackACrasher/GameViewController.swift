@@ -103,8 +103,8 @@ class GameViewController: UIViewController,GameSceneDelegate {
         let skView = self.skView
         let scene = GameScene(size: skView.bounds.size)
         
-        skView.showsFPS = true
-        skView.showsNodeCount = true
+        skView.showsFPS = false
+        skView.showsNodeCount = false
         /* Sprite Kit applies additional optimizations to improve rendering performance */
         skView.ignoresSiblingOrder = false
         
