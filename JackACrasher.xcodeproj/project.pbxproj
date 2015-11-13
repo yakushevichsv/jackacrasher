@@ -28,6 +28,8 @@
 		211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211BFC901B34872A0053ED9A /* FileManagerExtensions.swift */; };
 		211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211C4C6F1B16FFA4005F50B8 /* Fire.sks */; };
 		211F5FDD1BF0E700008591D7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 211F5FDF1BF0E700008591D7 /* Localizable.strings */; };
+		212390C11BF6364B00B79B33 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 212390BF1BF6364B00B79B33 /* Fabric.framework */; };
+		212390C21BF6364B00B79B33 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 212390C01BF6364B00B79B33 /* Crashlytics.framework */; };
 		212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
 		212A2F231B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
 		212A2F241B36F24400B31482 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F211B36F24400B31482 /* libssl.a */; };
@@ -148,6 +150,8 @@
 		211C4C6F1B16FFA4005F50B8 /* Fire.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Fire.sks; sourceTree = "<group>"; };
 		211F5FDE1BF0E700008591D7 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Localizable.strings; sourceTree = "<group>"; };
 		211F5FE01BF0E708008591D7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
+		212390BF1BF6364B00B79B33 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		212390C01BF6364B00B79B33 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		212A2F201B36F24400B31482 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = OpenSSL/lib/libcrypto.a; sourceTree = SOURCE_ROOT; };
 		212A2F211B36F24400B31482 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = OpenSSL/lib/libssl.a; sourceTree = SOURCE_ROOT; };
 		212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasherTests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -252,6 +256,8 @@
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
 				210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */,
 				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
+				212390C21BF6364B00B79B33 /* Crashlytics.framework in Frameworks */,
+				212390C11BF6364B00B79B33 /* Fabric.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -563,6 +569,8 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				212390BF1BF6364B00B79B33 /* Fabric.framework */,
+				212390C01BF6364B00B79B33 /* Crashlytics.framework */,
 				21CEEFAA1B9CCB2D008937A2 /* iAd.framework */,
 				210CE8731B8BC93C00C9F288 /* VKSdk.framework */,
 				210CE8701B8BC7B900C9F288 /* VKSdkResources.bundle */,
@@ -610,6 +618,7 @@
 				21FFEADF1AD5E216000115F6 /* Sources */,
 				21FFEAE01AD5E216000115F6 /* Frameworks */,
 				21FFEAE11AD5E216000115F6 /* Resources */,
+				212390BE1BF6362D00B79B33 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -735,6 +744,22 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		212390BE1BF6362D00B79B33 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run e352f5b447cd421c290f4b320fb95db6e5e74213 908e8b3d8e40a5d99270247a65460d6cf60179fc7f733a4fbe1e203ccbfe9015";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		21FFEADF1AD5E216000115F6 /* Sources */ = {
