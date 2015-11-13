@@ -26,13 +26,13 @@
 "ThanksPosting" = "Спасибо за пост";
 "LogoText" = "Я играю в Джек-Крушитель!";
 "FBDecsr" = "Веселитесь!. Помогите Джеку разрушить как можно больше!";
-"NoImplement" = "That functionality hasn't been implemented yet";
-"NoITunesStore" = "Couldn't access iTunes Store";
-"EnableIAP" = "For purchasing things please enable IAP";
-"EnableIAPTitle" = "Please enable In-App-Purchases";
-"EnableGC" = "Please enable Game Center!";
-"GCDisabledTitle"="Game Center is disabled";
-"GCDisabledMessage"="To participate in Leaderboard\nPlease enable it";
+"NoImplement" = "Данный функционал к сожалению ещё не реализован";
+"NoITunesStore" = "Не удалось подсоединится к iTunes";
+"EnableIAP" = "Пожалуйста активируйте IAP для осуществления покупок";
+"EnableIAPTitle" = "Пожалуйста разрешите покупки в приложении (IAP)";
+"EnableGC" = "Пожалуйста активируйте игровой центр(Game Center)!";
+"GCDisabledTitle"="Игровой центр не активен";
+"GCDisabledMessage"="Для сохранения результатов в Leaderboard\nПожалуйста активируйте его";
 
 "CKDisabledTitle"="Активируйте iCloud ";
 "CKDisabledMessage"="Пожалуйста активируйте iCloud уч запись\n iCloud запись сохраняет в себе результаты";
@@ -42,11 +42,12 @@
 
 "Start crashing" = "Начните крушите";
 "Let's crash something!" = "Пора крушить!";
-"You didn't play for a while!" = "You didn't play for a while!";
-"Can't move\n Attack trash asteroids" = "Can't move\n Attack trash asteroids";
-"When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically" = "When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically";
-"In a Beam\nMove up &down\nAttack enemies" = "In a Beam\nMove up &down\nAttack enemies";
-"Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies" =  "Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies";
+"You didn't play for a while!" = "Давно вас не было видно!";
+"Can't move\n Attack trash asteroids" = "Не пошевелиться \n Атакуй мусор(пояс астеройдов)";
+"When there is a bomb, destroy it \nOr wait until a timer has signaled\nAnd it will be fired automatically" = "При появлении ракеты ,уничтож её \nИли дождитесь истечения времени таймера\nИ ракета будет уничтожена автоматически";
 
-"Price " = "Price ";
-"Purchase of %@ failed" = "Purchase of %@ failed";
+"In a Beam\nMove up &down\nAttack enemies" = "В луче\nМожете двигаться в пределах него\nАттаковать противников";
+"Transmitter transmits a player to the lower left corner\n In a beam move up,down & attack enemies" =  "Трансмиттер переносит игрока в левую часть экрана\n Можно двигаться в пределах луча, уничтожая врагов";
+
+"Price " = "Цена ";
+"Purchase of %@ failed" = "Не удалось заказать элемент %@";
