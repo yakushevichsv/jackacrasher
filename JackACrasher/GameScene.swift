@@ -2067,8 +2067,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         if !self.userInteractionEnabled {
             
             if secondNode.parent != blackHoleNode.parent {
-            
-                //HACK: failed here....
                 assert(self.player == secondNode)
                 
                 if self.player.isCaptured {

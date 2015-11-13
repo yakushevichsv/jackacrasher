@@ -834,9 +834,10 @@ extension GameLogicManager {
         return def.boolForKey(key)
     }
     
+    //HACK: No sound is stored for all peopler....
     internal var currentSoundKey:String {
         get {
-            return getPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
+            return /*getPlayerId()*/self.getAnonymousPlayerId().stringByAppendingString(SoundConstants.sNoSoundAdditionKey)
         }
     }
 }
