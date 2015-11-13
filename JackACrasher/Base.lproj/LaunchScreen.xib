@@ -77,17 +77,22 @@
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="explosion0001" translatesAutoresizingMaskIntoConstraints="NO" id="VLe-Uu-hRO">
-                    <rect key="frame" x="146" y="195" width="162" height="100"/>
+                    <rect key="frame" x="147" y="183" width="161" height="100"/>
                     <animations/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="162" id="TOr-1f-ogW"/>
+                        <constraint firstAttribute="width" constant="161" id="TOr-1f-ogW"/>
                     </constraints>
+                </imageView>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cartoon-bomb" translatesAutoresizingMaskIntoConstraints="NO" id="UX7-RK-aGG">
+                    <rect key="frame" x="231" y="204" width="278" height="118"/>
+                    <animations/>
                 </imageView>
             </subviews>
             <animations/>
             <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="H68-FY-DsA" firstAttribute="centerX" secondItem="Grm-Eo-L3w" secondAttribute="centerX" multiplier="1.4" id="0OX-Nm-s63"/>
+                <constraint firstItem="UX7-RK-aGG" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.1" id="2GD-6Z-CW4"/>
                 <constraint firstItem="Wq7-3e-Zq0" firstAttribute="baseline" secondItem="H68-FY-DsA" secondAttribute="baseline" id="3FD-pN-OuR"/>
                 <constraint firstItem="Suc-WN-zPF" firstAttribute="centerY" secondItem="cJ5-tj-Ojm" secondAttribute="centerY" id="A1F-Jx-GOH"/>
                 <constraint firstItem="cJ5-tj-Ojm" firstAttribute="leading" secondItem="Suc-WN-zPF" secondAttribute="trailing" constant="34" id="B1e-BV-hkI"/>
@@ -100,11 +105,12 @@
                 <constraint firstItem="0hD-fE-ELc" firstAttribute="top" secondItem="Y1a-Vg-jes" secondAttribute="bottom" constant="-4" id="PO6-f9-u3q"/>
                 <constraint firstItem="pAt-cy-L0A" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.5" constant="-11.75" id="RQK-fE-q30"/>
                 <constraint firstItem="H68-FY-DsA" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="0.5" constant="11.75" id="WL5-Nh-N62"/>
+                <constraint firstItem="UX7-RK-aGG" firstAttribute="centerX" secondItem="H68-FY-DsA" secondAttribute="centerX" multiplier="1.1" id="XNr-Yv-eT5"/>
                 <constraint firstAttribute="bottom" secondItem="Grm-Eo-L3w" secondAttribute="bottom" constant="25" id="Ygy-CU-KRO"/>
                 <constraint firstItem="X3N-gI-5S9" firstAttribute="centerY" secondItem="daA-bg-k1I" secondAttribute="centerY" id="a8M-1k-PI9"/>
                 <constraint firstItem="X3N-gI-5S9" firstAttribute="width" secondItem="X3N-gI-5S9" secondAttribute="height" multiplier="12:11" id="aGc-w1-wMO"/>
                 <constraint firstItem="pAt-cy-L0A" firstAttribute="top" secondItem="0hD-fE-ELc" secondAttribute="bottom" constant="-18" id="alg-ou-ry4"/>
-                <constraint firstItem="VLe-Uu-hRO" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.1" constant="-18.450000000000045" id="iEA-2a-aft"/>
+                <constraint firstItem="VLe-Uu-hRO" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.1" constant="-30.450000000000045" id="iEA-2a-aft"/>
                 <constraint firstItem="pAt-cy-L0A" firstAttribute="centerX" secondItem="Grm-Eo-L3w" secondAttribute="centerX" multiplier="0.5" id="iMv-jd-gsL"/>
                 <constraint firstAttribute="trailing" secondItem="Grm-Eo-L3w" secondAttribute="trailing" id="kIk-h0-QEZ"/>
                 <constraint firstItem="X3N-gI-5S9" firstAttribute="centerY" secondItem="pAt-cy-L0A" secondAttribute="centerY" id="kgb-qy-f9O"/>
@@ -124,6 +130,7 @@
     </objects>
     <resources>
         <image name="asteroid-large" width="208" height="225"/>
+        <image name="cartoon-bomb" width="278" height="118"/>
         <image name="cartoon-bomb2" width="185" height="75"/>
         <image name="enemy-bullet" width="40" height="20"/>
         <image name="enemy-bullet-rot45" width="40" height="40"/>

@@ -5,6 +5,12 @@
   Created by Siarhei Yakushevich on 11/9/15.
   Copyright © 2015 Siarhei Yakushevich. All rights reserved.
 */
+"help-page001.png" = "help-page001.png";
+"help-page002.png" = "help-page002.png";
+"help-page003.png" = "help-page003.png";
+"help-page004.png" = "help-page004.png";
+"help-page005.png" = "help-page005.png";
+"help-page006.png" = "help-page006.png";
 
 "FontName" = "gamerobot";
 "HelpPage1" = "Player can't move\n Attack trash asteroids";

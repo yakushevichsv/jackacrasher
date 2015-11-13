@@ -183,11 +183,12 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         enableGravityReceptivity()
         self.physicsBody = aPhysBody
         
-        
-        let shapeNode = SKShapeNode(path: path.CGPath)
-        shapeNode.position = center
-        shapeNode.strokeColor = UIColor.redColor()
-        addChild(shapeNode)
+        if (EnabledDisplayDebugLabel) {
+            let shapeNode = SKShapeNode(path: path.CGPath)
+            shapeNode.position = center
+            shapeNode.strokeColor = UIColor.redColor()
+            addChild(shapeNode)
+        }
     }
     
     //MARK:Player's gravity receptivity

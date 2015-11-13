@@ -211,10 +211,12 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         self.physicsBody = physBody
         //self.physicsBody!.fieldBitMask = 0
         
-        let shapeNode = SKShapeNode(path: path.CGPath)
-        shapeNode.strokeColor = UIColor.redColor()
-        shapeNode.position = center
-        addChild(shapeNode)
+        if (EnabledDisplayDebugLabel) {
+            let shapeNode = SKShapeNode(path: path.CGPath)
+            shapeNode.strokeColor = UIColor.redColor()
+            shapeNode.position = center
+            addChild(shapeNode)
+        }
         
         if (!isLittle) {
             self.cropNode.addChild(self.digitNode)

@@ -459,7 +459,7 @@ class AsteroidGenerator: NSObject {
         let label = NORLabelNode(fontNamed: NSLocalizedString("FontName",comment:""))
         label.text = "Can't move\n Attack trash asteroids".syLocalizedString
         label.fontColor = SKColor.redColor()
-        label.fontSize = 40
+        label.fontSize = UIApplication.sharedApplication().isRussian ? 20 : 40
         label.lineSpacing = 2
         label.position = CGPointMake(node.size.width+50, node.size.halfHeight())
         label.zRotation = CGFloat(-M_PI_2)

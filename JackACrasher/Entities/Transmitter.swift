@@ -392,6 +392,10 @@ class Transmitter:SKNode,AssetsContainer {
                     self.transmitNode.position = sPoint
                 }
                 self.transmitNode.removeFromParent()
+                if let name = self.transmitNode?.name {
+                    let fNode = self.scene?.childNodeWithName(name)
+                    fNode?.removeFromParent()
+                }
                 self.addChild(self.transmitNode)
                 self.transmitNode.enableProjectileGun()
                 

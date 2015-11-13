@@ -272,6 +272,7 @@ class AsteroidManager : NSObject {
                             shapeNode.strokeColor = UIColor.redColor()
                             scene.addChild(shapeNode)
                             
+                            
                             let value =  NSValue(CGPoint: jointInfo.position)
                             
                             self.jointsArray[value] = JointState(joint: joint,node: shapeNode)
