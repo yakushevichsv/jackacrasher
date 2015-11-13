@@ -1218,23 +1218,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if let transmitter = didProduceItems.last as? Transmitter {
                 
-                // HACK: produce regular Asteroid
-                
-                let aster = RegularAsteroid(asteroid: .Big, maxLife:3,needToAnimate:false)
-                let action = self.asteroidGenerator.produceSeqActionToAsteroid(aster,asteroidSpeed:2)
-                aster.runAction(action)
-                
-                aster.position = transmitter.position - CGPoint(x: 100, y: 0)
-                
-                aster.position.y = self.player.position.y
-                
-                self.asteroidGenerator(self.asteroidGenerator, didProduceAsteroids: [aster], type: .Regular)
-                
-                
-                // END HACK...
-                
-                
-                
                 self.player.enableProjectileGun()
                 if (!transmitter.moveToPosition(toPosition: CGPointMake(CGRectGetMinX(self.playableArea) + max(self.player.size.halfWidth(),transmitter.transmitterSize.halfWidth()) , self.player.position.y))) {
                     //TODO: Transfer ownership of the player to transmitter

@@ -84,7 +84,7 @@
                                     <constraint firstAttribute="width" constant="200" id="Vb0-re-OwX"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" verticalHuggingPriority="249" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="82" y="364" width="137" height="40"/>
                                 <animations/>
                                 <constraints>
@@ -119,7 +119,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="rvc-9G-ulH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="382" y="364" width="136" height="40"/>
                                 <animations/>
                                 <constraints>
@@ -295,7 +295,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="263" y="364" width="74" height="40"/>
                                 <animations/>
                                 <constraints>
@@ -331,7 +331,7 @@
                                     <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="syR-z3-A5T"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="264" y="419" width="75" height="40"/>
                                 <animations/>
                                 <constraints>
@@ -489,20 +489,18 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6dL-56-Q5y">
-                                                    <rect key="frame" x="176" y="17" width="42" height="21"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6dL-56-Q5y">
+                                                    <rect key="frame" x="176" y="17" width="218" height="21"/>
                                                     <animations/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvC-fI-uwO" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                                    <rect key="frame" x="176" y="103" width="100" height="33"/>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvC-fI-uwO" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                                    <rect key="frame" x="176" y="109" width="106" height="27"/>
                                                     <animations/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="100" id="vRh-Bp-Tw3"/>
-                                                    </constraints>
                                                     <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
+                                                    <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
                                                     <state key="normal" title="Price $ 1000">
                                                         <color key="titleColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -525,6 +523,7 @@
                                             <constraint firstAttribute="bottomMargin" secondItem="G2i-Oy-fNO" secondAttribute="bottom" id="djw-3n-9bj"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="top" secondItem="z59-15-5a9" secondAttribute="top" id="eKo-M2-4mF"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="top" secondItem="ZTf-z3-8q5" secondAttribute="topMargin" constant="9" id="gKW-T1-88c"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="6dL-56-Q5y" secondAttribute="trailing" id="nXN-jn-BU5"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="leading" secondItem="ZTf-z3-8q5" secondAttribute="leadingMargin" constant="7" id="rSD-43-fV2"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="z59-15-5a9" secondAttribute="trailing" constant="8" symbolic="YES" id="xr1-HC-jrS"/>
                                         </constraints>
@@ -723,7 +722,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="u7c-lb-ttF" userLabel="ContainerView">
                                 <rect key="frame" x="90" y="438" width="420" height="132"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hIE-rY-cmt" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hIE-rY-cmt" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="26" y="86" width="159" height="38"/>
                                         <animations/>
                                         <constraints>
@@ -755,7 +754,7 @@
                                             <action selector="btnPressed:" destination="qda-7r-HQm" eventType="touchUpInside" id="TIp-57-9y4"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="q2p-pw-i4f" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="q2p-pw-i4f" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="263" y="86" width="104" height="38"/>
                                         <animations/>
                                         <constraints>
@@ -831,7 +830,7 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1WM-vX-PYK" userLabel="Container View">
                                 <rect key="frame" x="16" y="20" width="268" height="174"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="173" y="92" width="57" height="27"/>
                                         <animations/>
                                         <constraints>
@@ -863,7 +862,7 @@
                                             <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="21" y="92" width="119" height="27"/>
                                         <animations/>
                                         <constraints>
@@ -896,7 +895,7 @@
                                             <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwind" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
                                         </connections>
                                     </button>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Please select the action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Please select the action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
                                         <rect key="frame" x="-8" y="60" width="284" height="19"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="17"/>

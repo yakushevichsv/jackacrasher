@@ -461,7 +461,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
             deActivateIndicatorForCell(collectionViewCell,atIndexPath:indexPath)
         }
         
-        
+        correctFontOfChildViews(collectionViewCell.contentView)
         
         collectionViewCell.setTitleForProduct(product.skProduct.localizedTitle)
         collectionViewCell.productDescription.text = product.skProduct.localizedDescription
