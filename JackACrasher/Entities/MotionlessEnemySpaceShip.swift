@@ -22,7 +22,7 @@ class MotionlessEnemySpaceShip : EnemySpaceShip {
     }
     
     override func onUpdateTarget() {
-        let range = SKRange(lowerLimit:100, upperLimit: 500)
+        let range = SKRange(lowerLimit:100, upperLimit: 200)
         let constr = SKConstraint.distance(range, toNode: self.target!)
         self.constraints = [constr]
     }

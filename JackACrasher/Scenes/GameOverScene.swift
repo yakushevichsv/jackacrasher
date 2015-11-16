@@ -48,7 +48,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         static var EnemyShip2Name = "enemy2"
         static var EnemyShip3Name = "enemy3"
         static var EnemyShip4Name = "enemy4"
-        static var PlayerName     = "player"
+        static var PlayerName     = "astronaut"
         static var bulletName     = "bullet"
     }
     
@@ -279,14 +279,9 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         assert(self.scaleMode == .AspectFill, "Not aspect fill mode")
         
         if let _ = self.view {
-            
-            
-            let maxAspectRatio:CGFloat = 16.0/9.0 // 1
-            let playableHeight = size.width / maxAspectRatio // 2
-            let playableMargin = (size.height-playableHeight)/2.0 // 3
-            playableArea = CGRect(x: 0, y: playableMargin,
+            playableArea = CGRect(x: 0, y: 0,
                 width: size.width,
-                height: playableHeight) // 4
+                height: size.height) // 4
             print("Area \(self.playableArea)")
         }
     }

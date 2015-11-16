@@ -6,5 +6,4 @@
 #import <VKSdk/VKSdk.h>
 
 #import "IAPReceiptValidator.h"
-#import "UIImage+TextureAtlas.h"
 #import "NORLabelNode.h"

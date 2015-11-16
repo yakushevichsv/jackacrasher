@@ -75,7 +75,6 @@
 		219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A6D221AFABCC400A63E7F /* HUDNode.swift */; };
 		21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */; };
 		21B007901B72321B001B1F7B /* TransmitterLaser.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21B0078F1B72321B001B1F7B /* TransmitterLaser.sks */; };
-		21B2C9A31B852A5B0008FEED /* UIImage+TextureAtlas.m in Sources */ = {isa = PBXBuildFile; fileRef = 21B2C9A21B852A5B0008FEED /* UIImage+TextureAtlas.m */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
 		21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF9C271B89E0A60002AEAC /* HelpViewController.swift */; };
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
@@ -198,8 +197,6 @@
 		219A6D221AFABCC400A63E7F /* HUDNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HUDNode.swift; path = HUD/HUDNode.swift; sourceTree = "<group>"; };
 		21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTransitionSegue.swift; path = Utils/CustomTransitionSegue.swift; sourceTree = "<group>"; };
 		21B0078F1B72321B001B1F7B /* TransmitterLaser.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = TransmitterLaser.sks; path = JackACrasher/Particles/TransmitterLaser.sks; sourceTree = "<group>"; };
-		21B2C9A11B852A5B0008FEED /* UIImage+TextureAtlas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+TextureAtlas.h"; sourceTree = "<group>"; };
-		21B2C9A21B852A5B0008FEED /* UIImage+TextureAtlas.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+TextureAtlas.m"; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
 		21BF9C271B89E0A60002AEAC /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ViewControllers/HelpViewController.swift; sourceTree = "<group>"; };
 		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
@@ -429,8 +426,6 @@
 			children = (
 				2105AE521B8881DA00DDB0CC /* NORLabelNode.h */,
 				2105AE531B8881DA00DDB0CC /* NORLabelNode.m */,
-				21B2C9A11B852A5B0008FEED /* UIImage+TextureAtlas.h */,
-				21B2C9A21B852A5B0008FEED /* UIImage+TextureAtlas.m */,
 			);
 			name = External;
 			sourceTree = "<group>";
@@ -788,7 +783,6 @@
 				21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */,
 				2188A5CF1B9F9FB900612BEC /* SWBlade.swift in Sources */,
 				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
-				21B2C9A31B852A5B0008FEED /* UIImage+TextureAtlas.m in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,

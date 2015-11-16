@@ -166,7 +166,7 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
             break
         }
         if (!partName.isEmpty) {
-            nodeName = nodeName.stringByAppendingFormat("%@@%dx", partName,Int(UIScreen.mainScreen().scale))
+            nodeName = nodeName.stringByAppendingString(partName)
         }
         
         self.maxLife = maxLife

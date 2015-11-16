@@ -212,14 +212,9 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         assert(self.scaleMode == .AspectFill, "Not aspect fill mode")
         
         if let _ = self.view {
-            
-            
-            let maxAspectRatio:CGFloat = 16.0/9.0 // 1
-            let playableHeight = size.width / maxAspectRatio // 2
-            let playableMargin = (size.height-playableHeight)/2.0 // 3
-            playableArea = CGRect(x: 0, y: playableMargin,
+            playableArea = CGRect(x: 0, y: 0,
                 width: size.width,
-                height: playableHeight) // 4
+                height: size.height) // 4
             print("Area \(self.playableArea)")
         }
     }
@@ -1529,13 +1524,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let rect = CGRectMake(x, y, 2*radius, 2*radius)
             
             
-            let scenePoint = contact.contactPoint
-            createExplosion(ExplosionType.Large, position: scenePoint)
-            bombNode.physicsBody = nil
-            bombNode.removeFromParent()
-            
-            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: bombNode as! SKSpriteNode, withType: AsteroidType.Bomb)
-            
             self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { (eBody, _) -> Void in
                 
                 if (eBody.categoryBitMask == EntityCategory.TrashAsteroid) {
@@ -1555,6 +1543,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     }
                 }
             })
+            
+            let scenePoint = contact.contactPoint
+            createExplosion(ExplosionType.Large, position: scenePoint)
+            bombNode.physicsBody = nil
+            bombNode.removeFromParent()
+            
+            self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: bombNode as! SKSpriteNode, withType: AsteroidType.Bomb)
             
             
             return true
@@ -2571,7 +2566,7 @@ extension GameScene {
             // Here you add the delta value to the blade position
             
             var initCount = self.blades.count
-            for var index = initCount; index < 6; index++ {
+            for var index = initCount; index < 3; index++ {
                 if let lastCopy = self.blades.last?.copy() as? SWBlade {
                     addChild(lastCopy)
                     self.blades.insert(lastCopy, atIndex:0)

@@ -66,6 +66,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     
     private static var sBGSpriteTexture:SKTexture!
     internal static var sDamageEmitter:SKEmitterNode!
+    private static var sProjectileTexture:SKTexture!
     private static var hammerAttackAction:SKAction!
     private static var displayShowGunAction:SKAction!
     private static var spritesAtlas:SKTextureAtlas!
@@ -101,6 +102,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 self.spritesAtlas = SKTextureAtlas(named: "player")
                 
                 for var index = 0 ; index < 6; index++ {
+                    print("Player textures \(self.spritesAtlas.textureNames)")
                     let texture = self.spritesAtlas.textureNamed("astr\(index+1)")
                     textures.append(texture)
                     totalTime += timePerFrame
@@ -128,6 +130,9 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 let flyAct = SKAction.animateWithTextures(flyTextures, timePerFrame: timePerFrame)
                 self.displayShowGunAction = flyAct
             }
+            
+            let atlas = SKTextureAtlas(named: "player_extra")
+            self.sProjectileTexture =  atlas.textureNamed("projectile")
         }
     }
     
@@ -150,7 +155,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
     init(position:CGPoint) {
         let texture = Player.sBGSpriteTexture
         
-        super.init(texture: texture.copy() as? SKTexture, color: UIColor.redColor(), size: texture.size())
+        super.init(texture: texture, color: UIColor.redColor(), size: texture.size())
         
         self.name = playerNode
         self.position = position
@@ -478,7 +483,8 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
             return nil
         }
         
-        let projectile = SKSpriteNode(imageNamed: "projectile")
+        let texture = Player.sProjectileTexture
+        let projectile = SKSpriteNode(texture: texture)
         
         let isLeft = vector.dx < 0
         let isUp  = vector.dy > 0

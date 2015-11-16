@@ -139,8 +139,8 @@ class Rope: SKNode {
     internal var ringTexture:SKTexture {
         get {
            dispatch_once(&Rope.sContext) {
-                let image = UIImage.spriteWithContentsOfAtlas("sprites", name: "rope_ring.png")
-                Rope.sRingTexture = SKTexture(image: image)
+                let atlas = SKTextureAtlas(named: "sprites")
+                Rope.sRingTexture = atlas.textureNamed("rope_ring")
             }
             return Rope.sRingTexture
         }

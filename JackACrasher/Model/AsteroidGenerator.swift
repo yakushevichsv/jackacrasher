@@ -348,7 +348,7 @@ class AsteroidGenerator: NSObject {
             
             let sprite:SKSpriteNode!
             
-            let textName = "space debris (\(index))".syEncodeStringURL()!
+            let textName = "space_debris_(\(index))"
             
             let texture = trashAtlas?.textureNamed(textName)
             

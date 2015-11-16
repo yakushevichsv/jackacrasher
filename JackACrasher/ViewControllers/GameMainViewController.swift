@@ -111,18 +111,30 @@ class GameMainViewController: UIViewController {
         btn.layer.borderColor = UIColor.blackColor().CGColor//[UIColor blackColor].CGColor;
         btn.layer.borderWidth = 1.0
     
-        let images = UIImage.spritesWithContentsOfAtlas("blackhole", sequence: "BlackHole%01d.png", start: 0, end: 4) as! [UIImage]
+        var images:[UIImage] = []
+        
+        let blackHoleAtas = SKTextureAtlas(named: "blackhole")
+        for i in 0...4 {
+            print("Textures: \(blackHoleAtas.textureNames)")
+            let texture = blackHoleAtas.textureNamed(String(format: "BlackHole%d", i))
+            let image = UIImage(CGImage: texture.CGImage)
+            images.append(image)
+        }
         let animImage = UIImage.animatedImageWithImages(images, duration: 0.4)
         self.ivBlackHole.image = animImage;
         self.ivBlackHole.startAnimating()
         
-        
-        
-        let images2 = UIImage.spritesWithContentsOfAtlas("sprites", sequence: "explosion%04d.png", start: 1, end: 3) as! [UIImage]
+        var images2:[UIImage] = []
+        let spriteAtlas = SKTextureAtlas(named: "sprites")
+        for i in 1...3 {
+            let texture = spriteAtlas.textureNamed(String(format: "explosion%04d", i))
+            let image = UIImage(CGImage: texture.CGImage)
+            images2.append(image)
+        }
         let animImage2 = UIImage.animatedImageWithImages(images2, duration: 0.4)
         self.ivExplosion.image = animImage2
         
-        let image = UIImage.spriteWithContentsOfAtlas("sprites", name: "asteroid-large.png")
+        let image = UIImage(CGImage: spriteAtlas.textureNamed("asteroid-large").CGImage)
         self.ivAsteroidL.image = image
         self.ivAsteroidR.image = image
         
@@ -471,8 +483,6 @@ class GameMainViewController: UIViewController {
                     let image = UIImage(named: name)
                     images.append(image!)
                 }
-                
-                //let images = UIImage.spritesWithContentsOfAtlas("help", sequence: "heltp-page%03d.png", start: start) as! [UIImage]
                 
                 assert(images.count == Int(end - start + 1))
                 let dVC = segue.destinationViewController as! HelpViewController

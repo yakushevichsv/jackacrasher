@@ -16,15 +16,14 @@
                     <rect key="frame" x="0.0" y="24" width="480" height="431"/>
                     <animations/>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="player" translatesAutoresizingMaskIntoConstraints="NO" id="pAt-cy-L0A">
-                    <rect key="frame" x="82" y="306" width="76" height="83"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="astronaut" translatesAutoresizingMaskIntoConstraints="NO" id="pAt-cy-L0A">
+                    <rect key="frame" x="82" y="315" width="79" height="82"/>
                     <animations/>
                     <accessibility key="accessibilityConfiguration">
                         <accessibilityTraits key="traits" image="YES" notEnabled="YES"/>
                     </accessibility>
                     <constraints>
-                        <constraint firstAttribute="width" secondItem="pAt-cy-L0A" secondAttribute="height" multiplier="76:83" id="76j-S9-Yh7"/>
-                        <constraint firstAttribute="width" constant="76" id="KjW-iB-G2O"/>
+                        <constraint firstAttribute="width" secondItem="pAt-cy-L0A" secondAttribute="height" multiplier="76:83" constant="3.7590361445783174" id="76j-S9-Yh7"/>
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemyShip" translatesAutoresizingMaskIntoConstraints="NO" id="H68-FY-DsA">
@@ -44,19 +43,19 @@
                     </constraints>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="projectileRot45" translatesAutoresizingMaskIntoConstraints="NO" id="Y1a-Vg-jes">
-                    <rect key="frame" x="183" y="266" width="31" height="31"/>
+                    <rect key="frame" x="183" y="275" width="31" height="31"/>
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="projectileRot45" translatesAutoresizingMaskIntoConstraints="NO" id="0hD-fE-ELc">
-                    <rect key="frame" x="153" y="293" width="31" height="31"/>
+                    <rect key="frame" x="153" y="302" width="31" height="31"/>
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet" translatesAutoresizingMaskIntoConstraints="NO" id="Suc-WN-zPF">
-                    <rect key="frame" x="172" y="338" width="40" height="20"/>
+                    <rect key="frame" x="172" y="340" width="40" height="16"/>
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet" translatesAutoresizingMaskIntoConstraints="NO" id="daA-bg-k1I">
-                    <rect key="frame" x="210" y="338" width="40" height="20"/>
+                    <rect key="frame" x="210" y="340" width="40" height="16"/>
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cartoon-bomb2" translatesAutoresizingMaskIntoConstraints="NO" id="Wq7-3e-Zq0">
@@ -64,14 +63,14 @@
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="enemy-bullet" translatesAutoresizingMaskIntoConstraints="NO" id="cJ5-tj-Ojm">
-                    <rect key="frame" x="246" y="338" width="40" height="20"/>
+                    <rect key="frame" x="246" y="340" width="40" height="16"/>
                     <animations/>
                 </imageView>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="cartoon-bomb" translatesAutoresizingMaskIntoConstraints="NO" id="UX7-RK-aGG">
-                    <rect key="frame" x="231" y="204" width="278" height="118"/>
+                    <rect key="frame" x="278" y="224" width="185" height="78"/>
                     <animations/>
                 </imageView>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="explosion0001" translatesAutoresizingMaskIntoConstraints="NO" id="VLe-Uu-hRO">
+                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="explosion0001" translatesAutoresizingMaskIntoConstraints="NO" id="VLe-Uu-hRO">
                     <rect key="frame" x="147" y="183" width="161" height="100"/>
                     <animations/>
                     <constraints>
@@ -96,13 +95,13 @@
                 <constraint firstItem="Suc-WN-zPF" firstAttribute="centerY" secondItem="cJ5-tj-Ojm" secondAttribute="centerY" id="A1F-Jx-GOH"/>
                 <constraint firstItem="cJ5-tj-Ojm" firstAttribute="leading" secondItem="Suc-WN-zPF" secondAttribute="trailing" constant="34" id="B1e-BV-hkI"/>
                 <constraint firstItem="cJ5-tj-Ojm" firstAttribute="leading" secondItem="daA-bg-k1I" secondAttribute="trailing" constant="-4" id="Bff-zt-k6F"/>
-                <constraint firstItem="0hD-fE-ELc" firstAttribute="centerX" secondItem="pAt-cy-L0A" secondAttribute="centerX" multiplier="1.4" id="CqS-3b-rB0"/>
+                <constraint firstItem="0hD-fE-ELc" firstAttribute="centerX" secondItem="pAt-cy-L0A" secondAttribute="centerX" multiplier="1.4" constant="-0.89999999999997726" id="CqS-3b-rB0"/>
                 <constraint firstItem="H68-FY-DsA" firstAttribute="leading" secondItem="StP-7M-Y8v" secondAttribute="trailing" constant="-10" id="Et1-gR-j3f"/>
                 <constraint firstItem="X3N-gI-5S9" firstAttribute="leading" secondItem="daA-bg-k1I" secondAttribute="trailing" constant="44" id="JoM-et-3Jm"/>
                 <constraint firstItem="VLe-Uu-hRO" firstAttribute="centerX" secondItem="Grm-Eo-L3w" secondAttribute="centerX" constant="-13" id="KzV-z3-oXt"/>
-                <constraint firstItem="Wq7-3e-Zq0" firstAttribute="centerX" secondItem="pAt-cy-L0A" secondAttribute="centerX" multiplier="1.5" id="LiD-qq-O99"/>
+                <constraint firstItem="Wq7-3e-Zq0" firstAttribute="centerX" secondItem="pAt-cy-L0A" secondAttribute="centerX" multiplier="1.5" constant="-1" id="LiD-qq-O99"/>
                 <constraint firstItem="0hD-fE-ELc" firstAttribute="top" secondItem="Y1a-Vg-jes" secondAttribute="bottom" constant="-4" id="PO6-f9-u3q"/>
-                <constraint firstItem="pAt-cy-L0A" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.5" constant="-11.75" id="RQK-fE-q30"/>
+                <constraint firstItem="pAt-cy-L0A" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.5" constant="-3.25" id="RQK-fE-q30"/>
                 <constraint firstItem="H68-FY-DsA" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="0.5" constant="11.75" id="WL5-Nh-N62"/>
                 <constraint firstItem="UX7-RK-aGG" firstAttribute="centerX" secondItem="H68-FY-DsA" secondAttribute="centerX" multiplier="1.1" id="XNr-Yv-eT5"/>
                 <constraint firstAttribute="bottom" secondItem="Grm-Eo-L3w" secondAttribute="bottom" constant="25" id="Ygy-CU-KRO"/>
@@ -110,9 +109,9 @@
                 <constraint firstItem="X3N-gI-5S9" firstAttribute="width" secondItem="X3N-gI-5S9" secondAttribute="height" multiplier="12:11" id="aGc-w1-wMO"/>
                 <constraint firstItem="pAt-cy-L0A" firstAttribute="top" secondItem="0hD-fE-ELc" secondAttribute="bottom" constant="-18" id="alg-ou-ry4"/>
                 <constraint firstItem="VLe-Uu-hRO" firstAttribute="centerY" secondItem="Grm-Eo-L3w" secondAttribute="centerY" multiplier="1.1" constant="-30.450000000000045" id="iEA-2a-aft"/>
-                <constraint firstItem="pAt-cy-L0A" firstAttribute="centerX" secondItem="Grm-Eo-L3w" secondAttribute="centerX" multiplier="0.5" id="iMv-jd-gsL"/>
+                <constraint firstItem="pAt-cy-L0A" firstAttribute="centerX" secondItem="Grm-Eo-L3w" secondAttribute="centerX" multiplier="0.5" constant="1" id="iMv-jd-gsL"/>
                 <constraint firstAttribute="trailing" secondItem="Grm-Eo-L3w" secondAttribute="trailing" id="kIk-h0-QEZ"/>
-                <constraint firstItem="X3N-gI-5S9" firstAttribute="centerY" secondItem="pAt-cy-L0A" secondAttribute="centerY" id="kgb-qy-f9O"/>
+                <constraint firstItem="X3N-gI-5S9" firstAttribute="centerY" secondItem="pAt-cy-L0A" secondAttribute="centerY" constant="-8.5" id="kgb-qy-f9O"/>
                 <constraint firstItem="EhD-5B-vUl" firstAttribute="top" secondItem="StP-7M-Y8v" secondAttribute="bottom" constant="-4" id="mBf-gw-iP0"/>
                 <constraint firstItem="X3N-gI-5S9" firstAttribute="centerX" secondItem="H68-FY-DsA" secondAttribute="centerX" id="orS-aA-FWr"/>
                 <constraint firstItem="Grm-Eo-L3w" firstAttribute="leading" secondItem="iN0-l3-epB" secondAttribute="leading" id="tDG-hC-EaI"/>
@@ -128,14 +127,14 @@
         </view>
     </objects>
     <resources>
-        <image name="asteroid-large" width="208" height="225"/>
-        <image name="cartoon-bomb" width="278" height="118"/>
+        <image name="asteroid-large" width="133" height="104"/>
+        <image name="astronaut" width="79" height="72"/>
+        <image name="cartoon-bomb" width="185" height="78"/>
         <image name="cartoon-bomb2" width="185" height="75"/>
-        <image name="enemy-bullet" width="40" height="20"/>
+        <image name="enemy-bullet" width="40" height="16"/>
         <image name="enemy-bullet-rot45" width="40" height="40"/>
         <image name="enemyShip" width="69" height="63"/>
         <image name="explosion0001" width="100" height="100"/>
-        <image name="player" width="43" height="62"/>
         <image name="projectileRot45" width="31" height="31"/>
     </resources>
 </document>

@@ -49,13 +49,13 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         let texture = EnemySpaceShip.sPlayerTexture
         super.init(texture: texture, color: SKColor.blackColor(), size: texture.size())
         
-        createPhysicsBody()
+        createPhysicsBody(texture)
         self.name = Constants.name
         self.allowsAttackAction()
     }
     
-    private func createPhysicsBody() {
-        let body = SKPhysicsBody(texture: self.texture!, size: texture!.size())
+    private func createPhysicsBody(texture:SKTexture!) {
+        let body = SKPhysicsBody(texture: texture!, size: texture!.size())
         body.categoryBitMask = EntityCategory.EnemySpaceShip
         body.collisionBitMask = EntityCategory.EnemySpaceShip | EntityCategory.EnemySpaceShipLaser
         body.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
@@ -207,7 +207,10 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     //AssetsContainer
     class func loadAssets() {
         dispatch_once(&sOnce) {
-            let texture = SKTexture(imageNamed: "enemy-bullet")
+            let atlas = SKTextureAtlas(named: "enemyShip_extra")
+            print("Enemy ship extra textures \(atlas.textureNames)")
+            
+            let texture = atlas.textureNamed("enemy-bullet")
             let node = SKSpriteNode(texture: texture)
             let body = SKPhysicsBody(texture: texture, size: texture.size())
             body.categoryBitMask = EntityCategory.EnemySpaceShipLaser
@@ -218,7 +221,9 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
             node.userData = ["damageForce":ForceType(10)]
             self.sEnemyBulltet = node
             
-            self.sPlayerTexture = SKTexture(imageNamed: "enemyShip")
+            let texture2 = atlas.textureNamed("enemyShip")
+            
+            self.sPlayerTexture = texture2
         }
     }
     

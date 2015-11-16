@@ -447,25 +447,25 @@
                         <viewControllerLayoutGuide type="bottom" id="n54-lp-IOg"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" verticalCompressionResistancePriority="250" id="wzo-eb-guZ" userLabel="Container View">
-                        <rect key="frame" x="0.0" y="0.0" width="415" height="314"/>
+                        <rect key="frame" x="0.0" y="0.0" width="407" height="314"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="5o5-OH-fTw">
-                                <rect key="frame" x="0.0" y="10" width="395" height="295"/>
+                                <rect key="frame" x="0.0" y="10" width="387" height="295"/>
                                 <animations/>
                                 <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="S2O-G5-j42">
-                                    <size key="itemSize" width="402" height="294"/>
+                                    <size key="itemSize" width="416" height="294"/>
                                     <size key="headerReferenceSize" width="0.0" height="0.0"/>
                                     <size key="footerReferenceSize" width="0.0" height="0.0"/>
                                     <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 </collectionViewFlowLayout>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="productCell" id="ZTf-z3-8q5" userLabel="Product Cell" customClass="ShopDetailsCollectionViewCell" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="1" width="402" height="294"/>
+                                        <rect key="frame" x="0.0" y="1" width="416" height="294"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="402" height="294"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="416" height="294"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="z59-15-5a9">
@@ -478,7 +478,7 @@
                                                     </constraints>
                                                 </imageView>
                                                 <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" horizontalCompressionResistancePriority="250" verticalCompressionResistancePriority="200" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2i-Oy-fNO">
-                                                    <rect key="frame" x="15" y="148" width="379" height="138"/>
+                                                    <rect key="frame" x="15" y="148" width="393" height="138"/>
                                                     <animations/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <constraints>
@@ -488,13 +488,6 @@
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6dL-56-Q5y">
-                                                    <rect key="frame" x="176" y="17" width="218" height="21"/>
-                                                    <animations/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                    <nil key="highlightedColor"/>
-                                                </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="cvC-fI-uwO" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                                     <rect key="frame" x="176" y="109" width="106" height="27"/>
                                                     <animations/>
@@ -508,6 +501,13 @@
                                                         <action selector="buyButtonPressed:" destination="ZTf-z3-8q5" eventType="touchUpInside" id="iov-Ge-stb"/>
                                                     </connections>
                                                 </button>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="6dL-56-Q5y">
+                                                    <rect key="frame" x="176" y="17" width="210" height="21"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                             <animations/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
@@ -515,14 +515,14 @@
                                         <animations/>
                                         <constraints>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="cvC-fI-uwO" secondAttribute="leading" id="D0k-Hh-Yg0"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="G2i-Oy-fNO" secondAttribute="trailing" id="HJK-Mf-wcv"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="trailing" secondItem="ZTf-z3-8q5" secondAttribute="trailingMargin" id="ItC-3L-VED"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="leading" secondItem="G2i-Oy-fNO" secondAttribute="leading" id="MtP-It-dN9"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="top" secondItem="ZTf-z3-8q5" secondAttribute="topMargin" constant="9" id="Pyk-pO-tbk"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="bottom" secondItem="cvC-fI-uwO" secondAttribute="bottom" id="cSI-T3-JW4"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="G2i-Oy-fNO" secondAttribute="bottom" id="djw-3n-9bj"/>
-                                            <constraint firstItem="6dL-56-Q5y" firstAttribute="top" secondItem="z59-15-5a9" secondAttribute="top" id="eKo-M2-4mF"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="top" secondItem="ZTf-z3-8q5" secondAttribute="topMargin" constant="9" id="gKW-T1-88c"/>
-                                            <constraint firstAttribute="trailingMargin" secondItem="6dL-56-Q5y" secondAttribute="trailing" id="nXN-jn-BU5"/>
+                                            <constraint firstAttribute="trailingMargin" secondItem="6dL-56-Q5y" secondAttribute="trailing" constant="22" id="hRu-x9-Q4c"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="leading" secondItem="ZTf-z3-8q5" secondAttribute="leadingMargin" constant="7" id="rSD-43-fV2"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="z59-15-5a9" secondAttribute="trailing" constant="8" symbolic="YES" id="xr1-HC-jrS"/>
                                         </constraints>
@@ -552,7 +552,7 @@
                                 </connections>
                             </collectionView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="q0F-Ln-9WS">
-                                <rect key="frame" x="381" y="-5" width="29" height="30"/>
+                                <rect key="frame" x="373" y="-5" width="29" height="30"/>
                                 <animations/>
                                 <state key="normal" image="close">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
@@ -575,7 +575,7 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
-                    <size key="freeformSize" width="415" height="314"/>
+                    <size key="freeformSize" width="407" height="314"/>
                     <connections>
                         <outlet property="closeButton" destination="q0F-Ln-9WS" id="VEd-9a-NU2"/>
                         <outlet property="collectionView" destination="5o5-OH-fTw" id="oG1-ZQ-RN1"/>
