@@ -754,6 +754,8 @@ class GameMainViewController: UIViewController {
             self.needToDisplayAnimation = false
         }
         
+        correctSoundButton()
+        
         unwindForAd()
         
         
@@ -802,6 +804,11 @@ class GameMainViewController: UIViewController {
             }
             
             GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
+        }
+        else if (sender == self.btnHelp) {
+            SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { [unowned self ] (_, _) -> Void in
+                self.performSegueWithIdentifier("help", sender: sender)
+            })
         }
     }
     

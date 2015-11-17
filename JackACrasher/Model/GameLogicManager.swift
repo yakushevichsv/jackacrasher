@@ -824,7 +824,7 @@ extension GameLogicManager {
     }
     
     internal func gameSoundDisabled() -> Bool {
-        return GameLogicManager.gameSoundDisabledForKey(getPlayerId())
+        return GameLogicManager.gameSoundDisabledForKey(self.getAnonymousPlayerId())
     }
     
     internal class func gameSoundDisabledForKey(keyPart:String) -> Bool {

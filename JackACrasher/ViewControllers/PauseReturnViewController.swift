@@ -42,6 +42,7 @@ class PauseReturnViewController: UIViewController {
                 SoundManager.sharedInstance.disableSound()
             } else {
                 SoundManager.sharedInstance.enableSound()
+                SoundManager.sharedInstance.prepareToPlayBGMusic()
                 SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
             }
             
