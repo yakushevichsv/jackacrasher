@@ -373,6 +373,14 @@ func randomBetween(y1:CGFloat,y2:CGFloat) -> CGFloat {
     return yMin + CGFloat(yPos)
 }
 
+func isPhone4s() -> Bool {
+    return UIScreen.mainScreen().bounds.size == CGSizeMake(480, 320) && UIScreen.mainScreen().scale == 2.0
+}
+
+func isPhone6Plus() -> Bool {
+    return UIScreen.mainScreen().bounds.size == CGSizeMake(736, 414) && UIScreen.mainScreen().scale == 3.0
+}
+
 func randomUntil(y:CGFloat) -> CGFloat {
     return randomBetween(0, y2: y)
 }

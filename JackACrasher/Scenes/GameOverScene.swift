@@ -301,6 +301,11 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         self.gameOverLabel.hidden = false
         self.gameOverLabel.alpha = 0.0
         
+        if (isPhone4s()) {
+            self.gameOverLabel.fontSize = self.gameOverLabel.fontSize - 15
+        }
+        
+        
         let moveAct = SKAction.moveToY(CGRectGetMidY(self.playableArea), duration: Constants.GameOverMoveDuration)
         
         let fadeIn = SKAction.fadeInWithDuration(Constants.GameOverFadeInDuration)

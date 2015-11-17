@@ -368,29 +368,6 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         self.setTotalScoreLabelValue()
         
         
-        /*let shipScene = PyramidScene.pyramidScene()
-        
-        let  s = CGSizeMake(1000,500);
-        let tdNode = SK3DNode(viewportSize: s)
-        let center = self.player.position//CGPointMake(self.frame.midX, self.frame.midY)
-        tdNode.name = "3d node"
-        tdNode.position = center
-        tdNode.scnScene = shipScene
-        tdNode.zPosition = self.bgZPosition - 5
-        tdNode.pointOfView = shipScene.camera
-        //[self.tdNode setPointOfView:self.shipScene.camera];
-        tdNode.alpha = 0.5
-    
-        //tdNode.valueForKey("scnRenderer")
-        
-        addChild(tdNode)*/
-        
-        /*{
-        #warning This code is very important in iOS 8.1. Without these lines (which presumably initiate the SCNRenderer, the app crashes immediately.
-        id s1 = [self.tdNode valueForKey:@"_scnRenderer"];
-        NSLog(@"%@", s1);
-        }*/
-        
         correctLabelText(self)
     }
     
@@ -1524,7 +1501,8 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let rect = CGRectMake(x, y, 2*radius, 2*radius)
             
             
-            self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { (eBody, _) -> Void in
+            self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { [unowned self]
+                (eBody, retPtr) -> Void in
                 
                 if (eBody.categoryBitMask == EntityCategory.TrashAsteroid) {
                     
@@ -1534,6 +1512,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     let damageForce = AsteroidGenerator.damageForce(.Bomb)
                     if self.tryToDestroyPlayer(damageForce) {
                         self.terminateGame()
+                        retPtr.memory = true
                         return
                     }
                 }  else if (eBody.categoryBitMask == EntityCategory.PlayerLaser) {

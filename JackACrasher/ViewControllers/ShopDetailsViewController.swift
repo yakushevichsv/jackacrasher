@@ -399,6 +399,10 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                                     }
                                 }
                                 
+                                if self.products.isEmpty {
+                                    return
+                                }
+                                
                                 dispatch_async(dispatch_get_main_queue()) {
                                     [unowned self] in
                                     

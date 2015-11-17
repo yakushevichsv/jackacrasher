@@ -361,6 +361,10 @@ class Transmitter:SKNode,AssetsContainer {
         if CGPathContainsPoint(self.rayNode.path, nil, point, false) {
             let prevPoint = touch!.previousLocationInNode(self)
             
+            if self.transmitNode == nil {
+                return
+            }
+            
             let sTouch  = self.scene!.convertPoint(point, fromNode: self)
             let pTouch  = self.scene!.convertPoint(prevPoint, fromNode: self)
             

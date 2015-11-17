@@ -17,7 +17,7 @@ class ScoreNode: SKNode {
         super.init()
         
         label.fontColor = SKColor.blackColor()
-        label.fontSize = 40
+        label.fontSize =  isPhone4s() ? 36 : 40
         label.horizontalAlignmentMode = .Left
         label.position = point
         addChild(label)

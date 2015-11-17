@@ -199,9 +199,9 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         origin.x -= size.halfWidth()
         origin.y -= size.halfHeight()
         
-        let path = UIBezierPath(ovalInRect: CGRect(origin: origin, size: size))
+        //let path = UIBezierPath(ovalInRect: CGRect(origin: origin, size: size))
         
-        let physBody =  SKPhysicsBody(polygonFromPath: path.CGPath)
+        let physBody =  SKPhysicsBody(texture: texture, size: size) //SKPhysicsBody(polygonFromPath: path.CGPath)
 
         physBody.categoryBitMask = EntityCategory.RegularAsteroid
         physBody.contactTestBitMask = EntityCategory.Player | EntityCategory.PlayerLaser
@@ -212,6 +212,7 @@ class RegularAsteroid: SKSpriteNode, ItemDestructable ,ItemDamaging {
         //self.physicsBody!.fieldBitMask = 0
         
         if (EnabledDisplayDebugLabel) {
+            let path = UIBezierPath(ovalInRect: CGRect(origin: origin, size: size))
             let shapeNode = SKShapeNode(path: path.CGPath)
             shapeNode.strokeColor = UIColor.redColor()
             shapeNode.position = center
