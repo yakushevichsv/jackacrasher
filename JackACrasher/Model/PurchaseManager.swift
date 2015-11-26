@@ -133,10 +133,74 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         return false
     }
     
+    internal func restoreInProgress(productId:String) -> Bool {
+        
+        if let product = self.validProducs[productId] {
+            
+            if let info = product.productInfo {
+                if !info.consumable {
+                    return product.restorationInProgress
+                }
+            }
+        }
+        return false
+    }
+    
+    internal func setRestoreProgressState(productId:String,inProgress:Bool) {
+        if let product = self.validProducs[productId] {
+            if let info = product.productInfo {
+                if !info.consumable {
+                    product.restorationInProgress = inProgress
+                }
+            }
+        }
+    }
+    
     internal func setPurchaseProgressState(productId:String,inProgress:Bool) {
         
         if let product = self.validProducs[productId] {
             product.purchaseInProgress = inProgress
+        }
+    }
+    
+    internal func restoreFromReceipt() {
+        
+        self.receiptValidator.forceCheckReceiptWithCompletionHandler{
+            [unowned self]
+            arrayAny,error in
+            print("\(arrayAny)")
+            
+            self.status = error == nil ? .IAPRestoredSucceeded : .IAPRestoredFailed;
+            
+            if arrayAny != nil {
+                for item in arrayAny {
+                    let dic = item as! [NSObject:AnyObject]
+                    if let dicProductId = dic["productIdentifier"] as? String {
+                    
+                                
+                                if let fProduct = self.validProducs[dicProductId] {
+                                    fProduct.purchaseInProgress = false
+                                    fProduct.purchase = false
+                                    
+                                    if let prodInfo = fProduct.productInfo {
+                                        
+                                        if !prodInfo.consumable {
+                                            fProduct.availableForPurchase = false
+                                            GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(dicProductId)
+                                        }
+                                        
+                                        GameLogicManager.sharedInstance.purchasedProduct(fProduct)
+                                    }
+                                
+                        }
+                        
+                        NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo:["id":dicProductId])
+                    }
+                }
+            }
+            else {
+                NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo:nil)
+            }
         }
     }
     
@@ -263,13 +327,14 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     }
     
     private func userNameForPurchases() -> String? {
-        if let playerID = GameLogicManager.sharedInstance.getPlayerId() {
+        //TODO: generate guid id and store it here....
+        let playerID = GameLogicManager.sharedInstance.getAnonymousPlayerId()
             
             if let hash = PurchaseManager.hashedValueForPlayerID(playerID) {
                 
                 return hash
             }
-        }
+        
         return nil
     }
     
@@ -282,8 +347,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         return self.validProducs[productId]
     }
     
-    //MARK: Payment request 
-    
+    //MARK: Payment request
     internal func schedulePaymentWithProduct(product:IAPProduct?) -> Bool {
         
         if product == nil || product!.skProduct == nil {
@@ -355,6 +419,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         restored.removeAll(keepCapacity: false)
         let defQueue = SKPaymentQueue.defaultQueue()
         
+        setSynchRestoreTransactionStates(true)
         if let userName = userNameForPurchases() {
             defQueue.restoreCompletedTransactionsWithApplicationUsername(userName as String)
         }
@@ -364,11 +429,26 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
     }
     
+    internal func setSyncRestoreTransactionState(productId:String, restoreInProgress:Bool) {
+        
+        if let product = self.validProducs[productId] {
+            
+            if (product.productInfo != nil && product.productInfo!.consumable == false) {
+                product.restorationInProgress = restoreInProgress
+            }
+        }
+    }
+    
+    internal func setSynchRestoreTransactionStates(restoreInProgress:Bool) {
+        for vKey in self.validProducs.keys {
+            setSyncRestoreTransactionState(vKey,restoreInProgress: restoreInProgress)
+        }
+    }
+    
     //MARK: SKPaymentTransactionObserver
     
     func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction])
     {
-        
         for transaction in transactions {
             
             let userInfo:[NSObject:AnyObject]? = ["id":transaction.payment.productIdentifier]
@@ -378,6 +458,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
             case .Purchasing:
                 self.purchaseId = transaction.payment.productIdentifier
                 setPurchaseProgressState(self.purchaseId,inProgress: true)
+                setRestoreProgressState(self.purchaseId, inProgress: false)
                 self.status = .IAPPurchaseInProgress
                 NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo: userInfo)
                 break
@@ -401,7 +482,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     else {
                         //TODO: support other styles...
                         let productId = transaction.payment.productIdentifier
-                        self.receiptValidator.checkReceiptWithCompletionHandler{
+                        self.receiptValidator.forceCheckReceiptWithCompletionHandler{
                             [unowned self]
                             arrayAny,error in
                             print("\(arrayAny)")
@@ -409,6 +490,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                             var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
                             var found:Bool = false
                             
+                            if arrayAny != nil {
                             for item in arrayAny {
                                 let dic = item as! [NSObject:AnyObject]
                                 if let dicProductId = dic["productIdentifier"] as? String {
@@ -436,6 +518,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                                             purchaseStatus = .IAPPurchaseFailed
                                         }
                                     }
+                                    }
                                 }
                             }
                             self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
@@ -448,6 +531,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 
                     self.purchaseId = transaction.payment.productIdentifier;
                     self.restored.append(transaction)
+                    setSyncRestoreTransactionState(self.purchaseId,restoreInProgress: false)
                     
                     print("Restore content for \(transaction.payment.productIdentifier)")
                     // Send a IAPDownloadStarted notification if it has
@@ -463,7 +547,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         //statusInter = .IAPPurchaseSucceeded
                         
                         let productId = transaction.payment.productIdentifier
-                        self.receiptValidator.checkReceiptWithCompletionHandler{
+                        self.receiptValidator.forceCheckReceiptWithCompletionHandler{
                             [unowned self]
                             arrayAny,error in
                             print("\(arrayAny)")
@@ -507,11 +591,12 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 break
                 // The transaction failed
             case .Failed:
+                let prodId = transaction.payment.productIdentifier
                 
-                self.message =  String(format: "Purchase of %@ failed".syLocalizedString, "\(transaction.payment.productIdentifier)")
+                self.message =  String(format: "Purchase of %@ failed".syLocalizedString, "\(prodId)")
                 
-                setPurchaseProgressState(transaction.payment.productIdentifier,inProgress: false)
-                
+                setPurchaseProgressState(prodId,inProgress: false)
+                setRestoreProgressState(prodId, inProgress: false)
                 let code = transaction.error!.code
                 
                 completeTransaction(transaction, status:code != SKErrorPaymentCancelled && code != SKErrorUnknown ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
@@ -589,7 +674,9 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         else {
             self.status = .IAPRestoredCancelled
         }
-            
+        
+        
+        setSynchRestoreTransactionStates(false)
         NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self)
         
     }
@@ -598,6 +685,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         print("All restorable transactions have been processed by the payment queue.");
         if (self.status != .IAPDownloadStarted) {
             self.status = .IAPRestoredSucceeded
+            setSynchRestoreTransactionStates(false)
             NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self)
         }
     }

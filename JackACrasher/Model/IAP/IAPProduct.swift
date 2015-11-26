@@ -22,6 +22,7 @@ class IAPProduct : NSObject {
     internal var availableForPurchase:Bool = true
     internal var purchase:Bool = true
     internal var purchaseInProgress:Bool = false
+    internal var restorationInProgress:Bool = false
     
     override init() {
         super.init()
@@ -29,7 +30,7 @@ class IAPProduct : NSObject {
     
     internal func allowedToPurchase() -> Bool {
         
-        if !self.availableForPurchase || self.productInfo == nil || self.purchaseInProgress || (self.productInfo!.consumable && self.purchase) {
+        if !self.availableForPurchase || self.productInfo == nil || self.purchaseInProgress || self.restorationInProgress || (self.productInfo!.consumable && self.purchase) {
             return false
         }
         return true

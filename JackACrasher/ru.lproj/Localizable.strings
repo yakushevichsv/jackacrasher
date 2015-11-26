@@ -58,3 +58,9 @@
 
 "Price " = "Цена ";
 "Purchase of %@ failed" = "Не удалось заказать элемент %@";
+
+"Restore Status" = "Статус Восстановления";
+"Purchase Status" ="Статус Покупки";
+"Download Status" = "Статус Загрузки";
+"Enable iCloud" = "Активируйте iCloud";
+"Please login into iCloud via Settings" = "Залогинтесь в iCloud через Настройки";

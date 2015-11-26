@@ -301,7 +301,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         self.gameOverLabel.hidden = false
         self.gameOverLabel.alpha = 0.0
         
-        if (isPhone4s()) {
+        if (isPhone4s() || isPhone5s()) {
             self.gameOverLabel.fontSize = self.gameOverLabel.fontSize - 15
         }
         

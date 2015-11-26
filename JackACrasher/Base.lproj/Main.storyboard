@@ -21,6 +21,7 @@
             <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
+            <string>gamerobot</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -485,7 +486,6 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="138" placeholder="YES" id="sdv-Pr-N76"/>
                                                     </constraints>
-                                                    <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                 </textView>
@@ -505,8 +505,25 @@
                                                         <color key="titleColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
+                                                    <state key="disabled" title="Buying..."/>
                                                     <connections>
                                                         <action selector="buyButtonPressed:" destination="ZTf-z3-8q5" eventType="touchUpInside" id="iov-Ge-stb"/>
+                                                    </connections>
+                                                </button>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Yc-aa-LoM" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                                    <rect key="frame" x="176" y="65" width="80" height="27"/>
+                                                    <animations/>
+                                                    <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
+                                                    <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
+                                                    <state key="normal" title="Restore">
+                                                        <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                                        <color key="titleShadowColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <state key="disabled" title="Restoring...">
+                                                        <color key="titleShadowColor" red="0.49803921579999999" green="0.49803921579999999" blue="0.49803921579999999" alpha="1" colorSpace="calibratedRGB"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="restoreButtonPressed:" destination="ZTf-z3-8q5" eventType="touchUpInside" id="srF-ka-czZ"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -515,10 +532,12 @@
                                         </view>
                                         <animations/>
                                         <constraints>
+                                            <constraint firstItem="3Yc-aa-LoM" firstAttribute="top" secondItem="6dL-56-Q5y" secondAttribute="bottom" constant="12" id="2Xo-qG-n2Z"/>
                                             <constraint firstItem="6dL-56-Q5y" firstAttribute="leading" secondItem="cvC-fI-uwO" secondAttribute="leading" id="D0k-Hh-Yg0"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="G2i-Oy-fNO" secondAttribute="trailing" id="HJK-Mf-wcv"/>
                                             <constraint firstItem="G2i-Oy-fNO" firstAttribute="trailing" secondItem="ZTf-z3-8q5" secondAttribute="trailingMargin" id="ItC-3L-VED"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="leading" secondItem="G2i-Oy-fNO" secondAttribute="leading" id="MtP-It-dN9"/>
+                                            <constraint firstItem="3Yc-aa-LoM" firstAttribute="leading" secondItem="cvC-fI-uwO" secondAttribute="leading" id="NAL-mq-JXa"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="bottom" secondItem="cvC-fI-uwO" secondAttribute="bottom" id="cSI-T3-JW4"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="G2i-Oy-fNO" secondAttribute="bottom" id="djw-3n-9bj"/>
                                             <constraint firstItem="z59-15-5a9" firstAttribute="top" secondItem="ZTf-z3-8q5" secondAttribute="topMargin" constant="9" id="gKW-T1-88c"/>
@@ -533,6 +552,7 @@
                                             <outlet property="productDescription" destination="G2i-Oy-fNO" id="txf-j4-q5O"/>
                                             <outlet property="productImageView" destination="z59-15-5a9" id="bge-7S-kgR"/>
                                             <outlet property="productTitle" destination="6dL-56-Q5y" id="xKR-6l-B11"/>
+                                            <outlet property="restoreButton" destination="3Yc-aa-LoM" id="jTk-3h-6bF"/>
                                         </connections>
                                     </collectionViewCell>
                                 </cells>
@@ -830,7 +850,7 @@
                                         <nil key="highlightedColor"/>
                                     </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="43" y="129" width="119" height="27"/>
+                                        <rect key="frame" x="44" y="129" width="119" height="27"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
                                         <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
@@ -884,7 +904,7 @@
                                 <constraints>
                                     <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="13" id="32q-EG-sAu"/>
                                     <constraint firstItem="mvV-T3-331" firstAttribute="centerX" secondItem="w7g-AR-pH7" secondAttribute="trailing" id="9cy-9L-ZRx"/>
-                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="w7g-AR-pH7" secondAttribute="leading" multiplier="1.2" id="FdG-e4-Vxp"/>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="w7g-AR-pH7" secondAttribute="leading" multiplier="1.1" constant="10" id="FdG-e4-Vxp"/>
                                     <constraint firstItem="w7g-AR-pH7" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" id="PAc-dc-paH"/>
                                     <constraint firstItem="JJb-zX-zeW" firstAttribute="centerY" secondItem="mvV-T3-331" secondAttribute="centerY" id="jfG-nL-kWx"/>
                                     <constraint firstItem="w7g-AR-pH7" firstAttribute="centerY" secondItem="1WM-vX-PYK" secondAttribute="centerY" multiplier="0.8" id="pGV-9D-jxt"/>

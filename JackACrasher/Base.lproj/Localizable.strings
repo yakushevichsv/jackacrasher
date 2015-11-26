@@ -56,3 +56,9 @@
 
 "Price " = "Price ";
 "Purchase of %@ failed" = "Purchase of %@ failed";
+
+"Restore Status"  = "Restore Status";
+"Purchase Status" = "Purchase Status";
+"Download Status" = "Download Status"; 
+"Enable iCloud"   = "Enable iCloud";
+"Please login into iCloud via Settings" = "Please login into iCloud via Settings";

@@ -15,37 +15,57 @@
 #import "openssl/evp.h"
 
 
+typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
 
 @interface IAPReceiptValidator ()
 @property (nonatomic,strong) NSArray *puchasesInfo;
-@property (nonatomic, copy) void (^completionHandler)(NSArray *array,NSError *error);
+@property (nonatomic,strong) NSMutableDictionary<NSString *,receiptCompletionHandler> *dict;
+@property (nonatomic,strong) NSMutableArray *nextHandlers;
 @end
 
 @implementation IAPReceiptValidator 
 
 #pragma mark - Public methods
 
-- (void)checkReceiptWithCompletionHandler:(void (^)(NSArray *array,NSError *error))handler
+- (void)forceCheckReceiptWithCompletionHandler:(receiptCompletionHandler)handler
+{
+    @synchronized([self class]) {
+        if (!self.dict) {
+                self.dict = [NSMutableDictionary dictionary];
+            [self askForReceipt:handler];
+        }
+        else {
+            if (!self.nextHandlers)
+                self.nextHandlers = [NSMutableArray array];
+            
+            [self.nextHandlers addObject:handler];
+        }
+    }
+    
+}
+
+/*- (void)checkReceiptWithCompletionHandler:(void (^)(NSArray *array,NSError *error))handler
 {
     self.completionHandler = handler;
+    __weak typeof(self) wSelf = self;
     
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
     
         BOOL refresh = false;
-        if(![self checkReceiptInternalWithParam:&refresh]) {
+        if(![wSelf checkReceiptInternalWithParam:&refresh]) {
             if (refresh)
-                [self askForReceipt];
+                [wSelf askForReceipt];
         
         }
         else {
             
-            if (self.completionHandler) {
-                self.completionHandler(self.puchasesInfo,nil);
-                self.completionHandler = nil;
+            if (wSelf.completionHandler) {
+                wSelf.completionHandler(wSelf.puchasesInfo,nil);
+                wSelf.completionHandler = nil;
             }
         }
     });
-}
+}*/
 
 #pragma mark -
 #pragma  mark - SKRequestDelegate's methods
@@ -53,31 +73,64 @@
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"error %@",error);
     
-    if (self.completionHandler) {
-        self.completionHandler(nil,error);
-    }
-    self.completionHandler = nil;
+    self.puchasesInfo = nil;
+    
+    [self completionRefreshRequest:request withError:error];
+    
 }
 
 - (void)requestDidFinish:(SKRequest *)request {
- 
     
     BOOL res = [self checkReceiptInternal];
     
+    if (!res)
+        self.puchasesInfo = nil;
     
-    if (self.completionHandler) {
-        self.completionHandler(res ? self.puchasesInfo:nil,nil);
-        self.completionHandler = nil;
+    [self completionRefreshRequest:request withError:nil];
+}
+
+- (void)completionRefreshRequest:(SKRequest *)request withError:(NSError *)error
+{
+    NSString *key = [NSString stringWithFormat:@"%p", request];
+    receiptCompletionHandler completionHandler = self.dict[key] ;
+    
+    if (completionHandler) {
+        completionHandler(self.puchasesInfo,error);
+    }
+    
+    @synchronized([self class]) {
+        [self.dict removeObjectForKey:key];
+        
+        if (self.nextHandlers.count) {
+            receiptCompletionHandler nextHandler = [self.nextHandlers objectAtIndex:0];
+            [self.nextHandlers removeObjectAtIndex:0];
+            [self askForReceipt:nextHandler];
+        }
     }
 }
 
 #pragma mark -
 #pragma mark - Check & Ask methods
 
-- (void)askForReceipt {
-    SKReceiptRefreshRequest *req = [SKReceiptRefreshRequest new];
+- (void)askForReceipt:(receiptCompletionHandler)handler {
+    
+    NSDictionary<NSString *,id> *properties = nil;
+    
+#ifdef DEBUG
+    properties = @{SKReceiptPropertyIsExpired:@(NO),
+                   SKReceiptPropertyIsRevoked:@(NO)
+                   };
+#endif
+    
+    
+    SKReceiptRefreshRequest *req =[[SKReceiptRefreshRequest alloc]initWithReceiptProperties:properties];
     req.delegate = self;
     [req start];
+    
+    @synchronized([self class]) {
+        
+        self.dict[[NSString stringWithFormat:@"%p", req]] = handler;
+    }
 }
 
 - (BOOL)checkReceiptInternal {
@@ -463,14 +516,14 @@
     }
     
     
-    if (![bundleIdString isEqualToString:@"com.sygamefun.JackACrasher"]) {
+    if (![bundleIdString isEqualToString:[NSBundle mainBundle].bundleIdentifier])
         return false;
-    }
     
-    if (![bundleVersionString isEqualToString:@"1"]) {
-        // Validation fails
+    NSString *realBundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)@"CFBundleVersion"];
+    
+    
+    if (![bundleVersionString isEqualToString:realBundleVersion])
         return false;
-    }
     
     // Be sure that all information is present
     if (opaqueData == nil ||

@@ -51,7 +51,7 @@ class ReturnPausePopUpAnimator: PopupAnimator {
             let tW = self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
             let tH =  !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
             
-            let wScale = CGFloat( isPhone4s() ? 0.6 : (isPhone6Plus() ? 0.4 : 0.5) )
+            let wScale = CGFloat( (isPhone4s() || isPhone5s()) ? 0.6 : (isPhone6Plus() ? 0.4 : 0.5) )
             let hScale = CGFloat( isPhone4s() ? 0.5 : (isPhone6Plus() ? 0.4 : 0.4) )
             let xMargin = (1 - wScale) * 0.5
             let yMargin =  (1 - hScale) * 0.5

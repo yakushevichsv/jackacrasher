@@ -13,6 +13,6 @@
 
 @interface IAPReceiptValidator : NSObject<SKRequestDelegate>
 
-- (void)checkReceiptWithCompletionHandler:(void (^)(NSArray *array,NSError *error))handler;
-
+//- (void)checkReceiptWithCompletionHandler:(void (^)(NSArray *array,NSError *error))handler;
+- (void)forceCheckReceiptWithCompletionHandler:(void (^)(NSArray *array,NSError *error))handler;
 @end

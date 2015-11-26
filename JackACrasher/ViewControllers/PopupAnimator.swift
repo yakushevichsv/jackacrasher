@@ -67,7 +67,7 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             let tH =  !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
             
             let wScale = CGFloat( isPhone4s() ? 0.8 : (isPhone6Plus() ? 0.6 : 0.6) )
-            let hScale = CGFloat( isPhone4s() ? 0.8 : (isPhone6Plus() ? 0.7 : 0.7) )
+            let hScale = CGFloat( (isPhone4s() || isPhone5s()) ? 0.9 : (isPhone6Plus() ? 0.7 : 0.8) )
             let xMargin = (1 - wScale) * 0.5
             let yMargin =  (1 - hScale) * 0.5
             

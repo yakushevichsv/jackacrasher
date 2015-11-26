@@ -305,6 +305,14 @@ extension GameLogicManager
         return false
     }
     
+    private func loginToiCloud(mainVC:UIViewController) {
+    
+        mainVC.alertWithTitle("Enable iCloud".syLocalizedString, message: "Please login into iCloud via Settings".syLocalizedString, actionTitle: "OK".syLocalizedString){
+            
+            mainVC.view.userInteractionEnabled = true
+        }
+    }
+    
     // Update the UI according to the purchase request notification result
     func handlePurchasesNotification(aNotification:NSNotification!)
     {
@@ -380,16 +388,12 @@ extension GameLogicManager
                                             if let preseneted = mainVC.presentedViewController as? ShopDetailsViewController {
                                                 preseneted.prepareForDispose()
                                                 preseneted.dismissViewControllerAnimated(true) {
-                                                    mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK"){
-                                                        
-                                                        mainVC.view.userInteractionEnabled = true
-                                                    }
+                                                    
+                                                    self.loginToiCloud(mainVC)
                                                 }
                                             }
                                             else {
-                                                mainVC.alertWithTitle("Enable iCloud", message: "Please login into iCloud via Settings", actionTitle: "OK"){
-                                                    mainVC.view.userInteractionEnabled = true
-                                                }
+                                                self.loginToiCloud(mainVC)
                                             }
                                             
                                         }
@@ -455,7 +459,7 @@ extension GameLogicManager {
         return GameCenterManager.sharedInstance.playerID
     }
     
-    private func getAnonymousPlayerId() -> String {
+    internal func getAnonymousPlayerId() -> String {
         return "guest"
     }
         

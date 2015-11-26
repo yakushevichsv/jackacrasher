@@ -377,6 +377,10 @@ func isPhone4s() -> Bool {
     return UIScreen.mainScreen().bounds.size == CGSizeMake(480, 320) && UIScreen.mainScreen().scale == 2.0
 }
 
+func isPhone5s() -> Bool {
+    return UIScreen.mainScreen().bounds.size == CGSizeMake(568, 320) && UIScreen.mainScreen().scale == 2.0
+}
+
 func isPhone6Plus() -> Bool {
     return UIScreen.mainScreen().bounds.size == CGSizeMake(736, 414) && UIScreen.mainScreen().scale == 3.0
 }

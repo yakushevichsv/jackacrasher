@@ -71,23 +71,36 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
     // Update the UI according to the purchase request notification result
     func handlePurchasesNotification(aNotification:NSNotification!)
     {
+        if (!NSThread.isMainThread()) {
+            self.performSelectorOnMainThread("handlePurchasesNotification:", withObject: aNotification, waitUntilDone: false)
+            return
+        }
+        
         let pManager = aNotification.object as! PurchaseManager
         
         let userInfo = aNotification.userInfo
+     
+        
         
         switch (pManager.status)
         {
         case .IAPPurchaseFailed:
-            alertWithTitle("Purchase Status", message: pManager.message)
+            if pManager.message != nil &&  !pManager.message!.isEmpty {
+                alertWithTitle("Purchase Status".syLocalizedString, message: pManager.message)
+            }
             disposeActivityInficationUsingNofitication(aNotification)
             break
             // Switch to the iOSPurchasesList view controller when receiving a successful restore notification
         case .IAPRestoredFailed:
-            alertWithTitle("Restore Status", message: pManager.message)
+            if pManager.message != nil &&  !pManager.message!.isEmpty {
+                alertWithTitle("Restore Status".syLocalizedString, message: pManager.message)
+            }
             disposeActivityInficationUsingNofitication(aNotification)
             break
         case .IAPDownloadFailed:
-            alertWithTitle("Download Status", message: pManager.message)
+            if pManager.message != nil &&  !pManager.message!.isEmpty {
+                alertWithTitle("Download Status".syLocalizedString, message: pManager.message)
+            }
             disposeActivityInficationUsingNofitication(aNotification)
             break
         case .IAPDownloadStarted:
@@ -114,13 +127,11 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
         case .IAPPurchaseSucceeded:
             fallthrough
         case .IAPRestoredSucceeded:
-                dispatch_async(dispatch_get_main_queue()) {
-                    [unowned self] in
-                    self.disposeActivityInficationUsingNofitication(aNotification)
-                    if let productId = userInfo?["id"] as? String {
-                        self.removeNonConsumableItemOnNeed(productId)
-                    }
+                self.disposeActivityInficationUsingNofitication(aNotification)
+                if let productId = userInfo?["id"] as? String {
+                    self.removeNonConsumableItemOnNeed(productId)
                 }
+                
             break
         case .IAPDownloadSucceeded:
             //self.hasDownloadContent = NO;
@@ -153,14 +164,16 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                         if let info = curProduct.productInfo {
                             if !info.consumable && (!curProduct.availableForPurchase || GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
                                 removeNonConsumableItemFromLocal(indexPath)
-                                //self.collectionView.deleteItemsAtIndexPaths([vIndexPath])
+                                //self.products.removeAtIndex(indexPath.row)
+                                //self.collectionView.deleteItemsAtIndexPaths([indexPath])
                                 return
                             }
                         }
                         else {
                             if (GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
                                 removeNonConsumableItemFromLocal(indexPath)
-                                //self.collectionView.deleteItemsAtIndexPaths([vIndexPath])
+                                //self.products.removeAtIndex(indexPath.row)
+                                //self.collectionView.deleteItemsAtIndexPaths([indexPath])
                                 return
                             }
                         }
@@ -208,7 +221,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                             if vIndexPath == indexPath {
                                 
                                 if let collectionViewCell = self.collectionView.cellForItemAtIndexPath(indexPath) as? ShopDetailsCollectionViewCell {
-                                    self.activateIndicatorForCell(collectionViewCell, atIndexPath: indexPath)
+                                    self.activateIndicatorForCell(collectionViewCell,isPurchase: true, atIndexPath: indexPath)
                                     return
                                 }
                             }
@@ -240,6 +253,12 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                         if indexPath == visibleIndexPath {
                             let cell = self.collectionView.cellForItemAtIndexPath(indexPath) as! ShopDetailsCollectionViewCell
                             deActivateIndicatorForCell(cell, atIndexPath: indexPath)
+                            
+                            let consumable = product.productInfo?.consumable
+                            cell.restoreButton.hidden = consumable == nil || consumable! == true
+                            if !cell.restoreButton.hidden {
+                                cell.shouldEnableRestore(true)
+                            }
                             needToBreak = true
                             break
                         }
@@ -257,6 +276,10 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                     break
                 }
             }
+        }
+        else {
+            self.processingCells.removeAll()
+            self.collectionView.reloadData()
         }
     }
     
@@ -295,15 +318,30 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                     let product = self.products[curIndexPath.row]
                     PurchaseManager.sharedInstance.schedulePaymentWithProduct(product)
                     
-                    activateIndicatorForCell(cell, atIndexPath:curIndexPath)
+                    activateIndicatorForCell(cell,isPurchase: true, atIndexPath:curIndexPath)
+                }
+            }
+        }
+    }
+    
+    func restoreButtonPressedInCell(cell : ShopDetailsCollectionViewCell) {
+        
+        if let indexPath = self.collectionView.indexPathForCell(cell) {
+            
+            for curIndexPath in self.collectionView.indexPathsForVisibleItems() {
+                
+                if (curIndexPath == indexPath) {
+                    
+                    //restore purchases.....
+                    //PurchaseManager.sharedInstance.
+                        PurchaseManager.sharedInstance.restoreFromReceipt()
+                    activateIndicatorForCell(cell,isPurchase: false, atIndexPath:curIndexPath)
                 }
             }
         }
     }
     
     private func changeActitivyIndicatorStateForCell(cell: ShopDetailsCollectionViewCell!, isEnabled enabled:Bool,indexPath:NSIndexPath!) {
-        
-        cell.buyButton.enabled = !enabled
         
         if ((cell.contentView.subviews.last as? UIActivityIndicatorView) == nil && enabled) {
             let activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .Gray)
@@ -338,11 +376,15 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
         }
     }
     
-    private func activateIndicatorForCell(cell: ShopDetailsCollectionViewCell, atIndexPath indexPath:NSIndexPath!) {
+    private func activateIndicatorForCell(cell: ShopDetailsCollectionViewCell,isPurchase:Bool, atIndexPath indexPath:NSIndexPath!) {
+    
+        cell.indicateiTunesOpInProgress(isPurchase)
+        
         changeActitivyIndicatorStateForCell(cell, isEnabled: true,indexPath:indexPath)
     }
     
     private func deActivateIndicatorForCell(cell: ShopDetailsCollectionViewCell, atIndexPath indexPath:NSIndexPath!) {
+        cell.indicateiTunesOpFinished()
         changeActitivyIndicatorStateForCell(cell, isEnabled: false,indexPath:indexPath)
     }
     
@@ -454,14 +496,26 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
             
         }
         
+        
+        let consumable = product.productInfo?.consumable
+        collectionViewCell.restoreButton.hidden = consumable == nil || consumable! == true
+        
+        collectionViewCell.shouldEnableRestore(!collectionViewCell.restoreButton.hidden)
+        
+        
+        
         markPurchaseInProgressOnNeed(product.productIdentifier)
         
         
         let present:Bool = processingCells.contains(indexPath)
         
         if present {
-            activateIndicatorForCell(collectionViewCell,atIndexPath:indexPath)
-        } else {
+            activateIndicatorForCell(collectionViewCell,isPurchase: true,atIndexPath:indexPath)
+        }
+        else if product.restorationInProgress {
+            activateIndicatorForCell(collectionViewCell,isPurchase: false,atIndexPath:indexPath)
+        }
+        else {
             deActivateIndicatorForCell(collectionViewCell,atIndexPath:indexPath)
         }
         

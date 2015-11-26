@@ -11,6 +11,7 @@ import UIKit
 @objc protocol ShopDetailsCellDelegate {
     
     func buyButtonPressedInCell(cell:ShopDetailsCollectionViewCell)
+    func restoreButtonPressedInCell(cell:ShopDetailsCollectionViewCell)
 }
 
 
@@ -20,18 +21,25 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
     private static var originImageH:CGFloat = 0
     
     private static var sPredicate:dispatch_once_t = 0
+    private static let sBgColor = "backgroundColor"
     
     @IBOutlet weak var productImageView:UIImageView!
     @IBOutlet weak var productTitle:UILabel!
     @IBOutlet weak var buyButton:UIButton!
+    @IBOutlet weak var restoreButton:UIButton!
     @IBOutlet weak var productDescription:UITextView!
     @IBOutlet weak var descriptionTextView:UITextView!
+    
     
     @IBOutlet weak var delegate:ShopDetailsCellDelegate!
     
     
     @IBAction func buyButtonPressed(sender:UIButton!) {
         delegate.buyButtonPressedInCell(self)
+    }
+    
+    @IBAction func restoreButtonPressed(sender:UIButton!){
+        delegate.restoreButtonPressedInCell(self)
     }
     
     
@@ -46,6 +54,58 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         
         self.addConstraints([wConstraint,hConstraint,hConstraint2])
         self.setNeedsUpdateConstraints()
+    }
+    
+    internal func shouldEnableRestore(restore:Bool){
+        
+        let layer = self.restoreButton.layer
+        let anim = layer.animationForKey(ShopDetailsCollectionViewCell.sBgColor)
+        
+        if (restore) {
+            
+            if (anim != nil ) {
+                return
+            }
+            let anim = CABasicAnimation(keyPath: ShopDetailsCollectionViewCell.sBgColor)
+            anim.duration = 2.0
+            anim.repeatCount = .infinity
+            anim.toValue = UIColor.blueColor().CGColor;
+            layer.addAnimation(anim, forKey: ShopDetailsCollectionViewCell.sBgColor)
+            anim.removedOnCompletion = true
+        }
+        else {
+            if (anim != nil) {
+                layer.removeAnimationForKey(ShopDetailsCollectionViewCell.sBgColor)
+            }
+        }
+    }
+    
+    internal func indicateiTunesOpInProgress(isPurchase:Bool) {
+        
+        var btnD:UIButton! = nil ,btnE:UIButton! = nil
+        shouldEnableRestore(false)
+        if (isPurchase) {
+            btnD = self.restoreButton
+            btnE = self.buyButton
+        }
+        else {
+            btnD = self.buyButton
+            btnE = self.restoreButton
+        }
+        
+        btnD.hidden = true
+        btnE.hidden = false
+        btnE.enabled = false
+    }
+    
+    internal func indicateiTunesOpFinished() {
+        
+        if (!self.buyButton.hidden) {
+            self.buyButton.enabled = true
+        }
+        else if (!self.restoreButton.hidden) {
+            self.restoreButton.hidden = true
+        }
     }
     
     internal func setTitleForProduct(title:String) {
@@ -91,5 +151,10 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
         self.delegate = nil
         self.productImageView?.hidden = false
         self.hideActivityIndicatorAfterDonwloading()
+        self.restoreButton.hidden = true
+        self.restoreButton.enabled = true
+        self.buyButton.hidden = false
+        self.buyButton.enabled = true
+        shouldEnableRestore(false)
     }
 }
