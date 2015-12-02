@@ -9,6 +9,12 @@
 /* Begin PBXBuildFile section */
 		210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */; };
 		2101EFC61B7B651E00516086 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */; };
+		210464CD1C0EEE9700326FDD /* FacebookSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */; };
+		210464CF1C0EF06300326FDD /* SNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210464CE1C0EF06300326FDD /* SNManager.swift */; };
+		210464D11C0EF08900326FDD /* FBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210464D01C0EF08900326FDD /* FBManager.swift */; };
+		210464D41C0EFB4800326FDD /* SNFriendInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210464D31C0EFB4800326FDD /* SNFriendInfo.swift */; };
+		210464D61C0F06DA00326FDD /* FBSDKLoginKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210464D51C0F06D900326FDD /* FBSDKLoginKit.framework */; };
+		210464D81C0F1B4D00326FDD /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210464D71C0F1B4D00326FDD /* SafariServices.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 		2105AE511B8868ED00DDB0CC /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2105AE501B8868ED00DDB0CC /* Constants.swift */; };
 		2105AE541B8881DA00DDB0CC /* NORLabelNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 2105AE531B8881DA00DDB0CC /* NORLabelNode.m */; };
 		21068A3A1AE555DB007398B5 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21068A391AE555DB007398B5 /* Utils.swift */; };
@@ -125,6 +131,12 @@
 /* Begin PBXFileReference section */
 		210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsCollectionViewCell.swift; path = Views/ShopDetailsCollectionViewCell.swift; sourceTree = "<group>"; };
 		2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
+		210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKStrings.bundle; path = ../../../../../../Documents/FacebookSDK/FacebookSDKStrings.bundle; sourceTree = "<group>"; };
+		210464CE1C0EF06300326FDD /* SNManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SNManager.swift; path = Model/SNManager.swift; sourceTree = "<group>"; };
+		210464D01C0EF08900326FDD /* FBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = FBManager.swift; path = Model/FBManager.swift; sourceTree = "<group>"; };
+		210464D31C0EFB4800326FDD /* SNFriendInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SNFriendInfo.swift; path = Model/SNFriendInfo.swift; sourceTree = "<group>"; };
+		210464D51C0F06D900326FDD /* FBSDKLoginKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKLoginKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKLoginKit.framework; sourceTree = "<group>"; };
+		210464D71C0F1B4D00326FDD /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		2105AE501B8868ED00DDB0CC /* Constants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Constants.swift; path = Utils/Constants.swift; sourceTree = "<group>"; };
 		2105AE521B8881DA00DDB0CC /* NORLabelNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NORLabelNode.h; sourceTree = "<group>"; };
 		2105AE531B8881DA00DDB0CC /* NORLabelNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NORLabelNode.m; sourceTree = "<group>"; };
@@ -243,6 +255,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				210464D81C0F1B4D00326FDD /* SafariServices.framework in Frameworks */,
 				21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */,
 				2171B32B1B7B9F46007733BA /* Social.framework in Frameworks */,
 				2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */,
@@ -250,6 +263,7 @@
 				212A2F241B36F24400B31482 /* libssl.a in Frameworks */,
 				2171B3291B7B92B6007733BA /* FBSDKShareKit.framework in Frameworks */,
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
+				210464D61C0F06DA00326FDD /* FBSDKLoginKit.framework in Frameworks */,
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
 				210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */,
 				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
@@ -270,6 +284,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		210464D21C0EF19400326FDD /* SocialNetworks */ = {
+			isa = PBXGroup;
+			children = (
+				210464CE1C0EF06300326FDD /* SNManager.swift */,
+				210464D01C0EF08900326FDD /* FBManager.swift */,
+				210464D31C0EFB4800326FDD /* SNFriendInfo.swift */,
+			);
+			name = SocialNetworks;
+			sourceTree = "<group>";
+		};
 		210C0B4C1B3577D100759382 /* IAP */ = {
 			isa = PBXGroup;
 			children = (
@@ -339,6 +363,7 @@
 				215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */,
 				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
+				210464D21C0EF19400326FDD /* SocialNetworks */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -520,6 +545,7 @@
 		21FFEADA1AD5E216000115F6 = {
 			isa = PBXGroup;
 			children = (
+				210464D71C0F1B4D00326FDD /* SafariServices.framework */,
 				21FFEAE51AD5E216000115F6 /* JackACrasher */,
 				21FFEAFF1AD5E216000115F6 /* JackACrasherTests */,
 				21FFEAE41AD5E216000115F6 /* Products */,
@@ -564,6 +590,7 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */,
 				212390BF1BF6364B00B79B33 /* Fabric.framework */,
 				212390C01BF6364B00B79B33 /* Crashlytics.framework */,
 				21CEEFAA1B9CCB2D008937A2 /* iAd.framework */,
@@ -574,6 +601,7 @@
 				212A2F211B36F24400B31482 /* libssl.a */,
 				210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */,
 				2171B32A1B7B9F46007733BA /* Social.framework */,
+				210464D51C0F06D900326FDD /* FBSDKLoginKit.framework */,
 				2171B3281B7B92B6007733BA /* FBSDKShareKit.framework */,
 				2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */,
 				2163A8C21B3BE6C5003253C5 /* CloudKit.framework */,
@@ -713,6 +741,7 @@
 				21FFEAF71AD5E216000115F6 /* LaunchScreen.xib in Resources */,
 				21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */,
 				21CFBCA91B10AAB6009EDA3E /* star_small.png in Resources */,
+				210464CD1C0EEE9700326FDD /* FacebookSDKStrings.bundle in Resources */,
 				217341001AFE54AB009E934A /* GameOverScene.sks in Resources */,
 				211F5FDD1BF0E700008591D7 /* Localizable.strings in Resources */,
 				212B55FA1B8E52F400B816FD /* enemyDeath.sks in Resources */,
@@ -779,12 +808,14 @@
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
+				210464D41C0EFB4800326FDD /* SNFriendInfo.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */,
 				2188A5CF1B9F9FB900612BEC /* SWBlade.swift in Sources */,
 				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
+				210464CF1C0EF06300326FDD /* SNManager.swift in Sources */,
 				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,
 				21E5D2C01B79193700D7E614 /* MotionlessEnemySpaceShip.swift in Sources */,
 				2138E0BA1B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift in Sources */,
@@ -814,6 +845,7 @@
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
 				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,
 				21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */,
+				210464D11C0EF08900326FDD /* FBManager.swift in Sources */,
 				2105AE511B8868ED00DDB0CC /* Constants.swift in Sources */,
 				210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */,
 				21CCA14A1B0A8346004419A2 /* JackACrasherNavigationController.swift in Sources */,

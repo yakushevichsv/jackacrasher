@@ -38,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         //Fabric.with([Twitter()])
         
         appWillStart()
+        
+        FBSDKApplicationDelegate.sharedInstance().application(application, didFinishLaunchingWithOptions: launchOptions)
+        
         return true
     }
     private func appWillStart() {

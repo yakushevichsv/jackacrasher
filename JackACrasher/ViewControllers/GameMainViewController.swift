@@ -867,6 +867,13 @@ class GameMainViewController: UIViewController {
     
     private func shareOnFB() {
         
+        let manager = FBManager.sharedManager
+        
+        manager.getFriends { (friendsList, error) -> Void in
+            
+        }
+        return
+        
         let content = FBSDKShareLinkContent()
         content.contentTitle = NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!")
         content.contentURL = NSURL(string: "https://developers.facebook.com")
