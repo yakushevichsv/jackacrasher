@@ -28,8 +28,6 @@ class GameMainViewController: UIViewController {
     private weak var btnClose:UIButton! = nil
     private var timeInterval:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
     
-    
-    @IBOutlet weak var btnCompany:UIButton!
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
     @IBOutlet weak var btnShop:UIButton!
@@ -57,17 +55,15 @@ class GameMainViewController: UIViewController {
     private lazy var transitionDelegate:PopUpTransitioningDelegate = PopUpTransitioningDelegate()
     
     private func shiftOutButtons() {
-        
-        shiftXButton(self.btnCompany, isLeft: true)
+        shiftXButton(self.btnShop, isLeft: false)
         shiftXButton(self.btnStrategy, isLeft: false)
-        shiftYButton(self.btnHelp, isUp: false)
+        self.btnHelp.transform = CGAffineTransformMakeScale(1.2, 1.2)
     }
     
     private func shiftInButtons() {
-        
-        shiftXButton(self.btnCompany, isLeft: false)
+        shiftXButton(self.btnShop, isLeft: true)
         shiftXButton(self.btnStrategy, isLeft: true)
-        shiftYButton(self.btnHelp, isUp: true)
+        self.btnHelp.transform = CGAffineTransformIdentity
     }
     
     private func shiftXButton(button:UIButton!, isLeft:Bool) {
@@ -89,7 +85,7 @@ class GameMainViewController: UIViewController {
     }
     
     private func setButtonsState(enabled:Bool) {
-        for btn in [self.btnCompany,self.btnStrategy,self.btnHelp,self.btnShop] {
+        for btn in [self.btnStrategy,self.btnHelp,self.btnShop] {
             btn.enabled = enabled
         }
     }
@@ -150,8 +146,6 @@ class GameMainViewController: UIViewController {
         name = name.stringByAppendingString("\(template).png")
         
         self.btnVK.setImage(UIImage(named:name), forState: .Normal)
-        
-        self.btnCompany.setTitleColor(self.btnCompany.titleColorForState(.Disabled), forState: .Normal)
         
         processAdv()
         
@@ -691,7 +685,6 @@ class GameMainViewController: UIViewController {
                     self.btnTwitter.alpha = 1.0
                     self.btnTwitter.layoutIfNeeded()
                     
-                    self.btnCompany.superview?.bringSubviewToFront(self.btnCompany)
                     self.btnGameCenter.alpha = 1.0
                     self.btnGameCenter.layoutIfNeeded()
                     
@@ -773,10 +766,6 @@ class GameMainViewController: UIViewController {
                 sender.enabled = true
             })
             sender.userInteractionEnabled = true
-        } else if (sender == self.btnCompany) {
-            
-           self.alertWithTitle(NSLocalizedString("Sorry",comment:"Sorry"), message: NSLocalizedString("NoImplement",comment:"That functionality hasn't been implemented yet"))
-            
         } else if (sender == self.btnGameCenter) {
             
             if !self.displayOnNeedGameKitAuthStatus() {
