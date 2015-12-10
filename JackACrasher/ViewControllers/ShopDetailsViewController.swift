@@ -156,29 +156,29 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
         for curProduct in self.products {
             if curProduct.productIdentifier == productId {
                 let indexPath = NSIndexPath(forRow: index, inSection: 0)
-            
+                
                 if self.isViewLoaded() {
-                for vIndexPath in self.collectionView.indexPathsForVisibleItems() {
-                    if vIndexPath == indexPath {
-                        
-                        if let info = curProduct.productInfo {
-                            if !info.consumable && (!curProduct.availableForPurchase || GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
-                                removeNonConsumableItemFromLocal(indexPath)
-                                //self.products.removeAtIndex(indexPath.row)
-                                //self.collectionView.deleteItemsAtIndexPaths([indexPath])
-                                return
+                    for vIndexPath in self.collectionView.indexPathsForVisibleItems() {
+                        if vIndexPath.row == indexPath.row {
+                            
+                            if let info = curProduct.productInfo {
+                                if !info.consumable && (!curProduct.availableForPurchase || GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
+                                    removeNonConsumableItemFromLocal(indexPath)
+                                    //self.products.removeAtIndex(indexPath.row)
+                                    //self.collectionView.deleteItemsAtIndexPaths([indexPath])
+                                    return
+                                }
                             }
-                        }
-                        else {
-                            if (GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
-                                removeNonConsumableItemFromLocal(indexPath)
-                                //self.products.removeAtIndex(indexPath.row)
-                                //self.collectionView.deleteItemsAtIndexPaths([indexPath])
-                                return
+                            else {
+                                if (GameLogicManager.sharedInstance.hasStoredPurchaseOfNonConsumableWithIDInDefaults(productId)) {
+                                    removeNonConsumableItemFromLocal(indexPath)
+                                    //self.products.removeAtIndex(indexPath.row)
+                                    //self.collectionView.deleteItemsAtIndexPaths([indexPath])
+                                    return
+                                }
                             }
                         }
                     }
-                }
                 }
                 removeNonConsumableItemFromLocal(index)
                 return
@@ -194,6 +194,19 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
     }
     
     private func removeNonConsumableItemFromLocal(indexPath:NSIndexPath!) {
+        
+        if self.products.count <= indexPath.row {
+            return
+        }
+        
+        let product = self.products[indexPath.row]
+        
+        if let info = product.productInfo {
+            if info.consumable {
+                return;
+            }
+        }
+        
         self.products.removeAtIndex(indexPath.row)
         if let taskId = self.processingCellsImages[indexPath] {
             NetworkManager.sharedManager.cancelTask(taskId)
