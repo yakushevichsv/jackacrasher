@@ -18,7 +18,6 @@
 typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
 
 @interface IAPReceiptValidator ()
-@property (nonatomic,strong) NSArray *puchasesInfo;
 @property (nonatomic,strong) NSMutableDictionary<NSString *,receiptCompletionHandler> *dict;
 @property (nonatomic,strong) NSMutableArray *nextHandlers;
 @end
@@ -30,7 +29,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
 - (void)forceCheckReceiptWithCompletionHandler:(receiptCompletionHandler)handler
 {
     @synchronized([self class]) {
-        if (!self.dict) {
+        if (!self.dict.count) {
                 self.dict = [NSMutableDictionary dictionary];
             [self askForReceipt:handler];
         }
@@ -43,63 +42,36 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     }
     
 }
-
-/*- (void)checkReceiptWithCompletionHandler:(void (^)(NSArray *array,NSError *error))handler
-{
-    self.completionHandler = handler;
-    __weak typeof(self) wSelf = self;
-    
-    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), ^{
-    
-        BOOL refresh = false;
-        if(![wSelf checkReceiptInternalWithParam:&refresh]) {
-            if (refresh)
-                [wSelf askForReceipt];
-        
-        }
-        else {
-            
-            if (wSelf.completionHandler) {
-                wSelf.completionHandler(wSelf.puchasesInfo,nil);
-                wSelf.completionHandler = nil;
-            }
-        }
-    });
-}*/
-
 #pragma mark -
 #pragma  mark - SKRequestDelegate's methods
 
 - (void)request:(SKRequest *)request didFailWithError:(NSError *)error {
     NSLog(@"error %@",error);
     
-    self.puchasesInfo = nil;
     
-    [self completionRefreshRequest:request withError:error];
+    [self completionRefreshRequest:request purchasesInfo:nil withError:error];
     
 }
 
 - (void)requestDidFinish:(SKRequest *)request {
     
-    BOOL res = [self checkReceiptInternal];
-    
-    if (!res)
-        self.puchasesInfo = nil;
-    
-    [self completionRefreshRequest:request withError:nil];
+    [self completionRefreshRequest:request purchasesInfo:[self checkReceiptInternal] withError:nil];
 }
 
-- (void)completionRefreshRequest:(SKRequest *)request withError:(NSError *)error
+- (void)completionRefreshRequest:(SKRequest *)request purchasesInfo:(NSArray *)purchasesInfo withError:(NSError *)error
 {
     NSString *key = [NSString stringWithFormat:@"%p", request];
     receiptCompletionHandler completionHandler = self.dict[key] ;
     
     if (completionHandler) {
-        completionHandler(self.puchasesInfo,error);
+        completionHandler(purchasesInfo,error);
     }
     
     @synchronized([self class]) {
-        [self.dict removeObjectForKey:key];
+        if ([self.dict objectForKey:key])
+            [self.dict removeObjectForKey:key];
+        else if (self.dict.count == 1)
+            [self.dict removeAllObjects];
         
         if (self.nextHandlers.count) {
             receiptCompletionHandler nextHandler = [self.nextHandlers objectAtIndex:0];
@@ -133,11 +105,11 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     }
 }
 
-- (BOOL)checkReceiptInternal {
+- (NSArray *)checkReceiptInternal {
     return [self checkReceiptInternalWithParam:nil];
 }
 
-- (BOOL)checkReceiptInternalWithParam:(out BOOL*)needToAskPtr {
+- (NSArray *)checkReceiptInternalWithParam:(out BOOL*)needToAskPtr {
     
     // OS X 10.7 and later / iOS 7 and later
     NSBundle *mainBundle = [NSBundle mainBundle];
@@ -146,12 +118,13 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     BOOL isPresent = [receiptURL checkResourceIsReachableAndReturnError:&receiptError];
     if (isPresent && !receiptError) {
         // Validation fails
-        isPresent = [self checkReceiptWithURL:receiptURL];
+        NSArray * result = [self checkReceiptWithURL:receiptURL];
+        isPresent = result.count;
         if (isPresent) {
             if (needToAskPtr != nil) {
                 *needToAskPtr = false;
             }
-            return true;
+            return result;
         }
     }
     
@@ -162,12 +135,11 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     
     if (!isPresent && needToAskPtr != nil) {
         *needToAskPtr = true;
-        return false;
     }
-        return false;
+    return nil;
 }
 
-- (BOOL)checkReceiptWithURL:(NSURL *)receiptURL {
+- (NSArray *)checkReceiptWithURL:(NSURL *)receiptURL {
     // Load the receipt file
     NSData *receiptData = [NSData dataWithContentsOfURL:receiptURL];
     
@@ -175,7 +147,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     BIO *receiptBIO = BIO_new(BIO_s_mem());
     BIO_write(receiptBIO, [receiptData bytes], (int) [receiptData length]);
     PKCS7 *receiptPKCS7 = d2i_PKCS7_bio(receiptBIO, NULL);
-    BOOL res = false;
+    NSArray * res = nil;
     if (receiptPKCS7 &&
         PKCS7_type_is_signed(receiptPKCS7) &&
         PKCS7_type_is_data(receiptPKCS7->d.sign->contents)) {
@@ -216,7 +188,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     return res;
 }
 
-- (BOOL)parsingReceipts:(const unsigned char *)ptr  end:(const unsigned char *)end {
+- (NSArray *)parsingReceipts:(const unsigned char *)ptr  end:(const unsigned char *)end {
     
     const unsigned char *str_ptr;
     
@@ -228,7 +200,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
         ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
         if (type != V_ASN1_SET) {
             // Validation fails
-            return false;
+            return nil;
         }
         
         NSMutableArray *resInfo = [NSMutableArray array];
@@ -246,7 +218,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
             ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
             if (type != V_ASN1_SEQUENCE) {
                 // Validation fails
-                return false;
+                return nil;
             }
             
             const unsigned char *seq_end = ptr + length;
@@ -277,7 +249,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
             ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
             if (type != V_ASN1_OCTET_STRING) {
                 // Validation fails
-                return false;
+                return nil;
             }
             
             NSString *key = nil;
@@ -288,7 +260,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
                     ASN1_get_object(&str_ptr, &str_length, &str_type, &str_xclass, seq_end - str_ptr);
                     if (str_type != V_ASN1_INTEGER) {
                         // Validation fails
-                        return false;
+                        return nil;
                     }
                     ASN1_INTEGER  *integer1;
                     
@@ -368,9 +340,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     }
     resInfo = nil;
     
-    self.puchasesInfo = resInfo2.count ?  resInfo2 : nil;
-    
-    return true;
+    return resInfo2.count ?  resInfo2 : nil;
 }
 
 - (void)appendDic:(NSMutableDictionary *)curDic toArray:(NSMutableArray *)resInfo ifKeyMet:(NSString *)key value:(id)value
@@ -382,7 +352,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     curDic[key] = value;
 }
 
-- (BOOL)parsingReceiptAndCheck:(PKCS7 *)receiptPKCS7 {
+- (NSArray *)parsingReceiptAndCheck:(PKCS7 *)receiptPKCS7 {
    
     // Get a pointer to the ASN.1 payload
     ASN1_OCTET_STRING *octets = receiptPKCS7->d.sign->contents->d.data;
@@ -411,9 +381,9 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
     if (type != V_ASN1_SET) {
         // Validation fails
-        return false;
+        return nil;
     }
-    
+    NSMutableArray * receipts =[NSMutableArray array];
     while (ptr < end) {
         ASN1_INTEGER *integer;
         
@@ -421,7 +391,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
         ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
         if (type != V_ASN1_SEQUENCE) {
             // Validation fails
-            return false;
+            return nil;
         }
         
         const unsigned char *seq_end = ptr + length;
@@ -432,7 +402,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
         ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
         if (type != V_ASN1_INTEGER) {
             // Validation fails
-            return false;
+            return nil;
         }
         integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
         attr_type = ASN1_INTEGER_get(integer);
@@ -442,7 +412,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
         ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
         if (type != V_ASN1_INTEGER) {
             // Validation fails
-            return false;
+            return nil;
         }
         integer = c2i_ASN1_INTEGER(NULL, &ptr, length);
         attr_version = ASN1_INTEGER_get(integer);
@@ -452,7 +422,7 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
         ASN1_get_object(&ptr, &length, &type, &xclass, end - ptr);
         if (type != V_ASN1_OCTET_STRING) {
             // Validation fails
-            return false;
+            return nil;
         }
         
         switch (attr_type) {
@@ -501,12 +471,15 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
                 
                 // You can parse more attributes...
             case 17:
+            {
                 //purchases
-                
-                if (![self parsingReceipts:ptr end:seq_end]) {
-                    return false;
-                }
+                NSArray * receiptsExtra = [self parsingReceipts:ptr end:seq_end];
+                if (receiptsExtra.count)
+                    [receipts addObjectsFromArray:receiptsExtra];
+                else
+                    return nil;
                 break;
+            }
             default:
                 break;
         }
@@ -517,19 +490,19 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     
     
     if (![bundleIdString isEqualToString:[NSBundle mainBundle].bundleIdentifier])
-        return false;
+        return nil;
     
     NSString *realBundleVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)@"CFBundleVersion"];
     
     
     if (![bundleVersionString isEqualToString:realBundleVersion])
-        return false;
+        return nil;
     
     // Be sure that all information is present
     if (opaqueData == nil ||
         hashData == nil) {
         // Validation fails
-        return false;
+        return nil;
     }
     
     UIDevice *device = [UIDevice currentDevice];
@@ -553,10 +526,10 @@ typedef void (^receiptCompletionHandler)(NSArray *array,NSError *error);
     NSData *computedHashData = [NSData dataWithBytes:hash length:20];
     if (![computedHashData isEqualToData:hashData]) {
         // Validation fails
-        return false;
+        return nil;
     }
     
-    return true;
+    return receipts.count ? receipts : nil;
 }
 
 @end

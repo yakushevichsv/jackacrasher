@@ -109,6 +109,10 @@ class ShopDetailsCollectionViewCell: UICollectionViewCell {
     }
     
     internal func setTitleForProduct(title:String) {
+        if self.productTitle == nil {
+            return
+        }
+        
         self.productTitle?.text = title
         self.productTitle?.sizeToFit()
         self.setNeedsLayout()
