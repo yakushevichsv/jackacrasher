@@ -205,12 +205,37 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
             if info.consumable {
                 return;
             }
+            
+            if let icon = info.icon {
+                if (NSFileManager.defaultManager().jacHasItemInCache(icon)) {
+                    NSFileManager.defaultManager().jacRemoveItemFromCache(icon, completion: nil)
+                }
+            }
         }
+        
         
         self.products.removeAtIndex(indexPath.row)
         if let taskId = self.processingCellsImages[indexPath] {
             NetworkManager.sharedManager.cancelTask(taskId)
             self.processingCellsImages.removeValueForKey(indexPath)
+            
+            var processingCellsImagesTemp:[NSIndexPath:Int] = [NSIndexPath:Int]()
+            
+            let oldKeys = self.processingCellsImages.keys
+            for i in oldKeys.startIndex..<oldKeys.endIndex {
+                let key = oldKeys[i]
+                let row = key.row
+                if (row > indexPath.row) {
+                    if let oldValue = self.processingCellsImages[key] {
+                        processingCellsImagesTemp[NSIndexPath(forRow: row - 1 , inSection: indexPath.section)] = oldValue
+                    }
+                }
+            }
+            self.processingCellsImages = processingCellsImagesTemp
+        }
+        
+        if (!processingCells.isEmpty && processingCells.contains(indexPath)) {
+            processingCells.remove(indexPath)
         }
     }
     

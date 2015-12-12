@@ -67,32 +67,31 @@ extension NSFileManager {
         }
     }
     
+    func localPathFromPath(path:String) ->String! {
+        
+        var fileName = path.lastPathComponent
+        
+        if fileName == nil || fileName!.isEmpty {
+            fileName = path
+        }
+        
+        return  self.jacCacheDirectory.stringByAppendingPathComponent(fileName)
+    }
+    
+    
     func jacGetImageFromCache(path:String!) -> UIImage? {
         if !jacHasItemInCache(path) {
             return nil
         }
         
-        var fileName = path.lastPathComponent
-        
-        if let _ =  fileName?.isEmpty {
-            fileName = path
-        }
-        
-        let path = self.jacCacheDirectory.stringByAppendingPathComponent(fileName)
+        let path = localPathFromPath(path)
         
         return UIImage(contentsOfFile: path)
     }
     
     func jacHasItemInCache(path:String!) -> Bool {
         
-        var fileName = path.lastPathComponent
-        
-        if let _ =  fileName?.isEmpty  {
-            fileName = path
-        }
-        
-        let path = self.jacCacheDirectory.stringByAppendingPathComponent(fileName)
-        
+        let path = localPathFromPath(path)
         
         return self.fileExistsAtPath(path)
     }
@@ -102,14 +101,8 @@ extension NSFileManager {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)){
             [unowned self] in
             
-            var fileName = path.lastPathComponent
+            let filePath = self.localPathFromPath(path)
             
-            if let _ =  fileName?.isEmpty  {
-                fileName = path
-            }
-            
-            
-            let filePath = self.jacCacheDirectory.stringByAppendingPathComponent(fileName)
             do {
             try self.removeItemAtPath(filePath)
                 completion?(result: true)

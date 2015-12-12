@@ -627,6 +627,11 @@ extension GameLogicManager {
     internal func storePurchaseInDefaultsForNonConsumableWithID(productId:String) -> Bool {
         let key = getPlayerId().stringByAppendingString(productId)
         NSUserDefaults.standardUserDefaults().setBool(true, forKey: key)
+        
+        if productId == GameLogicManager.sNoAdProductId {
+            return disableAdv() && disableAdvForAnonymousUser()
+        }
+        
         return NSUserDefaults.standardUserDefaults().synchronize()
     }
 }
@@ -864,17 +869,21 @@ extension GameLogicManager {
     }
     
     func disableAdv() -> Bool {
-        return setAdvState(true)
+        return setAdvState(getPlayerId(),disabled:true)
+    }
+    
+    func disableAdvForAnonymousUser() -> Bool {
+       return setAdvState(getAnonymousPlayerId(),disabled:true)
     }
     
     
     func enableAdv() -> Bool {
-        return setAdvState(false)
+        return setAdvState(getPlayerId(),disabled:false)
     }
     
-    private func setAdvState(disabled:Bool) -> Bool {
+    private func setAdvState(keyPart:String, disabled:Bool) -> Bool {
         let userDef = NSUserDefaults.standardUserDefaults()
-        let key = getPlayerId().stringByAppendingString(GameLogicManager.sNoAdProductId)
+        let key = keyPart.stringByAppendingString(GameLogicManager.sNoAdProductId)
         
         if (!disabled) {
             //enabled... 
