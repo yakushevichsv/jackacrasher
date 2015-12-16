@@ -16,6 +16,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     private var myContext = 0
 
+    private var startLayer:JCStartLayer? = nil
+    private var displStartLayerAnim = false
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
@@ -89,7 +92,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        restartGame()
+        //restartGame()
         
         correctFontOfChildViews(self.view)
 
@@ -134,6 +137,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
+        performStartLayerAnimation()
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -273,3 +277,44 @@ class GameViewController: UIViewController,GameSceneDelegate {
         }
     }
 }
+
+//MARK: CA Start Layer methods
+extension GameViewController {
+    
+    private func performStartLayerAnimation() {
+        
+        if (!self.displStartLayerAnim)
+        {
+            let boxSize:CGFloat = 200
+            
+            let center = self.view.frame.center
+            let rect = CGRect(origin: center - CGPointMake(boxSize, boxSize)*0.5, size: CGSizeMake(boxSize, boxSize))
+            
+            self.startLayer = JCStartLayer(midRect:rect)
+            //self.startLayer?.fillColor = self.view.layer.backgroundColor
+            self.startLayer?.frame = self.view.layer.bounds
+            
+            print("Mid rect \(rect)\n Frame \(self.startLayer!.frame)")
+            
+            self.view.layer.addSublayer(self.startLayer!)
+            
+            if let duration = self.startLayer?.animate()
+            {
+                print("PerformStartLayerAnimation Duration \(duration)")
+                NSTimer.scheduledTimerWithTimeInterval(duration, target: self,
+                    selector: "removeStartLayer",
+                    userInfo: nil, repeats: false)
+            }
+            self.displStartLayerAnim = true
+        }
+    }
+    
+    func removeStartLayer() {
+        self.startLayer?.removeAllAnimations()
+        self.startLayer?.removeFromSuperlayer()
+        self.startLayer = nil
+        
+        restartGame()
+    }
+}
+

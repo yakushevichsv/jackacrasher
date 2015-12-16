@@ -19,6 +19,7 @@
 		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
 		210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210EA9C81B26D54100C69D29 /* PurchaseManager.swift */; };
 		21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21103F811B289A39007D8649 /* ShopDetailsViewController.swift */; };
+		211173DA1C21B1CF002A72A0 /* JCStartLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 211173D91C21B1CF002A72A0 /* JCStartLayer.swift */; };
 		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
 		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
 		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
@@ -138,6 +139,7 @@
 		210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductIsInfo.plist; sourceTree = "<group>"; };
 		210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasher-Bridging-Header.h"; sourceTree = "<group>"; };
 		21103F811B289A39007D8649 /* ShopDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsViewController.swift; path = ViewControllers/ShopDetailsViewController.swift; sourceTree = "<group>"; };
+		211173D91C21B1CF002A72A0 /* JCStartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JCStartLayer.swift; path = Views/Layers/JCStartLayer.swift; sourceTree = "<group>"; };
 		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
 		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
 		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
@@ -280,6 +282,14 @@
 				210C0B4F1B357AFB00759382 /* IAPProductInfo.swift */,
 			);
 			name = IAP;
+			sourceTree = "<group>";
+		};
+		211173D81C21B1A2002A72A0 /* Layers */ = {
+			isa = PBXGroup;
+			children = (
+				211173D91C21B1CF002A72A0 /* JCStartLayer.swift */,
+			);
+			name = Layers;
 			sourceTree = "<group>";
 		};
 		214007A51B0D2D1A00072C9F /* Nodes */ = {
@@ -445,6 +455,7 @@
 		21DEA0CF1AFD1761004FF5D7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				211173D81C21B1A2002A72A0 /* Layers */,
 				2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */,
 				210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */,
 			);
@@ -806,6 +817,7 @@
 				210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */,
 				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
 				2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */,
+				211173DA1C21B1CF002A72A0 /* JCStartLayer.swift in Sources */,
 				21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */,
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
