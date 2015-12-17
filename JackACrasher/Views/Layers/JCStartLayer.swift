@@ -8,53 +8,58 @@
 
 import UIKit
 
-class JCStartLayer: CAShapeLayer {
+class JCStartLayer: CALayer {
     private let animationDuration: CFTimeInterval = 1.2
     private let midRect:CGRect
+    private var animCompletionCount = 0
+    private var completionBlock:dispatch_block_t! = nil
+    
+    private struct Constants {
+        static let shrink = "shrink"
+        static let scale =  "scale"
+        static let position = "position"
+        static let shrinkZero = "shrinkZero"
+        static let rotation = "rotation"
+    }
     
     init(midRect:CGRect) {
         self.midRect = midRect
         super.init()
-        fillColor = UIColor.lightGrayColor().CGColor
-        borderColor = UIColor.blackColor().CGColor
-        borderWidth = 2.0
     }
     
-    override var frame: CGRect {
-        get {
-            return super.frame
-        }
-        set {
-            super.frame = newValue
-            path = rectPathLarge.CGPath
-        }
-    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    private var rectPathLarge:UIBezierPath {
-        return UIBezierPath(rect: CGRect(origin: CGPointZero,size:self.bounds.size))
-    }
-    
-    private var rectPathMedium:UIBezierPath {
-        return UIBezierPath(rect: self.midRect)
-    }
-    
-    private var rectPathMediumZero:UIBezierPath {
-        return UIBezierPath(rect:CGRect(origin: self.midRect.center, size: CGSizeZero))
-    }
-    
-    private func shrinkToMidRect() -> CFTimeInterval {
-        let shrinkAnim = CABasicAnimation(keyPath: "path")
-        shrinkAnim.duration = animationDuration * 2
-        shrinkAnim.fromValue = self.path
-        shrinkAnim.toValue = self.rectPathMedium.CGPath
-        shrinkAnim.removedOnCompletion = false
-        shrinkAnim.fillMode = kCAFillModeForwards
-        shrinkAnim.additive = true
-        addAnimation(shrinkAnim, forKey: "shrinkAnim")
+    private func shrinkToMidRect()  {
+        
+        let repeatCount:NSTimeInterval = 2
+        
+        let posAnim = CABasicAnimation(keyPath: "position")//"transform.scale")
+        posAnim.duration = animationDuration * repeatCount
+        //shrinkAnim.fromValue = 0
+        if let pLayer = self.presentationLayer() as? CALayer {
+            posAnim.fromValue = NSValue(CGPoint:pLayer.position)
+        }
+        
+        let x = self.midRect.center.x
+        let y = self.midRect.center.y
+        
+        posAnim.toValue = NSValue(CGPoint:CGPointMake(x, y))
+        //shrinkAnim.beginTime = beginTime
+        posAnim.removedOnCompletion = false
+        posAnim.fillMode = kCAFillModeForwards
+        
+        
+        let scaleAnim = CABasicAnimation(keyPath: "transform.scale")
+        scaleAnim.duration = posAnim.duration
+        //shrinkAnim.fromValue = 0
+        let param = max(CGRectGetWidth(self.midRect)/CGRectGetWidth(self.frame), CGRectGetHeight(self.midRect)/CGRectGetHeight(self.frame))
+        scaleAnim.toValue =   param
+        //shrinkAnim.beginTime = beginTime
+        scaleAnim.removedOnCompletion = false
+        scaleAnim.fillMode = kCAFillModeForwards
         
         let angle = CGFloat(M_PI/2)
         let rotationLAnimation: CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
@@ -79,26 +84,31 @@ class JCStartLayer: CAShapeLayer {
         animationGroup.animations = [rotationLAnimation,rotationRAnimation]
         animationGroup.duration = animationDuration
         animationGroup.removedOnCompletion = false
-        animationGroup.repeatCount = Float(shrinkAnim.duration/animationDuration)
+        animationGroup.repeatCount = Float(repeatCount)
         
         
-        addAnimation(animationGroup, forKey: "shrinkToMidRect")
+        animationGroup.delegate = self
+        addAnimation(animationGroup, forKey: Constants.shrink)
         
-        return animationGroup.duration * CFTimeInterval(animationGroup.repeatCount) + animationGroup.beginTime
+        posAnim.delegate = self
+        addAnimation(posAnim, forKey: Constants.position)
+        
+        scaleAnim.delegate = self
+        addAnimation(scaleAnim, forKey: Constants.scale)
     }
     
-    private func shrinkToMidPoint(beginTime:CFTimeInterval) -> CFTimeInterval {
-        let shrinkAnim = CABasicAnimation(keyPath: "path")
-        shrinkAnim.duration = animationDuration
-        shrinkAnim.fromValue = self.path
-        shrinkAnim.toValue = self.rectPathMediumZero.CGPath
-        //shrinkAnim.beginTime = beginTime
-        shrinkAnim.removedOnCompletion = false
-        shrinkAnim.fillMode = kCAFillModeForwards
+    private func shrinkToZero() {
         
         //addAnimation(shrinkAnim, forKey: "shrinkAnim")
+        let scaleAnim = CABasicAnimation(keyPath: "transform.scale")
+        scaleAnim.duration = animationDuration
+        scaleAnim.fromValue = max(CGRectGetWidth(self.midRect)/CGRectGetWidth(self.frame), CGRectGetHeight(self.midRect)/CGRectGetHeight(self.frame))
+        //shrinkAnim.fromValue = 0
+        scaleAnim.toValue = 0
+        //shrinkAnim.beginTime = beginTime
+        scaleAnim.removedOnCompletion = false
+        scaleAnim.fillMode = kCAFillModeForwards
         
-
         
         let rotationRAnimation: CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotationRAnimation.toValue = CGFloat(M_PI * 2)
@@ -111,28 +121,63 @@ class JCStartLayer: CAShapeLayer {
         
         //addAnimation(rotationRAnimation, forKey: "rotationRAnimation")
         
-        let animationGroup: CAAnimationGroup = CAAnimationGroup()
-        animationGroup.animations = [rotationRAnimation,shrinkAnim]
-        animationGroup.duration = animationDuration
-        animationGroup.repeatCount = 1
-        animationGroup.beginTime = beginTime
-        animationGroup.removedOnCompletion = false
-        addAnimation(animationGroup, forKey: "shrinkToMidPoint2")
+        scaleAnim.delegate = self
+        addAnimation(scaleAnim, forKey: Constants.scale)
         
-        
-        
-        return animationDuration //animationGroup.duration * CFTimeInterval(animationGroup.repeatCount) + animationGroup.beginTime
+        addAnimation(rotationRAnimation, forKey: Constants.rotation)
     }
 
     
-    //MARK: Public interface
-    func animate() -> CFTimeInterval {
+    //MARK: CA Delegate methods...
+    
+    override func animationDidStart(anim: CAAnimation) {
         
-        //let durationPart = shrinkToMidRect()
-        let durationTotal = shrinkToMidPoint(0)
-        
-        return durationTotal
+        if (self.animationForKey(Constants.shrink) == anim ||
+            self.animationForKey(Constants.shrinkZero) == anim ||
+                self.animationForKey(Constants.position) == anim  ||
+                self.animationForKey(Constants.scale) == anim) {
+                    animCompletionCount++
+        }
     }
     
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+        
+        if (!flag) {
+            return
+        }
+        
+        if (self.animationForKey(Constants.shrink) == anim ||
+            self.animationForKey(Constants.shrinkZero) == anim ||
+            self.animationForKey(Constants.position) == anim  ||
+            self.animationForKey(Constants.scale) == anim) {
+                animCompletionCount--
+        }
+        
+        if (animCompletionCount == 0) {
+            shrinkToZero()
+            animCompletionCount--
+        }
+        else if (animCompletionCount < 0) {
+            self.completionBlock()
+            self.completionBlock = nil
+            self.animCompletionCount = 0
+        }
+    }
+    
+    
+    //MARK: Public interface
+    func animate(completion:dispatch_block_t) -> Bool {
+        
+        if (self.animCompletionCount != 0) {
+            return false
+        }
+        
+        self.completionBlock = completion
+        animCompletionCount = 0
+        shrinkToMidRect()
+        
+        
+        return true
+    }
     
 }

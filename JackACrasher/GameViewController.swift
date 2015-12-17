@@ -281,6 +281,41 @@ class GameViewController: UIViewController,GameSceneDelegate {
 //MARK: CA Start Layer methods
 extension GameViewController {
     
+    private func imageFromLaunchScreenOrSelf(useSelfView:Bool = false) -> UIImage? {
+        
+        let scale = UIScreen.mainScreen().scale
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, scale)
+        if UIGraphicsGetCurrentContext() == nil  {
+            return nil
+        }
+        
+        if (useSelfView) {
+            if (!self.view.drawViewHierarchyInRect(self.view.bounds, afterScreenUpdates: false)){
+                view.layoutIfNeeded();
+                view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+            }
+        }
+        else {
+            let array = NSBundle.mainBundle().loadNibNamed("LaunchScreen", owner: self, options: nil)
+            if let retView = array.last as? UIView {
+                
+                retView.frame = self.view.frame;
+                
+                retView.layoutIfNeeded();
+                retView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+                
+            }
+            else {
+                UIGraphicsEndImageContext()
+                return nil
+            }
+        }
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
     private func performStartLayerAnimation() {
         
         if (!self.displStartLayerAnim)
@@ -288,23 +323,22 @@ extension GameViewController {
             let boxSize:CGFloat = 200
             
             let center = self.view.frame.center
-            let rect = CGRect(origin: center - CGPointMake(boxSize, boxSize)*0.5, size: CGSizeMake(boxSize, boxSize))
+            let rect = CGRect(origin: center - CGPointMake(boxSize, boxSize)*0.8, size: CGSizeMake(boxSize, boxSize))
             
             self.startLayer = JCStartLayer(midRect:rect)
             //self.startLayer?.fillColor = self.view.layer.backgroundColor
             self.startLayer?.frame = self.view.layer.bounds
+            self.startLayer?.contents = imageFromLaunchScreenOrSelf(false)?.CGImage
             
             print("Mid rect \(rect)\n Frame \(self.startLayer!.frame)")
             
             self.view.layer.addSublayer(self.startLayer!)
             
-            if let duration = self.startLayer?.animate()
-            {
-                print("PerformStartLayerAnimation Duration \(duration)")
-                NSTimer.scheduledTimerWithTimeInterval(duration, target: self,
-                    selector: "removeStartLayer",
-                    userInfo: nil, repeats: false)
+            self.startLayer?.animate(){
+                [unowned self] in
+                self.removeStartLayer()
             }
+            
             self.displStartLayerAnim = true
         }
     }
