@@ -28,6 +28,9 @@ class GameMainViewController: UIViewController {
     private weak var btnClose:UIButton! = nil
     private var timeInterval:NSTimeInterval = NSDate.timeIntervalSinceReferenceDate()
     
+    private var startLayer:JCStartLayer? = nil
+    private var displStartLayerAnim = false
+    
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
     @IBOutlet weak var btnShop:UIButton!
@@ -113,7 +116,7 @@ class GameMainViewController: UIViewController {
         for i in 0...4 {
             print("Textures: \(blackHoleAtas.textureNames)")
             let texture = blackHoleAtas.textureNamed(String(format: "BlackHole%d", i))
-            let image = UIImage(CGImage: texture.CGImage)
+            let image = UIImage(CGImage: texture.CGImage())
             images.append(image)
         }
         let animImage = UIImage.animatedImageWithImages(images, duration: 0.4)
@@ -124,13 +127,13 @@ class GameMainViewController: UIViewController {
         let spriteAtlas = SKTextureAtlas(named: "sprites")
         for i in 1...3 {
             let texture = spriteAtlas.textureNamed(String(format: "explosion%04d", i))
-            let image = UIImage(CGImage: texture.CGImage)
+            let image = UIImage(CGImage: texture.CGImage())
             images2.append(image)
         }
         let animImage2 = UIImage.animatedImageWithImages(images2, duration: 0.4)
         self.ivExplosion.image = animImage2
         
-        let image = UIImage(CGImage: spriteAtlas.textureNamed("asteroid-large").CGImage)
+        let image = UIImage(CGImage: spriteAtlas.textureNamed("asteroid-large").CGImage())
         self.ivAsteroidL.image = image
         self.ivAsteroidR.image = image
         
@@ -245,6 +248,8 @@ class GameMainViewController: UIViewController {
         foreverAsterAnim()
         
         displayCloudKitAuthStatus()
+        
+        performStartLayerAnimation()
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -1182,7 +1187,7 @@ extension GameMainViewController : ADInterstitialAdDelegate {
     func interstitialAdDidLoad(interstitialAd: ADInterstitialAd!) {
         print("Did load interstitialAdDidLoad")
         
-        if interstitialAd.loaded {
+        if interstitialAd.loaded && self.startLayerWasDisplayed {
             presentInterlude()
         }
     }
@@ -1202,5 +1207,85 @@ extension GameMainViewController : ADInterstitialAdDelegate {
         self.interstitial?.cancelAction()
         interstitialAdActionDidFinish(self.interstitial)
         interstitial = nil
+    }
+}
+
+//MARK: CA Start Layer methods
+extension GameMainViewController {
+    
+    private var startLayerWasDisplayed:Bool {
+        get {
+            return self.displStartLayerAnim && self.startLayer == nil
+        }
+    }
+    
+    private func imageFromLaunchScreenOrSelf(useSelfView:Bool = false) -> UIImage? {
+        
+        let scale = UIScreen.mainScreen().scale
+        UIGraphicsBeginImageContextWithOptions(view.bounds.size, true, scale)
+        if UIGraphicsGetCurrentContext() == nil  {
+            return nil
+        }
+        
+        if (useSelfView) {
+            if (!self.view.drawViewHierarchyInRect(self.view.bounds, afterScreenUpdates: false)){
+                view.layoutIfNeeded();
+                view.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+            }
+        }
+        else {
+            let array = NSBundle.mainBundle().loadNibNamed("LaunchScreen", owner: self, options: nil)
+            if let retView = array.last as? UIView {
+                
+                retView.frame = self.view.frame;
+                
+                retView.layoutIfNeeded();
+                retView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+                
+            }
+            else {
+                UIGraphicsEndImageContext()
+                return nil
+            }
+        }
+        
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image
+    }
+    
+    private func performStartLayerAnimation() {
+        
+        if (!self.displStartLayerAnim)
+        {
+            
+            let rect = self.ivBlackHole.frame
+            
+            self.startLayer = JCStartLayer(midRect:rect)
+            //self.startLayer?.fillColor = self.view.layer.backgroundColor
+            self.startLayer?.frame = self.view.layer.bounds
+            self.startLayer?.contents = imageFromLaunchScreenOrSelf(false)?.CGImage
+            
+            print("Mid rect \(rect)\n Frame \(self.startLayer!.frame)")
+            
+            self.view.layer.addSublayer(self.startLayer!)
+            
+            self.startLayer?.animate(){
+                [unowned self] in
+                self.removeStartLayer()
+            }
+            
+            self.displStartLayerAnim = true
+        }
+    }
+    
+    func removeStartLayer() {
+        self.startLayer?.removeAllAnimations()
+        self.startLayer?.removeFromSuperlayer()
+        self.startLayer = nil
+     
+        if self.interstitial?.loaded == true {
+            self.presentInterlude()
+        }
     }
 }
