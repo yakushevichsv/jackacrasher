@@ -8,6 +8,7 @@
 
 import UIKit
 import SpriteKit
+import GameplayKit
 
 /*
 Class used for generating black hole & animies ..
@@ -33,14 +34,16 @@ class EnemiesGenerator: NSObject {
     weak var delegate:EnemiesGeneratorDelegate?
     private var transmitterTime:NSTimeInterval = 0
     
+    private var transmitterDistr:GKRandomDistribution! = nil
+    
     private var isTransmitterPresent:Bool {
         return transmitter != nil
     }
     
     private var currentCount:UInt = 0
+    private var chunks = [UInt]()
     private weak var transmitter:Transmitter? = nil
-    
-    internal static let sTransmitterNodesCount:UInt = 10
+    private var transmitterNodesCount:UInt = 0
     
     init(playableRect rect:CGRect, andDelegate delegate:EnemiesGeneratorDelegate?) {
         self.playableRect = rect
@@ -105,16 +108,14 @@ class EnemiesGenerator: NSObject {
         
         self.canFire = false
         
-        let isSerieOver = currentCount == EnemiesGenerator.sTransmitterNodesCount
+        let isSerieOver = self.isTransmitterSerieOver
         
         
         
         let isBlackHole = !isTransmitterPresent && ( isSerieOver ? arc4random() % 3 <= 2 : arc4random() % 2 == 1 )
         
         if (isSerieOver) {
-            self.currentCount = 0
-            /*self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
-            return*/
+            self.resetTransmitterItems()
         }
         
         var nodes = [SKNode]()
@@ -132,35 +133,38 @@ class EnemiesGenerator: NSObject {
             }
             
             nodes.append(produceTransmitter())
+            self.setNextTransmittersCount()
             type = .Transmitter
         }
         else if !isSerieOver {
             assert(isTransmitterPresent)
             type = .SpaceShip
             
+            let finalCount = self.chuncksCount
+            
             var curCount:UInt = 0
-            if (currentCount == 0 ) {
-                //generate 2 items..
-                curCount = 2
-            } else if (currentCount == 2) {
-                //generate 3 items...
-                curCount = 3
-            } else if (currentCount == 5) {
-                //generate 3 items...
-                curCount = 3
-            }else if (currentCount == EnemiesGenerator.sTransmitterNodesCount - 2) {
-                curCount = 2
-                //generate 2 items...
+            let diff = self.transmitterNodesCount - finalCount
+            if diff < self.maxTransmitterChunckCount  && diff > 0 {
+                curCount = diff
+                
                 self.transmitterTime = NSDate.timeIntervalSinceReferenceDate()
+            }
+            else if (currentCount == finalCount) {
+                curCount = UInt(self.transmitterDistribution.nextIntWithUpperBound(Int(self.transmitterDistribution.lowestValue) + Int(self.maxTransmitterChunckCount)) - self.transmitterDistribution.lowestValue)
             }
             
             currentCount += curCount
+            if (curCount != 0) {
+                self.chunks.append(curCount)
             
-            let items = produceEnemiesSpaceShips(curCount,last: currentCount == EnemiesGenerator.sTransmitterNodesCount)
-            for item in items {
-                nodes.append(item)
+                let items = produceEnemiesSpaceShips(curCount,last: self.isTransmitterSerieOver)
+                for item in items {
+                    nodes.append(item)
+                }
             }
-            
+            else {
+                type = .None
+            }
             
         } else if (isTransmitterPresent) {
             self.transmitter = nil
@@ -180,10 +184,12 @@ class EnemiesGenerator: NSObject {
     func didFinishWithSpaceShipChunk(count:UInt) -> Bool {
         self.currentCount += count
         
-        let isSerieOver = currentCount == EnemiesGenerator.sTransmitterNodesCount
+        let isSerieOver = self.isTransmitterSerieOver
         
-        if (currentCount == 2 || currentCount == 5 || currentCount == 8 || isSerieOver) {
-            
+        let finalCount = self.chuncksCount
+        
+        
+        if (currentCount == finalCount || isSerieOver) {
             if isSerieOver {
                 self.delegate?.didDissappearItemForEnemiesGenerator(self, item: nil, type: .Transmitter)
                 self.transmitter = nil
@@ -227,7 +233,6 @@ class EnemiesGenerator: NSObject {
     }
     
     private func produceTransmitter() -> SKNode! {
-        self.currentCount = 0
         let w = CGRectGetWidth(self.playableRect) * 0.2
         let h = CGRectGetHeight(self.playableRect) * 0.05
         
@@ -287,5 +292,57 @@ class EnemiesGenerator: NSObject {
         }
     }
     
-    
 }
+
+//MARK: Generators
+
+extension EnemiesGenerator {
+    
+    private var transmitterDistribution: GKRandomDistribution! {
+        get {
+            
+            if (self.transmitterDistr == nil) {
+                
+                
+                let source = GKARC4RandomSource()
+                
+                
+                self.transmitterDistr = GKRandomDistribution(randomSource: source, lowestValue: Int(self.maxTransmitterChunckCount*2), highestValue: Int(self.maxTransmitterChunckCount*4))
+            }
+            return self.transmitterDistr
+        }
+    }
+    
+    private var maxTransmitterChunckCount:UInt {
+        get {
+            return 4
+        }
+    }
+    
+    private func setNextTransmittersCount() {
+        
+        self.transmitterNodesCount =  UInt(self.transmitterDistribution.nextInt())
+    }
+    
+    private var isTransmitterSerieOver:Bool {
+        get {
+            return self.transmitterNodesCount == self.currentCount && self.transmitterNodesCount != 0
+        }
+    }
+    
+    private func resetTransmitterItems() {
+        self.chunks.removeAll()
+        self.currentCount = 0
+    }
+    
+    
+    private var chuncksCount:UInt {
+        
+        var finalCount:UInt = 0
+        for item in self.chunks {
+            finalCount += item
+        }
+        return finalCount
+    }
+}
+
