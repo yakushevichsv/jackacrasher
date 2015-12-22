@@ -131,7 +131,7 @@ class EnemiesGenerator: NSObject {
                 generateItem()
                 return
             }
-            
+            print("Transmitter was produced")
             nodes.append(produceTransmitter())
             self.setNextTransmittersCount()
             type = .Transmitter
@@ -150,8 +150,10 @@ class EnemiesGenerator: NSObject {
                 self.transmitterTime = NSDate.timeIntervalSinceReferenceDate()
             }
             else if (currentCount == finalCount) {
-                curCount = UInt(self.transmitterDistribution.nextIntWithUpperBound(Int(self.transmitterDistribution.lowestValue) + Int(self.maxTransmitterChunckCount)) - self.transmitterDistribution.lowestValue)
+                curCount = UInt(self.transmitterDistribution.nextIntWithUpperBound(Int(self.transmitterDistribution.lowestValue) + Int(self.maxTransmitterChunckCount - 1)) + 1 - self.transmitterDistribution.lowestValue)
             }
+            
+            print("Number of items to display \(curCount)\n Total number of items final \(finalCount)\n Maximum number \(self.transmitterNodesCount)")
             
             currentCount += curCount
             if (curCount != 0) {

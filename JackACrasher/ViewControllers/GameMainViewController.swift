@@ -1236,10 +1236,10 @@ extension GameMainViewController {
         else {
             let array = NSBundle.mainBundle().loadNibNamed("LaunchScreen", owner: self, options: nil)
             if let retView = array.last as? UIView {
-                
                 retView.frame = self.view.frame;
                 
-                retView.layoutIfNeeded();
+                retView.layoutIfNeeded()
+                retView.layer.opaque = true
                 retView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
                 
             }
