@@ -347,6 +347,7 @@ class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
     init(maxLife: ForceType, needToAnimate: Bool) {
         super.init(asteroid: .Small, maxLife: maxLife, needToAnimate: needToAnimate)
         setupPhysicsBody()
+        self.health = self.damageForce
     }
     
     private func setupPhysicsBody(){
@@ -385,7 +386,7 @@ class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
         let fireEmitter = SmallRegularAsteroid.sFireEmitter.copy() as! SKEmitterNode
         
         fireEmitter.position = p1
-        fireEmitter.targetNode = self.scene
+        fireEmitter.targetNode = nil
         fireEmitter.particleRotation = shortestAngleBetween(self.zRotation, angle2: direction.angle)
         fireEmitter.zPosition = 2
         
@@ -393,6 +394,11 @@ class SmallRegularAsteroid:RegularAsteroid, AssetsContainer {
         
         self.firing = true
         
+    }
+    
+    override func tryToDestroyWithForce(forceValue: ForceType) -> Bool {
+        self.maxLife = 1.0
+        return super.tryToDestroyWithForce(forceValue)
     }
 }
 

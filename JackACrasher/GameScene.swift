@@ -1125,7 +1125,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         let moveToAction = SKAction.moveByX(vector.dx, y: vector.dy, duration: duration)
         
-        let durMin = min(duration+0.2,2.0)
+        let durMin = min(duration+0.2,1.0)
         
         let seg2 = SKAction.sequence([SKAction.waitForDuration(durMin),SKAction.runBlock({ () -> Void in
             if (asteroid.parent != nil && asteroid.physicsBody != nil) {
@@ -1370,10 +1370,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             */
             let asteroidTime = emulateImpulse(forAsteroid: asteroid, direction: impulse)
             
-            let time2 = asteroidTime * 0.2
+            let time2 = asteroidTime * 0.1
             
             asteroid.runAction(SKAction.sequence([SKAction.waitForDuration(time2),SKAction.runBlock(){
-                    asteroid.physicsBody?.contactTestBitMask |= EntityCategory.Player
+                    asteroid.physicsBody?.contactTestBitMask = UInt32.max
                 }]))
             
             
@@ -1743,14 +1743,24 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         
         var asteroidBody:SKPhysicsBody? = nil
         var entityBody: SKPhysicsBody? = nil
+        var isFireing:Bool = false
         
         if bodyA.categoryBitMask == EntityCategory.RegularAsteroid {
             asteroidBody = bodyA
             entityBody = bodyB
+            
+            if let smallAster = asteroidBody?.node as? SmallRegularAsteroid {
+                isFireing = smallAster.isFiring
+            }
         }
-        else if bodyB.categoryBitMask == EntityCategory.RegularAsteroid {
+        
+        if !isFireing && bodyB.categoryBitMask == EntityCategory.RegularAsteroid {
             asteroidBody = bodyB
             entityBody = bodyA
+            
+            if let smallAster = asteroidBody?.node as? SmallRegularAsteroid {
+                isFireing = smallAster.isFiring
+            }
         }
         
         if let smallRegAster = asteroidBody?.node as? SmallRegularAsteroid {
@@ -1783,7 +1793,13 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                             if (entityBody?.categoryBitMask != EntityCategory.Bomb) {
                                 self.createExplosion(.Large, position: contact.contactPoint)
                             }
-                            entityBody?.node?.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
+                            if let node = entityBody?.node {
+                                node.syDisplayScore(rect: self.playableArea, scoreAddition: 20)
+                                self.didMoveOutAsteroidForGenerator(self.asteroidGenerator, asteroid: node, withType: .Regular)
+                            }
+                        } else {
+                            smallRegAster.syDisplayScore(rect: self.playableArea, scoreAddition: 10)
+                            self.createExplosion(.Large, position: contact.contactPoint)
                         }
                     }
                 }
@@ -1954,6 +1970,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             player.anchorPoint = CGPoint.zero
             pNode.addChild(player)
+            player.disableEngine()
             self.player = player
             
             print("placing player at position \(pointInternal)")
