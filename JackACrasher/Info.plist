@@ -36,6 +36,16 @@
 				<string>vk5044756</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>CFBundleURLName</key>
+			<string>fbJAC</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fbJAC</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>48</string>

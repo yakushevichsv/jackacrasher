@@ -28,6 +28,8 @@
 		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
 		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
 		211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */; };
+		2113C0761C37D6150094BD0F /* InviteFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2113C0751C37D6150094BD0F /* InviteFriendsViewController.swift */; };
+		2113C0781C37E4DF0094BD0F /* Bolts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2113C0771C37E4DF0094BD0F /* Bolts.framework */; };
 		2116A1E81BF1597200CC45F0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 2116A1EA1BF1597200CC45F0 /* InfoPlist.strings */; };
 		2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0A1AFFE88100067348 /* GameMainViewController.swift */; };
 		2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */; };
@@ -153,6 +155,8 @@
 		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
 		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
 		211243641AEAF1D3006B5487 /* CrystalRepresentation.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = CrystalRepresentation.sks; sourceTree = "<group>"; };
+		2113C0751C37D6150094BD0F /* InviteFriendsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = InviteFriendsViewController.swift; path = ViewControllers/InviteFriendsViewController.swift; sourceTree = "<group>"; };
+		2113C0771C37E4DF0094BD0F /* Bolts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Bolts.framework; path = ../../../../../../Documents/FacebookSDK/Bolts.framework; sourceTree = "<group>"; };
 		2116A1E91BF1597200CC45F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2116A1EB1BF1597F00CC45F0 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		2118AD0A1AFFE88100067348 /* GameMainViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameMainViewController.swift; path = ViewControllers/GameMainViewController.swift; sourceTree = "<group>"; };
@@ -255,6 +259,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2113C0781C37E4DF0094BD0F /* Bolts.framework in Frameworks */,
 				210464D81C0F1B4D00326FDD /* SafariServices.framework in Frameworks */,
 				21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */,
 				2171B32B1B7B9F46007733BA /* Social.framework in Frameworks */,
@@ -389,6 +394,7 @@
 				21103F811B289A39007D8649 /* ShopDetailsViewController.swift */,
 				2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */,
 				21BF9C271B89E0A60002AEAC /* HelpViewController.swift */,
+				2113C0751C37D6150094BD0F /* InviteFriendsViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -545,7 +551,6 @@
 		21FFEADA1AD5E216000115F6 = {
 			isa = PBXGroup;
 			children = (
-				210464D71C0F1B4D00326FDD /* SafariServices.framework */,
 				21FFEAE51AD5E216000115F6 /* JackACrasher */,
 				21FFEAFF1AD5E216000115F6 /* JackACrasherTests */,
 				21FFEAE41AD5E216000115F6 /* Products */,
@@ -590,6 +595,8 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				2113C0771C37E4DF0094BD0F /* Bolts.framework */,
+				210464D71C0F1B4D00326FDD /* SafariServices.framework */,
 				210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */,
 				212390BF1BF6364B00B79B33 /* Fabric.framework */,
 				212390C01BF6364B00B79B33 /* Crashlytics.framework */,
@@ -843,6 +850,7 @@
 				211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */,
 				217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */,
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
+				2113C0761C37D6150094BD0F /* InviteFriendsViewController.swift in Sources */,
 				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,
 				21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */,
 				210464D11C0EF08900326FDD /* FBManager.swift in Sources */,

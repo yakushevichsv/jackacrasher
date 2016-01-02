@@ -117,7 +117,7 @@ class GameMainViewController: UIViewController {
         for i in 0...4 {
             print("Textures: \(blackHoleAtas.textureNames)")
             let texture = blackHoleAtas.textureNamed(String(format: "BlackHole%d", i))
-            let image = UIImage(CGImage: texture.CGImage)
+            let image = UIImage(CGImage: texture.CGImage())
             images.append(image)
         }
         let animImage = UIImage.animatedImageWithImages(images, duration: 0.4)
@@ -128,13 +128,13 @@ class GameMainViewController: UIViewController {
         let spriteAtlas = SKTextureAtlas(named: "sprites")
         for i in 1...3 {
             let texture = spriteAtlas.textureNamed(String(format: "explosion%04d", i))
-            let image = UIImage(CGImage: texture.CGImage)
+            let image = UIImage(CGImage: texture.CGImage())
             images2.append(image)
         }
         let animImage2 = UIImage.animatedImageWithImages(images2, duration: 0.4)
         self.ivExplosion.image = animImage2
         
-        let image = UIImage(CGImage: spriteAtlas.textureNamed("asteroid-large").CGImage)
+        let image = UIImage(CGImage: spriteAtlas.textureNamed("asteroid-large").CGImage())
         self.ivAsteroidL.image = image
         self.ivAsteroidR.image = image
         

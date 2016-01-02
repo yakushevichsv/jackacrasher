@@ -10,6 +10,7 @@ import UIKit
 import FBSDKCoreKit
 import Fabric
 import Crashlytics
+import Bolts
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -102,6 +103,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
+        
+        let parsedUrl = BFURL(inboundURL: url, sourceApplication: sourceApplication)
+        
+        if ((parsedUrl.appLinkData) != nil) {
+            
+            if (parsedUrl.targetURL.scheme == "fbJAC") {
+                return true
+            }
+        }
         
         return  VKSdk.processOpenURL(url, fromApplication: sourceApplication) ||
             FBSDKApplicationDelegate.sharedInstance().application(application, openURL: url, sourceApplication: sourceApplication, annotation: annotation)
