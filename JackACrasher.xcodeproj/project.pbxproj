@@ -108,6 +108,10 @@
 		21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FA22A21B2AE9A7002539A6 /* StoreKit.framework */; };
 		21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FA22A41B2B026E002539A6 /* PopupAnimator.swift */; };
 		21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FC6D7B1AEC0457001D99B6 /* Rope.swift */; };
+		21FDB39C1C3E6F1000E16379 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FDB3991C3E6F1000E16379 /* TwitterKit.framework */; };
+		21FDB39D1C3E6F1000E16379 /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 21FDB39A1C3E6F1000E16379 /* TwitterKitResources.bundle */; };
+		21FDB39E1C3E6F1000E16379 /* TwitterCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FDB39B1C3E6F1000E16379 /* TwitterCore.framework */; };
+		21FDB3A01C3E7FA900E16379 /* TwitterFriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FDB39F1C3E7FA900E16379 /* TwitterFriendsViewController.swift */; };
 		21FF6C121B51724F00256A63 /* backgroundMusic.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 21FF6C111B51724F00256A63 /* backgroundMusic.mp3 */; };
 		21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */; };
 		21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */; };
@@ -237,6 +241,10 @@
 		21FA22A21B2AE9A7002539A6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21FA22A41B2B026E002539A6 /* PopupAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAnimator.swift; path = ViewControllers/PopupAnimator.swift; sourceTree = "<group>"; };
 		21FC6D7B1AEC0457001D99B6 /* Rope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rope.swift; path = Entities/Rope.swift; sourceTree = "<group>"; };
+		21FDB3991C3E6F1000E16379 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = SOURCE_ROOT; };
+		21FDB39A1C3E6F1000E16379 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = SOURCE_ROOT; };
+		21FDB39B1C3E6F1000E16379 /* TwitterCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterCore.framework; sourceTree = SOURCE_ROOT; };
+		21FDB39F1C3E7FA900E16379 /* TwitterFriendsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterFriendsViewController.swift; path = ViewControllers/TwitterFriendsViewController.swift; sourceTree = "<group>"; };
 		21FF6C111B51724F00256A63 /* backgroundMusic.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = backgroundMusic.mp3; sourceTree = "<group>"; };
 		21FF765C1C06FE64009B9C37 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Main.strings; sourceTree = "<group>"; };
 		21FFA04A1AE697A700EF3EDC /* ProgressTimerNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressTimerNode.swift; path = Entities/ProgressTimerNode.swift; sourceTree = "<group>"; };
@@ -268,8 +276,10 @@
 				212A2F241B36F24400B31482 /* libssl.a in Frameworks */,
 				2171B3291B7B92B6007733BA /* FBSDKShareKit.framework in Frameworks */,
 				21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */,
+				21FDB39E1C3E6F1000E16379 /* TwitterCore.framework in Frameworks */,
 				210464D61C0F06DA00326FDD /* FBSDKLoginKit.framework in Frameworks */,
 				21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */,
+				21FDB39C1C3E6F1000E16379 /* TwitterKit.framework in Frameworks */,
 				210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */,
 				212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */,
 				212390C21BF6364B00B79B33 /* Crashlytics.framework in Frameworks */,
@@ -395,6 +405,7 @@
 				2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */,
 				21BF9C271B89E0A60002AEAC /* HelpViewController.swift */,
 				2113C0751C37D6150094BD0F /* InviteFriendsViewController.swift */,
+				21FDB39F1C3E7FA900E16379 /* TwitterFriendsViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -595,6 +606,9 @@
 		21FFEAE61AD5E216000115F6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				21FDB3991C3E6F1000E16379 /* TwitterKit.framework */,
+				21FDB39A1C3E6F1000E16379 /* TwitterKitResources.bundle */,
+				21FDB39B1C3E6F1000E16379 /* TwitterCore.framework */,
 				2113C0771C37E4DF0094BD0F /* Bolts.framework */,
 				210464D71C0F1B4D00326FDD /* SafariServices.framework */,
 				210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */,
@@ -757,6 +771,7 @@
 				211243631AEAE07A006B5487 /* Explosion.sks in Resources */,
 				21E56B2F1ADA93BB0071A217 /* spark.png in Resources */,
 				21B007901B72321B001B1F7B /* TransmitterLaser.sks in Resources */,
+				21FDB39D1C3E6F1000E16379 /* TwitterKitResources.bundle in Resources */,
 				21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */,
 				21FF6C121B51724F00256A63 /* backgroundMusic.mp3 in Resources */,
 				21FFEAF21AD5E216000115F6 /* Main.storyboard in Resources */,
@@ -849,6 +864,7 @@
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
 				211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */,
 				217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */,
+				21FDB3A01C3E7FA900E16379 /* TwitterFriendsViewController.swift in Sources */,
 				21FFA04B1AE697A700EF3EDC /* ProgressTimerNode.swift in Sources */,
 				2113C0761C37D6150094BD0F /* InviteFriendsViewController.swift in Sources */,
 				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,

@@ -865,10 +865,60 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="300"/>
+                    <connections>
+                        <segue destination="5tW-8m-ZyF" kind="presentation" identifier="twitterFriendsId" id="QM9-Ng-8Jr"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yVv-RJ-bxl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="796" y="1019"/>
+            <point key="canvasLocation" x="754" y="1028"/>
+        </scene>
+        <!--Twitter Friends-->
+        <scene sceneID="pPG-Dz-wqY">
+            <objects>
+                <viewController id="OCY-Yn-Nwl" customClass="TwitterFriendsViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Uoa-XV-GUw"/>
+                        <viewControllerLayoutGuide type="bottom" id="tFu-KA-H6g"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="YWb-ph-hcx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-xl-oEO">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8Gr-jT-kTP">
+                                    <size key="itemSize" width="50" height="50"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dKB-B3-VAj">
+                                        <rect key="frame" x="0.0" y="64" width="50" height="50"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </view>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Twitter Friends" id="mWQ-0b-x2Y">
+                        <barButtonItem key="leftBarButtonItem" title="Cancel" id="cEB-Nu-Rp6">
+                            <connections>
+                                <action selector="cancelPressed:" destination="OCY-Yn-Nwl" id="XGV-rq-HYk"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pvp-o0-hEO" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2213" y="1130"/>
         </scene>
         <!--Pause Return View Controller-->
         <scene sceneID="CVj-QA-Bhh">
@@ -1041,6 +1091,24 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D1G-x6-ipZ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-645" y="-320"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="kni-pE-K4x">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5tW-8m-ZyF" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="oAi-u0-om0">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="OCY-Yn-Nwl" kind="relationship" relationship="rootViewController" id="DH3-6p-7Rt"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="uqJ-8Q-r2u" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1202" y="1602"/>
         </scene>
     </scenes>
     <resources>
