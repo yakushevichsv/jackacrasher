@@ -97,6 +97,13 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         self.enemyShip4 = self.childNodeWithName(Constants.EnemyShip4Name) as! SKSpriteNode!
         self.player     = self.childNodeWithName(Constants.PlayerName) as! SKSpriteNode!
         
+        if EnemySpaceShip.sEnemyBulltet == nil {
+            EnemySpaceShip.loadAssets()
+        }
+        
+        if (Player.sDamageEmitter == nil) {
+            Player.loadAssets()
+        }
     }
 
     override func didMoveToView(view: SKView) {

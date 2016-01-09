@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="ekw-zd-0cC">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="qda-7r-HQm">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
@@ -768,7 +768,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ab1-9a-Swz" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="105" y="33" width="211" height="38"/>
+                                        <rect key="frame" x="95" y="33" width="211" height="38"/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="28"/>
                                         <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
                                         <state key="normal" title="Invite Friends">
@@ -799,7 +799,7 @@
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="baseline" secondItem="hIE-rY-cmt" secondAttribute="baseline" id="88D-Gg-l8I"/>
                                     <constraint firstAttribute="bottom" secondItem="hIE-rY-cmt" secondAttribute="bottom" constant="8" id="RYb-ni-jbK"/>
                                     <constraint firstAttribute="height" constant="132" id="oVe-gq-jNl"/>
-                                    <constraint firstItem="Ab1-9a-Swz" firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" id="uX0-3h-Oie"/>
+                                    <constraint firstItem="Ab1-9a-Swz" firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" constant="-10" id="uX0-3h-Oie"/>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="leading" secondItem="u7c-lb-ttF" secondAttribute="centerX" constant="20" id="vnQ-WK-HDn"/>
                                 </constraints>
                             </view>
@@ -885,28 +885,55 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-xl-oEO">
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-xl-oEO">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="8Gr-jT-kTP">
-                                    <size key="itemSize" width="50" height="50"/>
-                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
-                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
-                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
-                                </collectionViewFlowLayout>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewLayout key="collectionViewLayout" id="oi8-KS-e1W" customClass="TwitterFriendsViewLayout" customModule="JackACrasher" customModuleProvider="target"/>
                                 <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dKB-B3-VAj">
-                                        <rect key="frame" x="0.0" y="64" width="50" height="50"/>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="dKB-B3-VAj" customClass="TwitterFriendCollectionViewCell" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="64" width="150" height="80"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="150" height="80"/>
                                             <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJa-Nm-YQj">
+                                                    <rect key="frame" x="54" y="29" width="42" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
+                                        <constraints>
+                                            <constraint firstItem="FJa-Nm-YQj" firstAttribute="centerX" secondItem="dKB-B3-VAj" secondAttribute="centerX" id="CW6-T3-QA2"/>
+                                            <constraint firstItem="FJa-Nm-YQj" firstAttribute="centerY" secondItem="dKB-B3-VAj" secondAttribute="centerY" id="mxB-fF-vaM"/>
+                                        </constraints>
+                                        <size key="customSize" width="150" height="80"/>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="label" destination="FJa-Nm-YQj" id="vxp-uq-TNa"/>
+                                        </connections>
                                     </collectionViewCell>
                                 </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="OCY-Yn-Nwl" id="rin-bQ-MdM"/>
+                                    <outlet property="delegate" destination="OCY-Yn-Nwl" id="hGX-Dx-4vZ"/>
+                                </connections>
                             </collectionView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="Bpj-xl-oEO" firstAttribute="top" secondItem="Uoa-XV-GUw" secondAttribute="bottom" constant="-64" id="9LO-HG-KAc"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Bpj-xl-oEO" secondAttribute="trailing" constant="-20" id="IZv-OS-iaf"/>
+                            <constraint firstItem="Bpj-xl-oEO" firstAttribute="leading" secondItem="YWb-ph-hcx" secondAttribute="leadingMargin" constant="-20" id="STu-ug-gGF"/>
+                            <constraint firstItem="tFu-KA-H6g" firstAttribute="top" secondItem="Bpj-xl-oEO" secondAttribute="bottom" id="hFu-Ga-sYR"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Twitter Friends" id="mWQ-0b-x2Y">
                         <barButtonItem key="leftBarButtonItem" title="Cancel" id="cEB-Nu-Rp6">
@@ -915,6 +942,9 @@
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="collectionView" destination="Bpj-xl-oEO" id="gRw-Jb-WKu"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvp-o0-hEO" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>

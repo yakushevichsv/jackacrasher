@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */; };
+		2100E6361C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2100E6351C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift */; };
 		2101EFC61B7B651E00516086 /* FBSDKCoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */; };
 		210464CD1C0EEE9700326FDD /* FacebookSDKStrings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */; };
 		210464CF1C0EF06300326FDD /* SNManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210464CE1C0EF06300326FDD /* SNManager.swift */; };
@@ -83,6 +84,7 @@
 		219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219A6D221AFABCC400A63E7F /* HUDNode.swift */; };
 		21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */; };
 		21B007901B72321B001B1F7B /* TransmitterLaser.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21B0078F1B72321B001B1F7B /* TransmitterLaser.sks */; };
+		21BD57EE1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BD57ED1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift */; };
 		21BF7A631ADF15A5003F9B93 /* AsteroidGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */; };
 		21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21BF9C271B89E0A60002AEAC /* HelpViewController.swift */; };
 		21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */; };
@@ -136,6 +138,7 @@
 
 /* Begin PBXFileReference section */
 		210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsCollectionViewCell.swift; path = Views/ShopDetailsCollectionViewCell.swift; sourceTree = "<group>"; };
+		2100E6351C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterFriendsViewLayout.swift; path = Views/TwitterFriendsViewLayout.swift; sourceTree = "<group>"; };
 		2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKCoreKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKCoreKit.framework; sourceTree = "<group>"; };
 		210464CC1C0EEE9700326FDD /* FacebookSDKStrings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = FacebookSDKStrings.bundle; path = ../../../../../../Documents/FacebookSDK/FacebookSDKStrings.bundle; sourceTree = "<group>"; };
 		210464CE1C0EF06300326FDD /* SNManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SNManager.swift; path = Model/SNManager.swift; sourceTree = "<group>"; };
@@ -216,6 +219,7 @@
 		219A6D221AFABCC400A63E7F /* HUDNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HUDNode.swift; path = HUD/HUDNode.swift; sourceTree = "<group>"; };
 		21AF8C181B1CEA9100B9E6D2 /* CustomTransitionSegue.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CustomTransitionSegue.swift; path = Utils/CustomTransitionSegue.swift; sourceTree = "<group>"; };
 		21B0078F1B72321B001B1F7B /* TransmitterLaser.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = TransmitterLaser.sks; path = JackACrasher/Particles/TransmitterLaser.sks; sourceTree = "<group>"; };
+		21BD57ED1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterFriendCollectionViewCell.swift; path = Views/TwitterFriendCollectionViewCell.swift; sourceTree = "<group>"; };
 		21BF7A621ADF15A5003F9B93 /* AsteroidGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidGenerator.swift; path = Model/AsteroidGenerator.swift; sourceTree = "<group>"; };
 		21BF9C271B89E0A60002AEAC /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HelpViewController.swift; path = ViewControllers/HelpViewController.swift; sourceTree = "<group>"; };
 		21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameCenterManager.swift; path = Model/GameCenterManager.swift; sourceTree = "<group>"; };
@@ -489,6 +493,8 @@
 			children = (
 				2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */,
 				210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */,
+				2100E6351C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift */,
+				21BD57ED1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -812,6 +818,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2100E6361C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift in Sources */,
 				218F24B31B35AF56008C085F /* NetworkManager.swift in Sources */,
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
@@ -861,6 +868,7 @@
 				2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */,
 				21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */,
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,
+				21BD57EE1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift in Sources */,
 				21FFEAE91AD5E216000115F6 /* AppDelegate.swift in Sources */,
 				211BFC911B34872A0053ED9A /* FileManagerExtensions.swift in Sources */,
 				217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */,

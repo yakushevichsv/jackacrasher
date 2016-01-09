@@ -107,7 +107,11 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
                 popVC.delegate = self
                 popVC.permittedArrowDirections = .Any
                 var prefHeight = popVC.preferredContentSize.height;
-                
+                if let uiSender = sender as? UIButton {
+                    if uiSender == popVC.sourceView {
+                        popVC.sourceRect = uiSender.frame
+                    }
+                }
                 prefHeight = 200;
                 
                 dVC.preferredContentSize = CGSizeMake(min(300,popVC.preferredContentSize.width),prefHeight)
