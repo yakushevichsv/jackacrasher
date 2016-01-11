@@ -31,6 +31,12 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        /*#if DEBUG
+            let manager = DBManager.sharedInstance
+            print("Manager \(manager)")
+            
+        #endif*/
+        
         self.containerView.hidden = true
         
         if let scene = GameOverScene.unarchiveFromFile("GameOverScene") as? GameOverScene {
