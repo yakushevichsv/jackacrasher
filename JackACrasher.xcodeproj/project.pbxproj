@@ -60,6 +60,7 @@
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A433B1B5FA4F7003B1035 /* BlackHole.swift */; };
 		216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A43411B5FB820003B1035 /* EnemiesGenerator.swift */; };
+		216DDA831C48BA2B00331F5B /* TwitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216DDA821C48BA2B00331F5B /* TwitterManager.swift */; };
 		2171B3291B7B92B6007733BA /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2171B3281B7B92B6007733BA /* FBSDKShareKit.framework */; };
 		2171B32B1B7B9F46007733BA /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2171B32A1B7B9F46007733BA /* Social.framework */; };
 		217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217340FD1AFE5267009E934A /* GameOverViewController.swift */; };
@@ -201,6 +202,7 @@
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		216A433B1B5FA4F7003B1035 /* BlackHole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlackHole.swift; path = Entities/BlackHole.swift; sourceTree = "<group>"; };
 		216A43411B5FB820003B1035 /* EnemiesGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemiesGenerator.swift; path = Model/EnemiesGenerator.swift; sourceTree = "<group>"; };
+		216DDA821C48BA2B00331F5B /* TwitterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterManager.swift; path = Model/Twitter/TwitterManager.swift; sourceTree = "<group>"; };
 		2171B3281B7B92B6007733BA /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FBSDKShareKit.framework; path = ../../../../../../Documents/FacebookSDK/FBSDKShareKit.framework; sourceTree = "<group>"; };
 		2171B32A1B7B9F46007733BA /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		217340FD1AFE5267009E934A /* GameOverViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GameOverViewController.swift; path = ViewControllers/GameOverViewController.swift; sourceTree = "<group>"; };
@@ -397,6 +399,7 @@
 				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
 				210464D21C0EF19400326FDD /* SocialNetworks */,
+				216DDA821C48BA2B00331F5B /* TwitterManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -866,6 +869,7 @@
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
+				216DDA831C48BA2B00331F5B /* TwitterManager.swift in Sources */,
 				210464D41C0EFB4800326FDD /* SNFriendInfo.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
 				21CDE8ED1C4443A30090EE53 /* DBModel.xcdatamodeld in Sources */,
