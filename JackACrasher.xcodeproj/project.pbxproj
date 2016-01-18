@@ -58,6 +58,7 @@
 		2163A8C81B3BFF39003253C5 /* CloudManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C71B3BFF39003253C5 /* CloudManager.swift */; };
 		216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
+		2169D2C51C4C069F00551DFF /* ExpandedTwitterUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2169D2C41C4C069F00551DFF /* ExpandedTwitterUser.swift */; };
 		216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A433B1B5FA4F7003B1035 /* BlackHole.swift */; };
 		216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A43411B5FB820003B1035 /* EnemiesGenerator.swift */; };
 		216DDA831C48BA2B00331F5B /* TwitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216DDA821C48BA2B00331F5B /* TwitterManager.swift */; };
@@ -200,6 +201,7 @@
 		2163A8C71B3BFF39003253C5 /* CloudManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CloudManager.swift; path = Model/iCloud/CloudManager.swift; sourceTree = "<group>"; };
 		216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupPresentationController.swift; path = ViewControllers/PopupPresentationController.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
+		2169D2C41C4C069F00551DFF /* ExpandedTwitterUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExpandedTwitterUser.swift; path = Model/Twitter/ExpandedTwitterUser.swift; sourceTree = "<group>"; };
 		216A433B1B5FA4F7003B1035 /* BlackHole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlackHole.swift; path = Entities/BlackHole.swift; sourceTree = "<group>"; };
 		216A43411B5FB820003B1035 /* EnemiesGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemiesGenerator.swift; path = Model/EnemiesGenerator.swift; sourceTree = "<group>"; };
 		216DDA821C48BA2B00331F5B /* TwitterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterManager.swift; path = Model/Twitter/TwitterManager.swift; sourceTree = "<group>"; };
@@ -320,9 +322,11 @@
 		210464D21C0EF19400326FDD /* SocialNetworks */ = {
 			isa = PBXGroup;
 			children = (
+				216DDA821C48BA2B00331F5B /* TwitterManager.swift */,
 				210464CE1C0EF06300326FDD /* SNManager.swift */,
 				210464D01C0EF08900326FDD /* FBManager.swift */,
 				210464D31C0EFB4800326FDD /* SNFriendInfo.swift */,
+				2169D2C41C4C069F00551DFF /* ExpandedTwitterUser.swift */,
 			);
 			name = SocialNetworks;
 			sourceTree = "<group>";
@@ -399,7 +403,6 @@
 				21C1FA031B0A67D900C514B0 /* GameCenterManager.swift */,
 				2199B6871AE3FF7700DDDB9F /* SoundManager.swift */,
 				210464D21C0EF19400326FDD /* SocialNetworks */,
-				216DDA821C48BA2B00331F5B /* TwitterManager.swift */,
 			);
 			name = Managers;
 			sourceTree = "<group>";
@@ -878,6 +881,7 @@
 				212A2F3F1B37317600B31482 /* IAPReceiptValidator.m in Sources */,
 				21CDE8F61C4451630090EE53 /* TwitterId.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
+				2169D2C51C4C069F00551DFF /* ExpandedTwitterUser.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				210464CF1C0EF06300326FDD /* SNManager.swift in Sources */,
 				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,

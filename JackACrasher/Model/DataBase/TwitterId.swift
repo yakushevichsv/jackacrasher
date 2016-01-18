@@ -9,13 +9,15 @@
 import Foundation
 import CoreData
 
+protocol EntityPropertyProtocol:class {
+    static func EntityName() -> String
+}
 
-class TwitterId: NSManagedObject {
+class TwitterId: NSManagedObject,EntityPropertyProtocol {
 
 // Insert code here to add functionality to your managed object subclass
     
-    class func EntityName() -> String {
+    static func EntityName() -> String {
         return "TwitterId"
     }
-
 }

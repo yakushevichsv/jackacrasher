@@ -99,7 +99,7 @@ class TwitterManager: NSObject {
         }
     }
     
-    func receiveExtendedTwitterFriend(userId:String,completion:((user:TWTRUser?,image:UIImage?,error:NSError?)->Void)!) {
+    func _receiveExtendedTwitterFriend(userId:String,completion:((user:TWTRUser?,image:UIImage?,error:NSError?)->Void)!) {
         
         receiveTwitterFriend(userId) {
             [unowned self]
@@ -166,7 +166,22 @@ class TwitterManager: NSObject {
         
     }
     
-    func receiveExpandedTwitterFriends(userIds:[String],completion:((expandedUsers:[(user:TWTRUser,image:UIImage?)]?,error:NSError?)->Void)!) {
+    func receiveExpandedTwitterFriends(userIds:[String],completion:((expandedUsers:[ExpandedTwitterUser]?,error:NSError?)->Void)!) {
+        
+       _receiveExpandedTwitterFriends(userIds) { (expandedUsers, error) -> Void in
+        
+            let users = expandedUsers?.map({ (item) -> ExpandedTwitterUser in
+                let user = ExpandedTwitterUser(user: item.user)
+                user.image = item.image
+                return user
+            })
+        
+            completion(expandedUsers: users,error: error)
+        
+        }
+    }
+    
+    private func _receiveExpandedTwitterFriends(userIds:[String],completion:((expandedUsers:[(user:TWTRUser,image:UIImage?)]?,error:NSError?)->Void)!) {
         
         
         self.receiveTwitterFriends(userIds) {

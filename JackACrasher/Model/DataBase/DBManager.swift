@@ -117,7 +117,85 @@ class DBManager: NSObject {
         }
     }
     
+    //MARK: Twitter Ids methods....
+    
+    func insertTwitterIdRecord(userId:String, completion:(error:NSError?,twitterId:TwitterId?) -> Void) {
+     
+        
+        
+    }
+    
+    func fetchTwitterIdRecord(userIds:[String], completion:(error:NSError?,twitterIds:[TwitterId]?) -> Void) {
+     
+    }
+    
     //MARK :API
+
+    func insertTwitterUser(user:ExpandedTwitterUser!, completion:(error:NSError?,saved:Bool,dbTwitterUser:TwitterUser?) -> Void) {
+        
+        let dbTwitterId = NSEntityDescription.insertNewObjectForEntityForName(TwitterId.EntityName(), inManagedObjectContext: self.managedObjectContext) as! TwitterId
+        let dbTwitterUser =  NSEntityDescription.insertNewObjectForEntityForName(TwitterUser.EntityName() , inManagedObjectContext: self.managedObjectContext) as! TwitterUser
+        
+        dbTwitterUser.userId = dbTwitterId.userId
+        dbTwitterUser.profileImageMiniURL = user.twitterUser.jacImageURL
+        dbTwitterUser.userName = user.twitterUser.name
+        dbTwitterUser.screenName = user.twitterUser.screenName
+        dbTwitterUser.miniImage = UIImagePNGRepresentation(user.image!)
+        
+        dbTwitterId.twitterUser = dbTwitterUser
+        dbTwitterUser.twitterId = dbTwitterId
+        
+        saveContextWithCompletion {
+            (error, saved) in
+            
+            let value = saved && error == nil
+            
+            if value {
+                completion(error:nil,saved:value,dbTwitterUser:dbTwitterUser)
+            }
+            else if error != nil {
+                completion(error:error,saved:value,dbTwitterUser:nil)
+            }
+        }
+    }
+    
+    func fetchTwitterUserWithId(userId:String,completion:(dbTwitterUser:TwitterUser?) -> Void) {
+        
+        let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+        request.fetchBatchSize = 1
+        
+        request.predicate = NSPredicate(format: "userId = %@", userId)
+        request.resultType = NSFetchRequestResultType.ManagedObjectResultType
+        
+        let result = try? self.managedObjectContext.executeFetchRequest(request) as! [TwitterUser]
+        
+        completion(dbTwitterUser: result?.last)
+    }
+    
+    func updateTwitterUser(user:ExpandedTwitterUser,completion:(error:NSError?,updated:Bool) -> Void) {
+        
+        fetchTwitterUserWithId(user.twitterUser.userID) {
+            [unowned self]
+            (dbTwitterUserPtr) in
+            
+            if let dbTwitterUser = dbTwitterUserPtr {
+                
+                dbTwitterUser.profileImageMiniURL = user.twitterUser.jacImageURL
+                dbTwitterUser.userName = user.twitterUser.name
+                dbTwitterUser.screenName = user.twitterUser.screenName
+                dbTwitterUser.miniImage = UIImagePNGRepresentation(user.image!)
+                
+                self.saveContextWithCompletion{
+                    (error,saved) in
+                    completion(error: error, updated: saved)
+                }
+            }
+            else {
+                completion(error: nil,updated: false)
+            }
+        }
+    }
+    
     
     func saveContextWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
         

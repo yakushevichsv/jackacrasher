@@ -10,8 +10,12 @@ import Foundation
 import CoreData
 
 
-class TwitterUser: NSManagedObject {
+class TwitterUser: NSManagedObject,EntityPropertyProtocol {
 
-// Insert code here to add functionality to your managed object subclass
+    // Insert code here to add functionality to your managed object subclass
 
+    static func EntityName() -> String {
+        return "TwitterUser"
+    }
+    
 }
