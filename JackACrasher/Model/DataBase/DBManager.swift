@@ -119,14 +119,48 @@ class DBManager: NSObject {
     
     //MARK: Twitter Ids methods....
     
-    func insertTwitterIdRecord(userId:String, completion:(error:NSError?,twitterId:TwitterId?) -> Void) {
-     
+    internal func insertOrUpdateTwitterIds(userIds:[String],completionHandler:(error:NSError?,saved:Bool) -> Void) {
         
-        
+        dispatch_async(self.queue) {
+            [unowned self] in
+            
+         
+            let request = NSFetchRequest(entityName: TwitterId.EntityName())
+            request.predicate = NSPredicate(format: "userId IN {%@}", userIds.joinWithSeparator(","))
+            
+            do {
+                let existingDBTwitterIds = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterId]
+                
+                
+               let nonExistingUserIds = userIds.filter{ (value) in
+                    for existingDBTwitterId in existingDBTwitterIds {
+                        
+                        if (existingDBTwitterId.userId == Optional<String>(value)){
+                            return false
+                        }
+                    }
+                    return true
+                }
+                
+                for nonExistingUserId in nonExistingUserIds {
+                    self.insertTwitterIdRecord(nonExistingUserId)
+                }
+                
+                self.saveContextWithCompletion({ (error, saved) -> Void in
+                    completionHandler(error: error, saved: saved)
+                })
+            }
+            catch let error as NSError {
+                completionHandler(error: error, saved: false)
+            }
+        }
     }
     
-    func fetchTwitterIdRecord(userIds:[String], completion:(error:NSError?,twitterIds:[TwitterId]?) -> Void) {
+    func insertTwitterIdRecord(userId:String) -> TwitterId! {
      
+        let twitterId =  NSEntityDescription.insertNewObjectForEntityForName(TwitterId.EntityName(), inManagedObjectContext: self.managedObjectContext) as! TwitterId
+        twitterId.userId = userId
+        return twitterId
     }
     
     //MARK :API
