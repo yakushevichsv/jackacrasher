@@ -213,8 +213,22 @@ class TwitterManager: NSObject {
         }
     }
     
+    private var isCancelled :Bool {
+        
+        switch self.managerState {
+        case .DonwloadingTwitterUsersCancelled(_):
+            return true
+        default:
+            break
+        }
+        return false
+    }
     
     private func startUpdatingInCycle(offset:Int) {
+        
+        if self.isCancelled {
+            return
+        }
         
         self.managerState = .DownloadingTwitterIds(offset:offset)
         
@@ -577,6 +591,8 @@ class TwitterManager: NSObject {
                 }
             }
         }
+        
+        self.managerState = .DonwloadingTwitterUsersCancelled(lastEror:nil)
     }
 }
 
