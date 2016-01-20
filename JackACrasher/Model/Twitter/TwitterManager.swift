@@ -21,6 +21,7 @@ enum TwitterManagerState {
     
     case DownloadingFinished(totalCount:Int)
     
+    case DonwloadingTwitterUsersCancelled(lastEror:NSError?)
 }
 
 extension TwitterManagerState : Equatable {
@@ -49,7 +50,7 @@ Used for downloading items from the twitter account for userId.
 class TwitterManager: NSObject {
 
     typealias friendsCompletion = (items:[String]?,error:NSError?,last:Bool) -> Void
-    typealias twitterFriendsCompletion = (items:[AnyObject]? ,error:NSError?) -> Void
+    typealias twitterFriendsCompletion = (items:[TWTRUser]? ,error:NSError?) -> Void
     
     private let twitterId:String!
     private let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
@@ -114,15 +115,84 @@ class TwitterManager: NSObject {
                     if let countUsers = twitterUsers?.count {
                         
                         
-                        // TODO : Store or update users here....
+                        DBManager.sharedInstance.insertOrUpdateTwitterUsers(twitterUsers!) { (error, saved) in
+                            print("Saved \(saved)\n Error \(error)")
+                            
+                            if (!saved || error != nil) {
+                                return
+                            }
+                            
+                            DBManager.sharedInstance.fetchTwitterUsersWithEmptyProfileImages({ (users, error) -> Void in
+                                
+                                if (error == nil && users != nil) {
+                                    
+                                 
+                                    if (!users!.isEmpty) {
+                                        
+                                        var lastError:NSError? = nil
+                                        var cancelled = false
+                                        for user in users! {
+                                            
+                                            if cancelled {
+                                                break
+                                            }
+                                            
+                                                self.scheduleDBTwitterUserImageReceive(user) {
+                                                    (image, error) in
+                                                    if let imageInner = image {
+                                                        user.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                    }
+                                                    else if (!cancelled) {
+                                                        cancelled = lastError == nil
+                                                        
+                                                        if (error != nil) {
+                                                            lastError = error
+                                                        }
+                                                    }
+                                                }
+                                            
+                                        }
+                                        
+                                        if cancelled || lastError != nil {
+                                            
+                                            self.managerState = .DonwloadingTwitterUsersCancelled(lastEror:lastError)
+                                            return
+                                        }
+                                        
+                                        dispatch_barrier_async(self.queue){
+                                            DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
+                                                print("Saved images update or not... \(error)\n Saved \(saved)")
+                                                if (countUsers == 100 && !isLast) {
+                                                    self.startUpdatingInCycle(countUsers + offset)
+                                                }
+                                            })
+                                            
+                                        }
+                                        
+                                    }
+                                    else {
+                                        if (countUsers == 100 && !isLast) {
+                                            self.startUpdatingInCycle(countUsers + offset)
+                                        }
+                                    }
+                                }
+                                else {
+                                    if (countUsers == 100 && !isLast) {
+                                        self.startUpdatingInCycle(countUsers + offset)
+                                    }
+                                }
+                            })
+                        }
                         
+                        /*
+                        // TODO : Store or update users here....
                         DBManager.sharedInstance.insertOrUpdateTwitterIds(items!, completionHandler: { (error, saved) -> Void in
                             print("Saved \(saved)\n Error \(error)")
                             if (countUsers == 100 && !isLast) {
                                 
                                 self.startUpdatingInCycle(countUsers + offset)
                             }
-                        })
+                        }) */
                         
                         }
                     }
@@ -235,8 +305,17 @@ class TwitterManager: NSObject {
                         options: NSJSONReadingOptions.AllowFragments) as! NSArray {
                             
                             print("JSON response:\n \(json)")
-                            block(items: json as? [NSDictionary],error: nil)
                             
+                            if let jsonArray = json as? [NSDictionary] {
+                                
+                                let users =  jsonArray.map({ (value) -> TWTRUser in
+                                    return TWTRUser(JSONDictionary: value as [NSObject : AnyObject])
+                                })
+                                block(items:users,error:nil)
+                            }
+                            else {
+                                block(items:nil ,error: nil)
+                            }
                     }
                 }
                 else {
@@ -536,6 +615,32 @@ extension TwitterManager {
         }
     }
     
+    
+    private func scheduleDBTwitterUserImageReceive(user:TwitterUser!, completion:((image:UIImage?,error:NSError?)->Void)!) {
+        let userId = user.userId!
+        
+        let taskId = getTwitterUserImageForUrl(user.profileImageMiniURL) {
+            [unowned self]
+            (image, error) in
+            if let _ = self.userImageTasks.removeValueForKey(userId) {
+                completion(image:image,error: error)
+            }
+            else {
+                completion(image:nil,error:nil)
+            }
+        }
+        
+        let wrongURL = taskId == Int.min
+        
+        if (!wrongURL && NetworkManager.sharedManager.isValidTask(taskId)) {
+            self.userImageTasks[userId] = taskId
+        }
+        else if (!wrongURL) {
+            completion(image:nil,error:nil)
+        }
+    }
+
+    
     private func getTwitterUserImage(user:TWTRUser!, completion:((image:UIImage?,error:NSError?)->Void)!) -> Int {
         
         
@@ -552,5 +657,23 @@ extension TwitterManager {
             }
             completion(image: UIImage(contentsOfFile: path!),error: nil)
         }
+    }
+    
+    private func getTwitterUserImageForUrl(userUrlStr:String!,completion:((image:UIImage?,error:NSError?)->Void)!) -> Int {
+        
+        guard let urlStr = userUrlStr  else {
+            completion(image: nil,error:nil)
+            return Int.min
+        }
+        
+        return NetworkManager.sharedManager.downloadFileFromPath(urlStr) {
+            (path, error)  in
+            guard path != nil && error == nil else {
+                completion(image: nil,error: error)
+                return
+            }
+            completion(image: UIImage(contentsOfFile: path!),error: nil)
+        }
+
     }
 }

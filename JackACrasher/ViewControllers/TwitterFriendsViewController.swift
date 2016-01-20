@@ -20,8 +20,9 @@ class TwitterFriendsViewController: UIViewController {
         didSet {
             if !(twitterId == nil || twitterId.isEmpty) {
                 
-                self.twitterManager = TwitterManager(twitterId: twitterId)
-                self.twitterManager.startUpdatingTotalList()
+                self.performSelectorInBackground("startExecution", withObject: nil)
+                
+                //TODO: add support for periodic update of friends....
                 let request = NSFetchRequest(entityName: TwitterId.EntityName())
                 request.sortDescriptors = [NSSortDescriptor(key: "userId", ascending: true)]
                 self.controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DBManager.sharedInstance.managedObjectContext, sectionNameKeyPath: nil, cacheName: "\(twitterId)")
@@ -35,8 +36,15 @@ class TwitterFriendsViewController: UIViewController {
         }
     }
     
+    func startExecution() {
+        
+        self.twitterManager = TwitterManager(twitterId: twitterId)
+        self.twitterManager.startUpdatingTotalList()
+    }
+    
     @IBAction func cancelPressed(sender:AnyObject) {
     
+        self.twitterManager.cancelAllTwitterRequests()
         self.navigationController?.dismissViewControllerAnimated(false, completion: nil)
     }
 }
@@ -51,7 +59,12 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
 extension TwitterFriendsViewController : UICollectionViewDataSource,UICollectionViewDelegate
 {
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return self.controller.fetchedObjects!.count
+        
+        guard let count = self.controller?.fetchedObjects?.count else {
+            return 0
+        }
+        
+        return count
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {

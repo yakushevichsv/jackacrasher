@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreData
+import TwitterKit
 
 class DBManager: NSObject {
 
@@ -54,7 +55,7 @@ class DBManager: NSObject {
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             
-            dict[NSUnderlyingErrorKey] = error as NSError
+            dict[NSUnderlyingErrorKey] = error as? NSError
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
@@ -117,6 +118,7 @@ class DBManager: NSObject {
         }
     }
     
+    
     //MARK: Twitter Ids methods....
     
     internal func insertOrUpdateTwitterIds(userIds:[String],completionHandler:(error:NSError?,saved:Bool) -> Void) {
@@ -163,8 +165,142 @@ class DBManager: NSObject {
         return twitterId
     }
     
-    //MARK :API
+    private func updateTwitterUser(dbTwitterUser:TwitterUser, userRecord:TWTRUser) {
+        
+        dbTwitterUser.userId = userRecord.userID//(userRecord.objectForKey("id_str") as! String)
+        
+        if let urlStr = userRecord.profileImageMiniURL ?? userRecord.profileImageMiniURL ?? userRecord.profileImageLargeURL {
+        
+            if urlStr != dbTwitterUser.profileImageMiniURL {
+                dbTwitterUser.profileImageMiniURL = urlStr
+                dbTwitterUser.miniImage = nil;
+            }
+        }
+        
+        if let userName = userRecord.name /*userRecord.objectForKey("name") as? String*/ {
+            dbTwitterUser.userName = userName
+        }
+        
+        if let screenName = userRecord.screenName/*userRecord.objectForKey("screen_name") as? String*/ {
+            dbTwitterUser.screenName = screenName
+        }
+        
+        //if let verified = userRecord.isVerified/*userRecord.objectForKey("verified") as? Bool*/ {
+        dbTwitterUser.isVerified = userRecord.isVerified
+        //}
+    }
+    
+    func insertTwitterUserRecord(userRecord: TWTRUser /*NSDictionary*/) -> TwitterUser! {
+        
+        let dbTwitterUser =  NSEntityDescription.insertNewObjectForEntityForName(TwitterUser.EntityName(), inManagedObjectContext: self.managedObjectContext) as! TwitterUser
+        
+        self.updateTwitterUser(dbTwitterUser,userRecord: userRecord)
 
+        return dbTwitterUser
+    }
+    
+    //MARK: Twitter Users
+    
+    func fetchTwitterUsersWithEmptyProfileImages(completionHandler:(users:[TwitterUser]?, error:NSError?) -> Void) {
+        
+        dispatch_async(self.queue) {
+            [unowned self] in
+        
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            request.predicate = NSPredicate(format: "miniImage == NULL")
+            
+            let asyncReq = NSAsynchronousFetchRequest(fetchRequest: request){
+                (result) in
+                if let res = result.finalResult as? [TwitterUser] {
+                    completionHandler(users: res, error: nil)
+                }
+            }
+            
+            do {
+                try self.managedObjectContext.executeRequest(asyncReq)
+            }
+            catch let error as NSError {
+                completionHandler(users: nil, error: error)
+            }
+            
+        }
+    }
+
+    func insertOrUpdateTwitterUsers(users:[TWTRUser],completionHandler:(error:NSError?,saved:Bool) -> Void) {
+       
+        dispatch_async(self.queue) {
+            [unowned self] in
+            
+            
+            let userIds = users.map{ (item) in
+                return item.userID //item.objectForKey("id_str") as! String
+            }
+            
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            
+            let userIdsStr =  userIds.reduce("", combine: { (prevStr, elem) -> String in
+                if !prevStr.isEmpty {
+                    return prevStr + "," + elem
+                }
+                else {
+                    return elem
+                }
+            })
+            
+            request.predicate = NSPredicate(format: "userId IN {%@}",userIdsStr)
+            
+            do {
+                let existingDBTwitterUsers = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterUser]
+                
+                for twitterUser in existingDBTwitterUsers {
+                    if twitterUser.twitterId == nil {
+                        
+                        let dbTwitterIdRecord = self.insertTwitterIdRecord(twitterUser.userId!)
+                        
+                        twitterUser.twitterId = dbTwitterIdRecord
+                        
+                    }
+                }
+                
+                let nonExistingUsers = users.filter{ (value) in
+                    for existingDBTwitter in existingDBTwitterUsers {
+                        
+                        let idValue = value.userID//value.objectForKey("id_str") as? String
+                        
+                        if (existingDBTwitter.userId == idValue){
+                            
+                            self.updateTwitterUser(existingDBTwitter,userRecord: value)
+                            
+                            return false
+                        }
+                    }
+                    return true
+                }
+                
+                for nonExistingUser in nonExistingUsers {
+                    
+                    let idValue = nonExistingUser.userID//nonExistingUser.objectForKey("id_str") as? String
+                    
+                    if let id = idValue {
+                        let twitterIdRecord = self.insertTwitterIdRecord(id)
+                        let twitterUserRecord = self.insertTwitterUserRecord(nonExistingUser)
+                        
+                        twitterUserRecord.twitterId = twitterIdRecord
+                        twitterIdRecord.twitterUser = twitterUserRecord
+                    }
+                }
+                
+                self.saveContextWithCompletion({ (error, saved) -> Void in
+                    completionHandler(error: error, saved: saved)
+                })
+                
+            }
+            catch let error as NSError {
+                completionHandler(error: error, saved: false)
+            }
+        }
+    }
+    
     func insertTwitterUser(user:ExpandedTwitterUser!, completion:(error:NSError?,saved:Bool,dbTwitterUser:TwitterUser?) -> Void) {
         
         let dbTwitterId = NSEntityDescription.insertNewObjectForEntityForName(TwitterId.EntityName(), inManagedObjectContext: self.managedObjectContext) as! TwitterId
@@ -230,6 +366,8 @@ class DBManager: NSObject {
         }
     }
     
+    
+    //MARK: Save context
     
     func saveContextWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
         
