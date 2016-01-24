@@ -56,6 +56,69 @@ class TwitterFriendsViewController: UIViewController {
         }
 
     }
+    
+    private func appendRightBarItem() -> Bool {
+        
+        if self.navigationItem.rightBarButtonItem == nil {
+            return false
+        }
+        
+        
+        let item = UIBarButtonItem()
+        item.target = self
+        item.action = "checkUnCheckedPressed"
+        let selectAll = NSLocalizedString("Select All", comment: "Select All")
+        let unselectAll = NSLocalizedString("Unselect All", comment: "Unselect All")
+        
+        item.possibleTitles = Set<String>(arrayLiteral: selectAll,unselectAll)
+        item.title = selectAll
+        self.navigationItem.rightBarButtonItem = item
+        
+        return true
+    }
+    
+    private func removeRightBarItem() -> Bool {
+        
+        if self.navigationItem.rightBarButtonItem == nil {
+            return false
+        }
+        
+        self.navigationItem.rightBarButtonItem = nil
+        
+        return true
+    }
+    
+    func checkUnCheckedPressed() {
+        
+        let selectAll = NSLocalizedString("Select All", comment: "Select All")
+        let unselectAll = NSLocalizedString("Unselect All", comment: "Unselect All")
+        
+        let item = self.navigationItem.rightBarButtonItem
+        
+        if (item?.title == Optional<String>(selectAll)) {
+            
+            item?.enabled = false
+            
+            DBManager.sharedInstance.checkAllTwitterUsers({ (count,error, saved) -> Void in
+                if (error == nil) {
+                    item?.title = unselectAll
+                    
+                    //TODO: display next button....
+                }
+                item?.enabled = true
+            })
+            
+        }else if (item?.title == Optional<String>(unselectAll)) {
+            
+            item?.enabled = false
+            DBManager.sharedInstance.uncheckAllTwitterUsers({ (count,error, saved) -> Void in
+                if (error == nil) {
+                    item?.title = selectAll
+                }
+                item?.enabled = true
+            })
+        }
+    }
 
     @IBAction func cancelPressed(sender:AnyObject) {
     
@@ -72,6 +135,8 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
+        
+        let count = controller.fetchedObjects?.count ?? 0
         
         dispatch_async(dispatch_get_main_queue()){
             [unowned self] in
@@ -162,6 +227,13 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                 }, completion: {[unowned self]  (finished) -> Void in
                         self.sectionChanges = nil
                         self.itemChanges = nil
+                    
+                    if count != 0 {
+                        self.appendRightBarItem()
+                    }
+                    else {
+                        self.removeRightBarItem()
+                    }
                 })
         }
     }

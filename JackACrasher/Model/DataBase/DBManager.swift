@@ -375,30 +375,32 @@ class DBManager: NSObject {
         }
     }
     
-    func checkAllTwitterUsers(completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+    func checkAllTwitterUsers(completeionHandler:((count:Int, error:NSError?,saved:Bool) -> Void)?) {
         changeSelectionState(true, completeionHandler: completeionHandler)
     }
     
-    func uncheckAllTwitterUsers(completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+    func uncheckAllTwitterUsers(completeionHandler:((count:Int,error:NSError?,saved:Bool) -> Void)?) {
         changeSelectionState(false, completeionHandler: completeionHandler)
     }
     
-    private func changeSelectionState(selected:Bool,completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+    private func changeSelectionState(selected:Bool,completeionHandler:((count:Int,error:NSError?,saved:Bool) -> Void)?) {
         
         let request = NSBatchUpdateRequest(entityName: TwitterUser.EntityName())
         request.predicate = NSPredicate(format: "selected == %@",!selected)
-        
+        request.resultType = NSBatchUpdateRequestResultType.UpdatedObjectsCountResultType
         request.propertiesToUpdate = ["selected":selected]
         
         do {
-            try self.managedObjectContext.executeRequest(request)
+            let result = try self.managedObjectContext.executeRequest(request) as! NSBatchUpdateResult
             
             if let completion = completeionHandler {
-                self.saveContextWithCompletion(completion)
+                self.saveContextWithCompletion({ (error, saved) -> Void in
+                    completion(count: result.result as! Int,error:error,saved:saved)
+                })
             }
         }
         catch let error as NSError {
-            completeionHandler?(error: error, saved: false)
+            completeionHandler?(count:0,error: error, saved: false)
         }
     }
 
