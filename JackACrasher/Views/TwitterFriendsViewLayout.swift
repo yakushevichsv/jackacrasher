@@ -20,7 +20,7 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
         }
     }
     
-    var itemSize:CGSize = CGSizeMake(150 , 80) {
+    var itemSize:CGSize = CGSizeMake(202 , 150) {
         didSet {
             if (!CGSizeEqualToSize(itemSize, oldValue)) {
                 self.invalidateLayout()

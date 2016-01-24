@@ -5,7 +5,9 @@
         <relationship name="twitterUser" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="TwitterUser" inverseName="twitterId" inverseEntity="TwitterUser" syncable="YES"/>
     </entity>
     <entity name="TwitterUser" representedClassName=".TwitterUser" syncable="YES">
+        <attribute name="inviteCount" optional="YES" attributeType="Integer 32" minValueString="0" defaultValueString="0" syncable="YES"/>
         <attribute name="isVerified" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="lastUpdateTime" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="miniImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="profileImageMiniURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="screenName" optional="YES" attributeType="String" syncable="YES"/>
@@ -15,6 +17,6 @@
     </entity>
     <elements>
         <element name="TwitterId" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="TwitterUser" positionX="342" positionY="0" width="128" height="148"/>
+        <element name="TwitterUser" positionX="342" positionY="0" width="128" height="180"/>
     </elements>
 </model>

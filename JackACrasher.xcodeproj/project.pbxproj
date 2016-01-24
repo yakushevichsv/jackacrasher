@@ -51,6 +51,8 @@
 		2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */; };
 		2138E0BA1B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */; };
 		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
+		2140023B1C5226E00035574E /* TwitterId+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214002391C5226E00035574E /* TwitterId+CoreDataProperties.swift */; };
+		2140023C1C5226E00035574E /* TwitterUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2140023A1C5226E00035574E /* TwitterUser+CoreDataProperties.swift */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
@@ -95,9 +97,7 @@
 		21CCA14E1B0A881C004419A2 /* GameKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CCA14D1B0A881C004419A2 /* GameKit.framework */; };
 		21CDE8ED1C4443A30090EE53 /* DBModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 21CDE8EB1C4443A30090EE53 /* DBModel.xcdatamodeld */; };
 		21CDE8F01C4448DE0090EE53 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CDE8EF1C4448DE0090EE53 /* DBManager.swift */; };
-		21CDE8F51C4451630090EE53 /* TwitterId+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CDE8F11C4451630090EE53 /* TwitterId+CoreDataProperties.swift */; };
 		21CDE8F61C4451630090EE53 /* TwitterId.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CDE8F21C4451630090EE53 /* TwitterId.swift */; };
-		21CDE8F71C4451630090EE53 /* TwitterUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CDE8F31C4451630090EE53 /* TwitterUser+CoreDataProperties.swift */; };
 		21CDE8F81C4451630090EE53 /* TwitterUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21CDE8F41C4451630090EE53 /* TwitterUser.swift */; };
 		21CEEFAB1B9CCB2D008937A2 /* iAd.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21CEEFAA1B9CCB2D008937A2 /* iAd.framework */; };
 		21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */ = {isa = PBXBuildFile; fileRef = 21CFBCA61B10A1B1009EDA3E /* button_press.wav */; };
@@ -193,6 +193,8 @@
 		2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PauseReturnViewController.swift; path = ViewControllers/PauseReturnViewController.swift; sourceTree = "<group>"; };
 		2138E0B91B65227C00FFD118 /* ReturnPauseTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPauseTransitionDelegate.swift; path = ViewControllers/ReturnPauseTransitionDelegate.swift; sourceTree = "<group>"; };
 		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
+		214002391C5226E00035574E /* TwitterId+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TwitterId+CoreDataProperties.swift"; path = "Model/DataBase/TwitterId+CoreDataProperties.swift"; sourceTree = "<group>"; };
+		2140023A1C5226E00035574E /* TwitterUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TwitterUser+CoreDataProperties.swift"; path = "Model/DataBase/TwitterUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
@@ -238,9 +240,7 @@
 		21CCA14D1B0A881C004419A2 /* GameKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GameKit.framework; path = System/Library/Frameworks/GameKit.framework; sourceTree = SDKROOT; };
 		21CDE8EC1C4443A30090EE53 /* DBModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DBModel.xcdatamodel; sourceTree = "<group>"; };
 		21CDE8EF1C4448DE0090EE53 /* DBManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DBManager.swift; path = Model/DataBase/DBManager.swift; sourceTree = "<group>"; };
-		21CDE8F11C4451630090EE53 /* TwitterId+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TwitterId+CoreDataProperties.swift"; path = "Model/DataBase/TwitterId+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		21CDE8F21C4451630090EE53 /* TwitterId.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterId.swift; path = Model/DataBase/TwitterId.swift; sourceTree = "<group>"; };
-		21CDE8F31C4451630090EE53 /* TwitterUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TwitterUser+CoreDataProperties.swift"; path = "Model/DataBase/TwitterUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		21CDE8F41C4451630090EE53 /* TwitterUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterUser.swift; path = Model/DataBase/TwitterUser.swift; sourceTree = "<group>"; };
 		21CEEFAA1B9CCB2D008937A2 /* iAd.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = iAd.framework; path = System/Library/Frameworks/iAd.framework; sourceTree = SDKROOT; };
 		21CFBCA61B10A1B1009EDA3E /* button_press.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = button_press.wav; sourceTree = "<group>"; };
@@ -499,9 +499,9 @@
 		21CDE8EE1C4443AC0090EE53 /* Database */ = {
 			isa = PBXGroup;
 			children = (
-				21CDE8F11C4451630090EE53 /* TwitterId+CoreDataProperties.swift */,
+				214002391C5226E00035574E /* TwitterId+CoreDataProperties.swift */,
+				2140023A1C5226E00035574E /* TwitterUser+CoreDataProperties.swift */,
 				21CDE8F21C4451630090EE53 /* TwitterId.swift */,
-				21CDE8F31C4451630090EE53 /* TwitterUser+CoreDataProperties.swift */,
 				21CDE8F41C4451630090EE53 /* TwitterUser.swift */,
 				21CDE8EB1C4443A30090EE53 /* DBModel.xcdatamodeld */,
 			);
@@ -852,13 +852,11 @@
 			files = (
 				2100E6361C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift in Sources */,
 				218F24B31B35AF56008C085F /* NetworkManager.swift in Sources */,
-				21CDE8F71C4451630090EE53 /* TwitterUser+CoreDataProperties.swift in Sources */,
 				21FFEAED1AD5E216000115F6 /* GameScene.swift in Sources */,
 				2199B6881AE3FF7700DDDB9F /* SoundManager.swift in Sources */,
 				21E053051BCEAF2700F7E4AD /* PyramidScene.swift in Sources */,
 				21F7956A1B555788003464BF /* SurvivalGameInfo.swift in Sources */,
 				217340FE1AFE5267009E934A /* GameOverViewController.swift in Sources */,
-				21CDE8F51C4451630090EE53 /* TwitterId+CoreDataProperties.swift in Sources */,
 				21AF8C191B1CEA9100B9E6D2 /* CustomTransitionSegue.swift in Sources */,
 				21CDE8F81C4451630090EE53 /* TwitterUser.swift in Sources */,
 				2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */,
@@ -872,6 +870,7 @@
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
+				2140023C1C5226E00035574E /* TwitterUser+CoreDataProperties.swift in Sources */,
 				216DDA831C48BA2B00331F5B /* TwitterManager.swift in Sources */,
 				210464D41C0EFB4800326FDD /* SNFriendInfo.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
@@ -905,6 +904,7 @@
 				2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */,
 				210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */,
 				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
+				2140023B1C5226E00035574E /* TwitterId+CoreDataProperties.swift in Sources */,
 				2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */,
 				21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */,
 				21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */,

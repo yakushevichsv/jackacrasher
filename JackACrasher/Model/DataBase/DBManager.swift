@@ -49,19 +49,23 @@ class DBManager: NSObject {
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
             try coordinator.addPersistentStoreWithType(NSSQLiteStoreType, configuration: nil, URL: url, options: nil)
-        } catch {
+        } catch let error as NSError {
             // Report any error we got.
             var dict = [String: AnyObject]()
             dict[NSLocalizedDescriptionKey] = "Failed to initialize the application's saved data"
             dict[NSLocalizedFailureReasonErrorKey] = failureReason
             
-            dict[NSUnderlyingErrorKey] = error as? NSError
+            dict[NSUnderlyingErrorKey] = error
             let wrappedError = NSError(domain: "YOUR_ERROR_DOMAIN", code: 9999, userInfo: dict)
             // Replace this with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
             NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
             self.lastError = wrappedError
             self.canWork = false
+            #if DEBUG
+                abort()
+            #endif
+        } catch {
             #if DEBUG
                 abort()
             #endif
@@ -158,6 +162,14 @@ class DBManager: NSObject {
         }
     }
     
+    /*
+    
+    func deleteAllRecords() {
+        
+    
+    }
+*/
+    
     func insertTwitterIdRecord(userId:String) -> TwitterId! {
      
         let twitterId =  NSEntityDescription.insertNewObjectForEntityForName(TwitterId.EntityName(), inManagedObjectContext: self.managedObjectContext) as! TwitterId
@@ -188,6 +200,7 @@ class DBManager: NSObject {
         //if let verified = userRecord.isVerified/*userRecord.objectForKey("verified") as? Bool*/ {
         dbTwitterUser.isVerified = userRecord.isVerified
         //}
+        dbTwitterUser.lastUpdateTime = NSDate().timeIntervalSinceReferenceDate
     }
     
     func insertTwitterUserRecord(userRecord: TWTRUser /*NSDictionary*/) -> TwitterUser! {
@@ -223,6 +236,73 @@ class DBManager: NSObject {
                 completionHandler(users: nil, error: error)
             }
             
+        }
+    }
+    
+    private func countTestTwitterUser() -> Int {
+        
+        let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+        var error:NSError? = nil
+        let count = self.managedObjectContext.countForFetchRequest(request, error: &error)
+        return error == nil ? count : 0
+    }
+    
+    func getFetchedTwitterUsers<T:AnyObject where T:protocol<NSFetchedResultsControllerDelegate>>(twitterId:String, delegate:T) -> (controller:NSFetchedResultsController?,error:NSError?) {
+        
+        var controllerRet:NSFetchedResultsController? = nil
+        var errorRet:NSError? = nil
+        
+        assert(countTestTwitterUser() != 0)
+        
+        dispatch_sync(self.queue){
+            //TODO: add support for periodic update of friends....
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
+            request.fetchBatchSize = 20
+            let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: "\(twitterId)")
+                controller.delegate = delegate
+                do {
+                    try controller.performFetch()
+                    controllerRet = controller
+                } catch let error as NSError {
+                    print("\(error)")
+                    errorRet = error
+                }
+        }
+        return (controller:controllerRet,error: errorRet)
+    }
+    
+    func deleteOldAgedTwitterUsers(completionHandler:(error:NSError?,saved:Bool) -> Void) {
+        
+        dispatch_async(self.queue)
+            {
+         [unowned self] in
+                
+        let request = NSFetchRequest(entityName: TwitterId.EntityName())
+        
+        let timeInterval = NSDate().dateByAddingTimeInterval( -3 * 30 * 24 * 60 * 60)
+        
+        request.predicate = NSPredicate(format: "twitterUser != nil AND twitterUser.lastUpdateTime < %@", timeInterval)
+        
+        request.resultType = NSFetchRequestResultType.ManagedObjectIDResultType
+        
+                do {
+                    let result = try self.managedObjectContext.executeFetchRequest(request) as! [NSManagedObjectID]
+                    
+                    if (result.isEmpty) {
+                        completionHandler(error: nil, saved: false)
+                        return
+                    }
+                    
+                    let batchDelete = NSBatchDeleteRequest(objectIDs: result)
+                    
+                    try self.managedObjectContext.executeRequest(batchDelete)
+                    
+                    self.saveContextWithCompletion(completionHandler)
+                }
+                catch let error as NSError {
+                    completionHandler(error: error,saved: false)
+                }
         }
     }
 
@@ -310,8 +390,9 @@ class DBManager: NSObject {
         dbTwitterUser.profileImageMiniURL = user.twitterUser.jacImageURL
         dbTwitterUser.userName = user.twitterUser.name
         dbTwitterUser.screenName = user.twitterUser.screenName
-        dbTwitterUser.miniImage = UIImagePNGRepresentation(user.image!)
-        
+        if let image = user.image {
+            dbTwitterUser.miniImage = UIImagePNGRepresentation(image) ?? UIImageJPEGRepresentation(image, 1.0)
+        }
         dbTwitterId.twitterUser = dbTwitterUser
         dbTwitterUser.twitterId = dbTwitterId
         

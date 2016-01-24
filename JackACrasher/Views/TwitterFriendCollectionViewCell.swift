@@ -8,14 +8,51 @@
 
 import UIKit
 
+@IBDesignable
 class TwitterFriendCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var label:UILabel!
+    @IBOutlet weak var ivProfileImage:UIImageView!
+    @IBOutlet weak var aiDownloadingImage:UIActivityIndicatorView!
     
-    override func awakeAfterUsingCoder(aDecoder: NSCoder) -> AnyObject? {
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        correctProfileImage()
+    }
+    
+    override func prepareForReuse() {
+        correctProfileImage()
         
-        self.clipsToBounds =  self.layer.cornerRadius > 0 ? true : false
+    }
+    
+    override func prepareForInterfaceBuilder() {
+        super.prepareForInterfaceBuilder()
         
-        return super.awakeAfterUsingCoder(aDecoder)
+        correctProfileImage()
+    }
+    
+    private func correctProfileImage() {
+        
+        ivProfileImage.layer.cornerRadius = min(CGRectGetWidth(ivProfileImage.frame),CGRectGetHeight(ivProfileImage.frame)) * 0.5
+        
+        ivProfileImage.layer.masksToBounds = true
+        
+        ivProfileImage.layer.borderWidth = 10.0
+        
+        ivProfileImage.borderColor = UIColor.yellowColor()
+        
+        ivProfileImage.image = UIImage(imageLiteral: "no_twitter_profile_image")
+        aiDownloadingImage.hidden = false
+    }
+    
+    internal func setProfileImage(imaage imagePtr:UIImage?) {
+        
+        guard let image = imagePtr else {
+            aiDownloadingImage.hidden = true
+            return
+        }
+        
+        aiDownloadingImage.hidden = true
+        ivProfileImage.image = image
     }
     
 }

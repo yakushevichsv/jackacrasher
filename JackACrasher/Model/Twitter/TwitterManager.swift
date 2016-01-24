@@ -69,11 +69,23 @@ class TwitterManager: NSObject {
     
     func startUpdatingTotalList() {
         
+        print("%@",__FUNCTION__)
+        
         switch self.managerState {
             
             case .None: fallthrough
             case .DownloadingFinished(_):
-                startUpdatingInCycle(-1)
+                
+                print("DownloadingFinished state. DeleteOldAgedTwitterUsers")
+                DBManager.sharedInstance.deleteOldAgedTwitterUsers{
+                    [unowned self]
+                    (error, saved) in
+                    print("Error deleting old aged twitter \(error)")
+                    if error == nil {
+                        self.startUpdatingInCycle(-1)
+                    }
+                }
+                
                 break;
             default:
                 break;
@@ -142,7 +154,7 @@ class TwitterManager: NSObject {
                                                     if let imageInner = image {
                                                         user.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
                                                     }
-                                                    else if (!cancelled) {
+                                                    else if (!cancelled && error != nil) {
                                                         cancelled = lastError == nil
                                                         
                                                         if (error != nil) {
@@ -226,15 +238,20 @@ class TwitterManager: NSObject {
     
     private func startUpdatingInCycle(offset:Int) {
         
+        print("%@ Offset %d",__FUNCTION__,offset)
+        
         if self.isCancelled {
+            print("Cancelled")
             return
         }
         
         self.managerState = .DownloadingTwitterIds(offset:offset)
         
+         print("Calling getTwitterFriendIds")
         getTwitterFriendIds(offset, count:100){
             (items, error,last) in
             
+            print("getTwitterFriendIds Finished")
             switch self.managerState {
                 
             case let .DownloadingTwitterIds(offset) :
