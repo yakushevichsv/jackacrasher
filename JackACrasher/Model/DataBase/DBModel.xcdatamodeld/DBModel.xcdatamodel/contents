@@ -11,12 +11,13 @@
         <attribute name="miniImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="profileImageMiniURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="screenName" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="selected" optional="YES" attributeType="Boolean" syncable="YES"/>
         <attribute name="userId" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="twitterId" maxCount="1" deletionRule="Nullify" destinationEntity="TwitterId" inverseName="twitterUser" inverseEntity="TwitterId" syncable="YES"/>
     </entity>
     <elements>
         <element name="TwitterId" positionX="-63" positionY="-18" width="128" height="73"/>
-        <element name="TwitterUser" positionX="342" positionY="0" width="128" height="180"/>
+        <element name="TwitterUser" positionX="342" positionY="0" width="128" height="195"/>
     </elements>
 </model>

@@ -220,7 +220,7 @@ class DBManager: NSObject {
             [unowned self] in
         
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
-            request.predicate = NSPredicate(format: "miniImage == NULL")
+            request.predicate = NSPredicate(format: "miniImage = nil")
             
             let asyncReq = NSAsynchronousFetchRequest(fetchRequest: request){
                 (result) in
@@ -303,6 +303,102 @@ class DBManager: NSObject {
                 catch let error as NSError {
                     completionHandler(error: error,saved: false)
                 }
+        }
+    }
+    
+    func increaseInviteCount(completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+        
+        changeInviteCount(true, completeionHandler: completeionHandler)
+    }
+    
+    func decreaseInviteCount(completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+        
+        changeInviteCount(false, completeionHandler: completeionHandler)
+    }
+    
+    private func changeInviteCount(addition:Bool, completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+        
+        dispatch_async(self.queue) {
+            [unowned self] in
+        
+        let batchSize = 30
+        
+        let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+        request.fetchBatchSize = batchSize
+        
+        let predicate = NSPredicate()
+        
+        request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
+        request.predicate = predicate
+        
+        var error:NSError? = nil
+        
+        let count = self.managedObjectContext.countForFetchRequest(request, error: &error)
+        
+        
+            guard let _ = error else {
+                completeionHandler?(error: error, saved: false)
+                return
+            }
+        
+            var offset = 0
+            
+            while (offset < count) {
+                
+                // TODO : fetch items....
+                
+                do {
+                    request.fetchOffset = offset
+                    let users = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterUser]
+                    
+                    for user in users {
+                        
+                        if addition {
+                            user.inviteCount += 1
+                        } else if (user.inviteCount > 0) {
+                            user.inviteCount -= 1
+                        }
+                    }
+                    
+                    offset += users.count
+                    
+                } catch let error as NSError {
+                    completeionHandler?(error: error, saved: false)
+                    return
+                }
+                
+            }
+            
+            if let completion = completeionHandler {
+                self.saveContextWithCompletion(completion)
+            }
+        }
+    }
+    
+    func checkAllTwitterUsers(completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+        changeSelectionState(true, completeionHandler: completeionHandler)
+    }
+    
+    func uncheckAllTwitterUsers(completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+        changeSelectionState(false, completeionHandler: completeionHandler)
+    }
+    
+    private func changeSelectionState(selected:Bool,completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
+        
+        let request = NSBatchUpdateRequest(entityName: TwitterUser.EntityName())
+        request.predicate = NSPredicate(format: "selected == %@",!selected)
+        
+        request.propertiesToUpdate = ["selected":selected]
+        
+        do {
+            try self.managedObjectContext.executeRequest(request)
+            
+            if let completion = completeionHandler {
+                self.saveContextWithCompletion(completion)
+            }
+        }
+        catch let error as NSError {
+            completeionHandler?(error: error, saved: false)
         }
     }
 
