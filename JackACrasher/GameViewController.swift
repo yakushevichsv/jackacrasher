@@ -67,6 +67,28 @@ class GameViewController: UIViewController,GameSceneDelegate {
     @IBAction func recordingPressed(sender : UIButton) {
        sender.selected = !sender.selected
         
+        if (sender.selected) {
+            sender.enabled = false
+            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "hideScreenRecording", object: nil)
+            
+            startScreenRecording { [unowned self] () -> Void in
+                self.btnRecord.enabled = true
+                self.performSelector("terminateRecording", withObject: nil, afterDelay: 60)
+            }
+        }
+        else {
+            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "terminateRecording", object: nil)
+            terminateRecording()
+        }
+    }
+
+    func terminateRecording() {
+        stopScreenRecordingWithHandler { [unowned self]   () -> Void in
+            self.btnRecord.hidden = true
+            self.btnRecord.selected = false
+            
+            //TODO: add logic here for displaying preview action... Discard, or store....
+        }
     }
     
     @IBAction func btnPressed(sender: UIButton) {
@@ -243,7 +265,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 self.skView.scene?.paused = true
                 self.performSegueWithIdentifier("gameOver", sender: self)
             }
-            self.logicManager.setAllowedToScreenRecording(false)
+            self.logicManager.setScreenRecordingValue(0)
         }
     }
     
@@ -275,17 +297,33 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     func gameSceneHasScore(scene: GameScene, totalScore: UInt64) {
         
-        guard self.logicManager.allowedToScreenRecording else {
+        guard RPScreenRecorder.sharedRecorder().available else {
+            return
+        }
+        
+        if !self.btnRecord.hidden {
             return
         }
         
         let scoreDiff = totalScore - self.logicManager.oldScreenRecordingValue
         
         if scoreDiff > 1000 {
+            
+            if self.btnRecord.hidden {
+                self.btnRecord.hidden = false
+                self.btnRecord.selected = false
+                
+                self.performSelector("hideScreenRecording", withObject:  nil, afterDelay: 60*2)
+            }
+            
             self.logicManager.setScreenRecordingValue(totalScore)
         }
-        else {
-            self.logicManager.setAllowedToScreenRecording(false)
+    }
+    
+    func hideScreenRecording() {
+        self.btnRecord.hidden = true
+        if let scene = self.skView.scene as? GameScene {
+            self.logicManager.setScreenRecordingValue(scene.totalGameScore)
         }
     }
     
@@ -312,14 +350,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
 //MARK: Replay Kit
 extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewControllerDelegate {
     
-    
-    var screenRecordingEnabled:Bool {
-        return self.logicManager.allowedToScreenRecording
-    }
-    
-    func startScreenRecording() {
+    func startScreenRecording(handler:(() -> Void)) {
         // Do nothing if screen recording hasn't been enabled.
-        guard screenRecordingEnabled else { return }
+        guard RPScreenRecorder.sharedRecorder().available else { return }
         
         let sharedRecorder = RPScreenRecorder.sharedRecorder()
         
@@ -331,7 +364,7 @@ extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewController
                 self.alertWithTitle("Error", message: error.localizedDescription)
             }
             else {
-                self.logicManager.setScreenRecorderStartTime(NSDate())
+                handler()
             }
         }
     }
@@ -357,7 +390,6 @@ extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewController
                 */
                 self.previewVC = previewViewController
             }
-            self.logicManager.setScreenRecorderStartTime(nil)
             
             handler()
         }
@@ -396,11 +428,9 @@ extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewController
     func screenRecorderDidChangeAvailability(screenRecorder: RPScreenRecorder) {
         
         if !screenRecorder.available {
-            self.logicManager.setAllowedToScreenRecording(false)
             self.btnRecord.hidden = true
             self.btnRecord.selected = false
         }
-        
     }
     
     // MARK: RPPreviewViewControllerDelegate

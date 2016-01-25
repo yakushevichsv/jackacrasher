@@ -1014,45 +1014,20 @@ extension GameLogicManager {
 extension GameLogicManager {
     
     private struct ScreenRecordingConstants {
-        static let screenRecorderEnabledKey   = "recordingKey"
         static let screenRecorderOldValueKey  = "screenRecorderOldValueKey"
-        static let screenRecorderStartTimeKey = "screenRecorderStartTimeKey"
     }
     
     var oldScreenRecordingValue:UInt64 {
         return UInt64(NSUserDefaults.standardUserDefaults().floatForKey(ScreenRecordingConstants.screenRecorderOldValueKey))
     }
     
-    var allowedToScreenRecording:Bool {
-        return NSUserDefaults.standardUserDefaults().boolForKey(ScreenRecordingConstants.screenRecorderEnabledKey)
-    }
-    
-    var screenRecordingStartTime:NSTimeInterval {
-        return NSUserDefaults.standardUserDefaults().doubleForKey(ScreenRecordingConstants.screenRecorderStartTimeKey)
-    }
-    
-    func setAllowedToScreenRecording(enabled:Bool) -> Bool {
-        
-        if (!enabled) {
-            NSUserDefaults.standardUserDefaults().removeObjectForKey(ScreenRecordingConstants.screenRecorderOldValueKey)
-        }
-        
-        NSUserDefaults.standardUserDefaults().setBool(enabled, forKey: ScreenRecordingConstants.screenRecorderEnabledKey)
-        return NSUserDefaults.standardUserDefaults().synchronize()
-    }
-    
     func setScreenRecordingValue(value:UInt64) -> Bool {
-        NSUserDefaults.standardUserDefaults().setDouble(Double(value), forKey: ScreenRecordingConstants.screenRecorderOldValueKey)
-        return NSUserDefaults.standardUserDefaults().synchronize()
-    }
-    
-    func setScreenRecorderStartTime(value:NSDate!) -> Bool {
-        let key = ScreenRecordingConstants.screenRecorderStartTimeKey
+        let key = ScreenRecordingConstants.screenRecorderOldValueKey
         if value == 0 {
             NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
         }
         else {
-            NSUserDefaults.standardUserDefaults().setDouble(value.timeIntervalSinceReferenceDate, forKey: key)
+            NSUserDefaults.standardUserDefaults().setDouble(Double(value), forKey: key)
         }
         return NSUserDefaults.standardUserDefaults().synchronize()
     }
