@@ -11,6 +11,8 @@ import SpriteKit
 @objc protocol GameSceneDelegate
 {
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64,playedTime:NSTimeInterval,needToContinue:Bool)
+    
+    func gameSceneHasScore(scene:GameScene, totalScore:UInt64)
 }
 
 @objc protocol GameScoreItem
@@ -39,6 +41,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     var totalGameScore:UInt64 = 0 {
         didSet {
            self.setTotalScoreLabelValue()
+            self.gameSceneDelegate?.gameSceneHasScore(self, totalScore: self.totalGameScore)
         }
     }
     

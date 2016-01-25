@@ -8,19 +8,26 @@
 
 import UIKit
 import SpriteKit
+#if os(iOS)
+import ReplayKit
+#endif
 
 class GameViewController: UIViewController,GameSceneDelegate {
     @IBOutlet weak var btnPlay: UIButton!
+    @IBOutlet weak var btnRecord: UIButton!
+    
     private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
     private lazy var returnPauseTransDelegate = ReturnPauseTransitionDelegate()
     
     private var myContext = 0
-
+    
+    private var previewVC : RPPreviewViewController! = nil
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         
         logicManager.addObserver(self, forKeyPath: "isLoading", options: .New, context: &myContext)
+        RPScreenRecorder.sharedRecorder().available
     }
 
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
@@ -57,6 +64,10 @@ class GameViewController: UIViewController,GameSceneDelegate {
         get { return self.view as! SKView}
     }
     
+    @IBAction func recordingPressed(sender : UIButton) {
+       sender.selected = !sender.selected
+        
+    }
     
     @IBAction func btnPressed(sender: UIButton) {
         
@@ -93,7 +104,10 @@ class GameViewController: UIViewController,GameSceneDelegate {
         //restartGame()
         
         correctFontOfChildViews(self.view)
-
+        
+        let recorder = RPScreenRecorder.sharedRecorder()
+        recorder.delegate = self
+        self.screenRecorderDidChangeAvailability(recorder)
     }
     
     //MARK: - Public function
@@ -229,8 +243,11 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 self.skView.scene?.paused = true
                 self.performSegueWithIdentifier("gameOver", sender: self)
             }
+            self.logicManager.setAllowedToScreenRecording(false)
         }
     }
+    
+    //MARK: GameSceneDelegate
     
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64, playedTime:NSTimeInterval,needToContinue:Bool) {
         
@@ -256,6 +273,22 @@ class GameViewController: UIViewController,GameSceneDelegate {
         }
     }
     
+    func gameSceneHasScore(scene: GameScene, totalScore: UInt64) {
+        
+        guard self.logicManager.allowedToScreenRecording else {
+            return
+        }
+        
+        let scoreDiff = totalScore - self.logicManager.oldScreenRecordingValue
+        
+        if scoreDiff > 1000 {
+            self.logicManager.setScreenRecordingValue(totalScore)
+        }
+        else {
+            self.logicManager.setAllowedToScreenRecording(false)
+        }
+    }
+    
     //MARK: Unwind to replay
     @IBAction func unwindToReplay(sender: UIStoryboardSegue) {
         
@@ -273,6 +306,107 @@ class GameViewController: UIViewController,GameSceneDelegate {
             vc.restartGame(false)
             
         }
+    }
+}
+
+//MARK: Replay Kit
+extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewControllerDelegate {
+    
+    
+    var screenRecordingEnabled:Bool {
+        return self.logicManager.allowedToScreenRecording
+    }
+    
+    func startScreenRecording() {
+        // Do nothing if screen recording hasn't been enabled.
+        guard screenRecordingEnabled else { return }
+        
+        let sharedRecorder = RPScreenRecorder.sharedRecorder()
+        
+        // Register as the recorder's delegate to handle errors.
+        sharedRecorder.delegate = self
+        
+        sharedRecorder.startRecordingWithMicrophoneEnabled(true) { error in
+            if let error = error {
+                self.alertWithTitle("Error", message: error.localizedDescription)
+            }
+            else {
+                self.logicManager.setScreenRecorderStartTime(NSDate())
+            }
+        }
+    }
+    
+    
+    func stopScreenRecordingWithHandler(handler:(() -> Void)) {
+        let sharedRecorder = RPScreenRecorder.sharedRecorder()
+        
+        sharedRecorder.stopRecordingWithHandler { (previewViewController: RPPreviewViewController?, error: NSError?) in
+            if let error = error {
+                // If an error has occurred, display an alert to the user.
+                self.alertWithTitle("Error", message: error.localizedDescription)
+                return
+            }
+            
+            if let previewViewController = previewViewController {
+                // Set delegate to handle view controller dismissal.
+                previewViewController.previewControllerDelegate = self
+                
+                /*
+                Keep a reference to the `previewViewController` to
+                present when the user presses on preview button.
+                */
+                self.previewVC = previewViewController
+            }
+            self.logicManager.setScreenRecorderStartTime(nil)
+            
+            handler()
+        }
+    }
+    
+    func discardRecording() {
+        // When we no longer need the `previewViewController`, tell `ReplayKit` to discard the recording and nil out our reference
+        RPScreenRecorder.sharedRecorder().discardRecordingWithHandler {
+            self.previewVC = nil
+        }
+    }
+    
+    func displayRecordedContent() {
+        guard let previewViewController = self.previewVC else { fatalError("The user requested playback, but a valid preview controller does not exist.") }
+        
+        // `RPPreviewViewController` only supports full screen modal presentation.
+        previewViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
+        
+        self.presentViewController(previewViewController, animated: true, completion:nil)
+    }
+    
+    // MARK: RPScreenRecorderDelegate
+    
+    func screenRecorder(screenRecorder: RPScreenRecorder, didStopRecordingWithError error: NSError, previewViewController: RPPreviewViewController?) {
+        
+        // Display the error the user to alert them that the recording failed.
+        self.alertWithTitle("Error", message: error.localizedDescription)
+        
+        
+        /// Hold onto a reference of the `previewViewController` if not nil.
+        if previewViewController != nil {
+            self.previewVC = previewViewController
+        }
+    }
+    
+    func screenRecorderDidChangeAvailability(screenRecorder: RPScreenRecorder) {
+        
+        if !screenRecorder.available {
+            self.logicManager.setAllowedToScreenRecording(false)
+            self.btnRecord.hidden = true
+            self.btnRecord.selected = false
+        }
+        
+    }
+    
+    // MARK: RPPreviewViewControllerDelegate
+    
+    func previewControllerDidFinish(previewController: RPPreviewViewController) {
+        self.previewVC?.dismissViewControllerAnimated(true, completion: nil)
     }
 }
 
