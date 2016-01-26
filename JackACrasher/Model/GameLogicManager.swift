@@ -1018,7 +1018,11 @@ extension GameLogicManager {
     }
     
     var oldScreenRecordingValue:UInt64 {
-        return UInt64(NSUserDefaults.standardUserDefaults().floatForKey(ScreenRecordingConstants.screenRecorderOldValueKey))
+        if let value = NSUserDefaults.standardUserDefaults().objectForKey(ScreenRecordingConstants.screenRecorderOldValueKey) as? UInt64
+        {
+            return value
+        }
+        return 0
     }
     
     func setScreenRecordingValue(value:UInt64) -> Bool {

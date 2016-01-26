@@ -623,7 +623,7 @@
                                     <segue destination="odW-g4-p7G" kind="presentation" identifier="selectAction" id="3lf-OP-NJD"/>
                                 </connections>
                             </button>
-                            <button hidden="YES" opaque="NO" alpha="0.80000001192092896" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xAw-7M-c5W" userLabel="Recording">
+                            <button opaque="NO" alpha="0.80000001192092896" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="xAw-7M-c5W" userLabel="Recording">
                                 <rect key="frame" x="259" y="3" width="71" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="71" id="eZ0-61-ZkT"/>
@@ -827,9 +827,7 @@
                                 <constraints>
                                     <constraint firstItem="JJb-zX-zeW" firstAttribute="top" secondItem="w7g-AR-pH7" secondAttribute="bottom" constant="13" id="32q-EG-sAu"/>
                                     <constraint firstItem="mvV-T3-331" firstAttribute="centerX" secondItem="w7g-AR-pH7" secondAttribute="trailing" id="9cy-9L-ZRx"/>
-                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="w7g-AR-pH7" secondAttribute="leading" multiplier="1.1" constant="10" id="FdG-e4-Vxp">
-                                        <variation key="heightClass=compact-widthClass=regular" constant="20"/>
-                                    </constraint>
+                                    <constraint firstItem="JJb-zX-zeW" firstAttribute="centerX" secondItem="w7g-AR-pH7" secondAttribute="leading" multiplier="1.1" constant="10" id="FdG-e4-Vxp"/>
                                     <constraint firstItem="w7g-AR-pH7" firstAttribute="centerX" secondItem="1WM-vX-PYK" secondAttribute="centerX" id="PAc-dc-paH"/>
                                     <constraint firstItem="JJb-zX-zeW" firstAttribute="centerY" secondItem="mvV-T3-331" secondAttribute="centerY" id="jfG-nL-kWx"/>
                                     <constraint firstItem="w7g-AR-pH7" firstAttribute="centerY" secondItem="1WM-vX-PYK" secondAttribute="centerY" multiplier="0.8" id="pGV-9D-jxt"/>
