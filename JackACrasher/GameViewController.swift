@@ -68,160 +68,6 @@ class GameViewController: UIViewController,GameSceneDelegate {
         get { return self.view as! SKView}
     }
     
-    @IBAction func recordingPressed(sender : UIButton) {
-       sender.selected = !sender.selected
-        
-        if (sender.selected) {
-            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "hideScreenRecording", object: nil)
-            
-            startRecording()
-        }
-        else {
-            self.terminateRecordingTimer?.invalidate()
-            self.terminateRecordingTimer = nil
-            
-            terminateRecording()
-        }
-    }
-    
-    func startRecording() {
-        
-        self.btnRecord.enabled = false
-        
-        startScreenRecording{
-            [unowned self]
-            (error) in
-            
-            if self.view.window == nil {
-                self.discardRecording()
-                return
-            }
-            
-            if let error = error {
-                
-                if (error.domain == RPRecordingErrorDomain && (RPRecordingErrorCode(rawValue: error.code) == RPRecordingErrorCode.Disabled ||
-                    RPRecordingErrorCode(rawValue: error.code) == RPRecordingErrorCode.UserDeclined) ) {
-                    return
-                }
-                else {
-                    self.alertWithTitle("Error", message: error.localizedDescription)
-                }
-                
-                self.hideRecordButton()
-            }
-            else {
-                
-                self.btnRecord.enabled = true
-                //self.moveRecordButtonToAnotherWindow()
-                
-                self.restoreRemainingRecordTime()
-            }
-        }
-
-    }
-    
-    func moveRecordButtonToAnotherWindow() {
-        
-        if let wind = self.view.window {
-            self.oldWindow = wind
-        }
-        
-        let window = UIWindow(frame: self.view.frame)
-        window.backgroundColor = UIColor.clearColor()
-        let btnRec = self.btnRecord
-        self.btnRecord.removeFromSuperview()
-        
-        window.addSubview(btnRec)
-        window.makeKeyAndVisible()
-        
-        let centerX = NSLayoutConstraint(item: btnRec, attribute: .CenterX, relatedBy: .Equal, toItem: window, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
-        let centerY = NSLayoutConstraint(item: btnRec, attribute: .CenterY, relatedBy: .Equal, toItem: window, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
-        
-        window.addConstraints([centerX,centerY])
-        window.setNeedsLayout()
-    }
-    
-    func restoreRecordButtonToCurrentWindow() {
-        
-        if (self.btnRecord.superview != Optional<UIView>(self.view)){
-            self.btnRecord?.removeFromSuperview()
-            self.view.addSubview(self.btnRecord)
-        }
-        if let wind = self.oldWindow {
-            wind.makeKeyAndVisible()
-            self.oldWindow = nil
-        }
-    }
-    
-    func decrementRemainedTime(timer:NSTimer!) {
-        
-            
-        let date = timer.userInfo as! NSDate
-        let diff = NSDate().timeIntervalSinceDate(date)
-        
-            let timeRemained = Int(-diff)
-            print("DIff \(diff) \n Time remained \(timeRemained)")
-            self.btnRecord.setTitle("\(timeRemained/60):\(timeRemained%60)", forState: self.btnRecord.state)
-            if (timeRemained == 0) {
-                timer.invalidate()
-                terminateRecording()
-            }
-            /*else if (timeRemained < 10) {
-                
-                timer.invalidate()
-                
-                flashRecordButtonDuringRestCount(timeRemained)
-            }*/
-    }
-    
-    func flashRecordButtonDuringRestCount(count:Int) {
-        
-        self.btnRecord.setTitle("\(count%60)", forState: self.btnRecord.state)
-        
-        if count == 0 {
-            terminateRecording()
-        }
-        else {
-            UIView.animateWithDuration(NSTimeInterval(1), delay: 0, options: UIViewAnimationOptions(rawValue: UIViewAnimationOptions.Autoreverse.rawValue | UIViewAnimationOptions.AllowUserInteraction.rawValue), animations: { [unowned self] () -> Void in
-                self.btnRecord.alpha = 0.3
-                },completion: {  [unowned self] (finished) -> Void in
-                    if !self.btnRecord.hidden {
-                        self.flashRecordButtonDuringRestCount(count - 1)
-                    }
-                })
-        }
-    }
-
-    func terminateRecording() {
-        
-        self.hideRecordButton()
-        //self.btnRecord.enabled = false
-        
-        stopScreenRecordingWithHandler{
-            [unowned self]
-            (error) in
-            //self.btnRecord.enabled = true
-            if let error = error {
-                self.alertWithTitle("Error", message: error.localizedDescription)
-            }
-            
-            
-        }
-    }
-    
-    func displayRecordButton() {
-        self.btnRecord.enabled = true
-        self.btnRecord.selected = false
-        self.btnRecord.hidden = false
-        self.btnRecord.alpha = 0.8
-    }
-    
-    func hideRecordButton() {
-        self.btnRecord.hidden = true
-        
-        //restoreRecordButtonToCurrentWindow()
-    }
-    
     @IBAction func btnPressed(sender: UIButton) {
         
         sender.selected = !sender.selected
@@ -250,26 +96,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         }
     }
     
-    func storeRemainedRecordTime() {
-        if let recTimer = self.terminateRecordingTimer {
-            let date = recTimer.userInfo as! NSDate
-            let diff = NSDate().timeIntervalSinceDate(date)
-            
-            self.remainedTime =  max(0,Int(-diff))
-            
-            recTimer.invalidate()
-        }
-        else {
-            self.remainedTime = Int.min
-        }
-    }
-    
-    func restoreRemainingRecordTime(timeRemained:Int  = 120) {
-        
-        self.terminateRecordingTimer?.invalidate()
-        self.terminateRecordingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "decrementRemainedTime:", userInfo: NSDate(timeIntervalSinceNow: Double(timeRemained)), repeats: true)
-        self.terminateRecordingTimer.fire()
-    }
+
     
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
         
@@ -496,7 +323,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         let scoreDiff = totalScore - self.logicManager.oldScreenRecordingValue
         
-        if scoreDiff > 10/*100*/ {
+        if scoreDiff > 400 {
             
             if self.btnRecord.hidden {
                 self.displayRecordButton()
@@ -505,13 +332,6 @@ class GameViewController: UIViewController,GameSceneDelegate {
             }
             
             self.logicManager.setScreenRecordingValue(totalScore)
-        }
-    }
-    
-    func hideScreenRecording() {
-        hideRecordButton()
-        if let scene = self.skView.scene as? GameScene {
-            self.logicManager.setScreenRecordingValue(scene.totalGameScore)
         }
     }
     
@@ -533,6 +353,226 @@ class GameViewController: UIViewController,GameSceneDelegate {
             
         }
     }
+}
+
+//MARK: Recording logic
+extension GameViewController {
+    
+    //MARK: Recording Action
+    @IBAction func recordingPressed(sender : UIButton) {
+        sender.selected = !sender.selected
+        
+        if (sender.selected) {
+            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "hideScreenRecording", object: nil)
+            
+            startRecording()
+        }
+        else {
+            self.terminateRecordingTimer?.invalidate()
+            self.terminateRecordingTimer = nil
+            
+            terminateRecording()
+        }
+    }
+    //MARK:Recording Methods
+    func startRecording() {
+        
+        self.btnRecord.enabled = false
+        
+        startScreenRecording{
+            [unowned self]
+            (error) in
+            
+            if self.view.window == nil {
+                self.discardRecording()
+                return
+            }
+            
+            if let error = error {
+                
+                if (error.domain == RPRecordingErrorDomain && (RPRecordingErrorCode(rawValue: error.code) == RPRecordingErrorCode.Disabled ||
+                    RPRecordingErrorCode(rawValue: error.code) == RPRecordingErrorCode.UserDeclined) ) {
+                        return
+                }
+                else {
+                    self.alertWithTitle("Error", message: error.localizedDescription)
+                }
+                
+                self.hideRecordButton()
+            }
+            else {
+                
+                self.btnRecord.enabled = true
+                //self.moveRecordButtonToAnotherWindow()
+                
+                self.restoreRemainingRecordTime()
+            }
+        }
+        
+    }
+    
+    func moveRecordButtonToAnotherWindow() {
+        
+        if let wind = self.view.window {
+            self.oldWindow = wind
+        }
+        
+        let window = UIWindow(frame: self.view.frame)
+        window.backgroundColor = UIColor.clearColor()
+        let btnRec = self.btnRecord
+        self.btnRecord.removeFromSuperview()
+        
+        window.addSubview(btnRec)
+        window.makeKeyAndVisible()
+        
+        let centerX = NSLayoutConstraint(item: btnRec, attribute: .CenterX, relatedBy: .Equal, toItem: window, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
+        let centerY = NSLayoutConstraint(item: btnRec, attribute: .CenterY, relatedBy: .Equal, toItem: window, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
+        
+        window.addConstraints([centerX,centerY])
+        window.setNeedsLayout()
+    }
+    
+    func restoreRecordButtonToCurrentWindow() {
+        
+        if (self.btnRecord.superview != Optional<UIView>(self.view)){
+            self.btnRecord?.removeFromSuperview()
+            self.view.addSubview(self.btnRecord)
+        }
+        if let wind = self.oldWindow {
+            wind.makeKeyAndVisible()
+            self.oldWindow = nil
+        }
+    }
+    
+    func decrementRemainedTime(timer:NSTimer!) {
+        
+        
+        let date = timer.userInfo as! NSDate
+        let diff = NSDate().timeIntervalSinceDate(date)
+        
+        let timeRemained = Int(-diff)
+        print("DIff \(diff) \n Time remained \(timeRemained)")
+        self.btnRecord.setTitle("\(timeRemained/60):\(timeRemained%60)", forState: self.btnRecord.state)
+        if (timeRemained == 0) {
+            timer.invalidate()
+            terminateRecording()
+        }
+        /*else if (timeRemained < 10) {
+        
+        timer.invalidate()
+        
+        flashRecordButtonDuringRestCount(timeRemained)
+        }*/
+    }
+    
+    func flashRecordButtonDuringRestCount(count:Int) {
+        
+        self.btnRecord.setTitle("\(count%60)", forState: self.btnRecord.state)
+        
+        if count == 0 {
+            terminateRecording()
+        }
+        else {
+            UIView.animateWithDuration(NSTimeInterval(1), delay: 0, options: UIViewAnimationOptions(rawValue: UIViewAnimationOptions.Autoreverse.rawValue | UIViewAnimationOptions.AllowUserInteraction.rawValue), animations: { [unowned self] () -> Void in
+                self.btnRecord.alpha = 0.3
+                },completion: {  [unowned self] (finished) -> Void in
+                    if !self.btnRecord.hidden {
+                        self.flashRecordButtonDuringRestCount(count - 1)
+                    }
+                })
+        }
+    }
+    
+    func terminateRecording() {
+        
+        self.hideRecordButton()
+        //self.btnRecord.enabled = false
+        
+        stopScreenRecordingWithHandler{
+            [unowned self]
+            (error) in
+            //self.btnRecord.enabled = true
+            if let error = error {
+                self.alertWithTitle("Error", message: error.localizedDescription)
+            }
+            
+            
+        }
+    }
+    
+    func displayRecordButton() {
+        self.btnRecord.enabled = true
+        self.btnRecord.selected = false
+        self.btnRecord.hidden = false
+        self.btnRecord.alpha = 0.8
+    }
+    
+    func hideRecordButton() {
+        self.btnRecord.hidden = true
+        
+        //restoreRecordButtonToCurrentWindow()
+    }
+    
+    func storeRemainedRecordTime() {
+        if let recTimer = self.terminateRecordingTimer {
+            let date = recTimer.userInfo as! NSDate
+            let diff = NSDate().timeIntervalSinceDate(date)
+            
+            self.remainedTime =  max(0,Int(-diff))
+            
+            recTimer.invalidate()
+        }
+        else {
+            self.remainedTime = Int.min
+        }
+    }
+    
+    func restoreRemainingRecordTime(timeRemained:Int  = 120) {
+        
+        self.terminateRecordingTimer?.invalidate()
+        self.terminateRecordingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "decrementRemainedTime:", userInfo: NSDate(timeIntervalSinceNow: Double(timeRemained)), repeats: true)
+        self.terminateRecordingTimer.fire()
+    }
+    
+    func hideScreenRecording() {
+        hideRecordButton()
+        if let scene = self.skView.scene as? GameScene {
+            self.logicManager.setScreenRecordingValue(scene.totalGameScore)
+        }
+    }
+
+    
+    func gameOverOnNeed() -> Bool {
+        
+        if self.needToGameOver {
+            self.needToGameOver = false
+            self.performSegueWithIdentifier("gameOver", sender: self)
+            return true
+        }
+        return false
+    }
+    
+    func discardRecording() {
+        // When we no longer need the `previewViewController`, tell `ReplayKit` to discard the recording and nil out our reference
+        RPScreenRecorder.sharedRecorder().discardRecordingWithHandler {
+            [unowned self] in
+            self.previewVC = nil
+            self.gameOverOnNeed()
+        }
+    }
+    
+    func displayRecordedContent() {
+        guard let previewViewController = self.previewVC else { fatalError("The user requested playback, but a valid preview controller does not exist.") }
+        
+        // `RPPreviewViewController` only supports full screen modal presentation.
+        //previewViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
+        
+        if let scene = self.skView.scene as? GameScene {
+            scene.pauseGame()
+        }
+        self.presentViewController(previewViewController, animated: true, completion:nil)
+    }
+
 }
 
 //MARK: Replay Kit
@@ -583,37 +623,6 @@ extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewController
             
            handler(error: nil)
         }
-    }
-    
-    func gameOverOnNeed() -> Bool {
-        
-        if self.needToGameOver {
-            self.needToGameOver = false
-            self.performSegueWithIdentifier("gameOver", sender: self)
-            return true
-        }
-        return false
-    }
-    
-    func discardRecording() {
-        // When we no longer need the `previewViewController`, tell `ReplayKit` to discard the recording and nil out our reference
-        RPScreenRecorder.sharedRecorder().discardRecordingWithHandler {
-            [unowned self] in
-            self.previewVC = nil
-            self.gameOverOnNeed()
-        }
-    }
-    
-    func displayRecordedContent() {
-        guard let previewViewController = self.previewVC else { fatalError("The user requested playback, but a valid preview controller does not exist.") }
-        
-        // `RPPreviewViewController` only supports full screen modal presentation.
-        //previewViewController.modalPresentationStyle = UIModalPresentationStyle.FullScreen
-        
-        if let scene = self.skView.scene as? GameScene {
-            scene.pauseGame()
-        }
-        self.presentViewController(previewViewController, animated: true, completion:nil)
     }
     
     // MARK: RPScreenRecorderDelegate

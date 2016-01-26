@@ -930,8 +930,8 @@
         </scene>
     </scenes>
     <resources>
-        <image name="ButtonAutoRecordOff" width="160" height="64"/>
-        <image name="ButtonAutoRecordOn" width="160" height="64"/>
+        <image name="ButtonAutoRecordOff" width="75" height="30"/>
+        <image name="ButtonAutoRecordOn" width="75" height="30"/>
         <image name="btnSettings" width="38" height="38"/>
         <image name="close" width="29" height="29"/>
         <image name="fb-button" width="40" height="40"/>
