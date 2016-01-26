@@ -114,7 +114,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 self.btnRecord.enabled = true
                 //self.moveRecordButtonToAnotherWindow()
                 
-                self.restoreRemainingRecordTime(20)
+                self.restoreRemainingRecordTime()
             }
         }
 
@@ -264,7 +264,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
         }
     }
     
-    func restoreRemainingRecordTime(timeRemained:Int  = 20) {
+    func restoreRemainingRecordTime(timeRemained:Int  = 120) {
         
         self.terminateRecordingTimer?.invalidate()
         self.terminateRecordingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "decrementRemainedTime:", userInfo: NSDate(timeIntervalSinceNow: Double(timeRemained)), repeats: true)
@@ -333,8 +333,12 @@ class GameViewController: UIViewController,GameSceneDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         
+        if self.gameOverOnNeed() {
+            return
+        }
+        
         if let scene = self.skView.scene as? GameScene {
-            if (self.previewVC != nil && scene.paused) {
+            if (self.previewVC != nil && scene.paused ) {
                 scene.pauseGame(false)
             }
         }
@@ -497,7 +501,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
             if self.btnRecord.hidden {
                 self.displayRecordButton()
                 
-                self.performSelector("hideScreenRecording", withObject:  nil, afterDelay: 10/*60*2*/)
+                self.performSelector("hideScreenRecording", withObject:  nil, afterDelay: 60)
             }
             
             self.logicManager.setScreenRecordingValue(totalScore)
@@ -581,12 +585,14 @@ extension GameViewController : RPScreenRecorderDelegate, RPPreviewViewController
         }
     }
     
-    func gameOverOnNeed() {
+    func gameOverOnNeed() -> Bool {
         
         if self.needToGameOver {
             self.needToGameOver = false
             self.performSegueWithIdentifier("gameOver", sender: self)
+            return true
         }
+        return false
     }
     
     func discardRecording() {
