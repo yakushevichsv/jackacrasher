@@ -634,7 +634,7 @@
                                 <state key="normal" title="Record" backgroundImage="ButtonAutoRecordOff">
                                     <color key="titleColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
-                                <state key="selected" title="Stop" backgroundImage="ButtonAutoRecordOn"/>
+                                <state key="selected" title="00:00" backgroundImage="ButtonAutoRecordOn"/>
                                 <connections>
                                     <action selector="recordingPressed:" destination="BV1-FR-VrT" eventType="touchUpInside" id="snh-Xs-Txb"/>
                                 </connections>

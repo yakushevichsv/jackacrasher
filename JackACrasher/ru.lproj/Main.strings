@@ -15,9 +15,6 @@
 /* Class = "UIButton"; normalTitle = "Record"; ObjectID = "xAw-7M-c5W"; */
 "xAw-7M-c5W.normalTitle" = "Запись";
 
-/* Class = "UIButton"; selectedTitle = "Stop"; ObjectID = "xAw-7M-c5W"; */
-"xAw-7M-c5W.selectedTitle" = "Стоп";
-
 /* Class = "UILabel"; text = "Label"; ObjectID = "6dL-56-Q5y"; */
 "6dL-56-Q5y.text" = "Метка";
 

@@ -14,15 +14,18 @@ import ReplayKit
 
 class GameViewController: UIViewController,GameSceneDelegate {
     @IBOutlet weak var btnPlay: UIButton!
-    @IBOutlet weak var btnRecord: UIButton!
+    @IBOutlet var btnRecord: UIButton!
     
     private var logicManager:GameLogicManager! = GameLogicManager.sharedInstance
     private lazy var returnPauseTransDelegate = ReturnPauseTransitionDelegate()
+    private var terminateRecordingTimer:NSTimer! = nil
     
     private var myContext = 0
     
     private var previewVC : RPPreviewViewController! = nil
     private var needToGameOver:Bool = false
+    private var oldWindow:UIWindow? = nil
+    private var remainedTime:Int = 0
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
@@ -74,7 +77,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
             startRecording()
         }
         else {
-            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "terminateRecording", object: nil)
+            self.terminateRecordingTimer?.invalidate()
+            self.terminateRecordingTimer = nil
+            
             terminateRecording()
         }
     }
@@ -86,7 +91,11 @@ class GameViewController: UIViewController,GameSceneDelegate {
         startScreenRecording{
             [unowned self]
             (error) in
-            self.btnRecord.enabled = true
+            
+            if self.view.window == nil {
+                self.discardRecording()
+                return
+            }
             
             if let error = error {
                 
@@ -97,27 +106,106 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 else {
                     self.alertWithTitle("Error", message: error.localizedDescription)
                 }
+                
+                self.hideRecordButton()
             }
             else {
-                self.performSelector("terminateRecording", withObject: nil, afterDelay: 60)
+                
+                self.btnRecord.enabled = true
+                //self.moveRecordButtonToAnotherWindow()
+                
+                self.restoreRemainingRecordTime(20)
             }
         }
 
     }
+    
+    func moveRecordButtonToAnotherWindow() {
+        
+        if let wind = self.view.window {
+            self.oldWindow = wind
+        }
+        
+        let window = UIWindow(frame: self.view.frame)
+        window.backgroundColor = UIColor.clearColor()
+        let btnRec = self.btnRecord
+        self.btnRecord.removeFromSuperview()
+        
+        window.addSubview(btnRec)
+        window.makeKeyAndVisible()
+        
+        let centerX = NSLayoutConstraint(item: btnRec, attribute: .CenterX, relatedBy: .Equal, toItem: window, attribute: .CenterX, multiplier: 1.0, constant: 0.0)
+        let centerY = NSLayoutConstraint(item: btnRec, attribute: .CenterY, relatedBy: .Equal, toItem: window, attribute: .CenterY, multiplier: 1.0, constant: 0.0)
+        
+        window.addConstraints([centerX,centerY])
+        window.setNeedsLayout()
+    }
+    
+    func restoreRecordButtonToCurrentWindow() {
+        
+        if (self.btnRecord.superview != Optional<UIView>(self.view)){
+            self.btnRecord?.removeFromSuperview()
+            self.view.addSubview(self.btnRecord)
+        }
+        if let wind = self.oldWindow {
+            wind.makeKeyAndVisible()
+            self.oldWindow = nil
+        }
+    }
+    
+    func decrementRemainedTime(timer:NSTimer!) {
+        
+            
+        let date = timer.userInfo as! NSDate
+        let diff = NSDate().timeIntervalSinceDate(date)
+        
+            let timeRemained = Int(-diff)
+            print("DIff \(diff) \n Time remained \(timeRemained)")
+            self.btnRecord.setTitle("\(timeRemained/60):\(timeRemained%60)", forState: self.btnRecord.state)
+            if (timeRemained == 0) {
+                timer.invalidate()
+                terminateRecording()
+            }
+            /*else if (timeRemained < 10) {
+                
+                timer.invalidate()
+                
+                flashRecordButtonDuringRestCount(timeRemained)
+            }*/
+    }
+    
+    func flashRecordButtonDuringRestCount(count:Int) {
+        
+        self.btnRecord.setTitle("\(count%60)", forState: self.btnRecord.state)
+        
+        if count == 0 {
+            terminateRecording()
+        }
+        else {
+            UIView.animateWithDuration(NSTimeInterval(1), delay: 0, options: UIViewAnimationOptions(rawValue: UIViewAnimationOptions.Autoreverse.rawValue | UIViewAnimationOptions.AllowUserInteraction.rawValue), animations: { [unowned self] () -> Void in
+                self.btnRecord.alpha = 0.3
+                },completion: {  [unowned self] (finished) -> Void in
+                    if !self.btnRecord.hidden {
+                        self.flashRecordButtonDuringRestCount(count - 1)
+                    }
+                })
+        }
+    }
 
     func terminateRecording() {
         
-        self.btnRecord.enabled = false
+        self.hideRecordButton()
+        //self.btnRecord.enabled = false
         
         stopScreenRecordingWithHandler{
             [unowned self]
             (error) in
-            self.btnRecord.enabled = true
+            //self.btnRecord.enabled = true
             if let error = error {
                 self.alertWithTitle("Error", message: error.localizedDescription)
             }
             
-            self.hideRecordButton()
+            
         }
     }
     
@@ -125,10 +213,13 @@ class GameViewController: UIViewController,GameSceneDelegate {
         self.btnRecord.enabled = true
         self.btnRecord.selected = false
         self.btnRecord.hidden = false
+        self.btnRecord.alpha = 0.8
     }
     
     func hideRecordButton() {
         self.btnRecord.hidden = true
+        
+        //restoreRecordButtonToCurrentWindow()
     }
     
     @IBAction func btnPressed(sender: UIButton) {
@@ -146,8 +237,38 @@ class GameViewController: UIViewController,GameSceneDelegate {
         sender.setImage(img, forState: UIControlState.Highlighted)
         
         if let scene = skView.scene as? GameScene {
-            scene.pauseGame(!sender.selected)
+            let paused = !sender.selected
+            scene.pauseGame(paused)
+            
+            if (paused) {
+                storeRemainedRecordTime()
+            }
+            else if self.remainedTime != Int.min {
+                restoreRemainingRecordTime(self.remainedTime)
+            }
+            
         }
+    }
+    
+    func storeRemainedRecordTime() {
+        if let recTimer = self.terminateRecordingTimer {
+            let date = recTimer.userInfo as! NSDate
+            let diff = NSDate().timeIntervalSinceDate(date)
+            
+            self.remainedTime =  max(0,Int(-diff))
+            
+            recTimer.invalidate()
+        }
+        else {
+            self.remainedTime = Int.min
+        }
+    }
+    
+    func restoreRemainingRecordTime(timeRemained:Int  = 20) {
+        
+        self.terminateRecordingTimer?.invalidate()
+        self.terminateRecordingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "decrementRemainedTime:", userInfo: NSDate(timeIntervalSinceNow: Double(timeRemained)), repeats: true)
+        self.terminateRecordingTimer.fire()
     }
     
     override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
@@ -237,6 +358,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
     func didMoveToBGPrivate() {
         let scene = self.skView.scene as? GameScene
         scene?.pauseGame(true)
+        storeRemainedRecordTime()
     }
     
     func willMoveToFG(aNotification:NSNotification) {
@@ -251,6 +373,11 @@ class GameViewController: UIViewController,GameSceneDelegate {
         
         if let scene = self.skView.scene as? GameScene {
             scene.pauseGame(paused)
+            if (!paused) {
+                if self.remainedTime != Int.min {
+                    restoreRemainingRecordTime(self.remainedTime)
+                }
+            }
             
         } else {
             restartGame()
@@ -291,6 +418,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
                     if let scene = self.skView.scene as? GameScene {
                         scene.willTerminateApp()
                     }
+                    
+                    self.needToGameOver = false
+                    self.discardRecording()
                 }
                 
                 let transDelegate = self.returnPauseTransDelegate
