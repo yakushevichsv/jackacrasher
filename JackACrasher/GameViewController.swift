@@ -111,7 +111,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        //restartGame()
+        //NSNotificationCenter.defaultCenter().postNotificationName(NSBundleResourceRequestLowDiskSpaceNotification, object: self)
         
         correctFontOfChildViews(self.view)
         

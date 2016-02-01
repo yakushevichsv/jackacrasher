@@ -1052,7 +1052,7 @@ extension GameLogicManager {
     }
     
     func initODR() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToPurgeODR", name: ODRManagerShouldEndAccessOfRequestNotitification, object: self.odrManager)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToPurgeODR:", name: ODRManagerShouldEndAccessOfRequestNotitification, object: self.odrManager)
         
         self.odrManager.definePreservationPriorityForResources(ODRConstants.helpSet, priority: 0.1)
         self.odrManager.definePreservationPriorityForResources(ODRConstants.soundSet, priority: 0.9)
@@ -1070,17 +1070,26 @@ extension GameLogicManager {
                 
                 let request = userInfo["request"] as! NSBundleResourceRequest
                 
+                let tVC = UIApplication.topViewController()
+                
                 if preservation > 0.5 && request.tags == ODRConstants.soundSet  {
                         // high
                     
                     self.odrManager.endAcessingRequest(ODRConstants.soundSet)
                     SoundManager.sharedInstance.disableSound()
                     self.storeGameSoundInfo(true)
-                
+                    
+                    //TODO: place KVO in VC...
+                    if let gVC = tVC as? GameMainViewController {
+                        gVC.correctSoundButton()
+                    }
+                    else if let pVC = tVC as? PauseReturnViewController {
+                        pVC.correctSoundButton()
+                    }
                 }
                 else if preservation < 0.5 && request.tags == ODRConstants.helpSet {
                     
-                    if !(UIApplication.topViewController() is HelpViewController) {
+                    if !(tVC is HelpViewController) {
                         self.odrManager.endAcessingRequest(ODRConstants.helpSet)
                     }
                 }

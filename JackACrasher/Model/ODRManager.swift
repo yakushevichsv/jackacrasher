@@ -89,12 +89,7 @@ class ODRManager: NSObject {
     
     internal func definePreservationPriorityForResources(tags:Set<String>,priority:Double) {
         
-        for key in dic.keys.enumerate() {
-            
-            if key.element.tags == tags {
-                NSBundle.mainBundle().setPreservationPriority(priority, forTags: tags)
-            }
-        }
+        NSBundle.mainBundle().setPreservationPriority(priority, forTags: tags)
     }
     
     internal func startUsingpResources(tags:Set<String>, prioriy:Double, intermediateHandler:odrIntermediateBlock,   completionHandler: odrCompletionBlock) {

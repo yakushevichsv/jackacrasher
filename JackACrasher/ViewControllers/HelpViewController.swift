@@ -46,9 +46,10 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         pageControl.numberOfPages = pageImages.count
         
         setCurrentPage(pageControl.currentPage)
-        //loadPage(pageControl.currentPage)
         
         correctFontOfChildViews(self.view)
+        
+       // NSNotificationCenter.defaultCenter().postNotificationName(NSBundleResourceRequestLowDiskSpaceNotification, object: self)
     }
     
     override func viewWillAppear(animated: Bool) {

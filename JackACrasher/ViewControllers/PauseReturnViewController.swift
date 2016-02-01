@@ -22,10 +22,7 @@ class PauseReturnViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
-        
-        self.btnSound.selected = !disabled
-        self.buttonPressed(self.btnSound)
+        correctSoundButton()
         
         correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 4 : 0)
     }
@@ -81,6 +78,13 @@ class PauseReturnViewController: UIViewController {
             
             self.dismissViewControllerAnimated(true, completion:nil)
         }
+    }
+    
+    func correctSoundButton() {
+        let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
+        
+        self.btnSound.selected = !disabled
+        self.buttonPressed(self.btnSound)
     }
 
 }
