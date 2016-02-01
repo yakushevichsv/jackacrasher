@@ -305,7 +305,6 @@ class GameViewController: UIViewController,GameSceneDelegate {
         }
     
         self.logicManager.storeSurvivalScores([UInt64(currentScore),totalScore, UInt64(playedTime)]){
-            [unowned self]
             success, error in
             self.segueToGameOverSrceen(needToContinue)
         }

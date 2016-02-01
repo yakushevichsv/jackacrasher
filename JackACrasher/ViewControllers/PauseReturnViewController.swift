@@ -40,13 +40,35 @@ class PauseReturnViewController: UIViewController {
             //selected = no sound
             if disabled {
                 SoundManager.sharedInstance.disableSound()
+                ODRManager.sharedManager.endAcessingRequest(GameLogicManager.ODRConstants.soundSet)
+                GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
             } else {
-                SoundManager.sharedInstance.enableSound()
-                SoundManager.sharedInstance.prepareToPlayBGMusic()
-                SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
+                if (!disabled) {
+                    
+                    dispatch_async(dispatch_get_main_queue()){
+                        sender.enabled = false
+                    }
+                    
+                    ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.soundSet, intermediateHandler: { (fraction) -> Void in
+                        
+                        }, completionHandler: { (error) -> Void in
+                            
+                            dispatch_async(dispatch_get_main_queue()){
+                            if error == nil {
+                                
+                                SoundManager.sharedInstance.enableSound()
+                                SoundManager.sharedInstance.prepareToPlayEffect("backgroundMusic.mp3")
+                                GameLogicManager.sharedInstance.storeGameSoundInfo(false)
+                            }
+                            else {
+                                GameLogicManager.sharedInstance.storeGameSoundInfo(true)
+                            }
+                            
+                                sender.enabled = true
+                            }
+                    })
+                }
             }
-            
-            GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
 
             return
         }

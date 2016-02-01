@@ -685,6 +685,10 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         emitter.targetNode = self
         emitter.particleScale = scale
         addChild(emitter)
+        
+        let sAction = scale < 2 ? SoundManager.explosionSmall : SoundManager.explosionLarge
+        
+        emitter.runAction(sAction)
     }
     
     
@@ -1504,7 +1508,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             let rect = CGRectMake(x, y, 2*radius, 2*radius)
             
             
-            self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: { [unowned self]
+            self.physicsWorld.enumerateBodiesInRect(rect, usingBlock: {
                 (eBody, retPtr) -> Void in
                 
                 if (eBody.categoryBitMask == EntityCategory.TrashAsteroid) {

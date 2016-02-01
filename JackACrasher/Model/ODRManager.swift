@@ -11,11 +11,6 @@ import UIKit
 let ODRManagerShouldEndAccessOfRequestNotitification = "ODRManagerShouldEndAccessOfRequestNotitification"
 
 class ODRManager: NSObject {
-
-    private struct Constants {
-        static let Sound = "Sound"
-        static let Help = "Help"
-    }
     
     typealias odrCompletionBlock = (error:NSError?) -> Void
     typealias odrIntermediateBlock = (fraction:Double) -> Void
@@ -106,24 +101,25 @@ class ODRManager: NSObject {
         
         
         let request = NSBundleResourceRequest(tags: tags)
+        self.appendToDictionary(request, intermediate: intermediateHandler)
         
         request.conditionallyBeginAccessingResourcesWithCompletionHandler{
             [unowned self]
             (exist) in
             
+            
             if (exist) {
+                self.removeFromDictionary(request)
+                self.usedRes.insert(request)
                 completionHandler(error: nil)
             }
             else {
                 
-                self.appendToDictionary(request, intermediate: intermediateHandler)
                 
-            
                 request.beginAccessingResourcesWithCompletionHandler {
                     [unowned self]
                     (errorObj) in
                     self.removeFromDictionary(request)
-                    
                     if ((errorObj == nil)) {
                         self.usedRes.insert(request)
                     }

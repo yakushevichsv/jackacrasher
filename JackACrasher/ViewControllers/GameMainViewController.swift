@@ -747,7 +747,10 @@ class GameMainViewController: UIViewController {
     
     @IBAction func unwindSegue(segue:UIStoryboardSegue) {
        
-        if segue.identifier == Optional("selectActionUnwind") {
+        if segue.identifier == Optional("helpUnwind") {
+            ODRManager.sharedManager.endAcessingRequest(GameLogicManager.ODRConstants.helpSet)
+        }
+        else if segue.identifier == Optional("selectActionUnwind") {
             
             self.needToDisplayAnimation = false
         }
@@ -792,28 +795,61 @@ class GameMainViewController: UIViewController {
             //selected = no sound 
             if disabled {
                 SoundManager.sharedInstance.disableSound()
+                ODRManager.sharedManager.endAcessingRequest(GameLogicManager.ODRConstants.soundSet)
+                GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
             } else {
-                SoundManager.sharedInstance.enableSound()
-                SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
+                if (!disabled) {
+                    
+                    dispatch_async(dispatch_get_main_queue()){
+                        sender.enabled = false
+                    }
+                    
+                    ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.soundSet, intermediateHandler: { (fraction) -> Void in
+                        
+                        }, completionHandler: { (error) -> Void in
+                            dispatch_async(dispatch_get_main_queue()){
+                                
+                            if error == nil {
+                               
+                                SoundManager.sharedInstance.enableSound()
+                                SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
+                                GameLogicManager.sharedInstance.storeGameSoundInfo(false)
+                            }
+                            else {
+                                GameLogicManager.sharedInstance.storeGameSoundInfo(true)
+                            }
+                            
+                                sender.enabled = true
+                            }
+                    })
+                }
             }
-            
-            GameLogicManager.sharedInstance.storeGameSoundInfo(disabled)
         }
         else if (sender == self.btnHelp) {
+            sender.enabled = false
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { [unowned self ] (_, _) -> Void in
                 //self.performSegueWithIdentifier("help", sender: sender)
                 ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.helpSet, prioriy:0.2,  intermediateHandler: { (fraction) -> Void in
                     //TODO: notify here....
-                    UIApplication.sharedApplication().networkActivityIndicatorVisible = true
                     }, completionHandler: { (error) -> Void in
-                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
-                        if (error != nil) {
-                            self.performSegueWithIdentifier("help", sender: self.btnHelp)
+                        dispatch_async(dispatch_get_main_queue())
+                            {
+                            sender.enabled = true
                         }
-                        else {
-                            //TODO: display error...
+                        
+                        dispatch_async(dispatch_get_main_queue())
+                        {
+                            [unowned self] in
                             
-                            print("Error \(error)")
+                            
+                            
+                            if (error == nil) {
+                                self.performSegueWithIdentifier("help", sender: self.btnHelp)
+                            }
+                            else {
+                                self.alertWithTitle(NSLocalizedString("Error", comment: "") , message: NSLocalizedString("Can't access help file", comment: ""))
+                                print("Error \(error)")
+                                }
                         }
                 })
             })
