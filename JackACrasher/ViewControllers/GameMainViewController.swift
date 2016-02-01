@@ -801,7 +801,21 @@ class GameMainViewController: UIViewController {
         }
         else if (sender == self.btnHelp) {
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { [unowned self ] (_, _) -> Void in
-                self.performSegueWithIdentifier("help", sender: sender)
+                //self.performSegueWithIdentifier("help", sender: sender)
+                ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.helpSet, prioriy:0.2,  intermediateHandler: { (fraction) -> Void in
+                    //TODO: notify here....
+                    UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+                    }, completionHandler: { (error) -> Void in
+                        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+                        if (error != nil) {
+                            self.performSegueWithIdentifier("help", sender: self.btnHelp)
+                        }
+                        else {
+                            //TODO: display error...
+                            
+                            print("Error \(error)")
+                        }
+                })
             })
         }
     }

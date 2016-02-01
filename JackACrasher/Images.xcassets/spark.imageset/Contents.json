@@ -2,8 +2,8 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x",
-      "filename" : "spark.png"
+      "filename" : "spark.png",
+      "scale" : "1x"
     },
     {
       "idiom" : "universal",

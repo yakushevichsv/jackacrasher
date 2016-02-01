@@ -34,6 +34,7 @@ class GameLogicManager: NSObject {
     
     private let centerManager:GameCenterManager! = GameCenterManager.sharedInstance
     private let cloudManager:CloudManager! = CloudManager.sharedInstance
+    private let odrManager:ODRManager! = ODRManager.sharedManager
     
     dynamic internal var isLoading:Bool = false
     
@@ -49,12 +50,16 @@ class GameLogicManager: NSObject {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "cloudChangedAuth", name: SYiCloudAuthStatusChangeNotification, object: self.cloudManager)
         
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameCenterChangedAuth", name: GameCenterManagerDidChangeAuth, object: self.centerManager)
+    
+        initODR()
+        
     }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: SYiCloudAuthStatusChangeNotification, object: self.cloudManager)
         
           NSNotificationCenter.defaultCenter().removeObserver(self, name: GameCenterManagerDidChangeAuth, object: self.centerManager)
+       deinitODR()
     }
     
     internal static var sharedInstance:GameLogicManager
@@ -1036,3 +1041,53 @@ extension GameLogicManager {
         return NSUserDefaults.standardUserDefaults().synchronize()
     }
 }
+
+//MARK: ODR Logic
+
+extension GameLogicManager {
+    
+    struct ODRConstants {
+        static let helpSet  = Set(arrayLiteral: "Help")
+        static let soundSet = Set(arrayLiteral: "Sound")
+    }
+    
+    func initODR() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToPurgeODR", name: ODRManagerShouldEndAccessOfRequestNotitification, object: self.odrManager)
+        
+        self.odrManager.definePreservationPriorityForResources(ODRConstants.helpSet, priority: 0.1)
+        self.odrManager.definePreservationPriorityForResources(ODRConstants.soundSet, priority: 0.9)
+    }
+    
+    func deinitODR() {
+         NSNotificationCenter.defaultCenter().removeObserver(self, name:ODRManagerShouldEndAccessOfRequestNotitification  , object:self.odrManager)
+    }
+    
+    func  needToPurgeODR(notification:NSNotification) {
+        
+        if let userInfo = notification.userInfo {
+            
+            if let preservation = userInfo["preservation"] as? Double {
+                
+                let request = userInfo["request"] as! NSBundleResourceRequest
+                
+                if preservation > 0.5 && request.tags == ODRConstants.soundSet  {
+                        // high
+                    
+                    self.odrManager.endAcessingRequest(ODRConstants.soundSet)
+                    SoundManager.sharedInstance.disableSound()
+                    self.storeGameSoundInfo(true)
+                
+                }
+                else if preservation < 0.5 && request.tags == ODRConstants.helpSet {
+                    
+                    if !(UIApplication.topViewController() is HelpViewController) {
+                        self.odrManager.endAcessingRequest(ODRConstants.helpSet)
+                    }
+                }
+            }
+        }
+        
+    }
+    
+}
+
