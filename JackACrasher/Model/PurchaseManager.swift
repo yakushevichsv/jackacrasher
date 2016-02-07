@@ -89,7 +89,15 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     internal var hasValidated: Bool {
         get {return self.managerState == .Validated}
     }
+    
+    internal var isValidating: Bool {
+        get {return self.managerState == .Validating}
+    }
 
+    internal var hasFailed: Bool {
+        get { return self.managerState == .Failed || self.managerState == .FailedToAccessITunes }
+    }
+    
     internal var validProductsIds:[String]?{
         get {
             if self.managerState != .Validated { return nil }
@@ -115,7 +123,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     override init() {
         super.init()
-        accumulateProductIdentifiers()
+        //accumulateProductIdentifiers()
     }
     
     internal func prepare() {
@@ -239,7 +247,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
     }
     
-    private func validateProducts() {
+    internal func validateProducts() {
         self.products = NSFileManager.defaultManager().jacGetPropertiesInfoFromPropertiesList()
         if let productsVal = self.products  {
             self.validateProductsInternal(productsVal)

@@ -37,7 +37,7 @@ class IAPProductInfo: NSObject {
                     
                     let newName = name.stringByAppendingString("@\(Int(scale))x.\(ext)")
                     
-                    self.icon = iconPath.stringByReplacingOccurrencesOfString(fileName, withString: newName)
+                    self.icon = iconPath//iconPath.stringByReplacingOccurrencesOfString(fileName, withString: newName)
                 }
             }
             else {

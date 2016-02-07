@@ -10,7 +10,7 @@
 		<key>productIdentifier</key>
 		<string>sy.gamefun.jackACrasher.ExtraLife</string>
 		<key>icon</key>
-		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/medkit@%01dx.png</string>
+		<string>Survival_extra_lifes</string>
 		<key>consumable</key>
 		<true/>
 		<key>consumableAmount</key>
@@ -20,7 +20,7 @@
 		<key>productIdentifier</key>
 		<string>sy.gamefun.jackACrasher.NoAds</string>
 		<key>icon</key>
-		<string>https://dl.dropboxusercontent.com/u/106064832/JackACrasher/NoAds@%01dx.jpg</string>
+		<string>NoAds</string>
 		<key>consumable</key>
 		<false/>
 	</dict>
@@ -28,8 +28,7 @@
 		<key>productIdentifier</key>
 		<string>sy.gamefun.jackACrasher.Laser</string>
 		<key>icon</key>
-		<string>https://www.dropbox.com/s/sp3powfa9begfrz/Ion_laser_weapon_icon.png
-http://www.razeware.com/clients/hangman3/IAPInfo/icon_10hints.png
+		<string>icon_10hints.png
 </string>
 		<key>consumable</key>
 		<false/>

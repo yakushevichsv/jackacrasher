@@ -59,6 +59,7 @@
 		217341021AFE54C1009E934A /* GameOverScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217341011AFE54C1009E934A /* GameOverScene.swift */; };
 		217341041AFE5674009E934A /* lose.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217341031AFE5674009E934A /* lose.wav */; settings = {ASSET_TAGS = (Sound, ); }; };
 		217360F91B87260C00713E82 /* lap.wav in Resources */ = {isa = PBXBuildFile; fileRef = 217360F81B87260C00713E82 /* lap.wav */; settings = {ASSET_TAGS = (Sound, ); }; };
+		217695001C66347200C4DFE9 /* ProductsInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 210EA9CC1B26E00400C69D29 /* ProductsInfo.plist */; };
 		217CF4DE1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 217CF4DD1B2859FD00F67D33 /* PopUpTransitioningDelegate.swift */; };
 		2188A5CF1B9F9FB900612BEC /* SWBlade.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2188A5CE1B9F9FB900612BEC /* SWBlade.swift */; };
 		218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 218B375B1B02959A00B9085C /* GameLogicManager.swift */; };
@@ -88,6 +89,7 @@
 		21DC553D1AF42DB60083210D /* Sparky.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21DC553C1AF42DB60083210D /* Sparky.sks */; };
 		21DDE5491B6A5A6300B41A91 /* Bomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE5481B6A5A6300B41A91 /* Bomb.swift */; };
 		21DDE54B1B6A619E00B41A91 /* AIBomb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DDE54A1B6A619E00B41A91 /* AIBomb.swift */; };
+		21DE02561C67A890002C77EA /* ProgressViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21DE02551C67A890002C77EA /* ProgressViewController.swift */; };
 		21DEA0D51AFD3037004FF5D7 /* Game_Robot.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */; };
 		21E053051BCEAF2700F7E4AD /* PyramidScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E053041BCEAF2700F7E4AD /* PyramidScene.swift */; };
 		21E56B2E1ADA93BB0071A217 /* Engine.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B2C1ADA93BB0071A217 /* Engine.sks */; };
@@ -137,7 +139,7 @@
 		210CE8731B8BC93C00C9F288 /* VKSdk.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = VKSdk.framework; sourceTree = "<group>"; };
 		210DD8151AE3CBAA0092DD39 /* Explosion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Explosion.swift; path = Entities/Explosion.swift; sourceTree = "<group>"; };
 		210EA9C81B26D54100C69D29 /* PurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PurchaseManager.swift; path = Model/PurchaseManager.swift; sourceTree = "<group>"; };
-		210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductIsInfo.plist; sourceTree = "<group>"; };
+		210EA9CC1B26E00400C69D29 /* ProductsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductsInfo.plist; sourceTree = "<group>"; };
 		210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasher-Bridging-Header.h"; sourceTree = "<group>"; };
 		21103F811B289A39007D8649 /* ShopDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsViewController.swift; path = ViewControllers/ShopDetailsViewController.swift; sourceTree = "<group>"; };
 		211173D91C21B1CF002A72A0 /* JCStartLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = JCStartLayer.swift; path = Views/Layers/JCStartLayer.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 		21DC553C1AF42DB60083210D /* Sparky.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Sparky.sks; sourceTree = "<group>"; };
 		21DDE5481B6A5A6300B41A91 /* Bomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bomb.swift; path = Entities/Bomb.swift; sourceTree = "<group>"; };
 		21DDE54A1B6A619E00B41A91 /* AIBomb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AIBomb.swift; path = Entities/AIBomb.swift; sourceTree = "<group>"; };
+		21DE02551C67A890002C77EA /* ProgressViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProgressViewController.swift; path = ViewControllers/ProgressViewController.swift; sourceTree = "<group>"; };
 		21DEA0D41AFD3037004FF5D7 /* Game_Robot.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Game_Robot.ttf; sourceTree = "<group>"; };
 		21E053041BCEAF2700F7E4AD /* PyramidScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PyramidScene.swift; sourceTree = "<group>"; };
 		21E396991C57817C0085918C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -377,6 +380,7 @@
 				21103F811B289A39007D8649 /* ShopDetailsViewController.swift */,
 				2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */,
 				21BF9C271B89E0A60002AEAC /* HelpViewController.swift */,
+				21DE02551C67A890002C77EA /* ProgressViewController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -586,7 +590,7 @@
 				212A2F2A1B36F98700B31482 /* AppleIncRootCertificate.cer */,
 				212A2F201B36F24400B31482 /* libcrypto.a */,
 				212A2F211B36F24400B31482 /* libssl.a */,
-				210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */,
+				210EA9CC1B26E00400C69D29 /* ProductsInfo.plist */,
 				2171B32A1B7B9F46007733BA /* Social.framework */,
 				2171B3281B7B92B6007733BA /* FBSDKShareKit.framework */,
 				2101EFC51B7B651E00516086 /* FBSDKCoreKit.framework */,
@@ -664,6 +668,7 @@
 			attributes = {
 				KnownAssetTags = (
 					Help,
+					IAP,
 					Sound,
 				);
 				LastSwiftUpdateCheck = 0700;
@@ -716,6 +721,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				217695001C66347200C4DFE9 /* ProductsInfo.plist in Resources */,
 				211243651AEAF1D3006B5487 /* CrystalRepresentation.sks in Resources */,
 				21CFBCA71B10A1B1009EDA3E /* button_press.wav in Resources */,
 				211C4C701B16FFA4005F50B8 /* Fire.sks in Resources */,
@@ -794,6 +800,7 @@
 				210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */,
 				2105AE541B8881DA00DDB0CC /* NORLabelNode.m in Sources */,
 				216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */,
+				21DE02561C67A890002C77EA /* ProgressViewController.swift in Sources */,
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,

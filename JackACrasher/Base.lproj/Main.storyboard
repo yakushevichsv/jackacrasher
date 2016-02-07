@@ -22,6 +22,7 @@
             <string>gamerobot</string>
             <string>gamerobot</string>
             <string>gamerobot</string>
+            <string>gamerobot</string>
         </mutableArray>
     </customFonts>
     <scenes>
@@ -299,7 +300,6 @@
                                 </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="CWo-wD-shJ"/>
-                                    <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="syR-z3-A5T"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -362,11 +362,86 @@
                         <outlet property="vkConstraint" destination="THO-Uc-mEI" id="vm6-Go-JH9"/>
                         <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                         <segue destination="CYZ-cS-sIm" kind="show" identifier="help" id="a2X-TL-NVO"/>
+                        <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="Z9x-t2-pyJ"/>
+                        <segue destination="leQ-i5-H1z" kind="presentation" identifier="progressSegue" id="u36-5Z-SrC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xd0-7l-Lt6" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="207" y="-358"/>
+            <point key="canvasLocation" x="138" y="-272"/>
+        </scene>
+        <!--Progress VC-->
+        <scene sceneID="3rc-6i-LNk">
+            <objects>
+                <viewController id="leQ-i5-H1z" userLabel="Progress VC" customClass="ProgressViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="khX-2g-tVr"/>
+                        <viewControllerLayoutGuide type="bottom" id="a0V-S4-Zs0"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="vWC-sx-tDN">
+                        <rect key="frame" x="0.0" y="0.0" width="400" height="200"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pC-Sl-DC1" userLabel="Container View">
+                                <rect key="frame" x="14" y="10" width="366" height="170"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lxf-rb-zyi">
+                                        <rect key="frame" x="154" y="31" width="58" height="23"/>
+                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="20"/>
+                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="vzS-qP-3gb">
+                                        <rect key="frame" x="37" y="91" width="292" height="2"/>
+                                    </progressView>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="G0l-oj-Y3U">
+                                        <rect key="frame" x="165" y="73" width="37" height="37"/>
+                                        <color key="color" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </activityIndicatorView>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="G0l-oj-Y3U" firstAttribute="centerY" secondItem="vzS-qP-3gb" secondAttribute="centerY" id="2XJ-du-BhT"/>
+                                    <constraint firstItem="lxf-rb-zyi" firstAttribute="centerY" secondItem="8pC-Sl-DC1" secondAttribute="centerY" multiplier="0.5" id="7D0-SE-H8I"/>
+                                    <constraint firstItem="G0l-oj-Y3U" firstAttribute="centerX" secondItem="8pC-Sl-DC1" secondAttribute="centerX" id="C6b-z7-0v1"/>
+                                    <constraint firstItem="vzS-qP-3gb" firstAttribute="width" secondItem="8pC-Sl-DC1" secondAttribute="width" multiplier="0.8" id="QJ2-Q7-1Ft"/>
+                                    <constraint firstItem="lxf-rb-zyi" firstAttribute="centerX" secondItem="8pC-Sl-DC1" secondAttribute="centerX" id="T1x-g3-me3"/>
+                                    <constraint firstItem="vzS-qP-3gb" firstAttribute="centerX" secondItem="8pC-Sl-DC1" secondAttribute="centerX" id="W90-Gx-tN7"/>
+                                    <constraint firstItem="vzS-qP-3gb" firstAttribute="top" secondItem="lxf-rb-zyi" secondAttribute="bottom" constant="37" id="y1F-0P-lin"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QyN-uu-1Wf" userLabel="Close Button">
+                                <rect key="frame" x="364" y="-1" width="29" height="29"/>
+                                <state key="normal" image="close">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="closeButtonPressed:" destination="aN4-v4-THo" eventType="touchUpInside" id="DOu-WE-M6J"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="8pC-Sl-DC1" secondAttribute="trailing" id="LQd-Lc-VWn"/>
+                            <constraint firstItem="8pC-Sl-DC1" firstAttribute="top" secondItem="QyN-uu-1Wf" secondAttribute="bottom" constant="-18" id="YJh-8S-W3h"/>
+                            <constraint firstItem="8pC-Sl-DC1" firstAttribute="top" secondItem="khX-2g-tVr" secondAttribute="bottom" constant="10" id="aaT-1G-ckW"/>
+                            <constraint firstItem="a0V-S4-Zs0" firstAttribute="top" secondItem="8pC-Sl-DC1" secondAttribute="bottom" constant="20" id="apT-jl-mky"/>
+                            <constraint firstItem="8pC-Sl-DC1" firstAttribute="leading" secondItem="vWC-sx-tDN" secondAttribute="leadingMargin" constant="-6" id="gFP-XW-YAS"/>
+                            <constraint firstItem="QyN-uu-1Wf" firstAttribute="leading" secondItem="8pC-Sl-DC1" secondAttribute="trailing" constant="-16" id="y4m-5Z-1D5"/>
+                        </constraints>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <size key="freeformSize" width="400" height="200"/>
+                    <connections>
+                        <outlet property="btnClose" destination="QyN-uu-1Wf" id="c01-zD-RsQ"/>
+                        <outlet property="ivIndicator" destination="G0l-oj-Y3U" id="omQ-2K-5kg"/>
+                        <outlet property="lblProgress" destination="lxf-rb-zyi" id="MNc-J8-ITy"/>
+                        <outlet property="pvStatus" destination="vzS-qP-3gb" id="2uT-Tx-0WS"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DB4-dN-Xvc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="200" y="-867"/>
         </scene>
         <!--Shop Details View Controller-->
         <scene sceneID="DiS-P0-S6f">
@@ -777,6 +852,29 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                        <rect key="frame" x="205" y="129" width="57" height="27"/>
+                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
+                                        <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
+                                        <state key="normal" title="Pause">
+                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                <real key="value" value="5"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
+                                        </connections>
+                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="44" y="129" width="119" height="27"/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
@@ -799,29 +897,6 @@
                                         <connections>
                                             <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="bGi-7d-QNG"/>
                                             <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwind" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
-                                        </connections>
-                                    </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="205" y="129" width="57" height="27"/>
-                                        <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
-                                        <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
-                                        <state key="normal" title="Pause">
-                                            <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <userDefinedRuntimeAttributes>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
-                                                <real key="value" value="5"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
-                                                <real key="value" value="1"/>
-                                            </userDefinedRuntimeAttribute>
-                                            <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
-                                                <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                                            </userDefinedRuntimeAttribute>
-                                        </userDefinedRuntimeAttributes>
-                                        <connections>
-                                            <action selector="buttonPressed:" destination="odW-g4-p7G" eventType="touchUpInside" id="UOd-Fg-i3h"/>
                                         </connections>
                                     </button>
                                 </subviews>
