@@ -838,9 +838,16 @@ class GameMainViewController: UIViewController {
         
         self.removePurchaseValidationListeners()
         
+        var perform:Bool = self.btnShop.enabled
+        
+        if (!self.needToWaitValidation) {
+            perform = true
+            self.btnShop.enabled = true
+        }
+        
         self.needToWaitValidation = false
         
-        if (self.btnShop.enabled) {
+        if (perform) {
             if (!self.displayAlertAboutImpossiblePayments()) {
                 self.performSegueWithIdentifier("displayShop", sender: self.btnShop)
                 
@@ -932,6 +939,9 @@ class GameMainViewController: UIViewController {
                             if (!PurchaseManager.sharedInstance.isValidating) {
                                 sender.enabled = true
                                 self.puchaseValidationInternal()
+                            }
+                            else {
+                                self.needToWaitValidation = false
                             }
                     }
                 })

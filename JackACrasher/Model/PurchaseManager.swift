@@ -123,7 +123,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     override init() {
         super.init()
-        //accumulateProductIdentifiers()
+        accumulateProductIdentifiers()
     }
     
     internal func prepare() {
