@@ -156,6 +156,87 @@ class GameMainViewController: UIViewController {
         correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 5 : 0)
         
     }
+    
+    var progressVC:ProgressViewController? {
+        get {
+            for vc in self.childViewControllers {
+                if vc is ProgressViewController {
+                    return vc as? ProgressViewController
+                }
+            }
+            return nil
+        }
+    }
+    
+    func showOverlay(sender:AnyObject?) {
+        
+        if self.progressVC != nil {
+            return
+        }
+        
+        if let vc = self.storyboard?.instantiateViewControllerWithIdentifier("progressVCID") as? ProgressViewController {
+            
+            let size = CGSizeMake(300, 150)
+            let frame = CGRect(origin: CGPointZero, size: size)
+            vc.view.bounds = frame
+            vc.view.center = self.view.center
+            
+            vc.cancelBlock =  {
+                if let senderPr = sender as? UIButton {
+                    
+                    var tags:Set<String>? = nil
+                    
+                    if senderPr == self.btnHelp {
+                        tags = GameLogicManager.ODRConstants.helpSet
+                    } else if senderPr == self.btnShop {
+                        tags = GameLogicManager.ODRConstants.iapSet
+                        
+                    } else if senderPr == self.btnSound {
+                        tags = GameLogicManager.ODRConstants.soundSet
+                        
+                    }
+                    
+                    if let tagsInner = tags {
+                        
+                        //ODRManager.sharedManager.cancelRequest(tagsInner)
+                        ODRManager.sharedManager.endAcessingRequest(tagsInner)
+                    }
+                    
+                    senderPr.enabled = true
+                }
+                self.removeBlackOverlayView()
+            }
+            
+            addBlackOverlayView()
+            
+            self.view.addSubview(vc.view)
+            addChildViewController(vc)
+            vc.didMoveToParentViewController(self)
+        }
+        
+    }
+    
+    func addBlackOverlayView() {
+        
+        let blackView = UIView(frame: self.view.bounds)
+        blackView.backgroundColor = UIColor.blackColor()
+        blackView.alpha = 0.3
+        blackView.tag = 555
+        blackView.userInteractionEnabled = false
+        self.view.addSubview(blackView)
+    }
+    
+    func removeBlackOverlayView() {
+        self.view.viewWithTag(555)?.removeFromSuperview()
+    }
+    
+    func hideOverlay() {
+        removeBlackOverlayView()
+        if let pauseVC = self.progressVC {
+            pauseVC.stopIndicator()
+        }
+       
+    }
 
     private func hideAsters() {
     
@@ -501,41 +582,6 @@ class GameMainViewController: UIViewController {
                 let p6 = NSLocalizedString("HelpPage6", comment:"")
                 
                 dVC.pageDescriptions = [p1,p2,p3,p4,p5,p6]
-            } else if (identifier == "progressSegue") {
-                
-                let transDelegate = self.transitionDelegate
-                transDelegate.rect = CGRectInset(self.view.bounds, CGRectGetWidth(self.view.bounds)*0.4, CGRectGetHeight(self.view.bounds)*0.4)
-                transDelegate.isPortrait = CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame)
-                
-                let dVC = segue.destinationViewController as! ProgressViewController
-                
-                transDelegate.backgroundColor = UIColor.clearColor()
-                transDelegate.backgroundAlpha = 1.0
-                
-                dVC.cancelBlock =  {
-                    if let senderPr = sender as? UIButton {
-                        
-                        var tags:Set<String>? = nil
-                        
-                        if senderPr == self.btnHelp {
-                            tags = GameLogicManager.ODRConstants.helpSet
-                        } else if senderPr == self.btnShop {
-                            tags = GameLogicManager.ODRConstants.iapSet
-                            
-                        } else if senderPr == self.btnSound {
-                            tags = GameLogicManager.ODRConstants.soundSet
-                            
-                        }
-                        
-                        if let tagsInner = tags {
-                            
-                            //ODRManager.sharedManager.cancelRequest(tagsInner)
-                            ODRManager.sharedManager.endAcessingRequest(tagsInner)
-                        }
-                    }
-                }
-                dVC.modalPresentationStyle = .Custom
-                dVC.transitioningDelegate = transDelegate
             }
         }
     }
@@ -848,12 +894,11 @@ class GameMainViewController: UIViewController {
         self.needToWaitValidation = false
         
         if (perform) {
+            
+            self.hideOverlay()
+            
             if (!self.displayAlertAboutImpossiblePayments()) {
                 self.performSegueWithIdentifier("displayShop", sender: self.btnShop)
-                
-                if let pauseVC = self.presentedViewController as? ProgressViewController {
-                    pauseVC.stopIndicator()
-                }
             }
         }
     }
@@ -904,12 +949,10 @@ class GameMainViewController: UIViewController {
                     dispatch_async(dispatch_get_main_queue()) {
                         [unowned self ] in
                         
-                        if let pauseVC = self.presentedViewController as? ProgressViewController {
-                            pauseVC.setProgressValue(fraction)
+                        if (realPressed) {
+                            self.showOverlay(sender)
                         }
-                        else if (realPressed) {
-                            //self.performSegueWithIdentifier("progressSegue", sender: sender)
-                        }
+                        self.progressVC?.setProgressValue(fraction)
                     }
                     
                     }, completionHandler: { (error) -> Void in
@@ -917,7 +960,7 @@ class GameMainViewController: UIViewController {
                         dispatch_async(dispatch_get_main_queue()){
                             
                             
-                            if let pauseVC = self.presentedViewController as? ProgressViewController {
+                            if let pauseVC = self.progressVC {
                                 pauseVC.activateIndicator()
                             }
                         
@@ -925,9 +968,7 @@ class GameMainViewController: UIViewController {
                                 self.puchaseValidationInternal()
                                 sender.enabled = true
                                 
-                                if let pauseVC = self.presentedViewController as? ProgressViewController {
-                                    pauseVC.stopIndicator()
-                                }
+                                self.hideOverlay()
                                 
                                 self.alertWithTitle("Error", message: error!.localizedDescription)
                                 
@@ -967,20 +1008,17 @@ class GameMainViewController: UIViewController {
                         dispatch_async(dispatch_get_main_queue()) {
                             [unowned self ] in
                             
-                            if let pauseVC = self.presentedViewController as? ProgressViewController {
-                                pauseVC.setProgressValue(fraction)
+                            if (realPressed) {
+                                self.showOverlay(sender)
                             }
-                            else if (realPressed) {
-                                self.performSegueWithIdentifier("progressSegue", sender: sender)
-                            }
+                            self.progressVC?.setProgressValue(fraction)
+                            
                         }
                         
                         }, completionHandler: { (error) -> Void in
                             dispatch_async(dispatch_get_main_queue()){
                                 
-                                if let pauseVC = self.presentedViewController as? ProgressViewController {
-                                    pauseVC.stopIndicator()
-                                }
+                                self.hideOverlay()
                                 
                                 if error == nil {
                                     
@@ -1008,12 +1046,10 @@ class GameMainViewController: UIViewController {
                     dispatch_async(dispatch_get_main_queue()) {
                         [unowned self ] in
                         
-                        if let pauseVC = self.presentedViewController as? ProgressViewController {
-                            pauseVC.setProgressValue(fraction)
+                        if (realPressed) {
+                            self.showOverlay(sender)
                         }
-                        else if (realPressed) {
-                            self.performSegueWithIdentifier("progressSegue", sender: sender)
-                        }
+                        self.progressVC?.setProgressValue(fraction)
                     }
 
                     }, completionHandler: { (error) -> Void in
@@ -1025,9 +1061,7 @@ class GameMainViewController: UIViewController {
                             
                             sender.enabled = true
                             
-                            if let pauseVC = self.presentedViewController as? ProgressViewController {
-                                pauseVC.stopIndicator()
-                            }
+                            self.hideOverlay()
                             
                             if (error == nil) {
                                 self.performSegueWithIdentifier("help", sender: self.btnHelp)

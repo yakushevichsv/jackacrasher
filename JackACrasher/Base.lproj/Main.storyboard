@@ -363,7 +363,6 @@
                         <segue destination="BV1-FR-VrT" kind="custom" identifier="startSurvival" customClass="CustomTransitionSegue" customModule="JackACrasher" customModuleProvider="target" id="Mr1-T7-vMj"/>
                         <segue destination="CYZ-cS-sIm" kind="show" identifier="help" id="a2X-TL-NVO"/>
                         <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="Z9x-t2-pyJ"/>
-                        <segue destination="leQ-i5-H1z" kind="presentation" identifier="progressSegue" id="u36-5Z-SrC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xd0-7l-Lt6" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -373,7 +372,7 @@
         <!--Progress VC-->
         <scene sceneID="3rc-6i-LNk">
             <objects>
-                <viewController id="leQ-i5-H1z" userLabel="Progress VC" customClass="ProgressViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="progressVCID" id="leQ-i5-H1z" userLabel="Progress VC" customClass="ProgressViewController" customModule="JackACrasher" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="khX-2g-tVr"/>
                         <viewControllerLayoutGuide type="bottom" id="a0V-S4-Zs0"/>
@@ -409,6 +408,17 @@
                                     <constraint firstItem="vzS-qP-3gb" firstAttribute="centerX" secondItem="8pC-Sl-DC1" secondAttribute="centerX" id="W90-Gx-tN7"/>
                                     <constraint firstItem="vzS-qP-3gb" firstAttribute="top" secondItem="lxf-rb-zyi" secondAttribute="bottom" constant="37" id="y1F-0P-lin"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                                        <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                        <real key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                        <real key="value" value="1"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QyN-uu-1Wf" userLabel="Close Button">
                                 <rect key="frame" x="364" y="-1" width="29" height="29"/>
@@ -430,6 +440,9 @@
                             <constraint firstItem="QyN-uu-1Wf" firstAttribute="leading" secondItem="8pC-Sl-DC1" secondAttribute="trailing" constant="-16" id="y4m-5Z-1D5"/>
                         </constraints>
                     </view>
+                    <nil key="simulatedStatusBarMetrics"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <nil key="simulatedBottomBarMetrics"/>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="400" height="200"/>
                     <connections>

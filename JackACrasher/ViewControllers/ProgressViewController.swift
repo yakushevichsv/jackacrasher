@@ -33,6 +33,8 @@ class ProgressViewController: UIViewController {
             setProgressValue(progressValue,animated: true)
             progressValue = 0;
         }
+        
+        self.btnClose.hidden = true
     }
 
     
@@ -41,7 +43,17 @@ class ProgressViewController: UIViewController {
         if sender != nil && self.btnClose == sender {
             self.cancelBlock?()
         }
-        self.presentingViewController?.dismissViewControllerAnimated(true,completion: nil)
+        
+        self.cancelBlock = nil
+        
+        if let presentVC = self.presentingViewController {
+            presentVC.dismissViewControllerAnimated(true,completion: nil)
+        }
+        else if let _ = self.parentViewController {
+            self.willMoveToParentViewController(nil)
+            self.view.removeFromSuperview()
+            self.removeFromParentViewController()
+        }
     }
     
     func setProgressValue(value:Double,animated:Bool = false) {
