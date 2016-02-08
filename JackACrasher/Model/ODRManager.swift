@@ -13,6 +13,7 @@ let ODRManagerShouldEndAccessOfRequestNotitification = "ODRManagerShouldEndAcces
 class ODRManager: NSObject {
     
     typealias odrCompletionBlock = (error:NSError?) -> Void
+    typealias odrExistCompletionBlock = (exist:Bool) -> Void
     typealias odrIntermediateBlock = (fraction:Double) -> Void
     
     private static var sContext:dispatch_once_t = 0
@@ -93,6 +94,20 @@ class ODRManager: NSObject {
             priority += NSBundle.mainBundle().preservationPriorityForTag(tag)/Double(tags.count)
         }
         return priority
+    }
+    
+    internal func checkForResources(tags:Set<String>, completionHandler: odrExistCompletionBlock) {
+        
+        let request = NSBundleResourceRequest(tags: tags)
+        self.appendToDictionary(request) {_ in }
+        
+        request.conditionallyBeginAccessingResourcesWithCompletionHandler{
+            [unowned self]
+            (exist) in
+            
+            self.removeFromDictionary(request)
+            completionHandler(exist: exist)
+        }
     }
     
     internal func startUsingpResources(tags:Set<String>, prioriy:Double, intermediateHandler:odrIntermediateBlock,   completionHandler: odrCompletionBlock) {

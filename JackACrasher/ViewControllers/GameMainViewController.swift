@@ -156,87 +156,6 @@ class GameMainViewController: UIViewController {
         correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 5 : 0)
         
     }
-    
-    var progressVC:ProgressViewController? {
-        get {
-            for vc in self.childViewControllers {
-                if vc is ProgressViewController {
-                    return vc as? ProgressViewController
-                }
-            }
-            return nil
-        }
-    }
-    
-    func showOverlay(sender:AnyObject?) {
-        
-        if self.progressVC != nil {
-            return
-        }
-        
-        if let vc = self.storyboard?.instantiateViewControllerWithIdentifier("progressVCID") as? ProgressViewController {
-            
-            let size = CGSizeMake(300, 150)
-            let frame = CGRect(origin: CGPointZero, size: size)
-            vc.view.bounds = frame
-            vc.view.center = self.view.center
-            
-            vc.cancelBlock =  {
-                if let senderPr = sender as? UIButton {
-                    
-                    var tags:Set<String>? = nil
-                    
-                    if senderPr == self.btnHelp {
-                        tags = GameLogicManager.ODRConstants.helpSet
-                    } else if senderPr == self.btnShop {
-                        tags = GameLogicManager.ODRConstants.iapSet
-                        
-                    } else if senderPr == self.btnSound {
-                        tags = GameLogicManager.ODRConstants.soundSet
-                        
-                    }
-                    
-                    if let tagsInner = tags {
-                        
-                        //ODRManager.sharedManager.cancelRequest(tagsInner)
-                        ODRManager.sharedManager.endAcessingRequest(tagsInner)
-                    }
-                    
-                    senderPr.enabled = true
-                }
-                self.removeBlackOverlayView()
-            }
-            
-            addBlackOverlayView()
-            
-            self.view.addSubview(vc.view)
-            addChildViewController(vc)
-            vc.didMoveToParentViewController(self)
-        }
-        
-    }
-    
-    func addBlackOverlayView() {
-        
-        let blackView = UIView(frame: self.view.bounds)
-        blackView.backgroundColor = UIColor.blackColor()
-        blackView.alpha = 0.3
-        blackView.tag = 555
-        blackView.userInteractionEnabled = false
-        self.view.addSubview(blackView)
-    }
-    
-    func removeBlackOverlayView() {
-        self.view.viewWithTag(555)?.removeFromSuperview()
-    }
-    
-    func hideOverlay() {
-        removeBlackOverlayView()
-        if let pauseVC = self.progressVC {
-            pauseVC.stopIndicator()
-        }
-       
-    }
 
     private func hideAsters() {
     
@@ -944,14 +863,16 @@ class GameMainViewController: UIViewController {
             
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
             
+                if (realPressed) {
+                    self.showOverlay(sender)
+                    self.progressVC?.activateIndicator()
+                }
+                
                 ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.iapSet, intermediateHandler: { (fraction) -> Void in
                     
                     dispatch_async(dispatch_get_main_queue()) {
                         [unowned self ] in
                         
-                        if (realPressed) {
-                            self.showOverlay(sender)
-                        }
                         self.progressVC?.setProgressValue(fraction)
                     }
                     
@@ -1002,15 +923,18 @@ class GameMainViewController: UIViewController {
                     
                     sender.enabled = false
                     
+                    if (realPressed) {
+                        self.showOverlay(sender)
+                        self.progressVC?.activateIndicator()
+                    }
+
                     
                     ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.soundSet, intermediateHandler: { (fraction) -> Void in
                         
                         dispatch_async(dispatch_get_main_queue()) {
                             [unowned self ] in
                             
-                            if (realPressed) {
-                                self.showOverlay(sender)
-                            }
+                           
                             self.progressVC?.setProgressValue(fraction)
                             
                         }
@@ -1040,15 +964,17 @@ class GameMainViewController: UIViewController {
         else if (sender == self.btnHelp) {
             sender.enabled = false
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { [unowned self ] (_, _) -> Void in
-                //self.performSegueWithIdentifier("help", sender: sender)
+                
+                if (realPressed) {
+                    self.showOverlay(sender)
+                    self.progressVC?.activateIndicator()
+                }
+                
                 ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.helpSet, prioriy:0.2,  intermediateHandler: { (fraction) -> Void in
                     //TODO: notify here....
                     dispatch_async(dispatch_get_main_queue()) {
                         [unowned self ] in
                         
-                        if (realPressed) {
-                            self.showOverlay(sender)
-                        }
                         self.progressVC?.setProgressValue(fraction)
                     }
 
@@ -1557,5 +1483,117 @@ extension GameMainViewController {
         if self.interstitial?.loaded == true {
             self.presentInterlude()
         }
+    }
+}
+
+//MARK: Progress methods
+
+extension GameMainViewController {
+    
+    var progressVC:ProgressViewController? {
+        get {
+            for vc in self.childViewControllers {
+                if vc is ProgressViewController {
+                    return vc as? ProgressViewController
+                }
+            }
+            return nil
+        }
+    }
+    
+    func showOverlay(sender:AnyObject?) {
+        
+        if let senderPr = sender as? UIButton {
+            
+            var tags:Set<String>? = nil
+            
+            if senderPr == self.btnHelp {
+                tags = GameLogicManager.ODRConstants.helpSet
+            } else if senderPr == self.btnShop {
+                tags = GameLogicManager.ODRConstants.iapSet
+                
+            } else if senderPr == self.btnSound {
+                tags = GameLogicManager.ODRConstants.soundSet
+                
+            }
+
+            ODRManager.sharedManager.checkForResources(tags!) { (exist) in
+                
+                if (!exist) {
+                    
+                    self.performSelectorOnMainThread("showOverlayPrivate:", withObject: sender, waitUntilDone: false)
+                }
+            }
+        }
+    }
+    
+    func showOverlayPrivate(sender:AnyObject?) {
+        
+        if self.progressVC != nil {
+            return
+        }
+        
+        if let vc = self.storyboard?.instantiateViewControllerWithIdentifier("progressVCID") as? ProgressViewController {
+            
+            let size = CGSizeMake(300, 150)
+            let frame = CGRect(origin: CGPointZero, size: size)
+            vc.view.bounds = frame
+            vc.view.center = self.view.center
+            
+            vc.cancelBlock =  {
+                if let senderPr = sender as? UIButton {
+                    
+                    var tags:Set<String>? = nil
+                    
+                    if senderPr == self.btnHelp {
+                        tags = GameLogicManager.ODRConstants.helpSet
+                    } else if senderPr == self.btnShop {
+                        tags = GameLogicManager.ODRConstants.iapSet
+                        
+                    } else if senderPr == self.btnSound {
+                        tags = GameLogicManager.ODRConstants.soundSet
+                        
+                    }
+                    
+                    if let tagsInner = tags {
+                        
+                        //ODRManager.sharedManager.cancelRequest(tagsInner)
+                        ODRManager.sharedManager.endAcessingRequest(tagsInner)
+                    }
+                    
+                    senderPr.enabled = true
+                }
+                self.removeBlackOverlayView()
+            }
+            
+            addBlackOverlayView()
+            
+            self.view.addSubview(vc.view)
+            addChildViewController(vc)
+            vc.didMoveToParentViewController(self)
+        }
+        
+    }
+    
+    func addBlackOverlayView() {
+        
+        let blackView = UIView(frame: self.view.bounds)
+        blackView.backgroundColor = UIColor.blackColor()
+        blackView.alpha = 0.3
+        blackView.tag = 555
+        blackView.userInteractionEnabled = true
+        self.view.addSubview(blackView)
+    }
+    
+    func removeBlackOverlayView() {
+        self.view.viewWithTag(555)?.removeFromSuperview()
+    }
+    
+    func hideOverlay() {
+        removeBlackOverlayView()
+        if let pauseVC = self.progressVC {
+            pauseVC.stopIndicator()
+        }
+        
     }
 }

@@ -139,7 +139,6 @@ extension NSFileManager {
             return nil
         }
         
-        let path = self.jacCacheDirectory
         let scale = UIScreen.mainScreen().scale
         
         let filePath = NSBundle.mainBundle().pathForResource(self.jacProductsInfo, ofType: nil)!
