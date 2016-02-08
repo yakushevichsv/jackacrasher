@@ -48,12 +48,7 @@ class ODRManager: NSObject {
         
         for req in self.usedRes {
             
-            var totalValue:Double = 0
-            
-            for tag in req.tags {
-                let value =  NSBundle.mainBundle().preservationPriorityForTag(tag)
-                totalValue += value/Double(req.tags.count)
-            }
+            let totalValue = self.preservationPriorityForResource(req.tags)
             
             NSNotificationCenter.defaultCenter().postNotificationName(ODRManagerShouldEndAccessOfRequestNotitification, object: self, userInfo: ["preservation":totalValue, "request":req])
             
@@ -90,6 +85,14 @@ class ODRManager: NSObject {
     internal func definePreservationPriorityForResources(tags:Set<String>,priority:Double) {
         
         NSBundle.mainBundle().setPreservationPriority(priority, forTags: tags)
+    }
+    
+    internal func preservationPriorityForResource(tags:Set<String>) -> Double {
+        var priority:Double = 0;
+        for tag in tags {
+            priority += NSBundle.mainBundle().preservationPriorityForTag(tag)/Double(tags.count)
+        }
+        return priority
     }
     
     internal func startUsingpResources(tags:Set<String>, prioriy:Double, intermediateHandler:odrIntermediateBlock,   completionHandler: odrCompletionBlock) {
@@ -204,10 +207,16 @@ class ODRManager: NSObject {
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         
         
-        if let reqObj = object as? NSBundleResourceRequest {
+        if let progressObj = object as? NSProgress {
             
-            if let intermediate = self.dic[reqObj] {
-                intermediate(fraction: reqObj.progress.fractionCompleted)
+            for key in self.dic.keys {
+                
+                if key.progress == progressObj {
+                    
+                    if let intermediate = self.dic[key] {
+                        intermediate(fraction: progressObj.fractionCompleted)
+                    }
+                }
             }
             
         }

@@ -983,7 +983,6 @@ extension GameLogicManager {
     func cloudChangedAuth() {
         
         self.cloudManager.userLoggedIn() {
-            [unowned self]
             loggedIn in
             
             if (loggedIn) {
@@ -1049,6 +1048,7 @@ extension GameLogicManager {
     struct ODRConstants {
         static let helpSet  = Set(arrayLiteral: "Help")
         static let soundSet = Set(arrayLiteral: "Sound")
+        static let iapSet   = Set(arrayLiteral: "IAP")
     }
     
     func initODR() {
@@ -1056,6 +1056,8 @@ extension GameLogicManager {
         
         self.odrManager.definePreservationPriorityForResources(ODRConstants.helpSet, priority: 0.1)
         self.odrManager.definePreservationPriorityForResources(ODRConstants.soundSet, priority: 0.9)
+        self.odrManager.definePreservationPriorityForResources(ODRConstants.iapSet, priority: 0.5)
+        
     }
     
     func deinitODR() {
@@ -1072,10 +1074,18 @@ extension GameLogicManager {
                 
                 let tVC = UIApplication.topViewController()
                 
-                if preservation > 0.5 && request.tags == ODRConstants.soundSet  {
+                let calcPreservation = self.odrManager.preservationPriorityForResource(request.tags)
+                
+                let isEqual = preservation == calcPreservation
+                
+                if (!isEqual) {
+                    return
+                }
+                
+                if request.tags == ODRConstants.soundSet  {
                         // high
                     
-                    self.odrManager.endAcessingRequest(ODRConstants.soundSet)
+                    self.odrManager.endAcessingRequest(request.tags)
                     SoundManager.sharedInstance.disableSound()
                     self.storeGameSoundInfo(true)
                     
@@ -1087,10 +1097,16 @@ extension GameLogicManager {
                         pVC.correctSoundButton()
                     }
                 }
-                else if preservation < 0.5 && request.tags == ODRConstants.helpSet {
+                else if request.tags == ODRConstants.iapSet {
+                    
+                    if !(tVC is ShopDetailsViewController) {
+                        self.odrManager.endAcessingRequest(request.tags)
+                    }
+                }
+                else if request.tags == ODRConstants.helpSet {
                     
                     if !(tVC is HelpViewController) {
-                        self.odrManager.endAcessingRequest(ODRConstants.helpSet)
+                        self.odrManager.endAcessingRequest(request.tags)
                     }
                 }
             }

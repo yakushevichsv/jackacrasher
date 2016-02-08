@@ -453,7 +453,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
             collectionViewCell.setImage(nil)
         } else {
             let icon = product.productInfo!.icon!
-            if (!NSFileManager.defaultManager().jacHasItemInCache(icon)) {
+            if (UIImage(named: icon) == nil && !NSFileManager.defaultManager().jacHasItemInCache(icon)) {
                 
                 collectionViewCell.displayActivityIndicatorWhileDownloading()
                 
@@ -529,7 +529,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
             }
             else {
                 collectionViewCell.hideActivityIndicatorAfterDonwloading()
-                collectionViewCell.setImage(NSFileManager.defaultManager().jacGetImageFromCache(icon))
+                collectionViewCell.setImage(UIImage(named: icon) ?? NSFileManager.defaultManager().jacGetImageFromCache(icon))
             }
             
         }

@@ -116,11 +116,7 @@ extension NSFileManager {
     
     func jacHasValidPropertiesList() -> Bool {
         
-        let path = self.jacCacheDirectory
-        
-        let filePath = path.stringByAppendingPathComponent(self.jacProductsInfo)
-        
-        if self.fileExistsAtPath(filePath) {
+        if let filePath = NSBundle.mainBundle().pathForResource(self.jacProductsInfo, ofType: nil) {
          
             let array = NSArray(contentsOfFile: filePath)
             if (array?.count == 4) {
@@ -146,7 +142,7 @@ extension NSFileManager {
         let path = self.jacCacheDirectory
         let scale = UIScreen.mainScreen().scale
         
-        let filePath = path.stringByAppendingPathComponent(self.jacProductsInfo)
+        let filePath = NSBundle.mainBundle().pathForResource(self.jacProductsInfo, ofType: nil)!
         var result:[IAPProduct]? = nil
         
         if self.fileExistsAtPath(filePath) {

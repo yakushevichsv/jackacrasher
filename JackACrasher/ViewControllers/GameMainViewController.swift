@@ -30,6 +30,7 @@ class GameMainViewController: UIViewController {
     
     private var startLayer:JCStartLayer? = nil
     private var displStartLayerAnim = false
+    private var needToWaitValidation = false
     
     @IBOutlet weak var btnStrategy:UIButton!
     @IBOutlet weak var btnHelp:UIButton!
@@ -155,6 +156,87 @@ class GameMainViewController: UIViewController {
         correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 5 : 0)
         
     }
+    
+    var progressVC:ProgressViewController? {
+        get {
+            for vc in self.childViewControllers {
+                if vc is ProgressViewController {
+                    return vc as? ProgressViewController
+                }
+            }
+            return nil
+        }
+    }
+    
+    func showOverlay(sender:AnyObject?) {
+        
+        if self.progressVC != nil {
+            return
+        }
+        
+        if let vc = self.storyboard?.instantiateViewControllerWithIdentifier("progressVCID") as? ProgressViewController {
+            
+            let size = CGSizeMake(300, 150)
+            let frame = CGRect(origin: CGPointZero, size: size)
+            vc.view.bounds = frame
+            vc.view.center = self.view.center
+            
+            vc.cancelBlock =  {
+                if let senderPr = sender as? UIButton {
+                    
+                    var tags:Set<String>? = nil
+                    
+                    if senderPr == self.btnHelp {
+                        tags = GameLogicManager.ODRConstants.helpSet
+                    } else if senderPr == self.btnShop {
+                        tags = GameLogicManager.ODRConstants.iapSet
+                        
+                    } else if senderPr == self.btnSound {
+                        tags = GameLogicManager.ODRConstants.soundSet
+                        
+                    }
+                    
+                    if let tagsInner = tags {
+                        
+                        //ODRManager.sharedManager.cancelRequest(tagsInner)
+                        ODRManager.sharedManager.endAcessingRequest(tagsInner)
+                    }
+                    
+                    senderPr.enabled = true
+                }
+                self.removeBlackOverlayView()
+            }
+            
+            addBlackOverlayView()
+            
+            self.view.addSubview(vc.view)
+            addChildViewController(vc)
+            vc.didMoveToParentViewController(self)
+        }
+        
+    }
+    
+    func addBlackOverlayView() {
+        
+        let blackView = UIView(frame: self.view.bounds)
+        blackView.backgroundColor = UIColor.blackColor()
+        blackView.alpha = 0.3
+        blackView.tag = 555
+        blackView.userInteractionEnabled = false
+        self.view.addSubview(blackView)
+    }
+    
+    func removeBlackOverlayView() {
+        self.view.viewWithTag(555)?.removeFromSuperview()
+    }
+    
+    func hideOverlay() {
+        removeBlackOverlayView()
+        if let pauseVC = self.progressVC {
+            pauseVC.stopIndicator()
+        }
+       
+    }
 
     private func hideAsters() {
     
@@ -226,7 +308,7 @@ class GameMainViewController: UIViewController {
         let disabled = GameLogicManager.sharedInstance.gameSoundDisabled()
         
         self.btnSound.selected = !disabled
-        self.btnPressed(self.btnSound)
+        self.btnPressedInternal(self.btnSound, realPressed: false)
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -523,7 +605,7 @@ class GameMainViewController: UIViewController {
                 let canPurchase = PurchaseManager.canPurchase()
                 let validated = PurchaseManager.sharedInstance.hasValidated
             
-                return canPurchase && validated && !adPresent
+                return canPurchase && validated && !adPresent && !self.needToWaitValidation
             }
             else if (identifier == "startSurvival" || identifier == "help") {
                 
@@ -754,7 +836,6 @@ class GameMainViewController: UIViewController {
             
             self.needToDisplayAnimation = false
         }
-        
         correctSoundButton()
         
         unwindForAd()
@@ -766,7 +847,72 @@ class GameMainViewController: UIViewController {
         
     }
     
+    func appendPurchaseValidationListeners() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "purchaseValideted:", name: kPurchaseManagerValidatedProductsNotification, object: PurchaseManager.sharedInstance)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "purchaseValidationFailed:", name: kPurchaseManagerDidFailedProductsValidationNotification, object: PurchaseManager.sharedInstance)
+    }
+    
+    func removePurchaseValidationListeners() {
+        
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: kPurchaseManagerValidatedProductsNotification, object: PurchaseManager.sharedInstance)
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: kPurchaseManagerDidFailedProductsValidationNotification, object: PurchaseManager.sharedInstance)
+    }
+    
+    func purchaseValideted(aNotification:NSNotification) {
+        
+        if !NSThread.isMainThread() {
+            
+            self.performSelectorOnMainThread("purchaseValideted:", withObject: aNotification, waitUntilDone: false)
+            return
+        }
+        puchaseValidationInternal()
+    }
+    
+    func purchaseValidationFailed(aNotification:NSNotification) {
+        
+        
+        if !NSThread.isMainThread() {
+            
+            self.performSelectorOnMainThread("purchaseValidationFailed:", withObject: aNotification, waitUntilDone: false)
+            return
+        }
+        puchaseValidationInternal()
+    }
+    
+    func puchaseValidationInternal() {
+        
+        self.removePurchaseValidationListeners()
+        
+        var perform:Bool = self.btnShop.enabled
+        
+        if (!self.needToWaitValidation) {
+            perform = true
+            self.btnShop.enabled = true
+        }
+        
+        self.needToWaitValidation = false
+        
+        if (perform) {
+            
+            self.hideOverlay()
+            
+            if (!self.displayAlertAboutImpossiblePayments()) {
+                self.performSegueWithIdentifier("displayShop", sender: self.btnShop)
+            }
+        }
+    }
+    
     @IBAction  func btnPressed(sender: UIButton) {
+        btnPressedInternal(sender)
+    }
+    
+    func btnPressedInternal(sender: UIButton, realPressed:Bool = true) {
+        
+        if (sender != self.btnShop) {
+             removePurchaseValidationListeners()
+        }
+        
         if sender == self.btnStrategy {
 
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
@@ -782,10 +928,64 @@ class GameMainViewController: UIViewController {
                 })
             }
         } else if (sender == self.btnShop) {
+            
+           
+            sender.enabled = false
+            
+            self.needToWaitValidation = true
+            
+            if (PurchaseManager.sharedInstance.hasFailed || PurchaseManager.sharedInstance.managerState == .None){
+                PurchaseManager.sharedInstance.validateProducts()
+            }
+            
+            if (PurchaseManager.sharedInstance.isValidating) {
+                appendPurchaseValidationListeners()
+            }
+            
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { (_, _) -> Void in
-                
-                self.displayAlertAboutImpossiblePayments()
-                
+            
+                ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.iapSet, intermediateHandler: { (fraction) -> Void in
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [unowned self ] in
+                        
+                        if (realPressed) {
+                            self.showOverlay(sender)
+                        }
+                        self.progressVC?.setProgressValue(fraction)
+                    }
+                    
+                    }, completionHandler: { (error) -> Void in
+                    
+                        dispatch_async(dispatch_get_main_queue()){
+                            
+                            
+                            if let pauseVC = self.progressVC {
+                                pauseVC.activateIndicator()
+                            }
+                        
+                            if (error != nil) {
+                                self.puchaseValidationInternal()
+                                sender.enabled = true
+                                
+                                self.hideOverlay()
+                                
+                                self.alertWithTitle("Error", message: error!.localizedDescription)
+                                
+                                
+                                
+                                return
+                            }
+                            
+                            if (!PurchaseManager.sharedInstance.isValidating) {
+                                sender.enabled = true
+                                self.puchaseValidationInternal()
+                            }
+                            else {
+                                self.needToWaitValidation = false
+                            }
+                    }
+                })
             })
         } else if (sender == self.btnSound) {
             sender.selected = sender.selected ? false : true
@@ -800,25 +1000,37 @@ class GameMainViewController: UIViewController {
             } else {
                 if (!disabled) {
                     
-                    dispatch_async(dispatch_get_main_queue()){
-                        sender.enabled = false
-                    }
+                    sender.enabled = false
+                    
                     
                     ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.soundSet, intermediateHandler: { (fraction) -> Void in
+                        
+                        dispatch_async(dispatch_get_main_queue()) {
+                            [unowned self ] in
+                            
+                            if (realPressed) {
+                                self.showOverlay(sender)
+                            }
+                            self.progressVC?.setProgressValue(fraction)
+                            
+                        }
                         
                         }, completionHandler: { (error) -> Void in
                             dispatch_async(dispatch_get_main_queue()){
                                 
-                            if error == nil {
-                               
-                                SoundManager.sharedInstance.enableSound()
-                                SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
-                                GameLogicManager.sharedInstance.storeGameSoundInfo(false)
-                            }
-                            else {
-                                GameLogicManager.sharedInstance.storeGameSoundInfo(true)
-                            }
-                            
+                                self.hideOverlay()
+                                
+                                if error == nil {
+                                    
+                                    SoundManager.sharedInstance.enableSound()
+                                    SoundManager.sharedInstance.prepareToPlayEffect("button_press.wav")
+                                    GameLogicManager.sharedInstance.storeGameSoundInfo(false)
+                                }
+                                else {
+                                    sender.selected = true
+                                    GameLogicManager.sharedInstance.storeGameSoundInfo(true)
+                                }
+                                
                                 sender.enabled = true
                             }
                     })
@@ -831,17 +1043,25 @@ class GameMainViewController: UIViewController {
                 //self.performSegueWithIdentifier("help", sender: sender)
                 ODRManager.sharedManager.startUsingpResources(GameLogicManager.ODRConstants.helpSet, prioriy:0.2,  intermediateHandler: { (fraction) -> Void in
                     //TODO: notify here....
-                    }, completionHandler: { (error) -> Void in
-                        dispatch_async(dispatch_get_main_queue())
-                            {
-                            sender.enabled = true
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [unowned self ] in
+                        
+                        if (realPressed) {
+                            self.showOverlay(sender)
                         }
+                        self.progressVC?.setProgressValue(fraction)
+                    }
+
+                    }, completionHandler: { (error) -> Void in
+                        
                         
                         dispatch_async(dispatch_get_main_queue())
                         {
                             [unowned self] in
                             
+                            sender.enabled = true
                             
+                            self.hideOverlay()
                             
                             if (error == nil) {
                                 self.performSegueWithIdentifier("help", sender: self.btnHelp)
