@@ -44,6 +44,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     private func initQueue() {
         self.queue.name = "sy.jac.network.queue"
         self.queue.maxConcurrentOperationCount = 5
+        self.queue.qualityOfService = .Utility
     }
     
     private func initBGSession() {
@@ -101,12 +102,28 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     }
     
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, var didFinishDownloadingToURL location: NSURL) {
         
         let taskId = downloadTask.taskIdentifier
         
         if (self.tasksDic[taskId] != nil) {
             self.tasksDic.removeValueForKey(taskId)
+        }
+        
+        
+        if let ext = downloadTask.originalRequest?.URL?.lastPathComponent {
+            
+        
+            do{
+                if let location2Path = try NSFileManager.defaultManager().jacStoreItemToCache(location.path!, fileName: ext) {
+                
+                    location = NSURL(fileURLWithPath: location2Path)
+                    print("NEtworkManager downloading corrected location \(location)")
+                }
+            }
+            catch let error as NSError {
+                print("Error NEtworkManager downloading \(error)")
+                }
         }
         
         if (self.tasksCompletions[taskId] != nil) {
@@ -119,7 +136,10 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
-        self.tasksDic.removeValueForKey(task.taskIdentifier)
+        if (self.tasksDic[task.taskIdentifier] != nil) {
+            self.tasksDic.removeValueForKey(task.taskIdentifier)
+        }
+        
         if let errorInter = error {
             print("\(errorInter)")
             if let completion = self.tasksCompletions.removeValueForKey(task.taskIdentifier){

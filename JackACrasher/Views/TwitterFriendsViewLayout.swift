@@ -32,7 +32,7 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
     
     var itemEdgeInset:UIEdgeInsets = UIEdgeInsetsMake(10, 10, 5, 5) {
             didSet {
-                if (UIEdgeInsetsEqualToEdgeInsets(self.itemEdgeInset, oldValue)) {
+                if (!UIEdgeInsetsEqualToEdgeInsets(self.itemEdgeInset, oldValue)) {
                     self.invalidateLayout()
                 }
         }
@@ -128,7 +128,12 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
     
     
     override func collectionViewContentSize() -> CGSize {
-        let width  = self.itemSize.width * CGFloat(self.numberOfColumns)
+        var width  = self.itemSize.width * CGFloat(self.numberOfColumns)
+        
+        if (self.numberOfColumns % 2 == 0) {
+            width -= self.itemSize.width
+        }
+        
         let height = self.itemSize.height * CGFloat(self.numberOfRows)
         
         let size = CGSizeMake(width, height)
@@ -152,5 +157,14 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
             
             return CGRectIntersectsRect(attribute.frame, rect)
         }
+    }
+    
+    override func layoutAttributesForItemAtIndexPath(indexPath: NSIndexPath) -> UICollectionViewLayoutAttributes? {
+        
+        guard indexPath.row < self.layoutAttributes.count else {
+            return nil
+        }
+        
+        return self.layoutAttributes[indexPath.row]
     }
 }

@@ -128,7 +128,7 @@ class TwitterManager: NSObject {
                         
                         
                         DBManager.sharedInstance.insertOrUpdateTwitterUsers(twitterUsers!) { (error, saved) in
-                            print("Saved \(saved)\n Error \(error)")
+                            print("insertOrUpdateTwitterUsers Saved \(saved)\n Error \(error)")
                             
                             if (!saved || error != nil) {
                                 return
@@ -141,45 +141,62 @@ class TwitterManager: NSObject {
                                  
                                     if (!users!.isEmpty) {
                                         
-                                        var lastError:NSError? = nil
+                                        //dispatch_async(self.queue) {
                                         var cancelled = false
+                                        let counter = SignalCounter(barrier: users!.count)
                                         for user in users! {
                                             
                                             if cancelled {
-                                                break
+                                                return
                                             }
+                                            
                                             
                                                 self.scheduleDBTwitterUserImageReceive(user) {
                                                     (image, error) in
+                                                    
+                                                    
+                                                    
+                                                    print("Increment counter Image \(image) Error \(error)")
+                                                    
                                                     if let imageInner = image {
-                                                        user.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                        
+                                                        DBManager.sharedInstance.managedObjectContext.performBlock({ () -> Void in
+                                                            
+                                                            counter.increment()
+                                                            
+                                                            user.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                        })
+                                                        
                                                     }
                                                     else if (!cancelled && error != nil) {
-                                                        cancelled = lastError == nil
                                                         
-                                                        if (error != nil) {
-                                                            lastError = error
-                                                        }
+                                                        counter.increment()
+                                                        
+                                                        self.managerState = .DonwloadingTwitterUsersCancelled(lastEror:error)
+                                                        
+                                                        cancelled = true
                                                     }
+                                                    else {
+                                                        counter.increment()
+                                                    }
+                                                    
+                                                    if counter.didReachBarrierOnce() {
+                                                        
+                                                        DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
+                                                        print("Saved images update or not... \(error)\n Saved \(saved)")
+                                                            if (countUsers == 100 && !isLast && !cancelled) {
+                                                                self.startUpdatingInCycle(countUsers + offset)
+                                                            }
+                                                        })
+                                                    }
+                                                    
+                                                    
                                                 }
                                             
                                         }
                                         
-                                        if cancelled || lastError != nil {
-                                            
-                                            self.managerState = .DonwloadingTwitterUsersCancelled(lastEror:lastError)
-                                            return
-                                        }
-                                        
-                                        dispatch_barrier_async(self.queue){
-                                            DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
-                                                print("Saved images update or not... \(error)\n Saved \(saved)")
-                                                if (countUsers == 100 && !isLast) {
-                                                    self.startUpdatingInCycle(countUsers + offset)
-                                                }
-                                            })
-                                            
-                                        }
+                                        //}
+                
                                         
                                     }
                                     else {
@@ -699,13 +716,25 @@ extension TwitterManager {
             return Int.min
         }
         
+        print("Downloading image \(urlStr)")
+        
         return NetworkManager.sharedManager.downloadFileFromPath(urlStr) {
             (path, error)  in
+            
+            print("Result of Downloading image \(urlStr). Local Path \(path) Error \(error)")
+            
             guard path != nil && error == nil else {
                 completion(image: nil,error: error)
                 return
             }
-            completion(image: UIImage(contentsOfFile: path!),error: nil)
+            
+            var image = UIImage(contentsOfFile: path!)
+            if (image == nil) {
+                if let data = NSData(contentsOfURL: NSURL(string:urlStr)!) {
+                    image = UIImage(data: data)
+                }
+            }
+            completion(image: image,error: nil)
         }
 
     }

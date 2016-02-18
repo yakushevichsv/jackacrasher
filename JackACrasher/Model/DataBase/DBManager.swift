@@ -181,7 +181,7 @@ class DBManager: NSObject {
         
         dbTwitterUser.userId = userRecord.userID//(userRecord.objectForKey("id_str") as! String)
         
-        if let urlStr = userRecord.profileImageMiniURL ?? userRecord.profileImageMiniURL ?? userRecord.profileImageLargeURL {
+        if let urlStr = userRecord.profileImageMiniURL ?? userRecord.profileImageURL ?? userRecord.profileImageLargeURL {
         
             if urlStr != dbTwitterUser.profileImageMiniURL {
                 dbTwitterUser.profileImageMiniURL = urlStr
@@ -252,13 +252,18 @@ class DBManager: NSObject {
         var controllerRet:NSFetchedResultsController? = nil
         var errorRet:NSError? = nil
         
-        assert(countTestTwitterUser() != 0)
+        
         
         dispatch_sync(self.queue){
+            
+            print(__FUNCTION__)
+            //assert(self.countTestTwitterUser() != 0)
             //TODO: add support for periodic update of friends....
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
             request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
             request.fetchBatchSize = 20
+            //HACK....
+            //request.fetchLimit = 2
             let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: "\(twitterId)")
                 controller.delegate = delegate
                 do {

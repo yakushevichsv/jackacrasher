@@ -54,7 +54,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.navigationController!.navigationBarHidden = false
+        self.navigationController?.navigationBarHidden = false
     }
     
     override func viewWillDisappear(animated: Bool) {

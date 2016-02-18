@@ -472,6 +472,7 @@ class GameMainViewController: UIViewController {
                 
                 dVC.transitioningDelegate = self.transitionDelegate
             } else if (identifier == "help") {
+                print("perform help action!!!")
                 cancelAdvActions()
                 let start:Int32 = 1
                 let end :Int32 = 6
@@ -753,6 +754,13 @@ class GameMainViewController: UIViewController {
             
             self.needToDisplayAnimation = false
         }
+        else if segue.identifier == Optional("helpUnwind") {
+            
+            UIView.transitionWithView(self.btnHelp, duration: 0.5, options:  UIViewAnimationOptions(rawValue: UIViewAnimationOptions.TransitionFlipFromBottom.rawValue + UIViewAnimationOptions.CurveEaseOut.rawValue + UIViewAnimationOptions.ShowHideTransitionViews.rawValue), animations:nil,completion:{ (_) -> Void in
+                self.btnHelp.enabled = true
+            })
+            
+        }
         
         correctSoundButton()
         
@@ -807,7 +815,12 @@ class GameMainViewController: UIViewController {
         }
         else if (sender == self.btnHelp) {
             SoundManager.sharedInstance.playPreloadedSoundEffect(completionHandler: { [unowned self ] (_, _) -> Void in
-                self.performSegueWithIdentifier("help", sender: sender)
+                dispatch_async(dispatch_get_main_queue()) {
+                    UIView.transitionWithView(sender, duration: 1.0, options:  UIViewAnimationOptions(rawValue: UIViewAnimationOptions.TransitionFlipFromTop.rawValue + UIViewAnimationOptions.CurveEaseIn.rawValue + UIViewAnimationOptions.ShowHideTransitionViews.rawValue), animations: nil, completion: { (finished) -> Void in
+                        sender.enabled = false
+                        self.performSegueWithIdentifier("help", sender: sender)
+                    })
+                }
             })
         }
     }

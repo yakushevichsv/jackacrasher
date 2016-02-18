@@ -1,4 +1,4 @@
-//
+//	
 //  TwitterFriendsViewController.swift
 //  JackACrasher
 //
@@ -17,13 +17,17 @@ class TwitterFriendsViewController: UIViewController {
     private var itemChanges:[[NSFetchedResultsChangeType:NSIndexPath]]! = nil
     private var controller:NSFetchedResultsController!
     
+    private var selectedTwitterIds = Set<String>()
+    
     var twitterId:String! {
         didSet {
             if !(twitterId == nil || twitterId.isEmpty) {
                 
-                //self.performSelectorInBackground("startExecution", withObject: nil)
-                
-                performFetch()
+                /*self.performSelectorInBackground("startExecution", withObject: nil)
+                */
+                if (self.isViewLoaded()){
+                    performFetch()
+                }
                 //self.performSelectorInBackground("performFetch", withObject: nil)
             }
         }
@@ -35,17 +39,32 @@ class TwitterFriendsViewController: UIViewController {
         self.twitterManager.startUpdatingTotalList()
     }
     
+    override func viewDidLoad() {
+        
+        super.viewDidLoad()
+        
+        performFetch()
+    }
+    
     func performFetch() {
         
-        /*let tuple = DBManager.sharedInstance.getFetchedTwitterUsers(self.twitterId, delegate: self)
+        print("%@",__FUNCTION__)
+        
+        let tuple = DBManager.sharedInstance.getFetchedTwitterUsers(self.twitterId, delegate: self)
         self.controller = tuple.controller
         if let error = tuple.error {
             //TODO: dipslay information about error....
-        }*/
+            self.controller = nil
+            dispatch_async(dispatch_get_main_queue()){
+                [unowned self] in
+                self.alertWithTitle(NSLocalizedString("Error", comment: "Error"), message: error.localizedDescription)
+            }
+        }
         
-        let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+        /*let request = NSFetchRequest(entityName: TwitterUser.EntityName())
         request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
         request.fetchBatchSize = 20
+        request.fetchLimit = 2
         let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DBManager.sharedInstance.managedObjectContext, sectionNameKeyPath: nil, cacheName: "\(twitterId)")
         controller.delegate = self
         do {
@@ -53,7 +72,7 @@ class TwitterFriendsViewController: UIViewController {
             self.controller = controller
         } catch let error as NSError {
             print("\(error)")
-        }
+        }*/
 
     }
     
@@ -136,11 +155,13 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
         
-        let count = controller.fetchedObjects?.count ?? 0
+        //let count = controller.fetchedObjects?.count ?? 0
+        
         
         dispatch_async(dispatch_get_main_queue()){
-            [unowned self] in
             
+        
+            var count = 0
             self.collectionView.performBatchUpdates({ [unowned self]  () -> Void in
                 
                 for sectionChange in self.sectionChanges {
@@ -223,6 +244,7 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                     self.collectionView.reloadItemsAtIndexPaths(reloadArray)
                 }
                 
+                count = reloadArray.count + insertArray.count - deleteArray.count
                 
                 }, completion: {[unowned self]  (finished) -> Void in
                         self.sectionChanges = nil
@@ -296,7 +318,7 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! TwitterFriendCollectionViewCell
         
-        let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
+        let twitterUser = self.controller.fetchedObjects?[indexPath.row] as! TwitterUser
         
         if let imageData = twitterUser.miniImage {
             cell.setProfileImage(imaage: UIImage(data: imageData))
@@ -308,6 +330,31 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         cell.label.text = twitterUser.userName
         cell.label.sizeToFit()
         
+        
         return cell
+    }
+    
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        
+        collectionView.deselectItemAtIndexPath(indexPath, animated: false)
+        
+        let twitterUser = self.controller.fetchedObjects?[indexPath.row] as! TwitterUser
+        
+        var selected = false
+        
+        if let uId = twitterUser.userId {
+        
+            if self.selectedTwitterIds.contains(uId) {
+                self.selectedTwitterIds.remove(uId)
+            }
+            else {
+                self.selectedTwitterIds.insert(uId)
+                selected = true
+            }
+        }
+        
+        if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
+            cell.markAsSelected(selected)
+        }
     }
 }
