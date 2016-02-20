@@ -31,11 +31,11 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        /*#if DEBUG
+        #if DEBUG
             let manager = DBManager.sharedInstance
             print("Manager \(manager)")
             
-        #endif*/
+        #endif
         
         self.containerView.hidden = true
         

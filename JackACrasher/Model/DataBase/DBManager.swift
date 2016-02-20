@@ -25,6 +25,10 @@ class DBManager: NSObject {
         //#if DEBUG
             //test()
         //#endif
+        
+        //#if DEBUG
+            //testDBInsertOrUpdate()
+        //#endif
     }
     
     //MARK - Core Data Stack
@@ -122,6 +126,79 @@ class DBManager: NSObject {
         }
     }
     
+    #if DEBUG
+    
+    private func testDBInsertOrUpdate() {
+    
+        self.testInsertOrUpdate(["XYZ","XYZ2"]) {
+            (flags,error,saved) in
+            
+            let XYZinsert = flags["XYZ"] == true
+            let XYZ2insert = flags["XYZ"] == true
+            
+            print("XYZ first time \(XYZinsert)")
+            
+            print("XYZ2 first time \(XYZ2insert)")
+            
+            self.testInsertOrUpdate(["XYZ","XYZ3"]) {
+                (flags,error,saved) in
+            
+                let XYZNewInsert = flags["XYZ"] == true
+                let XYZ3Insert = flags["XYZ3"] == true
+                
+                print("XYZ second time \(XYZNewInsert)")
+                print("XYZ3 first time \(XYZ3Insert)")
+            }
+        }
+        
+    }
+    
+    
+    private func testInsertOrUpdate(userIds:[String],completionHandler:(flags:[String:Bool],error:NSError?,saved:Bool) -> Void) {
+        
+        dispatch_async(self.queue) {
+            [unowned self] in
+            
+            var results = [String:Bool]()
+            
+            let request = NSFetchRequest(entityName: TwitterId.EntityName())
+            request.predicate = NSPredicate(format: "userId IN %@", userIds)
+            
+            do {
+                let existingDBTwitterIds = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterId]
+                
+                for twitterId in existingDBTwitterIds {
+                    results[twitterId.userId!] = false
+                }
+                
+                let nonExistingUserIds = userIds.filter{ (value) in
+                    for existingDBTwitterId in existingDBTwitterIds {
+                        
+                        if (existingDBTwitterId.userId == Optional<String>(value)){
+                            return false
+                        }
+                    }
+                    return true
+                }
+                
+                for nonExistingUserId in nonExistingUserIds {
+                    self.insertTwitterIdRecord(nonExistingUserId)
+                    
+                    results[nonExistingUserId] = true
+                }
+                
+                self.saveContextWithCompletion({ (error, saved) -> Void in
+                    completionHandler(flags:results, error: error, saved: saved)
+                })
+            }
+            catch let error as NSError {
+                completionHandler(flags:results,error: error, saved: false)
+            }
+        }
+        
+    }
+    
+    #endif
     
     //MARK: Twitter Ids methods....
     
