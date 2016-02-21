@@ -45,7 +45,7 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         
         createImageLayer()
         
-        setProfileImageLayerBg(UIColor.yellowColor())
+        markAsSelected(false)
     }
     
     
@@ -83,11 +83,13 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         layer.fillRule = kCAFillRuleEvenOdd
         layer.path = path.CGPath
         
-        layer.position = ivProfileImage.center
+        layer.position = aiDownloadingImage.center
         
         ivProfileImage.superview?.layer.insertSublayer(layer, atIndex: 0) //insertSublayer(layer, above: ivProfileImage.layer) //addSublayer(layer)
         
         self.bgProfileImageLayer = layer
+        
+        print("Layer frame \(layer.frame) \n Image frame \(ivProfileImage.frame)\n Image center \(layer.position) \n Image View position \(ivProfileImage.center)")
     }
     
     
@@ -108,7 +110,10 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
             basic.toValue = 1.0
             basic.removedOnCompletion = false
             self.bgProfileImageLayer?.addAnimation(basic, forKey: "strokeEndAnimation")
-            
+        
+            self.bgProfileImageLayer?.strokeColor = color.CGColor
+            self.bgProfileImageLayer?.strokeEnd = 0.0
+            self.bgProfileImageLayer?.strokeStart = 0.0
         }
     }
     

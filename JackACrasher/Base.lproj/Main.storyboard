@@ -82,7 +82,7 @@
                                     <constraint firstAttribute="width" constant="200" id="Vb0-re-OwX"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" verticalHuggingPriority="249" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" verticalHuggingPriority="249" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nd9-3T-vrx" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="82" y="364" width="137" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="137" id="PUB-me-Bhb"/>
@@ -116,7 +116,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="rvc-9G-ulH"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="382" y="364" width="136" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="137" id="Cx9-kA-LBI"/>
@@ -285,7 +285,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="263" y="364" width="74" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="82" id="nST-Pv-pPT"/>
@@ -320,7 +320,7 @@
                                     <segue destination="aN4-v4-THo" kind="presentation" identifier="displayShop" id="syR-z3-A5T"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="264" y="419" width="75" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="82" id="0r0-lm-6Hw"/>
@@ -835,7 +835,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="300" height="300"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cfF-ud-GAr">
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="cfF-ud-GAr">
                                 <rect key="frame" x="0.0" y="20" width="300" height="280"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <prototypes>
@@ -864,6 +864,12 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="cfF-ud-GAr" firstAttribute="leading" secondItem="Unw-Gg-hcZ" secondAttribute="leading" id="GOV-ty-l30"/>
+                            <constraint firstItem="cfF-ud-GAr" firstAttribute="top" secondItem="nsK-hv-sgk" secondAttribute="bottom" id="I5C-DO-4Gd"/>
+                            <constraint firstAttribute="trailing" secondItem="cfF-ud-GAr" secondAttribute="trailing" id="MMh-Q0-dyY"/>
+                            <constraint firstItem="cfF-ud-GAr" firstAttribute="bottom" secondItem="jpu-am-lHj" secondAttribute="top" id="rQj-e3-Avr"/>
+                        </constraints>
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="300" height="300"/>
@@ -887,44 +893,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4xH-FT-5sJ">
+                                <rect key="frame" x="494" y="517" width="66" height="63"/>
+                                <state key="normal" image="back-section">
+                                    <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                            </button>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="Bpj-xl-oEO">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewLayout key="collectionViewLayout" id="oi8-KS-e1W" customClass="TwitterFriendsViewLayout" customModule="JackACrasher" customModuleProvider="target"/>
                                 <cells>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="Cell" id="dKB-B3-VAj" customClass="TwitterFriendCollectionViewCell" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="64" width="202" height="151"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="212" height="163"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="202" height="151"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="212" height="163"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Wdt-mk-URg">
+                                                    <rect key="frame" x="61" y="36" width="80" height="80"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="80" id="lYt-G7-fsS"/>
+                                                        <constraint firstAttribute="width" constant="80" id="wea-sq-E4Y"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="78F-id-mgv">
+                                                    <rect key="frame" x="88" y="63" width="37" height="37"/>
+                                                </activityIndicatorView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="FJa-Nm-YQj">
-                                                    <rect key="frame" x="80" y="122" width="42" height="21"/>
+                                                    <rect key="frame" x="85" y="134" width="42" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Wdt-mk-URg">
-                                                    <rect key="frame" x="44" y="27" width="115" height="86"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="115" id="wea-sq-E4Y"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="78F-id-mgv">
-                                                    <rect key="frame" x="83" y="57" width="37" height="37"/>
-                                                </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
                                             <constraint firstItem="FJa-Nm-YQj" firstAttribute="centerX" secondItem="dKB-B3-VAj" secondAttribute="centerX" id="CW6-T3-QA2"/>
-                                            <constraint firstItem="Wdt-mk-URg" firstAttribute="top" secondItem="dKB-B3-VAj" secondAttribute="topMargin" constant="19" id="TdO-Ov-Mom"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="FJa-Nm-YQj" secondAttribute="bottom" id="Zwb-aR-Zbl"/>
-                                            <constraint firstItem="FJa-Nm-YQj" firstAttribute="top" secondItem="Wdt-mk-URg" secondAttribute="bottom" constant="9" id="jHr-ee-4gu"/>
+                                            <constraint firstItem="78F-id-mgv" firstAttribute="centerX" secondItem="dKB-B3-VAj" secondAttribute="centerX" id="fC6-Gy-kQe"/>
+                                            <constraint firstItem="FJa-Nm-YQj" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Wdt-mk-URg" secondAttribute="bottom" constant="10" id="jHr-ee-4gu"/>
+                                            <constraint firstItem="78F-id-mgv" firstAttribute="centerY" secondItem="dKB-B3-VAj" secondAttribute="centerY" id="oby-vO-c8M"/>
                                             <constraint firstItem="Wdt-mk-URg" firstAttribute="centerX" secondItem="dKB-B3-VAj" secondAttribute="centerX" id="rkl-Xw-Cgk"/>
                                         </constraints>
-                                        <size key="customSize" width="202" height="151"/>
+                                        <size key="customSize" width="212" height="163"/>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
                                                 <integer key="value" value="5"/>
@@ -946,9 +960,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Bpj-xl-oEO" firstAttribute="top" secondItem="Uoa-XV-GUw" secondAttribute="bottom" constant="-64" id="9LO-HG-KAc"/>
+                            <constraint firstItem="tFu-KA-H6g" firstAttribute="top" secondItem="4xH-FT-5sJ" secondAttribute="bottom" constant="20" id="E3L-6T-RmQ"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Bpj-xl-oEO" secondAttribute="trailing" constant="-20" id="IZv-OS-iaf"/>
                             <constraint firstItem="Bpj-xl-oEO" firstAttribute="leading" secondItem="YWb-ph-hcx" secondAttribute="leadingMargin" constant="-20" id="STu-ug-gGF"/>
                             <constraint firstItem="tFu-KA-H6g" firstAttribute="top" secondItem="Bpj-xl-oEO" secondAttribute="bottom" id="hFu-Ga-sYR"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="4xH-FT-5sJ" secondAttribute="trailing" constant="20" id="w5p-lp-TsE" userLabel="RIght Constraint"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Twitter Friends" id="mWQ-0b-x2Y">
@@ -960,6 +976,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="collectionView" destination="Bpj-xl-oEO" id="gRw-Jb-WKu"/>
+                        <outlet property="nextBtn" destination="4xH-FT-5sJ" id="6lR-Jn-WQC"/>
+                        <outlet property="nextButtonLeftLayout" destination="w5p-lp-TsE" id="eeD-1u-pY2"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="pvp-o0-hEO" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -981,13 +999,13 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1WM-vX-PYK" userLabel="Container View">
                                 <rect key="frame" x="16" y="20" width="318" height="266"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Select an action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Select an action" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="w7g-AR-pH7">
                                         <rect key="frame" x="85" y="97" width="148" height="19"/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="JJb-zX-zeW" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="44" y="129" width="119" height="27"/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
                                         <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
@@ -1011,7 +1029,7 @@
                                             <segue destination="97K-gZ-yb6" kind="unwind" identifier="selectActionUnwind" unwindAction="unwindSegue:" id="ilY-B3-l52"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mvV-T3-331" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                         <rect key="frame" x="205" y="129" width="57" height="27"/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="18"/>
                                         <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
@@ -1158,6 +1176,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="back-section" width="66" height="63"/>
         <image name="btnSettings" width="38" height="38"/>
         <image name="close" width="29" height="29"/>
         <image name="fb-button" width="40" height="40"/>

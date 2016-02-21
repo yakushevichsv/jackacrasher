@@ -209,7 +209,7 @@ class DBManager: NSObject {
             
          
             let request = NSFetchRequest(entityName: TwitterId.EntityName())
-            request.predicate = NSPredicate(format: "userId IN {%@}", userIds.joinWithSeparator(","))
+            request.predicate = NSPredicate(format: "userId IN %@", userIds)
             
             do {
                 let existingDBTwitterIds = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterId]
