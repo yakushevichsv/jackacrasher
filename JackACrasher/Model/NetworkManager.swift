@@ -106,7 +106,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         
         let taskId = downloadTask.taskIdentifier
         
-        if (self.tasksDic[taskId] != nil) {
+        if (!self.tasksDic.isEmpty  && self.tasksDic[taskId] != nil) {
             self.tasksDic.removeValueForKey(taskId)
         }
         
@@ -136,7 +136,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
         
-        if (self.tasksDic[task.taskIdentifier] != nil) {
+        if (!self.tasksDic.isEmpty  && self.tasksDic[task.taskIdentifier] != nil) {
             self.tasksDic.removeValueForKey(task.taskIdentifier)
         }
         

@@ -43,6 +43,36 @@ func == (lhs: TwitterManagerState, rhs: TwitterManagerState) -> Bool {
 }
 
 
+enum FriendshipStatus {
+    case Following
+    case FollowingRequested
+    case FollowedBy
+    case None
+    case Blocking
+    case Muting
+    
+    func isFriend(status:FriendshipStatus) -> Bool {
+        
+        return (self == .Following && status == .FollowedBy) ||
+              (self == .FollowedBy &&  status == .Following)
+    }
+    
+    func isBlockedByAnother(status:FriendshipStatus) -> Bool {
+        return self == .Following && status == .Blocking
+    }
+    
+    func isBlockingAnother(status:FriendshipStatus) -> Bool {
+        return status.isBlockedByAnother(self)
+    }
+    
+    func isNone(status:FriendshipStatus) -> Bool {
+        return self == status && self == .None
+    }
+    
+    func isFollowing() -> Bool {
+        return self == .Following
+    }
+}
 
 /**
 Used for downloading items from the twitter account for userId.
@@ -51,9 +81,10 @@ class TwitterManager: NSObject {
 
     typealias friendsCompletion = (items:[String]?,error:NSError?,last:Bool) -> Void
     typealias twitterFriendsCompletion = (items:[TWTRUser]? ,error:NSError?) -> Void
+    typealias twitterFriendShipCompletion = (usersInfo:[TWTRUser:[FriendshipStatus]]?,error:NSError?) -> Void
     
     private let twitterId:String!
-    private let queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
+    private let queue = dispatch_queue_create("sy.jac.twittermanager.queue", DISPATCH_QUEUE_CONCURRENT)//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
     private var clientMap  = [String:TWTRAPIClient]()
     private var userImageTasks = [String:Int]()
     
@@ -125,8 +156,44 @@ class TwitterManager: NSObject {
                 else {
                     
                     if let countUsers = twitterUsers?.count {
+                        //TODO: store into DB status.., of friendShip...
                         
+                        //var count = 0;
                         
+                        //for twitterUser in twitterUsers! {
+                            
+                            //count++
+                            
+                            //if (count == 20) {
+                            //    break
+                            //}
+                            //dispatch_async(dispatch_get_main_queue()) {
+                            self.detectFriendShipWithUsers(twitterUsers!, block: { (usersInfo, error) -> Void in
+                                print("Friendship error %@",error)
+                               
+                                if let usersInfoPrivate = usersInfo {
+                                    for (userInfo,connections) in usersInfoPrivate {
+                                        
+                                        guard let f = connections.first,l = connections.last else {
+                                            continue
+                                        }
+                                        
+                                        let isFriend = f.isFriend(l)
+                                        let isFollowing = f.isFollowing() || l.isFollowing()
+                                        
+                                       print("\(userInfo.name) Connections \(connections)   is Friend \(isFriend) IS following \(isFollowing)")
+                                        }
+                                    
+                                    /*
+                                    Телеканал Дождь Connections [JackACrasher.FriendshipStatus.Following]   is Friend false IS following true
+                                    Jason Majoue Connections [JackACrasher.FriendshipStatus.Following, JackACrasher.FriendshipStatus.FollowedBy]
+*/
+                                    
+                                    }
+                                })
+                            //}
+                            
+                        //}
                         DBManager.sharedInstance.insertOrUpdateTwitterUsers(twitterUsers!) { (error, saved) in
                             print("insertOrUpdateTwitterUsers Saved \(saved)\n Error \(error)")
                             
@@ -307,6 +374,135 @@ class TwitterManager: NSObject {
         default:
             assert(false)
             break;
+        }
+    }
+    
+    func detectFriendShipWithUsers(users:[TWTRUser],block:twitterFriendShipCompletion!) {
+        
+        let userId = self.twitterId
+        
+        var usersSetId = [String:TWTRUser]()
+        
+        var userIdsStr = ""
+        
+        for curUser in users {
+            if let curUserId = curUser.userID {
+                usersSetId[curUserId] = curUser
+                
+                if (!userIdsStr.isEmpty){
+                    userIdsStr = userIdsStr.stringByAppendingString(",")
+                }
+                
+                userIdsStr += curUserId
+                
+            }
+        }
+        
+        let key = "friendship.\(userId).\(userIdsStr.hashValue))"
+        print("detectFriendShipWithUsers start...")
+        let client = TWTRAPIClient(userID: userId)
+        clientMap[key] = client
+        
+        //https:
+        
+        dispatch_async(self.queue) {
+            [unowned self] in
+            
+        
+            
+             var error:NSError? = nil
+            
+            let params:[NSObject:AnyObject] = ["user_id":userIdsStr,"screen_name":key]
+            let request = client.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/friendships/lookup.json", parameters: params, error: &error)
+            
+            if let errorInner = error {
+                print("Error formatting \(errorInner)")
+                self.clientMap.removeValueForKey(key)
+                assert(false)
+                return
+            }
+            
+            print("detectFriendShipWithUsers start... sendTwitterRequest")
+            client.sendTwitterRequest(request) {
+                [unowned self]
+                (response, data, connectionError)  in
+                
+                if self.clientMap.isEmpty || self.clientMap.removeValueForKey(key) == nil {
+                    return
+                }
+                
+                
+                if (connectionError == nil) {
+                    if let json = try? NSJSONSerialization.JSONObjectWithData(data!,
+                        options: NSJSONReadingOptions.AllowFragments) as! NSArray {
+                            
+                            print("detectFriendShipWithUsers JSON response:\n \(json)")
+                            
+                            if let jsonArray = json as? [NSDictionary] {
+                                
+                                var result = [TWTRUser:[FriendshipStatus]]()
+                                
+                                for curJson in jsonArray {
+                                    
+                                    guard let curUserId = curJson["id_str"] as? String else {
+                                        continue
+                                    }
+                                    
+                                    guard let fUser = usersSetId[curUserId] else {
+                                        continue
+                                    }
+                                    
+                                    if let connections = curJson["connections"] as? [String] {
+                                        
+                                        var curState = [FriendshipStatus]()
+                                        for connection in connections {
+                                            
+                                            switch connection{
+                                                
+                                            case "following":
+                                                curState.append(.Following)
+                                                break
+                                            case "followed_by":
+                                                curState.append(.FollowedBy)
+                                                break
+                                            case "following_requested":
+                                                curState.append(.FollowingRequested)
+                                                break
+                                            case "none":
+                                                curState.append(.None)
+                                                break
+                                            case "blocking":
+                                                curState.append(.Blocking)
+                                                break
+                                            case "muting":
+                                                curState.append(.Muting)
+                                                break
+                                            default:
+                                                break
+                                            }
+                                        }
+                                        result[fUser] = curState
+                                    }
+                                }
+                                
+                                block(usersInfo:result,error:nil)
+                            }
+                            else {
+                                block(usersInfo:nil ,error: nil)
+                            }
+                    }
+                }
+                else {
+                    print("twitter Request... Error: \(connectionError)")
+                    block(usersInfo:nil,error:connectionError)
+                    //block(items: nil,error: connectionError)
+                    /*
+Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client error (429)" UserInfo={NSErrorFailingURLKey=https://api.twitter.com/1.1/friendships/lookup.json, NSLocalizedDescription=Request failed: client error (429), NSLocalizedFai*/
+                    
+                }
+                
+            }
+            
         }
     }
     
