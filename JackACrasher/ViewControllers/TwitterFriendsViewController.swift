@@ -371,10 +371,16 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         else if twitterUser.profileImageMiniURL == nil {
             cell.setProfileImage(imaage: nil)
         }
-    
-        cell.label.text = twitterUser.userName
-        cell.label.sizeToFit()
         
+        cell.setText(twitterUser.userName)
+       
+        
+        if let uId = twitterUser.userId {
+            cell.markAsSelected(self.selectedTwitterIds.contains(uId))
+        }
+        else {
+            cell.markAsSelected(false)
+        }
         
         return cell
     }
