@@ -38,7 +38,8 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         aiDownloadingImage.hidden = false
         aiDownloadingImage.startAnimating()
         
-        let center = self.contentView.layer.bounds.center
+        var center = self.contentView.layer.bounds.center
+        center.y -= 15
         
         createImageLayer(center)
         createImageBorderLayer(center)
@@ -73,7 +74,7 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         
         layer.masksToBounds = true
         layer.cornerRadius = round(0.5*min(CGRectGetWidth(layer.bounds),CGRectGetHeight(layer.bounds)))
-        layer.contentsGravity = kCAGravityCenter
+        layer.contentsGravity = kCAGravityResizeAspectFill
         layer.backgroundColor = UIColor.lightGrayColor().CGColor
         self.imageLayer = layer
     }
@@ -110,7 +111,7 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         layer.fillRule = kCAFillRuleEvenOdd
         layer.path = path.CGPath
         
-        layer.position = self.contentView.layer.bounds.center
+        layer.position = center
         
         self.contentView.layer.insertSublayer(layer, atIndex: 0) //insertSublayer(layer, above: ivProfileImage.layer) //addSublayer(layer)
         
@@ -135,7 +136,8 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         layer.foregroundColor = UIColor.blackColor().CGColor
         layer.contentsScale = UIScreen.mainScreen().scale
         layer.alignmentMode = kCAAlignmentCenter
-        layer.position = CGPoint(x: self.contentView.layer.bounds.center.x, y: CGRectGetMinY(self.bgProfileImageLayer.frame) - 20)
+        layer.truncationMode = kCATruncationMiddle
+        layer.position = CGPoint(x: center.x, y: CGRectGetMaxY(self.bgProfileImageLayer.frame) + 15)
         
         let size = CGSizeMake(CGRectGetWidth(self.contentView.layer.bounds),30)
         
