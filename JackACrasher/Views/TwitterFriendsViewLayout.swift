@@ -80,7 +80,7 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
                 
                 layoutAttributes.append(attribute)
                 
-                print("#\(index) Frame  \(frame) ")
+                //print("#\(index) Frame  \(frame) ")
                 
                 maxRowItem--
                 

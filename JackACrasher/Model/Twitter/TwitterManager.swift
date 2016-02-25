@@ -249,7 +249,7 @@ class TwitterManager: NSObject {
                                                     
                                                     if counter.didReachBarrierOnce() {
                                                         
-                                                        DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
+                                                        DBManager.sharedInstance.saveContextAsynchWithCompletion({ (error, saved) -> Void in
                                                         print("Saved images update or not... \(error)\n Saved \(saved)")
                                                             if (countUsers == 100 && !isLast && !cancelled) {
                                                                 self.startUpdatingInCycle(countUsers + offset)

@@ -470,20 +470,42 @@ class DBManager: NSObject {
         changeSelectionState(false, completeionHandler: completeionHandler)
     }
     
+    func countSelectedItems() -> Int {
+        
+        var count:Int = NSNotFound
+        
+        dispatch_sync(self.queue) {
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            request.predicate = NSPredicate(format: "selected == %@",NSNumber(bool: true))
+            
+            var error:NSError? = nil
+            let countInner = self.managedObjectContext.countForFetchRequest(request, error: &error)
+            
+            if (error != nil){
+                print("Error \(error)\n")
+            }
+            count = countInner
+        }
+        
+        return count
+    }
+    
     private func changeSelectionState(selected:Bool,completeionHandler:((count:Int,error:NSError?,saved:Bool) -> Void)?) {
         
         dispatch_async(self.queue) {
             [unowned self] in
             
             let request = NSBatchUpdateRequest(entityName: TwitterUser.EntityName())
-            request.predicate = NSPredicate(format: "selected == %@",!selected)
+            request.predicate = NSPredicate(format: "selected != %@",NSNumber(bool: selected))
             request.resultType = NSBatchUpdateRequestResultType.UpdatedObjectIDsResultType
-            request.propertiesToUpdate = ["selected":selected]
-            
+            request.propertiesToUpdate = ["selected":NSNumber(bool:selected)]
+            self.managedObjectContext.stalenessInterval = 0
             do {
                 let result = try self.managedObjectContext.executeRequest(request) as! NSBatchUpdateResult
                 
-                let objIDs = result.result as! [NSManagedObjectID]
+                let objIDs = result.result as![NSManagedObjectID]
+                
+                print("changeSelectionState Changed items \(objIDs.count)",__FUNCTION__)
                 
                 for objID in objIDs {
                     let retObj = self.managedObjectContext.objectWithID(objID)
@@ -496,6 +518,7 @@ class DBManager: NSObject {
                 if let completion = completeionHandler {
                     let count = objIDs.count
                     self.saveContextWithCompletion({ (error, saved) -> Void in
+                        print("Check uncheck db saved \(saved) Stored \(count)")
                         completion(count: count ,error:error,saved:saved)
                     })
                 }
@@ -519,16 +542,7 @@ class DBManager: NSObject {
             
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
             
-            let userIdsStr =  userIds.reduce("", combine: { (prevStr, elem) -> String in
-                if !prevStr.isEmpty {
-                    return prevStr + "," + elem
-                }
-                else {
-                    return elem
-                }
-            })
-            
-            request.predicate = NSPredicate(format: "userId IN {%@}",userIdsStr)
+            request.predicate = NSPredicate(format: "userId IN %@",userIds)
             
             do {
                 let existingDBTwitterUsers = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterUser]
@@ -651,12 +665,14 @@ class DBManager: NSObject {
     
     //MARK: Save context
     
-    func saveContextWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
+    func saveContextAsynchWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
         
         if (!self.canWork) {
             completionHandler(error: self.lastError, saved: false)
             return
         }
+        
+        
         
         dispatch_async(self.queue) {
             [unowned self] in
@@ -677,6 +693,36 @@ class DBManager: NSObject {
             }
         }
     }
+    
+    private func saveContextWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
+        
+        if (!self.canWork) {
+            completionHandler(error: self.lastError, saved: false)
+            return
+        }
+        
+        
+        
+        //dispatch_async(self.queue) {
+          //  [unowned self] in
+            
+            if self.managedObjectContext.hasChanges {
+                do {
+                    try self.managedObjectContext.save()
+                    self.lastError = nil
+                    completionHandler(error: nil, saved: true)
+                } catch let nserror as NSError {
+                    self.lastError = nserror
+                    NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
+                    completionHandler(error: nserror, saved: false)
+                }
+            }
+            else {
+                completionHandler(error: nil, saved: false)
+            }
+        //}
+    }
+
     
     func saveContext () -> Bool {
         

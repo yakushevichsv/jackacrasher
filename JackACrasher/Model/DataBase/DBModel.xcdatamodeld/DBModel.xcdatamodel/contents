@@ -12,7 +12,7 @@
         <attribute name="miniImage" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="profileImageMiniURL" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="screenName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="selected" optional="YES" attributeType="Boolean" syncable="YES"/>
+        <attribute name="selected" optional="YES" attributeType="Boolean" defaultValueString="NO" syncable="YES"/>
         <attribute name="toFriendShip" optional="YES" attributeType="Integer 16" defaultValueString="0" syncable="YES"/>
         <attribute name="userId" attributeType="String" syncable="YES"/>
         <attribute name="userName" optional="YES" attributeType="String" syncable="YES"/>

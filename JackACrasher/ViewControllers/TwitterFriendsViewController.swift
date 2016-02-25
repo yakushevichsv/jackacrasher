@@ -21,8 +21,6 @@ class TwitterFriendsViewController: UIViewController {
     private var itemChanges:[[NSFetchedResultsChangeType:NSIndexPath]]! = nil
     private var controller:NSFetchedResultsController!
     
-    private var selectedTwitterIds = Set<String>()
-    
     var twitterId:String! {
         didSet {
             fetchOnNeed()
@@ -47,7 +45,7 @@ class TwitterFriendsViewController: UIViewController {
     
     func startExecution() {
         
-        self.twitterManager = TwitterManager(twitterId: twitterId)
+        self.twitterManager = TwitterManager(twitterId: self.twitterId)
         self.twitterManager.startUpdatingTotalList()
     }
     
@@ -168,12 +166,21 @@ class TwitterFriendsViewController: UIViewController {
             item?.enabled = false
             
             DBManager.sharedInstance.checkAllTwitterUsers({ (count,error, saved) -> Void in
+                
                 dispatch_async(dispatch_get_main_queue()) {
                     [weak self] in
                     
                     guard (self != nil) else  {
                         return
                     }
+                    
+                    
+                    if (saved && error == nil) {
+                        let count2 = DBManager.sharedInstance.countSelectedItems()
+                        
+                        assert(count2 >= count)
+                    }
+
                     
                     if (error == nil) {
                         item?.title = unselectAll
@@ -188,7 +195,9 @@ class TwitterFriendsViewController: UIViewController {
         }else if (item?.title == Optional<String>(unselectAll)) {
             
             item?.enabled = false
+            print("UnSelect All!")
             DBManager.sharedInstance.uncheckAllTwitterUsers({ (count,error, saved) -> Void in
+                
                 
                 dispatch_async(dispatch_get_main_queue()) {
                     [weak self] in
@@ -196,9 +205,18 @@ class TwitterFriendsViewController: UIViewController {
                     guard (self != nil) else  {
                         return
                     }
+                    
+                    
+                    if (saved && error == nil) {
+                        let count2 = DBManager.sharedInstance.countSelectedItems()
+                        
+                        assert(count2 == 0)
+                    }
+                    
                     if (error == nil) {
                         item?.title = selectAll
                         
+                        print("UnSelect All! reload data")
                         self?.collectionView.reloadData()
                     }
                     
@@ -434,14 +452,8 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         }
         
         cell.setText(twitterUser.userName)
-       
-        
-        if let uId = twitterUser.userId {
-            cell.markAsSelected(self.selectedTwitterIds.contains(uId))
-        }
-        else {
-            cell.markAsSelected(false)
-        }
+    
+        cell.markAsSelected(twitterUser.selected)
         
         return cell
     }
@@ -453,17 +465,14 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
         
         
-        var selected = false
+        var selected:Bool
         
-        if let uId = twitterUser.userId {
+        if (twitterUser.userId!.isEmpty) {
         
-            if self.selectedTwitterIds.contains(uId) {
-                self.selectedTwitterIds.remove(uId)
-            }
-            else {
-                self.selectedTwitterIds.insert(uId)
-                selected = true
-            }
+            selected = !twitterUser.selected
+        }
+        else {
+            selected = false
         }
         
         if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
@@ -526,7 +535,7 @@ private extension TwitterFriendsViewController {
             if countExternal != 0 {
                 self.appendRightBarItem()
                 
-                if self.selectedTwitterIds.count == countExternal {
+                if DBManager.sharedInstance.countSelectedItems() == countExternal {
                     self.unSelectAllTitle()
                 }
                 else {
