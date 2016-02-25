@@ -98,6 +98,8 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         if task.state == .Suspended {
             task.resume()
         }
+        
+        assert(task.state != .Completed || task.state != .Canceling)
         return task.taskIdentifier
     }
     

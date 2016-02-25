@@ -872,7 +872,7 @@ extension TwitterManager {
                 completion(image:image,error: error)
             }
             else {
-                completion(image:nil,error:nil)
+                completion(image:image,error:error)
             }
         }
         
@@ -920,18 +920,30 @@ extension TwitterManager {
             print("Result of Downloading image \(urlStr). Local Path \(path) Error \(error)")
             
             guard path != nil && error == nil else {
-                completion(image: nil,error: error)
+                
+                let image = TwitterManager.imageFromPathOrUrl(path,urlStr: urlStr)
+                
+                completion(image: image,error: error)
                 return
             }
             
-            var image = UIImage(contentsOfFile: path!)
-            if (image == nil) {
-                if let data = NSData(contentsOfURL: NSURL(string:urlStr)!) {
-                    image = UIImage(data: data)
-                }
-            }
+            let image = TwitterManager.imageFromPathOrUrl(path,urlStr: urlStr)
             completion(image: image,error: nil)
         }
 
+    }
+    
+    private class func imageFromPathOrUrl(path:String?,urlStr:String!) -> UIImage? {
+        
+        var image:UIImage? = nil
+        if (path != nil) {
+            image = UIImage(contentsOfFile: path!)
+        }
+        if (image == nil) {
+            if let data = NSData(contentsOfURL: NSURL(string:urlStr)!) {
+                image = UIImage(data: data)
+            }
+        }
+        return image
     }
 }

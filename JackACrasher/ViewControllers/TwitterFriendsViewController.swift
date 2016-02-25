@@ -28,7 +28,7 @@ class TwitterFriendsViewController: UIViewController {
             fetchOnNeed()
             if !(twitterId == nil || twitterId.isEmpty) {
                 
-                //self.performSelectorInBackground("startExecution", withObject: nil)
+                self.performSelectorInBackground("startExecution", withObject: nil)
             }
         }
     }
@@ -177,7 +177,8 @@ class TwitterFriendsViewController: UIViewController {
                     
                     if (error == nil) {
                         item?.title = unselectAll
-            
+                        //TODO: observe why items are not loaded...
+                        self?.collectionView.reloadData()
                         //TODO: display next button....
                     }
                     item?.enabled = true
@@ -197,6 +198,8 @@ class TwitterFriendsViewController: UIViewController {
                     }
                     if (error == nil) {
                         item?.title = selectAll
+                        
+                        self?.collectionView.reloadData()
                     }
                     
                     item?.enabled = true
