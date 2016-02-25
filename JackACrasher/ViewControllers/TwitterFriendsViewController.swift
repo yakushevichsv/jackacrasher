@@ -25,15 +25,23 @@ class TwitterFriendsViewController: UIViewController {
     
     var twitterId:String! {
         didSet {
+            fetchOnNeed()
             if !(twitterId == nil || twitterId.isEmpty) {
                 
-                self.performSelectorInBackground("startExecution", withObject: nil)
-                
-                if (self.isViewLoaded()){
-                    performFetch()
-                }
-                //self.performSelectorInBackground("performFetch", withObject: nil)
+                //self.performSelectorInBackground("startExecution", withObject: nil)
             }
+        }
+    }
+    
+    private func fetchOnNeed(){
+        if !(twitterId == nil || twitterId.isEmpty) {
+            
+            //self.performSelectorInBackground("startExecution", withObject: nil)
+            
+            if (self.isViewLoaded()){
+                performFetch()
+            }
+            //self.performSelectorInBackground("performFetch", withObject: nil)
         }
     }
     
@@ -47,10 +55,20 @@ class TwitterFriendsViewController: UIViewController {
         
         super.viewDidLoad()
         
-        performFetch()
+        fetchOnNeed()
         
         self.leftSpace = self.nextButtonLeftLayout.constant
+        print("viewDidLoad")
+    }
+    
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
         
+        let count = self.collectionView.numberOfSections()
+        if (count != 0) {
+            defineStateOfRightBarItem(self.collectionView.numberOfItemsInSection(count-1))
+        }
     }
     
     func performFetch() {
@@ -86,9 +104,11 @@ class TwitterFriendsViewController: UIViewController {
     private func appendRightBarItem() -> Bool {
         
         if self.navigationItem.rightBarButtonItem != nil {
+            print("No need to append Right Bar")
             return false
         }
         
+        print("Appending Right Bar")
         
         let item = UIBarButtonItem()
         item.target = self
@@ -195,12 +215,13 @@ class TwitterFriendsViewController: UIViewController {
 extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
 {
     func controllerWillChangeContent(controller: NSFetchedResultsController) {
+        print("controllerWillChangeContent")
         self.sectionChanges = []
         self.itemChanges = []
     }
     
     func controllerDidChangeContent(controller: NSFetchedResultsController) {
-        
+        print("controllerDidChangeContent")
         //let count = controller.fetchedObjects?.count ?? 0
         
         let sections = self.sectionChanges
@@ -349,21 +370,58 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
     }
 }
 
-extension TwitterFriendsViewController : UICollectionViewDataSource,UICollectionViewDelegate
-{
-    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+//MARK: Controller's methods....
+/*extension TwitterFriendsViewController {
+    
+    func fetchedObjectsCountInSection(section:Int) -> Int {
         
-        guard let count = self.controller?.fetchedObjects?.count else {
-            return 0
+        var count:Int = 0
+        DBManager.sharedInstance.managedObjectContext.performBlockAndWait { () -> Void in
+            
+            if let countInnter = self.controller?.sections?[section].numberOfObjects {
+                count = countInnter
+            }
+            else {
+                count = 0
+            }
         }
         
         return count
     }
     
+    func twitterUserAtIndexPath(indexPath:NSIndexPath) -> TwitterUser! {
+        
+        var twitterUser:TwitterUser! = nil
+        
+        DBManager.sharedInstance.managedObjectContext.performBlockAndWait { () -> Void in
+            twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
+        }
+        return twitterUser
+    }
+}*/
+
+//MARK: CollectionView DS & Delegate
+extension TwitterFriendsViewController : UICollectionViewDataSource,UICollectionViewDelegate
+{
+    func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        
+        var count:Int
+        if let countInnter = self.controller?.sections?[section].numberOfObjects {
+            count = countInnter
+        }
+        else {
+            count = 0
+        }
+        
+        
+        return count
+
+    }
+    
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! TwitterFriendCollectionViewCell
         
-        let twitterUser = self.controller.fetchedObjects?[indexPath.row] as! TwitterUser
+        let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
         
         if let imageData = twitterUser.miniImage {
             cell.setProfileImage(imaage: UIImage(data: imageData))
@@ -389,7 +447,8 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         
         collectionView.deselectItemAtIndexPath(indexPath, animated: false)
         
-        let twitterUser = self.controller.fetchedObjects?[indexPath.row] as! TwitterUser
+        let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
+        
         
         var selected = false
         
@@ -460,7 +519,7 @@ private extension TwitterFriendsViewController {
     private func defineStateOfRightBarItem(countExternal:Int = 0) {
         
         
-            
+            print("defineStateOfRightBarItem: Before append External count \(countExternal)")
             if countExternal != 0 {
                 self.appendRightBarItem()
                 

@@ -83,6 +83,7 @@ class DBManager: NSObject {
         // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
+        managedObjectContext.mergePolicy = NSOverwriteMergePolicy
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
@@ -207,6 +208,7 @@ class DBManager: NSObject {
         dispatch_async(self.queue) {
             [unowned self] in
             
+            print("User ids \(userIds)")
          
             let request = NSFetchRequest(entityName: TwitterId.EntityName())
             request.predicate = NSPredicate(format: "userId IN %@", userIds)
@@ -228,6 +230,9 @@ class DBManager: NSObject {
                 for nonExistingUserId in nonExistingUserIds {
                     self.insertTwitterIdRecord(nonExistingUserId)
                 }
+                
+                
+                print("Non existing user ids count \(nonExistingUserIds.count) \n Existing user ids count \(existingDBTwitterIds.count) ")
                 
                 self.saveContextWithCompletion({ (error, saved) -> Void in
                     completionHandler(error: error, saved: saved)
@@ -467,22 +472,38 @@ class DBManager: NSObject {
     
     private func changeSelectionState(selected:Bool,completeionHandler:((count:Int,error:NSError?,saved:Bool) -> Void)?) {
         
-        let request = NSBatchUpdateRequest(entityName: TwitterUser.EntityName())
-        request.predicate = NSPredicate(format: "selected == %@",!selected)
-        request.resultType = NSBatchUpdateRequestResultType.UpdatedObjectsCountResultType
-        request.propertiesToUpdate = ["selected":selected]
-        
-        do {
-            let result = try self.managedObjectContext.executeRequest(request) as! NSBatchUpdateResult
+        dispatch_async(self.queue) {
+            [unowned self] in
             
-            if let completion = completeionHandler {
-                self.saveContextWithCompletion({ (error, saved) -> Void in
-                    completion(count: result.result as! Int,error:error,saved:saved)
-                })
+            let request = NSBatchUpdateRequest(entityName: TwitterUser.EntityName())
+            request.predicate = NSPredicate(format: "selected == %@",!selected)
+            request.resultType = NSBatchUpdateRequestResultType.UpdatedObjectIDsResultType
+            request.propertiesToUpdate = ["selected":selected]
+            
+            do {
+                let result = try self.managedObjectContext.executeRequest(request) as! NSBatchUpdateResult
+                
+                let objIDs = result.result as! [NSManagedObjectID]
+                
+                for objID in objIDs {
+                    let retObj = self.managedObjectContext.objectWithID(objID)
+                    
+                    if (retObj.fault == false) {
+                        self.managedObjectContext.refreshObject(retObj, mergeChanges: true)
+                    }
+                }
+                
+                if let completion = completeionHandler {
+                    let count = objIDs.count
+                    self.saveContextWithCompletion({ (error, saved) -> Void in
+                        completion(count: count ,error:error,saved:saved)
+                    })
+                }
             }
-        }
-        catch let error as NSError {
-            completeionHandler?(count:0,error: error, saved: false)
+            catch let error as NSError {
+                completeionHandler?(count:0,error: error, saved: false)
+            }
+        
         }
     }
 
