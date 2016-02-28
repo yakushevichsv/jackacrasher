@@ -185,7 +185,7 @@ class TwitterFriendsViewController: UIViewController {
                     if (error == nil) {
                         item?.title = unselectAll
                         //TODO: observe why items are not loaded...
-                        self?.collectionView.reloadData()
+                        self?.reloadVisibleCells()
                         //TODO: display next button....
                     }
                     item?.enabled = true
@@ -217,12 +217,21 @@ class TwitterFriendsViewController: UIViewController {
                         item?.title = selectAll
                         
                         print("UnSelect All! reload data")
-                        self?.collectionView.reloadData()
+                        self?.reloadVisibleCells()
                     }
                     
                     item?.enabled = true
                 }
             })
+        }
+    }
+    
+    private func reloadVisibleCells() {
+        
+        let indexes = self.collectionView.indexPathsForVisibleItems()
+        
+        if (!indexes.isEmpty) {
+            self.collectionView.reloadItemsAtIndexPaths(indexes)
         }
     }
 
@@ -317,22 +326,6 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                 }
                 
                 if !reloadArray.isEmpty {
-                    /*if anObject is TwitterUser {
-                    let twitterUser = anObject as! TwitterUser
-                    
-                    if (twitterUser.miniImage != nil) {
-                    //TODO: add some fancy cool animation....
-                    }
-                    
-                    dispatch_async(dispatch_get_main_queue()){
-                    [unowned self] in
-                    
-                    if self.collectionView.indexPathsForVisibleItems().contains(newIndexPath!) {
-                    self.collectionView.reloadItemsAtIndexPaths([newIndexPath!])
-                    }
-                    }
-                    }*/
-
                     self.collectionView.reloadItemsAtIndexPaths(reloadArray)
                 }
                 
@@ -364,21 +357,6 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
             break
         case NSFetchedResultsChangeType.Update:
             
-            /*if anObject is TwitterUser {
-                let twitterUser = anObject as! TwitterUser
-                
-                if (twitterUser.miniImage != nil) {
-                    //TODO: add some fancy cool animation....
-                }
-                
-                dispatch_async(dispatch_get_main_queue()){
-                    [unowned self] in
-                    
-                    if self.collectionView.indexPathsForVisibleItems().contains(newIndexPath!) {
-                        self.collectionView.reloadItemsAtIndexPaths([newIndexPath!])
-                    }
-                }
-            }*/
             
             break
         case NSFetchedResultsChangeType.Delete:
@@ -467,7 +445,7 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         
         var selected:Bool
         
-        if (twitterUser.userId!.isEmpty) {
+        if (!twitterUser.userId!.isEmpty) {
         
             selected = !twitterUser.selected
         }
@@ -475,13 +453,17 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
             selected = false
         }
         
+    
+        twitterUser.selected = selected
+        
+        
         if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
             cell.markAsSelected(selected)
         }
     }
 }
 
-//MARK: Next Button 
+//MARK: Next Button
 private extension TwitterFriendsViewController {
     
     
