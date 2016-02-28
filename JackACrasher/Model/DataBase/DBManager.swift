@@ -472,11 +472,22 @@ class DBManager: NSObject {
     
     func countSelectedItems() -> Int {
         
+        return countItemsWithPredicate(NSPredicate(format: "selected == %@",NSNumber(bool: true)))
+    }
+    
+    func totalCountOfTwitterUsers() -> Int {
+        
+        return countItemsWithPredicate(nil)
+    }
+    
+    
+    private func countItemsWithPredicate(predicate:NSPredicate?) -> Int {
+        
         var count:Int = NSNotFound
         
         dispatch_sync(self.queue) {
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
-            request.predicate = NSPredicate(format: "selected == %@",NSNumber(bool: true))
+            request.predicate = predicate
             
             var error:NSError? = nil
             let countInner = self.managedObjectContext.countForFetchRequest(request, error: &error)

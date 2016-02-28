@@ -9,7 +9,7 @@
 import UIKit
 import TwitterKit
 
-class TwitterFriendsViewController: UIViewController {
+class TwitterFriendsViewController: ProgressHDViewController {
 
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var nextBtn:UIButton!
@@ -20,6 +20,8 @@ class TwitterFriendsViewController: UIViewController {
     private var sectionChanges:[[NSFetchedResultsChangeType:Int]]! = nil
     private var itemChanges:[[NSFetchedResultsChangeType:NSIndexPath]]! = nil
     private var controller:NSFetchedResultsController!
+    
+    private var animateOnce:Bool = false
     
     var twitterId:String! {
         didSet {
@@ -56,7 +58,10 @@ class TwitterFriendsViewController: UIViewController {
         fetchOnNeed()
         
         self.leftSpace = self.nextButtonLeftLayout.constant
+        
         print("viewDidLoad")
+        
+        
     }
     
     
@@ -66,6 +71,22 @@ class TwitterFriendsViewController: UIViewController {
         let count = self.collectionView.numberOfSections()
         if (count != 0) {
             defineStateOfRightBarItem(self.collectionView.numberOfItemsInSection(count-1))
+        }
+        
+        
+        if (!self.animateOnce) {
+            
+            var totalCount = DBManager.sharedInstance.totalCountOfTwitterUsers()
+            
+            if (totalCount == 0) {
+                self.displayProgress(true)
+            }
+            else {
+                totalCount = DBManager.sharedInstance.countSelectedItems()
+            }
+            self.moveInOutNextButton(totalCount != 0, animated: false)
+        
+            self.animateOnce = true
         }
     }
     
@@ -79,24 +100,10 @@ class TwitterFriendsViewController: UIViewController {
             //TODO: dipslay information about error....
             self.controller = nil
             dispatch_async(dispatch_get_main_queue()){
-                [unowned self] in
-                self.alertWithTitle(NSLocalizedString("Error", comment: "Error"), message: error.localizedDescription)
+                [weak self] in
+                self?.alertWithTitle(NSLocalizedString("Error", comment: "Error"), message: error.localizedDescription)
             }
         }
-        
-        /*let request = NSFetchRequest(entityName: TwitterUser.EntityName())
-        request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
-        request.fetchBatchSize = 20
-        request.fetchLimit = 2
-        let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: DBManager.sharedInstance.managedObjectContext, sectionNameKeyPath: nil, cacheName: "\(twitterId)")
-        controller.delegate = self
-        do {
-            try controller.performFetch()
-            self.controller = controller
-        } catch let error as NSError {
-            print("\(error)")
-        }*/
-
     }
     
     private func appendRightBarItem() -> Bool {
@@ -175,8 +182,10 @@ class TwitterFriendsViewController: UIViewController {
                     }
                     
                     
-                    if (saved && error == nil) {
+                    if (error == nil || saved) {
                         let count2 = DBManager.sharedInstance.countSelectedItems()
+                        
+                        self?.moveInOutNextButton(count2 != 0, animated: true)
                         
                         assert(count2 >= count)
                     }
@@ -184,9 +193,7 @@ class TwitterFriendsViewController: UIViewController {
                     
                     if (error == nil) {
                         item?.title = unselectAll
-                        //TODO: observe why items are not loaded...
-                        self?.reloadVisibleCells()
-                        //TODO: display next button....
+                        self?.markVisibleCells(true)
                     }
                     item?.enabled = true
                 }
@@ -207,8 +214,10 @@ class TwitterFriendsViewController: UIViewController {
                     }
                     
                     
-                    if (saved && error == nil) {
+                    if (error == nil || saved) {
                         let count2 = DBManager.sharedInstance.countSelectedItems()
+                        
+                        self?.moveInOutNextButton(count2 != 0, animated: true)
                         
                         assert(count2 == 0)
                     }
@@ -217,7 +226,7 @@ class TwitterFriendsViewController: UIViewController {
                         item?.title = selectAll
                         
                         print("UnSelect All! reload data")
-                        self?.reloadVisibleCells()
+                        self?.markVisibleCells(false)
                     }
                     
                     item?.enabled = true
@@ -226,12 +235,10 @@ class TwitterFriendsViewController: UIViewController {
         }
     }
     
-    private func reloadVisibleCells() {
+    private func markVisibleCells(selected:Bool) {
         
-        let indexes = self.collectionView.indexPathsForVisibleItems()
-        
-        if (!indexes.isEmpty) {
-            self.collectionView.reloadItemsAtIndexPaths(indexes)
+        for cell in  self.collectionView.visibleCells() as! [TwitterFriendCollectionViewCell] {
+            cell.markAsSelected(selected)
         }
     }
 
@@ -331,11 +338,15 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                 
                 count = reloadArray.count + insertArray.count - deleteArray.count
                 
-                }, completion: {[unowned self]  (finished) -> Void in
-                        self.sectionChanges = nil
-                        self.itemChanges = nil
+                }, completion: {[weak self]  (finished) -> Void in
+                        self?.sectionChanges = nil
+                        self?.itemChanges = nil
                     
-                    self.defineStateOfRightBarItem(count)
+                    self?.defineStateOfRightBarItem(count)
+                    
+                    if (count != 0) {
+                        self?.hideProgress()
+                    }
                 })
         }
     }
@@ -460,6 +471,8 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
             cell.markAsSelected(selected)
         }
+        
+        self.moveInOutNextButton(selected || DBManager.sharedInstance.countSelectedItems() != 0, animated: true)
     }
 }
 
@@ -469,6 +482,12 @@ private extension TwitterFriendsViewController {
     
     func moveOutNextButton(duration:NSTimeInterval = 0.5, animated:Bool = false) {
         
+         self.nextBtn.enabled = false
+        assert(self.nextBtn.superview! == self.view)
+        self.nextBtn.superview?.bringSubviewToFront(self.nextBtn)
+        
+        print("Move OUT Next button \(duration)\n \(animated)")
+        
         if (animated && duration != 0 ) {
             UIView.animateWithDuration(duration, animations: { [weak self]  () -> Void in
                 
@@ -477,12 +496,14 @@ private extension TwitterFriendsViewController {
                 }, completion: { [weak self] (finished) -> Void in
                 self?.nextBtn.hidden = true
                 self?.nextBtn.setNeedsLayout()
+                self?.nextBtn.enabled = true
             })
         }
         else {
             self.nextButtonLeftLayout.constant = -30
             self.nextBtn.setNeedsLayout()
             self.nextBtn.hidden = true
+            self.nextBtn.enabled = true
         }
     }
     
@@ -490,6 +511,12 @@ private extension TwitterFriendsViewController {
         
         let leftSpace = self.leftSpace
         self.nextBtn.hidden = false
+        self.nextBtn.enabled = false
+        assert(self.nextBtn.superview! == self.view)
+        
+        self.nextBtn.superview?.bringSubviewToFront(self.nextBtn)
+        
+        print("Move in Next button \(duration)\n \(animated)")
         
         if (animated && duration != 0 ) {
             UIView.animateWithDuration(duration, animations: { [weak self]  () -> Void in
@@ -498,11 +525,13 @@ private extension TwitterFriendsViewController {
                 
                 }, completion: { [weak self] (finished) -> Void in
                     self?.nextBtn.setNeedsLayout()
+                    self?.nextBtn.enabled = true
                 })
         }
         else {
             self.nextButtonLeftLayout.constant = leftSpace
             self.nextBtn.setNeedsLayout()
+            self.nextBtn.enabled = true
         }
     }
     
@@ -528,6 +557,24 @@ private extension TwitterFriendsViewController {
                 self.removeRightBarItem()
             }
         
+    }
+    
+    private func isNextButtonVisible() -> Bool {
+        
+        return self.view.bounds.contains(self.nextBtn.frame) || (self.nextButtonLeftLayout == self.leftSpace && self.nextBtn.enabled)
+    }
+    
+    func moveInOutNextButton(moveIn:Bool, animated:Bool ) {
+        
+        if (moveIn) {
+            let isVisible = animated ? self.isNextButtonVisible() : true
+            
+            self.moveInNextButton(3.3, animated: !isVisible)
+        }
+        else {
+            let isVisible = animated ? self.isNextButtonVisible() : false
+            self.moveOutNextButton(0.5, animated: isVisible)
+        }
     }
     
 }

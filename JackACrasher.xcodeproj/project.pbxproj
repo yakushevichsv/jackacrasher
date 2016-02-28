@@ -133,6 +133,7 @@
 		A65976F81C6DEC9000178FC3 /* FBSDKShareKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A65976F31C6DEC9000178FC3 /* FBSDKShareKit.framework */; };
 		A6627EB41C7CEC5000F968E6 /* TwitterUser+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6627EB31C7CEC5000F968E6 /* TwitterUser+CoreDataProperties.swift */; };
 		A6766A9B1C74781E00517D50 /* SignalCounter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A6766A9A1C74781E00517D50 /* SignalCounter.swift */; };
+		A695CF1E1C8373980049F178 /* ProgressHDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A695CF1D1C8373980049F178 /* ProgressHDViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -282,6 +283,7 @@
 		A65976F31C6DEC9000178FC3 /* FBSDKShareKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = FBSDKShareKit.framework; sourceTree = SOURCE_ROOT; };
 		A6627EB31C7CEC5000F968E6 /* TwitterUser+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "TwitterUser+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		A6766A9A1C74781E00517D50 /* SignalCounter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalCounter.swift; sourceTree = "<group>"; };
+		A695CF1D1C8373980049F178 /* ProgressHDViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressHDViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -424,6 +426,7 @@
 		217340FC1AFE5211009E934A /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				A695CF1D1C8373980049F178 /* ProgressHDViewController.swift */,
 				21CCA1491B0A8346004419A2 /* JackACrasherNavigationController.swift */,
 				21FFEAEE1AD5E216000115F6 /* GameViewController.swift */,
 				217340FD1AFE5267009E934A /* GameOverViewController.swift */,
@@ -908,6 +911,7 @@
 				2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */,
 				210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */,
 				21FFA04D1AE69A6900EF3EDC /* DigitNode.swift in Sources */,
+				A695CF1E1C8373980049F178 /* ProgressHDViewController.swift in Sources */,
 				2140023B1C5226E00035574E /* TwitterId+CoreDataProperties.swift in Sources */,
 				2138E0B81B65112300FFD118 /* PauseReturnViewController.swift in Sources */,
 				21BF9C281B89E0A60002AEAC /* HelpViewController.swift in Sources */,
