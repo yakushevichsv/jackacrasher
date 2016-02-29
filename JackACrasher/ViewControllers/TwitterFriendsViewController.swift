@@ -9,6 +9,16 @@
 import UIKit
 import TwitterKit
 
+
+/*
+TODO:
+1) Create Main thread Context
+2) Next button action (Send to the twitter)
+3) Select/unselect is not displayed properly (Situation when it is not unchecked
+4) Change animation activity, use damping for the next button
+
+*/
+
 class TwitterFriendsViewController: ProgressHDViewController {
 
     @IBOutlet weak var collectionView:UICollectionView!
