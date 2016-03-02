@@ -16,6 +16,7 @@ TODO:
 2) Next button action (Send to the twitter)
 3) Select/unselect is not displayed properly (Situation when it is not unchecked
 4) Change animation activity, use damping for the next button
+5) Wrong size(H) of collectionView
 
 */
 
@@ -490,58 +491,53 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
 private extension TwitterFriendsViewController {
     
     
-    func moveOutNextButton(duration:NSTimeInterval = 0.5, animated:Bool = false) {
+    func moveOutNextButton(animated:Bool = false) {
         
-         self.nextBtn.enabled = false
         assert(self.nextBtn.superview! == self.view)
         self.nextBtn.superview?.bringSubviewToFront(self.nextBtn)
         
-        print("Move OUT Next button \(duration)\n \(animated)")
+        print("Move OUT Next button \(animated)")
         
-        if (animated && duration != 0 ) {
-            UIView.animateWithDuration(duration, animations: { [weak self]  () -> Void in
-                
-                self?.nextButtonLeftLayout.constant = -30
+        self.nextButtonLeftLayout.constant = -CGRectGetWidth(self.nextBtn.bounds)
+        
+        if (animated) {
             
+            UIView.animateWithDuration(0.2, animations: { [weak self]  () -> Void in
+                
+                self?.view.layoutIfNeeded()
+                
                 }, completion: { [weak self] (finished) -> Void in
                 self?.nextBtn.hidden = true
-                self?.nextBtn.setNeedsLayout()
-                self?.nextBtn.enabled = true
             })
         }
         else {
-            self.nextButtonLeftLayout.constant = -30
-            self.nextBtn.setNeedsLayout()
+            self.view.layoutIfNeeded()
             self.nextBtn.hidden = true
-            self.nextBtn.enabled = true
         }
     }
     
-    func moveInNextButton(duration:NSTimeInterval = 0.5, animated:Bool = false) {
+    func moveInNextButton(animated:Bool = false) {
         
         let leftSpace = self.leftSpace
         self.nextBtn.hidden = false
-        self.nextBtn.enabled = false
+        
         assert(self.nextBtn.superview! == self.view)
         
         self.nextBtn.superview?.bringSubviewToFront(self.nextBtn)
         
-        print("Move in Next button \(duration)\n \(animated)")
+        print("Move in Next button \(animated)")
+        self.nextButtonLeftLayout.constant = leftSpace
         
-        if (animated && duration != 0 ) {
-            UIView.animateWithDuration(duration, animations: { [weak self]  () -> Void in
+        if (animated) {
+            
+            UIView.animateWithDuration(0.8, delay: 0.0, usingSpringWithDamping: 0.4, initialSpringVelocity: 0.8, options: .CurveEaseOut, animations: { [weak self]  () -> Void in
                 
-                self?.nextButtonLeftLayout.constant = leftSpace
+                self?.view.layoutIfNeeded()
                 
-                }, completion: { [weak self] (finished) -> Void in
-                    self?.nextBtn.setNeedsLayout()
-                    self?.nextBtn.enabled = true
-                })
+                }, completion:nil)
         }
         else {
-            self.nextButtonLeftLayout.constant = leftSpace
-            self.nextBtn.setNeedsLayout()
-            self.nextBtn.enabled = true
+            self.view.layoutIfNeeded()
         }
     }
     
@@ -579,11 +575,11 @@ private extension TwitterFriendsViewController {
         if (moveIn) {
             let isVisible = animated ? self.isNextButtonVisible() : true
             
-            self.moveInNextButton(3.3, animated: !isVisible)
+            self.moveInNextButton(!isVisible)
         }
         else {
             let isVisible = animated ? self.isNextButtonVisible() : false
-            self.moveOutNextButton(0.5, animated: isVisible)
+            self.moveOutNextButton(isVisible)
         }
     }
     
