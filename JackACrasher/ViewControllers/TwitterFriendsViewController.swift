@@ -28,7 +28,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
     
     private var twitterManager:TwitterManager!
     private var sectionChanges:[[NSFetchedResultsChangeType:Int]]! = nil
-    private var itemChanges:[[NSFetchedResultsChangeType:NSIndexPath]]! = nil
+    private var itemChanges:[[NSFetchedResultsChangeType:[NSIndexPath]]]! = nil
     private var controller:NSFetchedResultsController!
     
     private var animateOnce:Bool = false
@@ -72,22 +72,40 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         fetchOnNeed()
         
-        var totalCount = DBManager.sharedInstance.totalCountOfTwitterUsers()
         
-        if (totalCount == 0) {
-            self.displayProgress(true)
-        }
-        else {
-            totalCount = DBManager.sharedInstance.countSelectedItems()
-        }
-        print("Total count of items in the context \(totalCount)")
-        self.moveInOutNextButton(totalCount != 0, animated: false)
     }
     
     
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
+        if (!animateOnce) {
+            animateOnce = true
+            
+            DBManager.sharedInstance.managedObjectContext.performBlock{
+             
+                
+                var totalCount = DBManager.sharedInstance.totalCountOfTwitterUsers()
+            
+            if (totalCount == 0) {
+                dispatch_async(dispatch_get_main_queue()) {
+                    [weak self] in
+                    self?.displayProgress(true)
+                }
+            }
+            else {
+                totalCount = DBManager.sharedInstance.countSelectedItems()
+            }
+             
+                dispatch_async(dispatch_get_main_queue()) {
+                    [weak self] in
+                    
+                    self?.moveInOutNextButton(totalCount != 0, animated: false)
+                }
+                print("Total count of items in the context \(totalCount)")
+            }
+            
+        }
         
         let count = self.collectionView.numberOfSections()
         if (count != 0) {
@@ -313,30 +331,30 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                 var insertArray = [NSIndexPath]()
                 var deleteArray = [NSIndexPath]()
                 var reloadArray = [NSIndexPath]()
+                var moveArray = [[NSIndexPath]]()
                 
-                var moveDetected:Bool = false
                 for itemChange in items {
                     
-                    for (type,indexPath) in itemChange {
+                    for (type,indexPaths) in itemChange {
                         
                         switch type {
                         case NSFetchedResultsChangeType.Insert:
                             
-                            insertArray.append(indexPath)
+                            insertArray.append(indexPaths.last!)
                             break
                         case NSFetchedResultsChangeType.Update:
                             
                             //if self.collectionView.indexPathsForVisibleItems().contains(indexPath) {
-                                reloadArray.append(indexPath)
+                                reloadArray.append(indexPaths.last!)
                             //}
                             break
                         case NSFetchedResultsChangeType.Delete:
                             
-                            deleteArray.append(indexPath)
+                            deleteArray.append(indexPaths.last!)
                             break
                         case NSFetchedResultsChangeType.Move:
                             //assert(false)
-                            moveDetected = true
+                            moveArray.append(indexPaths)
                             break
                         }
                         
@@ -356,8 +374,10 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                     self.collectionView.reloadItemsAtIndexPaths(reloadArray)
                 }
                 
-                if (moveDetected) {
-                    self.collectionView.reloadData()
+                if (!moveArray.isEmpty) {
+                    for pairs in moveArray {
+                        self.collectionView.moveItemAtIndexPath(pairs.first!,toIndexPath: pairs.last!)
+                    }
                 }
                 
                 //count = reloadArray.count + insertArray.count - deleteArray.count
@@ -390,8 +410,16 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
     
     func controller(controller: NSFetchedResultsController, didChangeObject anObject: AnyObject, atIndexPath indexPath: NSIndexPath?, forChangeType type: NSFetchedResultsChangeType, newIndexPath: NSIndexPath?) {
         
-        let index = newIndexPath ?? indexPath
-        let dic = [type:index!]
+        var indexes = [NSIndexPath]()
+        if newIndexPath != nil {
+            indexes.append(newIndexPath!)
+        }
+        
+        if indexPath != nil {
+            indexes.append(indexPath!)
+        }
+        
+        let dic = [type:indexes]
         self.itemChanges.append(dic)
         
         switch type {
@@ -409,6 +437,14 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
             //assert(false)
             break
         }
+        
+        /*if !((newIndexPath == nil && indexPath != nil) ||
+               (newIndexPath != nil && indexPath == nil) ||
+        (newIndexPath == indexPath)) {
+            print("New Index \(newIndexPath) Old Index \(indexPath)")
+            assert(false)
+        }*/
+        
     }
 }
 
@@ -501,24 +537,41 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         twitterUser.selected = selected
         
         
-        if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
+        /*if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
             cell.markAsSelected(selected)
-        }
+        }*/
         
-        if let context = twitterUser.managedObjectContext {
+        let context = DBManager.sharedInstance.managedObjectContext
             context.performBlock {
-            if context.hasChanges {
+                [weak self] in
+                
                 do {
-                    try context.save()
-                }
-                    catch let error as NSError  {
-                    print("Erorr select \(error)")
+                    
+                    let rUser = try context.existingObjectWithID(twitterUser.objectID) as! TwitterUser
+             
+                    rUser.selected = selected
+                
+                    if context.hasChanges {
+                
+                        try context.save()
                     }
+                    
+                    let condition = selected || DBManager.sharedInstance.countSelectedItems() != 0
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [weak self] in
+                        self?.moveInOutNextButton(condition, animated: true)
+                    }
+                    
                 }
-            }
+
+                catch let error as NSError  {
+                    print("Erorr select \(error)")
+                }
         }
+
+
         
-        self.moveInOutNextButton(selected || DBManager.sharedInstance.countSelectedItems() != 0, animated: true)
     }
 }
 
@@ -585,14 +638,23 @@ private extension TwitterFriendsViewController {
         
             print("defineStateOfRightBarItem: Before append External count \(countExternal)")
             if countExternal != 0 {
-                self.appendRightBarItem()
                 
-                if DBManager.sharedInstance.countSelectedItems() == countExternal {
-                    self.unSelectAllTitle()
-                }
-                else {
-                    self.selectAllTitle()
-                }
+                DBManager.sharedInstance.getSelectedItemsCount({  (count, error) -> Void in
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [weak self] in
+                        
+                        self?.appendRightBarItem()
+                        
+                        if count == countExternal {
+                            self?.unSelectAllTitle()
+                        }
+                        else {
+                            self?.selectAllTitle()
+                        }
+                    }
+                })
+                
             }
             else {
                 self.removeRightBarItem()

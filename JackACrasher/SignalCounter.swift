@@ -13,6 +13,8 @@ class SignalCounter {
     
     let barrier:Int
     
+    var completionBlock:dispatch_block_t! = nil
+    
     init(barrier:Int) {
         self.barrier = barrier
     }
@@ -21,9 +23,14 @@ class SignalCounter {
     
     func increment() {
         OSAtomicAdd32(1, &value)
+        
+        if (didReachBarrierOnce()) {
+            
+            completionBlock()
+        }
     }
     
-    func didReachBarrierOnce() -> Bool {
+    private func didReachBarrierOnce() -> Bool {
         
         return OSAtomicCompareAndSwap32(Int32(self.barrier), Int32(self.barrier + 1), &value)
     }

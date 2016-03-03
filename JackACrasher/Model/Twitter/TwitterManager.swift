@@ -211,6 +211,19 @@ class TwitterManager: NSObject {
                                         //dispatch_async(self.queue) {
                                         var cancelled = false
                                         let counter = SignalCounter(barrier: users!.count)
+                                        
+                                        counter.completionBlock = {
+                                            [unowned self] in
+                                            
+                                            print("Did reach barrier!")
+                                            DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
+                                                print("Saved images update or not... \(error)\n Saved \(saved)")
+                                                
+                                                self.defineStateUsingCount(countUsers, count: countUsers, offset: offset, isLast: isLast, cancelled: cancelled)
+                                                
+                                            })
+                                        }
+                                        
                                         for user in users! {
                                             
                                             if cancelled {
@@ -219,30 +232,44 @@ class TwitterManager: NSObject {
                                             
                                                 let userId = user.objectID
                                             
+                                            print("Init user ID \(user.userId). IS Temporaty \(userId.temporaryID)")
+                                            
                                                 self.scheduleDBTwitterUserImageReceive(user) {
                                                     (image, error) in
                                                     
                                                     
+                                                    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND,0)) {
+                                                        
                                                     
                                                     print("Increment counter \(counter.value) Barrier \(counter.barrier) Image \(image) Error \(error)")
                                                     
                                                     if let imageInner = image {
                                                         
-                                                        counter.increment()
                                                         
                                                         DBManager.sharedInstance.managedObjectContext.performBlock({ () -> Void in
                                                             
                                                             let retContext = DBManager.sharedInstance.managedObjectContext
                                                             do {
-                                                            let retUser = try retContext.existingObjectWithID(userId) as! TwitterUser
+                                                            let retUser =  retContext.objectWithID(userId) as! TwitterUser
                                                             
-                                                            retUser.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                retUser.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                 
+                                                 print("Ret user ID \(retUser.userId) Update \(retUser.updated)")
                                                                 
+                                                                if (!retUser.fault) {
+                                                  retUser.managedObjectContext?.refreshObject(retUser, mergeChanges: true)
+                                                                }
                                                                 try retContext.save()
+                                                                
+                                                                print("Image saved. ")
                                                             }
                                                             catch let error as NSError {
                                                                 print("Error Saving Image \(error)")
                                                             }
+                                                            
+                                                            counter.increment()
+                                                            
+                                                            
                                                         })
                                                         
                                                     }
@@ -258,18 +285,9 @@ class TwitterManager: NSObject {
                                                         counter.increment()
                                                     }
                                                     
-                                                    if counter.didReachBarrierOnce() {
-                                                        
-                                                        print("Did reach barrier!")
-                                                        DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
-                                                        print("Saved images update or not... \(error)\n Saved \(saved)")
-                                                            
-                                                            self.defineStateUsingCount(countUsers, count: countUsers, offset: offset, isLast: isLast, cancelled: cancelled)
-                                                            
-                                                        })
+                                                    
+                                                    
                                                     }
-                                                    
-                                                    
                                                 }
                                             
                                         }

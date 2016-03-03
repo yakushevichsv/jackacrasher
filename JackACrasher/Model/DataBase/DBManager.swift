@@ -38,15 +38,21 @@ class DBManager: NSObject {
     }()
     
     lazy var managedObjectModel: NSManagedObjectModel = {
+        //assert(NSThread.isMainThread())
         // The managed object model for the application. This property is not optional. It is a fatal error for the application not to be able to find and load its model.
         let modelURL = NSBundle.mainBundle().URLForResource("DBModel", withExtension: "momd")!
         return NSManagedObjectModel(contentsOfURL: modelURL)!
     }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+        
+        //assert(NSThread.isMainThread())
+        var coordinator:NSPersistentStoreCoordinator! = nil
+        
+        //dispatch_sync(dispatch_get_main_queue()) {
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
-        let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
+         coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentsDirectory.URLByAppendingPathComponent("DBModel.sqlite")
         var failureReason = "There was an error creating or loading the application's saved data."
         do {
@@ -64,15 +70,15 @@ class DBManager: NSObject {
             NSLog("Unresolved error \(wrappedError), \(wrappedError.userInfo)")
             self.lastError = wrappedError
             self.canWork = false
-            #if DEBUG
+            //#if DEBUG
                 abort()
-            #endif
+            //#endif
         } catch {
-            #if DEBUG
+            //#if DEBUG
                 abort()
-            #endif
+            //#endif
         }
-        
+        //}
         return coordinator
     }()
     
@@ -327,15 +333,12 @@ class DBManager: NSObject {
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
             request.predicate = NSPredicate(format: "miniImage = nil")
             
-            let asyncReq = NSAsynchronousFetchRequest(fetchRequest: request){
-                (result) in
-                if let res = result.finalResult as? [TwitterUser] {
-                    completionHandler(users: res, error: nil)
-                }
-            }
             
             do {
-                try self.managedObjectContext.executeRequest(asyncReq)
+                let res = try self.managedObjectContext.executeFetchRequest(request) as! [TwitterUser]
+                
+                completionHandler(users: res, error: nil)
+                
             }
             catch let error as NSError {
                 completionHandler(users: nil, error: error)
@@ -750,6 +753,8 @@ extension DBManager {
         }
         print("Start listening")
         
+        assert(self.mainManagedObjectContext != nil)
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeContext:", name: NSManagedObjectContextDidSaveNotification, object: context)
     }
     
@@ -764,6 +769,8 @@ extension DBManager {
     
     
     func didChangeContext(notification:NSNotification) {
+       
+        print("didChangeContext start!")
         
         guard let sContext = notification.object as? NSManagedObjectContext else {
             return
@@ -773,7 +780,7 @@ extension DBManager {
             return
         }
         
-        print("didChangeContext start!")
+       
         
         
             print("didChangeContext merge performBlock!")
@@ -834,6 +841,10 @@ extension DBManager {
         return (controller:controllerRet,error: errorRet)
     }
     
+    func getSelectedItemsCount(completion:(count:Int,error:NSError?)->Void) {
+        countItemsWithPredicateAsync(NSPredicate(format: "selected == %@",NSNumber(bool: true)),completion:completion)
+    }
+    
     func countSelectedItems() -> Int {
         
         return countItemsWithPredicate(NSPredicate(format: "selected == %@",NSNumber(bool: true)))
@@ -850,18 +861,37 @@ extension DBManager {
         _mainManagedObjectContext = nil
     }
     
-    
-    private func countItemsWithPredicate(predicate:NSPredicate?) -> Int {
+    private func countItemsWithPredicateAsync(predicate:NSPredicate?,completion:(count:Int,error:NSError?)->Void) {
         
-        var count:Int = NSNotFound
+        let context = self.managedObjectContext
         
-        self.mainManagedObjectContext.performBlockAndWait{
-            [unowned self] in
+        context.performBlock{
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
             request.predicate = predicate
             
             var error:NSError? = nil
-            let countInner = self.mainManagedObjectContext.countForFetchRequest(request, error: &error)
+            let countInner = context.countForFetchRequest(request, error: &error)
+            
+            if (error != nil){
+                print("Error \(error)\n")
+            }
+            completion(count: countInner,error:error)
+        }
+        
+    }
+    
+    
+    private func countItemsWithPredicate(predicate:NSPredicate?) -> Int {
+        
+        var count:Int = NSNotFound
+        let context = self.managedObjectContext
+        
+        context.performBlockAndWait{
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            request.predicate = predicate
+            
+            var error:NSError? = nil
+            let countInner = context.countForFetchRequest(request, error: &error)
             
             if (error != nil){
                 print("Error \(error)\n")

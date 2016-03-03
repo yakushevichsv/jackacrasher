@@ -99,10 +99,11 @@ class ProgressHDViewController: UIViewController {
         view.alpha = 0.8
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
-        view.center = self.view.bounds.center
+        //view.center = self.view.bounds.center
         view.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(view)
+        self.containerView = view
         
         let const1 = view.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
         const1.active = true
@@ -110,15 +111,15 @@ class ProgressHDViewController: UIViewController {
         let const2 = view.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
         const2.active = true
         
-        view.superview!.setNeedsLayout()
+        NSLayoutConstraint.activateConstraints([const1,const2])
         
-        self.containerView = view
+        
     }
     
     
     private func appendActivityIndicator() {
         
-        
+        assert(self.containerView != nil)
         let view = UIActivityIndicatorView(activityIndicatorStyle: .White)
         view.translatesAutoresizingMaskIntoConstraints = false
         
@@ -128,22 +129,20 @@ class ProgressHDViewController: UIViewController {
         view.alpha = 0.8
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
-        view.center = self.containerView.bounds.center
+        //view.center = self.containerView.bounds.center
         
         self.containerView.addSubview(view)
-        
+        self.activityIndicator = view
         
         
         let const1 = view.centerXAnchor.constraintEqualToAnchor(self.containerView.centerXAnchor)
-        const1.active = true
         
         let const2 = view.centerYAnchor.constraintEqualToAnchor(self.containerView.centerYAnchor)
-        const2.active = true
         
-        view.superview!.setNeedsLayout()
+        NSLayoutConstraint.activateConstraints([const1,const2])
         
         
-        self.activityIndicator = view
+        
     }
     
 
