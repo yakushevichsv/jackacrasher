@@ -11,7 +11,7 @@ import Foundation
 
 class SignalCounter {
     
-    private let barrier:Int
+    let barrier:Int
     
     init(barrier:Int) {
         self.barrier = barrier

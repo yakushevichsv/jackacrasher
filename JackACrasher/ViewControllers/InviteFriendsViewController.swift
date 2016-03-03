@@ -183,11 +183,12 @@ extension InviteFriendsViewController {
         Twitter.sharedInstance().logInWithViewController(self.presentingViewController) { (session, error) -> Void in
         
             guard (error == nil && session != nil) else {
-                if (error!.domain == TWTRLogInErrorDomain && error!.code == TWTRLogInErrorCode.Denied.rawValue) {
-                    return
+                if error != nil {
+                    if (error!.domain == TWTRLogInErrorDomain && error!.code == TWTRLogInErrorCode.Denied.rawValue) {
+                        return
+                    }
+                    self.alertWithTitle("Error", message: error!.localizedDescription)
                 }
-                
-                self.alertWithTitle("Error", message: error!.localizedDescription)
                 return
             }
             self.twitterUserId = session!.userID

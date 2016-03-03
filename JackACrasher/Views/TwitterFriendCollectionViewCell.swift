@@ -188,7 +188,9 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
     }
     
     internal func setText(text:String?) {
-        self.labelLayer.string = text
+        if self.labelLayer.string as? String != text  {
+            self.labelLayer.string = text
+        }
     }
     
 }

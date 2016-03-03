@@ -13,8 +13,6 @@ import TwitterKit
 class DBManager: NSObject {
 
     internal static let sharedInstance = DBManager()
-    private let queue = dispatch_queue_create("DBManager", DISPATCH_QUEUE_CONCURRENT)
-    
     var lastError:NSError? = nil
     private var canWork = true
     
@@ -78,12 +76,37 @@ class DBManager: NSObject {
         return coordinator
     }()
     
+    private var _mainManagedObjectContext:NSManagedObjectContext! = nil
+    private var _mainMOCDisposed:Bool = false
     
-    lazy var managedObjectContext: NSManagedObjectContext = {
-        // Returns the managed object context for the application (which is already bound to the persistent store coordinator for the application.) This property is optional since there are legitimate error conditions that could cause the creation of the context to fail.
+    var mainManagedObjectContext: NSManagedObjectContext!
+    {
+        get {
+            if (_mainManagedObjectContext == nil) {
+                
+                if (_mainMOCDisposed) {
+                    return nil
+                }
+                let coordinator = self.managedObjectContext.persistentStoreCoordinator
+                let context = NSManagedObjectContext(concurrencyType:.MainQueueConcurrencyType)
+                context.persistentStoreCoordinator = coordinator
+                context.mergePolicy = NSRollbackMergePolicy
+                context.stalenessInterval = 0
+                _mainManagedObjectContext = context
+                self.startListeningForChangesInManagedContext()
+            }
+            return _mainManagedObjectContext
+        }
+    }
+    
+    var needToRestartListening:Bool = false
+    
+    lazy var managedObjectContext: NSManagedObjectContext =
+        {
         let coordinator = self.persistentStoreCoordinator
         var managedObjectContext = NSManagedObjectContext(concurrencyType: .PrivateQueueConcurrencyType)
-        managedObjectContext.mergePolicy = NSOverwriteMergePolicy
+        managedObjectContext.mergePolicy = NSRollbackMergePolicy
+        managedObjectContext.stalenessInterval = 0
         managedObjectContext.persistentStoreCoordinator = coordinator
         return managedObjectContext
     }()
@@ -92,8 +115,8 @@ class DBManager: NSObject {
     
    private func test() {
         
-        dispatch_async(self.queue){
-            
+    self.managedObjectContext.performBlock {
+        
             let fetchRequest = NSFetchRequest(entityName: TwitterId.EntityName())
             
             fetchRequest.predicate =
@@ -157,7 +180,7 @@ class DBManager: NSObject {
     
     private func testInsertOrUpdate(userIds:[String],completionHandler:(flags:[String:Bool],error:NSError?,saved:Bool) -> Void) {
         
-        dispatch_async(self.queue) {
+        self.managedObjectContext.performBlock  {
             [unowned self] in
             
             var results = [String:Bool]()
@@ -205,7 +228,7 @@ class DBManager: NSObject {
     
     internal func insertOrUpdateTwitterIds(userIds:[String],completionHandler:(error:NSError?,saved:Bool) -> Void) {
         
-        dispatch_async(self.queue) {
+        self.managedObjectContext.performBlock {
             [unowned self] in
             
             print("User ids \(userIds)")
@@ -298,7 +321,7 @@ class DBManager: NSObject {
     
     func fetchTwitterUsersWithEmptyProfileImages(completionHandler:(users:[TwitterUser]?, error:NSError?) -> Void) {
         
-        dispatch_async(self.queue) {
+        self.managedObjectContext.performBlock  {
             [unowned self] in
         
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
@@ -329,39 +352,10 @@ class DBManager: NSObject {
         return error == nil ? count : 0
     }
     
-    func getFetchedTwitterUsers<T:AnyObject where T:protocol<NSFetchedResultsControllerDelegate>>(twitterId:String, delegate:T) -> (controller:NSFetchedResultsController?,error:NSError?) {
-        
-        var controllerRet:NSFetchedResultsController? = nil
-        var errorRet:NSError? = nil
-        
-        
-        
-        dispatch_sync(self.queue){
-            
-            print(__FUNCTION__)
-            //assert(self.countTestTwitterUser() != 0)
-            //TODO: add support for periodic update of friends....
-            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
-            request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
-            request.fetchBatchSize = 20
-            //HACK....
-            //request.fetchLimit = 2
-            let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: self.managedObjectContext, sectionNameKeyPath: nil, cacheName: "\(twitterId)")
-                controller.delegate = delegate
-                do {
-                    try controller.performFetch()
-                    controllerRet = controller
-                } catch let error as NSError {
-                    print("\(error)")
-                    errorRet = error
-                }
-        }
-        return (controller:controllerRet,error: errorRet)
-    }
     
     func deleteOldAgedTwitterUsers(completionHandler:(error:NSError?,saved:Bool) -> Void) {
         
-        dispatch_async(self.queue)
+        self.managedObjectContext.performBlock
             {
          [unowned self] in
                 
@@ -405,7 +399,7 @@ class DBManager: NSObject {
     
     private func changeInviteCount(addition:Bool, completeionHandler:((error:NSError?,saved:Bool) -> Void)?) {
         
-        dispatch_async(self.queue) {
+       self.managedObjectContext.performBlock  {
             [unowned self] in
         
         let batchSize = 30
@@ -470,47 +464,16 @@ class DBManager: NSObject {
         changeSelectionState(false, completeionHandler: completeionHandler)
     }
     
-    func countSelectedItems() -> Int {
-        
-        return countItemsWithPredicate(NSPredicate(format: "selected == %@",NSNumber(bool: true)))
-    }
-    
-    func totalCountOfTwitterUsers() -> Int {
-        
-        return countItemsWithPredicate(nil)
-    }
-    
-    
-    private func countItemsWithPredicate(predicate:NSPredicate?) -> Int {
-        
-        var count:Int = NSNotFound
-        
-        dispatch_sync(self.queue) {
-            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
-            request.predicate = predicate
-            
-            var error:NSError? = nil
-            let countInner = self.managedObjectContext.countForFetchRequest(request, error: &error)
-            
-            if (error != nil){
-                print("Error \(error)\n")
-            }
-            count = countInner
-        }
-        
-        return count
-    }
     
     private func changeSelectionState(selected:Bool,completeionHandler:((count:Int,error:NSError?,saved:Bool) -> Void)?) {
         
-        dispatch_async(self.queue) {
+        self.managedObjectContext.performBlock {
             [unowned self] in
             
             let request = NSBatchUpdateRequest(entityName: TwitterUser.EntityName())
             request.predicate = NSPredicate(format: "selected != %@",NSNumber(bool: selected))
             request.resultType = NSBatchUpdateRequestResultType.UpdatedObjectIDsResultType
             request.propertiesToUpdate = ["selected":NSNumber(bool:selected)]
-            self.managedObjectContext.stalenessInterval = 0
             do {
                 let result = try self.managedObjectContext.executeRequest(request) as! NSBatchUpdateResult
                 
@@ -530,7 +493,33 @@ class DBManager: NSObject {
                     let count = objIDs.count
                     self.saveContextWithCompletion({ (error, saved) -> Void in
                         print("Check uncheck db saved \(saved) Stored \(count)")
-                        completion(count: count ,error:error,saved:saved)
+                        
+                        if (!saved && error == nil) {
+                            
+                            let context = self.mainManagedObjectContext
+                            context?.performBlockAndWait() {
+                                
+                                for objID in objIDs {
+                                    let retObj = context.objectWithID(objID)
+                                    
+                                    if (retObj.fault == false) {
+                                        context.refreshObject(retObj, mergeChanges: false)
+                                    }
+                                    else {
+                                        try? context.existingObjectWithID(objID)
+                                    }
+                                }
+                                self.saveContextWithCompletion(context) {
+                                    (error, saved) in
+                                    
+                                    print("Main Context Check uncheck db saved \(saved) Stored \(count)")
+                                    completion(count: count ,error:error,saved:saved)
+                                }
+                            }
+                        }
+                        else {
+                            completion(count: count ,error:error,saved:saved)
+                        }
                     })
                 }
             }
@@ -543,7 +532,7 @@ class DBManager: NSObject {
 
     func insertOrUpdateTwitterUsers(users:[TWTRUser],completionHandler:(error:NSError?,saved:Bool) -> Void) {
        
-        dispatch_async(self.queue) {
+        self.managedObjectContext.performBlock {
             [unowned self] in
             
             
@@ -676,52 +665,49 @@ class DBManager: NSObject {
     
     //MARK: Save context
     
-    func saveContextAsynchWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
-        
-        if (!self.canWork) {
-            completionHandler(error: self.lastError, saved: false)
-            return
-        }
-        
-        
-        
-        dispatch_async(self.queue) {
-            [unowned self] in
-            
-            if self.managedObjectContext.hasChanges {
-                do {
-                    try self.managedObjectContext.save()
-                    self.lastError = nil
-                    completionHandler(error: nil, saved: true)
-                } catch let nserror as NSError {
-                    self.lastError = nserror
-                    NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
-                    completionHandler(error: nserror, saved: false)
-                }
-            }
-            else {
-                completionHandler(error: nil, saved: false)
-            }
-        }
+    
+    func saveContextWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
+        saveContextWithCompletion(self.managedObjectContext,completionHandler:completionHandler)
     }
     
-    private func saveContextWithCompletion(completionHandler:(error:NSError?,saved:Bool) -> Void) {
+    private func saveContextWithCompletion(context:NSManagedObjectContext!, completionHandler:(error:NSError?,saved:Bool) -> Void) {
         
         if (!self.canWork) {
             completionHandler(error: self.lastError, saved: false)
             return
         }
         
-        
-        
-        //dispatch_async(self.queue) {
-          //  [unowned self] in
-            
-            if self.managedObjectContext.hasChanges {
+        context.performBlock {
+            [unowned self] in
+            if context.hasChanges {
                 do {
-                    try self.managedObjectContext.save()
+                    try context.save()
                     self.lastError = nil
-                    completionHandler(error: nil, saved: true)
+                    
+                    print("Did save changes!")
+                    
+                    if let parent = context.parentContext {
+                        
+                        parent.performBlock {
+                            [unowned self] in
+                            
+                        if parent.hasChanges {
+                                do {
+                                    try parent.save()
+                                    self.lastError = nil
+                                    completionHandler(error: nil, saved: true)
+                                }
+                                catch let nserror as NSError {
+                                    self.lastError = nserror
+                                    NSLog("Unresolved Parent error \(nserror), \(nserror.userInfo)")
+                                    completionHandler(error: nserror, saved: false)
+                                }
+                            }
+                        }
+                    }
+                    else {
+                        completionHandler(error: nil, saved: true)
+                    }
                 } catch let nserror as NSError {
                     self.lastError = nserror
                     NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
@@ -731,7 +717,7 @@ class DBManager: NSObject {
             else {
                 completionHandler(error: nil, saved: false)
             }
-        //}
+        }
     }
 
     
@@ -750,5 +736,139 @@ class DBManager: NSObject {
         dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER)
         
         return retSaved
+    }
+}
+
+//MARK:Context's changes
+extension DBManager {
+    
+    func startListeningForChangesInManagedContext() {
+        let context = self.managedObjectContext
+        
+        if context.parentContext != nil {
+            return
+        }
+        print("Start listening")
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeContext:", name: NSManagedObjectContextDidSaveNotification, object: context)
+    }
+    
+    func stopListeningForChangesInManagedContext() {
+        if self.managedObjectContext.parentContext != nil {
+            return
+        }
+        
+        print("Stop listening")
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: NSManagedObjectContextDidSaveNotification, object: self.managedObjectContext)
+    }
+    
+    
+    func didChangeContext(notification:NSNotification) {
+        
+        guard let sContext = notification.object as? NSManagedObjectContext else {
+            return
+        }
+        
+        if (sContext == self.mainManagedObjectContext ) {
+            return
+        }
+        
+        print("didChangeContext start!")
+        
+        
+            print("didChangeContext merge performBlock!")
+            self.mainManagedObjectContext.performBlockAndWait({ () -> Void in
+                print("didChangeContext merge changes!")
+                
+                self.mainManagedObjectContext.mergeChangesFromContextDidSaveNotification(notification)
+            })
+        
+    }
+}
+
+//MARK: Main Context's methods...
+
+extension DBManager {
+    
+    
+    func getFetchedTwitterUsers<T:AnyObject where T:protocol<NSFetchedResultsControllerDelegate>>(twitterId:String, delegate:T) -> (controller:NSFetchedResultsController?,error:NSError?) {
+        
+        var controllerRet:NSFetchedResultsController? = nil
+        var errorRet:NSError? = nil
+    
+        assert(NSThread.isMainThread())
+        _mainMOCDisposed = false
+        //self.stopListeningForChangesInManagedContext()
+        
+        //self.mainManagedObjectContext.performBlockAndWait{
+          //  [unowned self] in
+            
+            print(__FUNCTION__)
+            
+            //assert(self.countTestTwitterUser() != 0)
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
+            let controller = NSFetchedResultsController(fetchRequest: request, managedObjectContext: self.mainManagedObjectContext, sectionNameKeyPath: nil, cacheName: nil)
+            controller.delegate = delegate
+            do {
+            
+                if self.needToRestartListening  {
+                    
+                    self.startListeningForChangesInManagedContext()
+                    
+                    self.needToRestartListening = false
+                }
+                
+                try controller.performFetch()
+                
+                controllerRet = controller
+                print("CONTROLLER performFetch ")
+            } catch let error as NSError {
+                print("ERROR CONTROLLER! \(error)")
+                errorRet = error
+                self.stopListeningForChangesInManagedContext()
+                
+                self.needToRestartListening = true
+            }
+        //}
+        return (controller:controllerRet,error: errorRet)
+    }
+    
+    func countSelectedItems() -> Int {
+        
+        return countItemsWithPredicate(NSPredicate(format: "selected == %@",NSNumber(bool: true)))
+    }
+    
+    func totalCountOfTwitterUsers() -> Int {
+        
+        return countItemsWithPredicate(nil)
+    }
+    
+    func disposeUIContext() {
+        stopListeningForChangesInManagedContext()
+        _mainMOCDisposed = true
+        _mainManagedObjectContext = nil
+    }
+    
+    
+    private func countItemsWithPredicate(predicate:NSPredicate?) -> Int {
+        
+        var count:Int = NSNotFound
+        
+        self.mainManagedObjectContext.performBlockAndWait{
+            [unowned self] in
+            let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+            request.predicate = predicate
+            
+            var error:NSError? = nil
+            let countInner = self.mainManagedObjectContext.countForFetchRequest(request, error: &error)
+            
+            if (error != nil){
+                print("Error \(error)\n")
+            }
+            count = countInner
+        }
+        
+        return count
     }
 }

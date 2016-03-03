@@ -181,7 +181,7 @@ class TwitterManager: NSObject {
                                         let isFriend = f.isFriend(l)
                                         let isFollowing = f.isFollowing() || l.isFollowing()
                                         
-                                       print("\(userInfo.name) Connections \(connections)   is Friend \(isFriend) IS following \(isFollowing)")
+                                       /*print("\(userInfo.name) Connections \(connections)   is Friend \(isFriend) IS following \(isFollowing)")*/
                                         }
                                     
                                     /*
@@ -217,21 +217,32 @@ class TwitterManager: NSObject {
                                                 return
                                             }
                                             
+                                                let userId = user.objectID
                                             
                                                 self.scheduleDBTwitterUserImageReceive(user) {
                                                     (image, error) in
                                                     
                                                     
                                                     
-                                                    print("Increment counter Image \(image) Error \(error)")
+                                                    print("Increment counter \(counter.value) Barrier \(counter.barrier) Image \(image) Error \(error)")
                                                     
                                                     if let imageInner = image {
                                                         
+                                                        counter.increment()
+                                                        
                                                         DBManager.sharedInstance.managedObjectContext.performBlock({ () -> Void in
                                                             
-                                                            counter.increment()
+                                                            let retContext = DBManager.sharedInstance.managedObjectContext
+                                                            do {
+                                                            let retUser = try retContext.existingObjectWithID(userId) as! TwitterUser
                                                             
-                                                            user.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                            retUser.miniImage = UIImagePNGRepresentation(imageInner) ?? UIImageJPEGRepresentation(imageInner, 0.8)
+                                                                
+                                                                try retContext.save()
+                                                            }
+                                                            catch let error as NSError {
+                                                                print("Error Saving Image \(error)")
+                                                            }
                                                         })
                                                         
                                                     }
@@ -249,11 +260,12 @@ class TwitterManager: NSObject {
                                                     
                                                     if counter.didReachBarrierOnce() {
                                                         
-                                                        DBManager.sharedInstance.saveContextAsynchWithCompletion({ (error, saved) -> Void in
+                                                        print("Did reach barrier!")
+                                                        DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
                                                         print("Saved images update or not... \(error)\n Saved \(saved)")
-                                                            if (countUsers == 100 && !isLast && !cancelled) {
-                                                                self.startUpdatingInCycle(countUsers + offset)
-                                                            }
+                                                            
+                                                            self.defineStateUsingCount(countUsers, count: countUsers, offset: offset, isLast: isLast, cancelled: cancelled)
+                                                            
                                                         })
                                                     }
                                                     
@@ -267,15 +279,11 @@ class TwitterManager: NSObject {
                                         
                                     }
                                     else {
-                                        if (countUsers == 100 && !isLast) {
-                                            self.startUpdatingInCycle(countUsers + offset)
-                                        }
+                                        self.defineStateUsingCount(countUsers, count: count, offset: offset, isLast: isLast)
                                     }
                                 }
                                 else {
-                                    if (countUsers == 100 && !isLast) {
-                                        self.startUpdatingInCycle(countUsers + offset)
-                                    }
+                                    self.defineStateUsingCount(countUsers, count: count, offset: offset, isLast: isLast)
                                 }
                             })
                         }
@@ -299,14 +307,21 @@ class TwitterManager: NSObject {
             
             //eee Store items here!.....
             
-            
-            if (count < 100 && isLast) {
-                self.managerState = .DownloadingFinished(totalCount:offset + count)
-            }
         }
         else if (isLast) {
             self.managerState = .DownloadingFinished(totalCount:offset)
         }
+    }
+    
+    func defineStateUsingCount(countUsers:Int,count:Int,offset:Int,isLast:Bool,cancelled:Bool = false) {
+        
+        if (countUsers == 100 && !isLast && !cancelled) {
+            self.startUpdatingInCycle(countUsers + offset)
+        }
+        else if (isLast){
+            self.managerState = .DownloadingFinished(totalCount:offset + count)
+        }
+
     }
     
     private var isCancelled :Bool {
@@ -553,7 +568,7 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
                             if let jsonArray = json as? [NSDictionary] {
                                 
                                 let users =  jsonArray.map({ (value) -> TWTRUser in
-                                    return TWTRUser(JSONDictionary: value as [NSObject : AnyObject])
+                                    return TWTRUser(JSONDictionary: value as! [NSObject : AnyObject])
                                 })
                                 block(items:users,error:nil)
                             }

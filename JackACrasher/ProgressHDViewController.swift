@@ -66,15 +66,19 @@ class ProgressHDViewController: UIViewController {
         
         view.backgroundColor = UIColor.clearColor()
         view.userInteractionEnabled = false
+        view.translatesAutoresizingMaskIntoConstraints = false
         
+        let con1 = NSLayoutConstraint(item: self.view, attribute: .Leading, relatedBy: .Equal, toItem: view, attribute: .Leading, multiplier: 1.0, constant: 0)
+        con1.active = true
         
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .Leading, relatedBy: .Equal, toItem: view, attribute: .Leading, multiplier: 1.0, constant: 0))
+        let con2 = NSLayoutConstraint(item: self.view, attribute: .Trailing, relatedBy: .Equal, toItem: view, attribute: .Trailing, multiplier: 1.0, constant: 0)
+        con2.active = true
         
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .Trailing, relatedBy: .Equal, toItem: view, attribute: .Trailing, multiplier: 1.0, constant: 0))
+        let con3 = NSLayoutConstraint(item: self.view, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: 0)
+        con3.active = true
         
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .Bottom, relatedBy: .Equal, toItem: view, attribute: .Bottom, multiplier: 1.0, constant: 0))
-        
-        self.view.addConstraint(NSLayoutConstraint(item: self.view, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1.0, constant: 0))
+        let con4 = NSLayoutConstraint(item: self.view, attribute: .Top, relatedBy: .Equal, toItem: view, attribute: .Top, multiplier: 1.0, constant: 0)
+        con4.active = true
         
         self.view.insertSubview(view, aboveSubview: self.containerView)
         
@@ -96,12 +100,15 @@ class ProgressHDViewController: UIViewController {
         view.layer.cornerRadius = 10
         view.layer.masksToBounds = true
         view.center = self.view.bounds.center
+        view.translatesAutoresizingMaskIntoConstraints = false
         
         self.view.addSubview(view)
         
-        self.view.addConstraint(NSLayoutConstraint(item: view, attribute: .CenterX, relatedBy: .Equal, toItem: self.view, attribute: .CenterX, multiplier: 0.5, constant: 0))
+        let const1 = view.centerXAnchor.constraintEqualToAnchor(self.view.centerXAnchor)
+        const1.active = true
         
-        self.view.addConstraint(NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: self.view, attribute: .CenterY, multiplier: 0.5, constant: 0))
+        let const2 = view.centerYAnchor.constraintEqualToAnchor(self.view.centerYAnchor)
+        const2.active = true
         
         view.superview!.setNeedsLayout()
         
@@ -113,6 +120,8 @@ class ProgressHDViewController: UIViewController {
         
         
         let view = UIActivityIndicatorView(activityIndicatorStyle: .White)
+        view.translatesAutoresizingMaskIntoConstraints = false
+        
         view.hidesWhenStopped = true
         
         view.backgroundColor = UIColor.blackColor()
@@ -125,9 +134,11 @@ class ProgressHDViewController: UIViewController {
         
         
         
-        self.containerView.addConstraint(NSLayoutConstraint(item: view, attribute: .CenterX, relatedBy: .Equal, toItem: self.containerView, attribute: .CenterX, multiplier: 0.5, constant: 0))
+        let const1 = view.centerXAnchor.constraintEqualToAnchor(self.containerView.centerXAnchor)
+        const1.active = true
         
-        self.containerView.addConstraint(NSLayoutConstraint(item: view, attribute: .CenterY, relatedBy: .Equal, toItem: self.containerView, attribute: .CenterY, multiplier: 0.5, constant: 0))
+        let const2 = view.centerYAnchor.constraintEqualToAnchor(self.containerView.centerYAnchor)
+        const2.active = true
         
         view.superview!.setNeedsLayout()
         
@@ -138,6 +149,7 @@ class ProgressHDViewController: UIViewController {
 
     func displayProgress(animated:Bool = false) {
         
+        print("displayProgress")
         self.appendViewsOnNeed()
         
         self.containerView.hidden = true
@@ -168,6 +180,7 @@ class ProgressHDViewController: UIViewController {
             return
         }
     
+        print("hideProgress")
         
         if (animated) {
             UIView.animateWithDuration(ProgressHDViewController.dissapperanceDuration, animations: { [weak self] () -> Void in
