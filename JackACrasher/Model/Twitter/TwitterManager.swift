@@ -12,17 +12,19 @@ import TwitterKit
 enum TwitterManagerState {
     case None
     case DownloadingTwitterIds(offset:Int)
-    case DownloadingTwitterIdsRateLimit(offset:Int)
+    case DownloadingTwitterIdsRateLimit(offset:Int,error:NSError!)
     case DownloadingTwitterIdsError(offset:Int,error:NSError!)
     
     case DownloadingTwitterUsers(offset:Int)
-    case DownloadingTwitterUsersRateLimit(userIds:[String])
+    case DownloadingTwitterUsersRateLimit(userIds:[String],error:NSError!)
     case DownloadingTwitterUsersError(offset:Int)
     
     case DownloadingFinished(totalCount:Int)
     
     case DonwloadingTwitterUsersCancelled(lastEror:NSError?)
 }
+
+let TwitterManagerStateNotification = "JC.TwitterManagerStateNotification"
 
 extension TwitterManagerState : Equatable {
 }
@@ -88,7 +90,12 @@ class TwitterManager: NSObject {
     private var clientMap  = [String:TWTRAPIClient]()
     private var userImageTasks = [String:Int]()
     
-    private var managerState = TwitterManagerState.None
+    private (set) var managerState = TwitterManagerState.None {
+        didSet {
+            
+            NSNotificationCenter.defaultCenter().postNotificationName(TwitterManagerStateNotification, object: self)
+        }
+    }
     
     private var timer:NSTimer! = nil
     
@@ -147,7 +154,7 @@ class TwitterManager: NSObject {
                     
                     //TODO: find out when it is downloading error....
                     print("Error twitter users \(error1)")
-                    self.managerState = .DownloadingTwitterUsersRateLimit(userIds:items!)
+                    self.managerState = .DownloadingTwitterUsersRateLimit(userIds:items!,error:error1)
                     
                     
                     
@@ -342,7 +349,7 @@ class TwitterManager: NSObject {
 
     }
     
-    private var isCancelled :Bool {
+    var isCancelled :Bool {
         
         switch self.managerState {
         case .DonwloadingTwitterUsersCancelled(_):
@@ -376,7 +383,7 @@ class TwitterManager: NSObject {
                 if let error = error {
                     //TODO: find out when it is downloading error....
                     print("Error twitter ids \(error). Items \(items)")
-                    self.managerState = .DownloadingTwitterIdsRateLimit(offset:offset)
+                    self.managerState = .DownloadingTwitterIdsRateLimit(offset:offset,error:error)
                     
                     //self.managerState = .DownloadingTwitterIdsError(offset:offset,error:error)
                 }
@@ -397,7 +404,7 @@ class TwitterManager: NSObject {
         self.timer = nil;
         
         switch self.managerState {
-        case .DownloadingTwitterUsersRateLimit(let items) :
+        case .DownloadingTwitterUsersRateLimit(let items,let error) :
             
             let offset = aNotification.userInfo?["offset"] as! Int
             let isLast = aNotification.userInfo?["isLast"] as! Bool
@@ -588,6 +595,8 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
                                 let users =  jsonArray.map({ (value) -> TWTRUser in
                                     return TWTRUser(JSONDictionary: value as! [NSObject : AnyObject])
                                 })
+                                //users.removeRange(Range(start: 0,end: users.count - 4))
+                                
                                 block(items:users,error:nil)
                             }
                             else {

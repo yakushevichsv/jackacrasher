@@ -12,11 +12,12 @@ import TwitterKit
 
 /*
 TODO:
-1) Create Main thread Context
-2) Next button action (Send to the twitter)
-3) Select/unselect is not displayed properly (Situation when it is not unchecked
-5) Wrong size(H) of collectionView
+2) Next button action Go to the next screen...
 
+5) Wrong size(H) of collectionView
+6) Correct Progress HD indicator...
+7) Process Twitter Rate limit for number of requests.....
+8) Append refresh control
 */
 
 class TwitterFriendsViewController: ProgressHDViewController {
@@ -38,7 +39,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
             fetchOnNeed()
             if !(twitterId == nil || twitterId.isEmpty) {
                 
-                self.performSelectorInBackground("startExecution", withObject: nil)
+                self.performSelectorInBackground("setupTM", withObject: nil)
             }
         }
     }
@@ -46,7 +47,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
     private func fetchOnNeed(){
         if !(twitterId == nil || twitterId.isEmpty) {
             
-            //self.performSelectorInBackground("startExecution", withObject: nil)
+            //self.performSelectorInBackground("setupTM", withObject: nil)
             
             if (self.isViewLoaded()){
                 performFetch()
@@ -55,12 +56,6 @@ class TwitterFriendsViewController: ProgressHDViewController {
         }
     }
     
-    func startExecution() {
-        
-        self.twitterManager = TwitterManager(twitterId: self.twitterId)
-        self.twitterManager.startUpdatingTotalList()
-        
-    }
     
     override func viewDidLoad() {
         
@@ -276,10 +271,13 @@ class TwitterFriendsViewController: ProgressHDViewController {
 
     @IBAction func cancelPressed(sender:AnyObject) {
     
+        self.stopListeningTMNotifications()
         self.twitterManager?.cancelAllTwitterRequests()
+        DBManager.sharedInstance.disposeUIContext()
+        
         self.controller = nil
         self.navigationController?.dismissViewControllerAnimated(false, completion: nil)
-        DBManager.sharedInstance.disposeUIContext()
+        
     }
 }
 
@@ -345,7 +343,13 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                         case NSFetchedResultsChangeType.Update:
                             
                             //if self.collectionView.indexPathsForVisibleItems().contains(indexPath) {
-                                reloadArray.append(indexPaths.last!)
+                            
+                                reloadArray.append(indexPaths.first!)
+                                
+                                if indexPaths.last != indexPaths.first {
+                                 print("Last \(indexPaths.last) \nFirst \(indexPaths.first)")
+                                    reloadArray.append(indexPaths.last!)
+                                }
                             //}
                             break
                         case NSFetchedResultsChangeType.Delete:
@@ -370,21 +374,31 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
                 }
                 
                 if !reloadArray.isEmpty {
-                    print("Reload Array \(reloadArray)")
                     self.collectionView.reloadItemsAtIndexPaths(reloadArray)
                 }
                 
                 if (!moveArray.isEmpty) {
                     for pairs in moveArray {
-                        self.collectionView.moveItemAtIndexPath(pairs.first!,toIndexPath: pairs.last!)
+                        let oldIndex = pairs.first
+                        let newIndex = pairs.last
+                        
+                        self.collectionView.moveItemAtIndexPath(oldIndex!,toIndexPath: newIndex!)
+                        
+                        
                     }
                 }
+                
+                
+                
+                print("Insert \(insertArray.count) \nDelete \(deleteArray.count) \nUpdate \(reloadArray.count) \nMove \(moveArray.count)")
                 
                 //count = reloadArray.count + insertArray.count - deleteArray.count
                 
                 }, completion: {[weak self]  (finished) -> Void in
                         self?.sectionChanges = nil
                         self?.itemChanges = nil
+                    
+                    self?.checkTMState(self?.twitterManager)
                     
                     if let count = self?.collectionView.numberOfSections() {
                         if (count != 0) {
@@ -502,11 +516,17 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         
         let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
         
+        assert(!(twitterUser.objectID.temporaryID || twitterUser.fault))
+        
         if let imageData = twitterUser.miniImage {
             cell.setProfileImage(imaage: UIImage(data: imageData))
         }
         else if twitterUser.profileImageMiniURL == nil {
             cell.setProfileImage(imaage: nil)
+        }
+        
+        if (self.twitterManager.isCancelled) {
+            cell.stopActivityIndicator()
         }
         
         cell.setText(twitterUser.userName)
@@ -680,4 +700,55 @@ private extension TwitterFriendsViewController {
         }
     }
     
+}
+
+//MARK: Twitter's Manager methods
+extension TwitterFriendsViewController {
+    
+    private func startListeningTMNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeTMState:", name: TwitterManagerStateNotification, object: self.twitterManager)
+    }
+    
+    private func stopListeningTMNotifications() {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: TwitterManagerStateNotification, object: self.twitterManager)
+    }
+    
+    func setupTM() {
+        self.twitterManager = TwitterManager(twitterId: self.twitterId)
+        self.twitterManager.startUpdatingTotalList()
+        
+        startListeningTMNotifications()
+    }
+    
+    func didChangeTMState(aNotification:NSNotification) {
+        
+        let manager = aNotification.object as! TwitterManager
+        
+        checkTMState(manager)
+    }
+    
+    private func checkTMState(manager:TwitterManager?) {
+        guard let manager = manager else {
+            return
+        }
+        
+        switch (manager.managerState) {
+            
+        case .DownloadingTwitterUsersRateLimit(_,_): fallthrough
+        case .DownloadingTwitterUsersError(_): fallthrough
+        case .DownloadingFinished(_): fallthrough
+        case .DonwloadingTwitterUsersCancelled(_):
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                [weak self] in
+                print("RELOAD RELOAT")
+                self?.collectionView.reloadData()
+                //try! self?.controller.performFetch()
+                
+            }
+            break
+        default:
+            break
+        }
+    }
 }

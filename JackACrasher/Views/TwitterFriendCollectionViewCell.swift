@@ -172,10 +172,15 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         }
     }
     
-    internal func setProfileImage(imaage imagePtr:UIImage?) {
+    internal func stopActivityIndicator() {
         
         aiDownloadingImage.hidden = true
         aiDownloadingImage.stopAnimating()
+    }
+    
+    internal func setProfileImage(imaage imagePtr:UIImage?) {
+        
+        stopActivityIndicator()
         
         guard let image = imagePtr else {
             self.imageLayer.contents = UIImage(imageLiteral: "no_twitter_profile_image").CGImage
