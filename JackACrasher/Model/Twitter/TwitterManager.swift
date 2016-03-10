@@ -17,7 +17,7 @@ enum TwitterManagerState {
     
     case DownloadingTwitterUsers(offset:Int)
     case DownloadingTwitterUsersRateLimit(userIds:[String],error:NSError!)
-    case DownloadingTwitterUsersError(offset:Int)
+    case DownloadingTwitterUsersError(offset:Int,error:NSError!)
     
     case DownloadingFinished(totalCount:Int)
     
@@ -97,38 +97,51 @@ class TwitterManager: NSObject {
         }
     }
     
-    private var timer:NSTimer! = nil
-    
     init(twitterId:String!) {
         self.twitterId = twitterId
         super.init()
     }
     
     
-    func startUpdatingTotalList() {
+    func startUpdatingTotalList() -> Bool {
         
-        print("%@",__FUNCTION__)
-        
+        //print("%@",__FUNCTION__)
         switch self.managerState {
             
             case .None: fallthrough
-            case .DownloadingFinished(_):
+            case .DownloadingFinished(_): fallthrough
+            case .DonwloadingTwitterUsersCancelled: fallthrough
+            case .DownloadingTwitterUsersError(_, _): fallthrough
+            case .DownloadingTwitterIdsError(_, _):
                 
-                print("DownloadingFinished state. DeleteOldAgedTwitterUsers")
+                //print("Downloading should start. DeleteOldAgedTwitterUsers")
                 DBManager.sharedInstance.deleteOldAgedTwitterUsers{
                     [unowned self]
                     (error, saved) in
                     print("Error deleting old aged twitter \(error)")
-                    if error == nil {
-                        self.startUpdatingInCycle(-1)
-                    }
+                    
+                    self.startUpdatingInCycle(-1)
+                }
+                return true
+            
+            case .DownloadingTwitterUsersRateLimit(_,_):
+                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: true) {
+                    return startUpdatingTotalList()
+                }
+                break;
+            case .DownloadingTwitterIdsRateLimit(_,_):
+                if self.resetFailedState(true, userLimit: self.hasPassedFailUsersLimit()) {
+                    return startUpdatingTotalList()
                 }
                 
                 break;
             default:
                 break;
         }
+        return false
     }
+    
+    
     
     private func startDownloadingTwitterUsers(items:[String]?, offset:Int, isLast:Bool) {
         
@@ -141,24 +154,16 @@ class TwitterManager: NSObject {
                 
                 if let error1 = errorTwitterUsers {
                     
-                    //TODO: store just user Ids here...
-                    
-                    if let timerInner = self.timer {
-                        timerInner.invalidate()
-                    }
-                    
-                    self.timer = NSTimer.scheduledTimerWithTimeInterval(15*60, target: self, selector: "restartTwitterUsersDownload:", userInfo: ["offset":offset,"isLast":isLast], repeats: false)
-                    
                     DBManager.sharedInstance.insertOrUpdateTwitterIds(items!, completionHandler: { (error, saved) -> Void in
                     })
                     
-                    //TODO: find out when it is downloading error....
                     print("Error twitter users \(error1)")
-                    self.managerState = .DownloadingTwitterUsersRateLimit(userIds:items!,error:error1)
-                    
-                    
-                    
-                    //self.managerState = .DownloadingTwitterUsersError(offset:offset,error:error)
+                    if (TwitterManager.isTwitterLimitError(error1)) {
+                        self.managerState = .DownloadingTwitterUsersRateLimit(userIds:items!,error:error1)
+                    }
+                    else {
+                        self.managerState = .DownloadingTwitterUsersError(offset:offset,error:error1)
+                    }
                 }
                 else {
                     
@@ -372,7 +377,7 @@ class TwitterManager: NSObject {
         self.managerState = .DownloadingTwitterIds(offset:offset)
         
          print("Calling getTwitterFriendIds")
-        getTwitterFriendIds(offset, count:100){
+        self.getTwitterFriendIds(offset, count:100){
             (items, error,last) in
             
             print("getTwitterFriendIds Finished")
@@ -381,11 +386,13 @@ class TwitterManager: NSObject {
             case let .DownloadingTwitterIds(offset) :
                 
                 if let error = error {
-                    //TODO: find out when it is downloading error....
                     print("Error twitter ids \(error). Items \(items)")
-                    self.managerState = .DownloadingTwitterIdsRateLimit(offset:offset,error:error)
-                    
-                    //self.managerState = .DownloadingTwitterIdsError(offset:offset,error:error)
+                    if TwitterManager.isTwitterLimitError(error) {
+                        self.managerState = .DownloadingTwitterIdsRateLimit(offset:offset,error:error)
+                    }
+                    else {
+                        self.managerState = .DownloadingTwitterIdsError(offset:offset,error:error)
+                    }
                 }
                 else {
                     self.startDownloadingTwitterUsers(items, offset: offset,isLast: last)
@@ -401,10 +408,9 @@ class TwitterManager: NSObject {
     
     func restartTwitterUsersDownload(aNotification:NSNotification) {
         
-        self.timer = nil;
         
         switch self.managerState {
-        case .DownloadingTwitterUsersRateLimit(let items,let error) :
+        case .DownloadingTwitterUsersRateLimit(let items, _) :
             
             let offset = aNotification.userInfo?["offset"] as! Int
             let isLast = aNotification.userInfo?["isLast"] as! Bool
@@ -987,5 +993,148 @@ extension TwitterManager {
             }
         }
         return image
+    }
+}
+
+//MARK: Limit Rate Processing
+extension TwitterManager {
+    
+    private struct Constants {
+        static let userIdLimit = "jc.userIdLimit"
+        static let userLimit   = "jc.userLimit"
+        static let userIdLimitInterval = NSTimeInterval(1*60)
+        static let userLimitInterval   = NSTimeInterval(1*60)
+    }
+    
+    func storeFailUserIdLimit() -> Bool {
+        let res =  TwitterManager.storeFailForKey(Constants.userIdLimit)
+    
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(Constants.userIdLimitInterval * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime,self.queue) {
+            [weak self] in
+            self?.resetFailedState(true,userLimit: false)
+        }
+        
+        return res
+    }
+    
+    func storeFailUsersLimit() -> Bool {
+        let res =  TwitterManager.storeFailForKey(Constants.userLimit)
+    
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(Constants.userLimitInterval * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime,self.queue) {
+            [weak self] in
+            self?.resetFailedState(false,userLimit: true)
+        }
+        
+        return res
+    }
+    
+    func resetFailedState(let userIdLimit:Bool,let userLimit:Bool) -> Bool {
+     
+        var result:Bool = false
+        
+        switch (self.managerState) {
+            
+        case .DownloadingTwitterIdsRateLimit(_,_):
+            if (userIdLimit) {
+                result = removeFailUserIdLimit()
+                self.managerState = .None
+            }
+            break
+        case .DownloadingTwitterUsersRateLimit(_,_):
+            if (userLimit) {
+                result = removeFailUsersLimit()
+                self.managerState = .None
+            }
+            break
+        default:
+            break
+        }
+        
+        return result
+    }
+    
+    
+    func hasPassedFailUserIdLimit() -> Bool {
+        return TwitterManager.hasPassedForKey(Constants.userIdLimit, interval: Constants.userIdLimitInterval)
+    }
+    
+    func hasPassedFailUsersLimit() -> Bool {
+         return TwitterManager.hasPassedForKey(Constants.userLimit, interval: Constants.userLimitInterval)
+    }
+    
+    func removeFailUserIdLimit() -> Bool {
+        return TwitterManager.removeFailForKey(Constants.userIdLimit)
+    }
+    
+    func removeFailUsersLimit() -> Bool {
+        return TwitterManager.removeFailForKey(Constants.userLimit)
+    }
+    
+    private class func removeFailForKey(let key:String) -> Bool {
+        NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    private class func storeFailForKey(let key:String) -> Bool {
+        let timeInterval = NSDate().timeIntervalSinceReferenceDate
+        NSUserDefaults.standardUserDefaults().setDouble(timeInterval, forKey: key)
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    private class func hasPassedForKey(let key:String,let interval:NSTimeInterval) -> Bool {
+        let timeInterval = NSDate().timeIntervalSinceReferenceDate
+        let timeIntervalOld = NSUserDefaults.standardUserDefaults().doubleForKey(key)
+        
+        return timeIntervalOld != 0 && (timeInterval - timeIntervalOld >= interval)
+    }
+    
+}
+
+//MARK: Error analysis
+extension TwitterManager {
+    
+    private class func isTwitterLimitError(error:NSError) -> Bool {
+        
+        return error.domain == "TwitterAPIErrorDomain" && error.code == 88
+    }
+    
+    func isLimitRate() -> Bool {
+        
+        switch self.managerState {
+        case .DownloadingTwitterUsersRateLimit(_, _): fallthrough
+        case .DownloadingTwitterIdsRateLimit(_, _):
+            
+            return true
+        default:
+            break
+        }
+        
+        return false
+    }
+    
+    func isError() -> (result:Bool,error:NSError?) {
+        
+        var result:Bool = false
+        var retError:NSError? = nil
+        
+        switch self.managerState {
+        case .DownloadingTwitterUsersError(_, let error):
+            result = false
+            retError = error
+            break
+        case .DownloadingTwitterIdsError(_, let error):
+            result = false
+            retError = error
+        default:
+            break
+        }
+        
+        return (result,retError)
     }
 }

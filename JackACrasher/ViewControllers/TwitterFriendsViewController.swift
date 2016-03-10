@@ -12,12 +12,11 @@ import TwitterKit
 
 /*
 TODO:
-2) Next button action Go to the next screen...
-
-5) Wrong size(H) of collectionView
+2) Go to the next screen...
+3) Save relationships into DB ....
+4) Next screen with sending information...
 6) Correct Progress HD indicator...
-7) Process Twitter Rate limit for number of requests.....
-8) Append refresh control
+
 */
 
 class TwitterFriendsViewController: ProgressHDViewController {
@@ -67,6 +66,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         fetchOnNeed()
         
+        appendPullToRefreshController()
         
     }
     
@@ -76,6 +76,10 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         if (!animateOnce) {
             animateOnce = true
+        
+            //self.collectionView.contentInset = UIEdgeInsetsMake(self.heightOfPullToRefreshControl(), 0, 0, 0)
+            
+            self.collectionView.setContentOffset(CGPointZero, animated: animated)
             
             DBManager.sharedInstance.managedObjectContext.performBlock{
              
@@ -516,7 +520,7 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         
         let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
         
-        assert(!(twitterUser.objectID.temporaryID || twitterUser.fault))
+        assert(!(twitterUser.objectID.temporaryID /*|| twitterUser.fault*/))
         
         if let imageData = twitterUser.miniImage {
             cell.setProfileImage(imaage: UIImage(data: imageData))
@@ -702,6 +706,50 @@ private extension TwitterFriendsViewController {
     
 }
 
+//MARK: Refresh Control
+extension TwitterFriendsViewController {
+    
+    func appendPullToRefreshController() {
+        
+        self.collectionView.addPullToRefreshWithActionHandler {[weak self]  () -> Void in
+            if (self?.twitterManager == nil) {
+                self?.setupTM()
+            }
+            
+            if let result = self?.twitterManager?.startUpdatingTotalList() {
+                if !result {
+                    guard let sSelf = self else {
+                        return
+                    }
+                    self?.checkTMState(sSelf.twitterManager)
+                    
+                    let errorInfo = sSelf.twitterManager.isError()
+                    
+                    dispatch_async(dispatch_get_main_queue()){
+                        [weak self] in
+                        if (errorInfo.result && errorInfo.error != nil) {
+                            self?.alertWithTitle(NSLocalizedString("Error",comment:""),message: !errorInfo.error!.userInfo.isEmpty ? errorInfo.error!.localizedDescription : errorInfo.error!.description)
+                        }
+                        else if sSelf.twitterManager.isLimitRate() {
+                            self?.alertWithTitle(NSLocalizedString("Error", comment: "Error"), message: NSLocalizedString("Twitter API Rate Limit",comment:""))
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        // Three type of waiting animations available now: Random, Linear and Circular
+        self.collectionView.pullToRefreshController.waitingAnimation = SpiralPullToRefreshWaitAnimationCircular;
+        
+        self.collectionView.pullToRefreshController.backgroundColor = self.collectionView.backgroundColor
+    }
+    
+    func heightOfPullToRefreshControl() -> CGFloat {
+        return CGRectGetHeight(self.collectionView.pullToRefreshController.frame)
+    }
+}
+
 //MARK: Twitter's Manager methods
 extension TwitterFriendsViewController {
     
@@ -714,8 +762,12 @@ extension TwitterFriendsViewController {
     }
     
     func setupTM() {
+        
+        if (self.twitterManager != nil) {
+            return
+        }
+        
         self.twitterManager = TwitterManager(twitterId: self.twitterId)
-        self.twitterManager.startUpdatingTotalList()
         
         startListeningTMNotifications()
     }
@@ -733,7 +785,8 @@ extension TwitterFriendsViewController {
         }
         
         switch (manager.managerState) {
-            
+        case .DownloadingTwitterIdsError(_, _): fallthrough
+        case .DownloadingTwitterIdsRateLimit(_, _): fallthrough
         case .DownloadingTwitterUsersRateLimit(_,_): fallthrough
         case .DownloadingTwitterUsersError(_): fallthrough
         case .DownloadingFinished(_): fallthrough
@@ -741,7 +794,8 @@ extension TwitterFriendsViewController {
             
             dispatch_async(dispatch_get_main_queue()) {
                 [weak self] in
-                print("RELOAD RELOAT")
+                //print("RELOAD RELOAT")
+                self?.collectionView.pullToRefreshController.didFinishRefresh()
                 self?.collectionView.reloadData()
                 //try! self?.controller.performFetch()
                 

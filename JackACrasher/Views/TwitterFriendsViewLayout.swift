@@ -43,6 +43,24 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
         return false
     }
     
+    override func targetContentOffsetForProposedContentOffset(proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint {
+        
+        return self.targetContentOffsetForProposedContentOffset(proposedContentOffset)
+    }
+    
+    override func targetContentOffsetForProposedContentOffset(var proposedContentOffset: CGPoint) -> CGPoint {
+        
+        let height = self.collectionViewContentSize().height
+        
+        if (proposedContentOffset.y > height) {
+            proposedContentOffset.y = height
+        }
+        /*else if (proposedContentOffset.y < 0 && proposedContentOffset.y > -CGRectGetHeight(self.collectionView!.pullToRefreshController.frame)/2){
+            proposedContentOffset.y = 0
+        }*/
+        
+        return proposedContentOffset
+    }
     
     override func prepareLayout() {
         super.prepareLayout()
@@ -56,10 +74,23 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
                 return
             }
             
-            var rowCount:UInt = 0
+            //print("Number of items \(numberOfItems)\n ")
+            
+            //var rowCount:UInt = 0
             
             var even = false
             let maxEvenRowItem = Int(ceil(Double(self.numberOfColumns)/2.0))
+            
+            
+            let pairs = numberOfItems/(2*maxEvenRowItem - 1)
+            numberOfRows = UInt(2*pairs)
+            
+            let reminder = numberOfItems - pairs * (2*maxEvenRowItem - 1)
+            
+            let extraRows = UInt(ceil(Double(reminder/maxEvenRowItem)))
+            numberOfRows += extraRows
+            
+            //print("Extra rows \(numberOfRows)")
             
             
             var maxRowItem = maxEvenRowItem
@@ -80,11 +111,9 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
                 
                 layoutAttributes.append(attribute)
                 
-                //print("#\(index) Frame  \(frame) ")
-                
                 maxRowItem--
                 
-                if (maxRowItem == 0) {
+                if (maxRowItem == 0 && index != numberOfItems - 1) {
                     
                     maxRowItem = maxEvenRowItem
                     
@@ -93,8 +122,6 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
                     if even {
                         maxRowItem -= 1
                     }
-                    
-                    rowCount++
                     
                     
                     if even {
@@ -106,20 +133,12 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
                     
                     yOffset += self.itemSize.height
                     
-                    print("Frame \(frame)\n")
                 }
                 else {
                     xOffset += 2*self.itemSize.width
                 }
 
             }
-            
-            numberOfRows = rowCount
-            
-            if maxRowItem != 0 {
-                numberOfRows++
-            }
-            
         }
         else {
             self.layoutAttributes.removeAll()
@@ -136,20 +155,25 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
         
         let height = self.itemSize.height * CGFloat(self.numberOfRows)
         
-        let size = CGSizeMake(width, height)
+        var size = CGSizeMake(width, height)
         
         if  CGSizeEqualToSize(size,CGSizeZero) {
         
             if let colView = self.collectionView {
                 var frame = colView.frame
                 frame = CGRectInset(frame, colView.contentInset.left + colView.contentInset.right, colView.contentInset.bottom + colView.contentInset.top)
-                return frame.size
+                size = frame.size
             }
         }
+        
+        /*if let refresh = self.collectionView?.pullToRefreshController {
+            size.height += CGRectGetHeight(refresh.frame)
+        }*/
         
         return size
         
     }
+    
     
     override func layoutAttributesForElementsInRect(rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
         

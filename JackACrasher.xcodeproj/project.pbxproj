@@ -22,6 +22,7 @@
 		210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210CE8731B8BC93C00C9F288 /* VKSdk.framework */; };
 		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
 		210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210EA9C81B26D54100C69D29 /* PurchaseManager.swift */; };
+		210FF3BB1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 210FF3BA1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m */; };
 		21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21103F811B289A39007D8649 /* ShopDetailsViewController.swift */; };
 		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
 		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
@@ -165,6 +166,8 @@
 		210EA9C81B26D54100C69D29 /* PurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PurchaseManager.swift; path = Model/PurchaseManager.swift; sourceTree = "<group>"; };
 		210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductIsInfo.plist; sourceTree = "<group>"; };
 		210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasher-Bridging-Header.h"; sourceTree = "<group>"; };
+		210FF3B91C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SpiralPullToRefresh.h"; sourceTree = "<group>"; };
+		210FF3BA1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SpiralPullToRefresh.m"; sourceTree = "<group>"; };
 		21103F811B289A39007D8649 /* ShopDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsViewController.swift; path = ViewControllers/ShopDetailsViewController.swift; sourceTree = "<group>"; };
 		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
 		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
@@ -496,6 +499,8 @@
 		21B2C99A1B85281F0008FEED /* External */ = {
 			isa = PBXGroup;
 			children = (
+				210FF3B91C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.h */,
+				210FF3BA1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m */,
 				2105AE521B8881DA00DDB0CC /* NORLabelNode.h */,
 				2105AE531B8881DA00DDB0CC /* NORLabelNode.m */,
 			);
@@ -888,6 +893,7 @@
 				21CDE8F61C4451630090EE53 /* TwitterId.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				2169D2C51C4C069F00551DFF /* ExpandedTwitterUser.swift in Sources */,
+				210FF3BB1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				210464CF1C0EF06300326FDD /* SNManager.swift in Sources */,
 				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,
@@ -1115,8 +1121,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = JackACrasher/JackACrasher.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
