@@ -22,7 +22,6 @@
 		210CE8741B8BC93C00C9F288 /* VKSdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 210CE8731B8BC93C00C9F288 /* VKSdk.framework */; };
 		210DD8161AE3CBAA0092DD39 /* Explosion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210DD8151AE3CBAA0092DD39 /* Explosion.swift */; };
 		210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210EA9C81B26D54100C69D29 /* PurchaseManager.swift */; };
-		210FF3BB1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 210FF3BA1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m */; };
 		21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21103F811B289A39007D8649 /* ShopDetailsViewController.swift */; };
 		211243611AEAE070006B5487 /* Rock.png in Resources */ = {isa = PBXBuildFile; fileRef = 211243601AEAE070006B5487 /* Rock.png */; };
 		211243631AEAE07A006B5487 /* Explosion.sks in Resources */ = {isa = PBXBuildFile; fileRef = 211243621AEAE07A006B5487 /* Explosion.sks */; };
@@ -36,6 +35,7 @@
 		211F5FDD1BF0E700008591D7 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 211F5FDF1BF0E700008591D7 /* Localizable.strings */; };
 		212390C11BF6364B00B79B33 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 212390BF1BF6364B00B79B33 /* Fabric.framework */; };
 		212390C21BF6364B00B79B33 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 212390C01BF6364B00B79B33 /* Crashlytics.framework */; };
+		212A24951C9344CD009384D6 /* UIScrollView+Refresh.m in Sources */ = {isa = PBXBuildFile; fileRef = 212A24931C9344CD009384D6 /* UIScrollView+Refresh.m */; };
 		212A2F221B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
 		212A2F231B36F24400B31482 /* libcrypto.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F201B36F24400B31482 /* libcrypto.a */; };
 		212A2F241B36F24400B31482 /* libssl.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 212A2F211B36F24400B31482 /* libssl.a */; };
@@ -166,8 +166,6 @@
 		210EA9C81B26D54100C69D29 /* PurchaseManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PurchaseManager.swift; path = Model/PurchaseManager.swift; sourceTree = "<group>"; };
 		210EA9CC1B26E00400C69D29 /* ProductIsInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = ProductIsInfo.plist; sourceTree = "<group>"; };
 		210EA9CE1B26FD6E00C69D29 /* JackACrasher-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasher-Bridging-Header.h"; sourceTree = "<group>"; };
-		210FF3B91C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+SpiralPullToRefresh.h"; sourceTree = "<group>"; };
-		210FF3BA1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+SpiralPullToRefresh.m"; sourceTree = "<group>"; };
 		21103F811B289A39007D8649 /* ShopDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ShopDetailsViewController.swift; path = ViewControllers/ShopDetailsViewController.swift; sourceTree = "<group>"; };
 		211243601AEAE070006B5487 /* Rock.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Rock.png; sourceTree = "<group>"; };
 		211243621AEAE07A006B5487 /* Explosion.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = Explosion.sks; sourceTree = "<group>"; };
@@ -183,6 +181,8 @@
 		211F5FE01BF0E708008591D7 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		212390BF1BF6364B00B79B33 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		212390C01BF6364B00B79B33 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
+		212A24931C9344CD009384D6 /* UIScrollView+Refresh.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIScrollView+Refresh.m"; sourceTree = "<group>"; };
+		212A24941C9344CD009384D6 /* UIScrollView+Refresh.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIScrollView+Refresh.h"; sourceTree = "<group>"; };
 		212A2F201B36F24400B31482 /* libcrypto.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libcrypto.a; path = OpenSSL/lib/libcrypto.a; sourceTree = SOURCE_ROOT; };
 		212A2F211B36F24400B31482 /* libssl.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libssl.a; path = OpenSSL/lib/libssl.a; sourceTree = SOURCE_ROOT; };
 		212A2F261B36F45F00B31482 /* JackACrasherTests-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "JackACrasherTests-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -499,8 +499,8 @@
 		21B2C99A1B85281F0008FEED /* External */ = {
 			isa = PBXGroup;
 			children = (
-				210FF3B91C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.h */,
-				210FF3BA1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m */,
+				212A24931C9344CD009384D6 /* UIScrollView+Refresh.m */,
+				212A24941C9344CD009384D6 /* UIScrollView+Refresh.h */,
 				2105AE521B8881DA00DDB0CC /* NORLabelNode.h */,
 				2105AE531B8881DA00DDB0CC /* NORLabelNode.m */,
 			);
@@ -893,7 +893,6 @@
 				21CDE8F61C4451630090EE53 /* TwitterId.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				2169D2C51C4C069F00551DFF /* ExpandedTwitterUser.swift in Sources */,
-				210FF3BB1C908609000EDF59 /* UIScrollView+SpiralPullToRefresh.m in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				210464CF1C0EF06300326FDD /* SNManager.swift in Sources */,
 				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,
@@ -904,6 +903,7 @@
 				218B375C1B02959A00B9085C /* GameLogicManager.swift in Sources */,
 				210C0B501B357AFB00759382 /* IAPProductInfo.swift in Sources */,
 				215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */,
+				212A24951C9344CD009384D6 /* UIScrollView+Refresh.m in Sources */,
 				216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */,
 				218D5A831B317C7F007ABE63 /* UIViewControllerExtensions.swift in Sources */,
 				2118AD0D1B00B14C00067348 /* RoundCornerButton.swift in Sources */,

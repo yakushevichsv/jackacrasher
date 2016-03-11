@@ -66,7 +66,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         fetchOnNeed()
         
-        appendPullToRefreshController()
+        initRefresh()
         
     }
     
@@ -278,6 +278,8 @@ class TwitterFriendsViewController: ProgressHDViewController {
         self.stopListeningTMNotifications()
         self.twitterManager?.cancelAllTwitterRequests()
         DBManager.sharedInstance.disposeUIContext()
+        
+        self.collectionView.unload()
         
         self.controller = nil
         self.navigationController?.dismissViewControllerAnimated(false, completion: nil)
@@ -709,44 +711,45 @@ private extension TwitterFriendsViewController {
 //MARK: Refresh Control
 extension TwitterFriendsViewController {
     
-    func appendPullToRefreshController() {
+    func beginRefreshing() {
+       self.refreshAction()
+    }
+    
+    func initRefresh() {
+        if (!self.collectionView.refreshing) {
+            self.collectionView.initRefresh()
+        }
+    }
+    
+    func refreshAction() {
+        if (self.twitterManager == nil) {
+            self.setupTM()
+        }
         
-        self.collectionView.addPullToRefreshWithActionHandler {[weak self]  () -> Void in
-            if (self?.twitterManager == nil) {
-                self?.setupTM()
-            }
-            
-            if let result = self?.twitterManager?.startUpdatingTotalList() {
-                if !result {
-                    guard let sSelf = self else {
-                        return
+        if let result = self.twitterManager?.startUpdatingTotalList() {
+            if !result {
+                
+                self.checkTMState(self.twitterManager)
+                
+                let errorInfo = self.twitterManager.isError()
+                
+                dispatch_async(dispatch_get_main_queue()){
+                    [weak self] in
+                    if (errorInfo.result && errorInfo.error != nil) {
+                        self?.alertWithTitle(NSLocalizedString("Error",comment:""),message: !errorInfo.error!.userInfo.isEmpty ? errorInfo.error!.localizedDescription : errorInfo.error!.description)
                     }
-                    self?.checkTMState(sSelf.twitterManager)
-                    
-                    let errorInfo = sSelf.twitterManager.isError()
-                    
-                    dispatch_async(dispatch_get_main_queue()){
-                        [weak self] in
-                        if (errorInfo.result && errorInfo.error != nil) {
-                            self?.alertWithTitle(NSLocalizedString("Error",comment:""),message: !errorInfo.error!.userInfo.isEmpty ? errorInfo.error!.localizedDescription : errorInfo.error!.description)
-                        }
-                        else if sSelf.twitterManager.isLimitRate() {
+                    else if let limitRate = self?.twitterManager.isLimitRate() {
+                        if (limitRate){
                             self?.alertWithTitle(NSLocalizedString("Error", comment: "Error"), message: NSLocalizedString("Twitter API Rate Limit",comment:""))
                         }
                     }
                 }
             }
-            
         }
-        
-        // Three type of waiting animations available now: Random, Linear and Circular
-        self.collectionView.pullToRefreshController.waitingAnimation = SpiralPullToRefreshWaitAnimationCircular;
-        
-        self.collectionView.pullToRefreshController.backgroundColor = self.collectionView.backgroundColor
     }
     
-    func heightOfPullToRefreshControl() -> CGFloat {
-        return CGRectGetHeight(self.collectionView.pullToRefreshController.frame)
+    func finishRefresh() {
+        self.collectionView.endRefreshing()
     }
 }
 
@@ -795,7 +798,7 @@ extension TwitterFriendsViewController {
             dispatch_async(dispatch_get_main_queue()) {
                 [weak self] in
                 //print("RELOAD RELOAT")
-                self?.collectionView.pullToRefreshController.didFinishRefresh()
+                self?.finishRefresh()
                 self?.collectionView.reloadData()
                 //try! self?.controller.performFetch()
                 

@@ -7,4 +7,4 @@
 
 #import "IAPReceiptValidator.h"
 #import "NORLabelNode.h"
-#import "UIScrollView+SpiralPullToRefresh.h"
+#import "UIScrollView+Refresh.h"

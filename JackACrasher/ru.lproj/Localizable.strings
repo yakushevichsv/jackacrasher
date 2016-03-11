@@ -65,4 +65,8 @@
 "Enable iCloud" = "Активируйте iCloud";
 "Please login into iCloud via Settings" = "Залогинтесь в iCloud через Настройки";
 "Twitter API Rate Limit" = "Лимит вызовов для Twitter API";
+"Push to update" = "Потяните для обновления";
+"Release to update" = "Отпустите для обновления";
+
+
 
