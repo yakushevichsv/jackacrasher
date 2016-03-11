@@ -20,7 +20,7 @@ TODO:
 */
 
 class TwitterFriendsViewController: ProgressHDViewController {
-
+    
     @IBOutlet weak var collectionView:UICollectionView!
     @IBOutlet weak var nextBtn:UIButton!
     @IBOutlet weak var nextButtonLeftLayout:NSLayoutConstraint!
@@ -76,26 +76,26 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         if (!animateOnce) {
             animateOnce = true
-        
+            
             //self.collectionView.contentInset = UIEdgeInsetsMake(self.heightOfPullToRefreshControl(), 0, 0, 0)
             
             self.collectionView.setContentOffset(CGPointZero, animated: animated)
             
             DBManager.sharedInstance.managedObjectContext.performBlock{
-             
+                
                 
                 var totalCount = DBManager.sharedInstance.totalCountOfTwitterUsers()
-            
-            if (totalCount == 0) {
-                dispatch_async(dispatch_get_main_queue()) {
-                    [weak self] in
-                    self?.displayProgress(true)
+                
+                if (totalCount == 0) {
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [weak self] in
+                        self?.displayProgress(true)
+                    }
                 }
-            }
-            else {
-                totalCount = DBManager.sharedInstance.countSelectedItems()
-            }
-             
+                else {
+                    totalCount = DBManager.sharedInstance.countSelectedItems()
+                }
+                
                 dispatch_async(dispatch_get_main_queue()) {
                     [weak self] in
                     
@@ -121,7 +121,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         print("%@",__FUNCTION__)
         assert(NSThread.isMainThread())
-
+        
         let tuple = DBManager.sharedInstance.getFetchedTwitterUsers(self.twitterId, delegate: self)
         self.controller = tuple.controller
         if let error = tuple.error {
@@ -171,11 +171,11 @@ class TwitterFriendsViewController: ProgressHDViewController {
     }
     
     func selectAllTitle() {
-         dispatch_async(dispatch_get_main_queue()) {
+        dispatch_async(dispatch_get_main_queue()) {
             let selectAll = NSLocalizedString("Select All", comment: "Select All")
-        
+            
             let item = self.navigationItem.rightBarButtonItem
-        
+            
             item?.enabled  = true
             item?.title = selectAll
         }
@@ -220,7 +220,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
                         
                         assert(count2 >= count)
                     }
-
+                    
                     
                     if (error == nil) {
                         item?.title = unselectAll
@@ -272,9 +272,9 @@ class TwitterFriendsViewController: ProgressHDViewController {
             cell.markAsSelected(selected)
         }
     }
-
-    @IBAction func cancelPressed(sender:AnyObject) {
     
+    @IBAction func cancelPressed(sender:AnyObject) {
+        
         self.stopListeningTMNotifications()
         self.twitterManager?.cancelAllTwitterRequests()
         DBManager.sharedInstance.disposeUIContext()
@@ -303,123 +303,123 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
         let items = self.itemChanges
         
         //dispatch_async(dispatch_get_main_queue()){
+        
+        self.collectionView.performBatchUpdates({ [unowned self]  () -> Void in
             
-            self.collectionView.performBatchUpdates({ [unowned self]  () -> Void in
+            
+            
+            for sectionChange in sections {
                 
-                
-                
-                for sectionChange in sections {
-                    
-                    for (type,sectionIndex) in sectionChange {
-                        switch type {
-                        case NSFetchedResultsChangeType.Insert:
-                            self.collectionView.insertSections(NSIndexSet(index: sectionIndex))
-                            break
-                        case NSFetchedResultsChangeType.Delete:
-                            self.collectionView.deleteSections(NSIndexSet(index: sectionIndex))
-                            break
-                        case .Update:
-                            self.collectionView.reloadSections(NSIndexSet(index: sectionIndex))
-                            break
-                        default:
-                            assert(false)
-                            break
-                        }
+                for (type,sectionIndex) in sectionChange {
+                    switch type {
+                    case NSFetchedResultsChangeType.Insert:
+                        self.collectionView.insertSections(NSIndexSet(index: sectionIndex))
+                        break
+                    case NSFetchedResultsChangeType.Delete:
+                        self.collectionView.deleteSections(NSIndexSet(index: sectionIndex))
+                        break
+                    case .Update:
+                        self.collectionView.reloadSections(NSIndexSet(index: sectionIndex))
+                        break
+                    default:
+                        assert(false)
+                        break
                     }
                 }
+            }
+            
+            /*if (self.sectionChanges.isEmpty && self.collectionView.numberOfSections() == 0) {
+            self.collectionView.insertSections(NSIndexSet(index: 0))
+            }*/
+            
+            var insertArray = [NSIndexPath]()
+            var deleteArray = [NSIndexPath]()
+            var reloadArray = [NSIndexPath]()
+            var moveArray = [[NSIndexPath]]()
+            
+            for itemChange in items {
                 
-                /*if (self.sectionChanges.isEmpty && self.collectionView.numberOfSections() == 0) {
-                    self.collectionView.insertSections(NSIndexSet(index: 0))
-                }*/
-                
-                var insertArray = [NSIndexPath]()
-                var deleteArray = [NSIndexPath]()
-                var reloadArray = [NSIndexPath]()
-                var moveArray = [[NSIndexPath]]()
-                
-                for itemChange in items {
+                for (type,indexPaths) in itemChange {
                     
-                    for (type,indexPaths) in itemChange {
+                    switch type {
+                    case NSFetchedResultsChangeType.Insert:
                         
-                        switch type {
-                        case NSFetchedResultsChangeType.Insert:
-                            
-                            insertArray.append(indexPaths.last!)
-                            break
-                        case NSFetchedResultsChangeType.Update:
-                            
-                            //if self.collectionView.indexPathsForVisibleItems().contains(indexPath) {
-                            
-                                reloadArray.append(indexPaths.first!)
-                                
-                                if indexPaths.last != indexPaths.first {
-                                 print("Last \(indexPaths.last) \nFirst \(indexPaths.first)")
-                                    reloadArray.append(indexPaths.last!)
-                                }
-                            //}
-                            break
-                        case NSFetchedResultsChangeType.Delete:
-                            
-                            deleteArray.append(indexPaths.last!)
-                            break
-                        case NSFetchedResultsChangeType.Move:
-                            //assert(false)
-                            moveArray.append(indexPaths)
-                            break
+                        insertArray.append(indexPaths.last!)
+                        break
+                    case NSFetchedResultsChangeType.Update:
+                        
+                        //if self.collectionView.indexPathsForVisibleItems().contains(indexPath) {
+                        
+                        reloadArray.append(indexPaths.first!)
+                        
+                        if indexPaths.last != indexPaths.first {
+                            print("Last \(indexPaths.last) \nFirst \(indexPaths.first)")
+                            reloadArray.append(indexPaths.last!)
                         }
+                        //}
+                        break
+                    case NSFetchedResultsChangeType.Delete:
                         
+                        deleteArray.append(indexPaths.last!)
+                        break
+                    case NSFetchedResultsChangeType.Move:
+                        //assert(false)
+                        moveArray.append(indexPaths)
+                        break
                     }
-                }
-                
-                if !insertArray.isEmpty {
-                    self.collectionView.insertItemsAtIndexPaths(insertArray)
-                }
-                
-                if !deleteArray.isEmpty {
-                    self.collectionView.deleteItemsAtIndexPaths(deleteArray)
-                }
-                
-                if !reloadArray.isEmpty {
-                    self.collectionView.reloadItemsAtIndexPaths(reloadArray)
-                }
-                
-                if (!moveArray.isEmpty) {
-                    for pairs in moveArray {
-                        let oldIndex = pairs.first
-                        let newIndex = pairs.last
-                        
-                        self.collectionView.moveItemAtIndexPath(oldIndex!,toIndexPath: newIndex!)
-                        
-                        
-                    }
-                }
-                
-                
-                
-                print("Insert \(insertArray.count) \nDelete \(deleteArray.count) \nUpdate \(reloadArray.count) \nMove \(moveArray.count)")
-                
-                //count = reloadArray.count + insertArray.count - deleteArray.count
-                
-                }, completion: {[weak self]  (finished) -> Void in
-                        self?.sectionChanges = nil
-                        self?.itemChanges = nil
                     
-                    self?.checkTMState(self?.twitterManager)
+                }
+            }
+            
+            if !insertArray.isEmpty {
+                self.collectionView.insertItemsAtIndexPaths(insertArray)
+            }
+            
+            if !deleteArray.isEmpty {
+                self.collectionView.deleteItemsAtIndexPaths(deleteArray)
+            }
+            
+            if !reloadArray.isEmpty {
+                self.collectionView.reloadItemsAtIndexPaths(reloadArray)
+            }
+            
+            if (!moveArray.isEmpty) {
+                for pairs in moveArray {
+                    let oldIndex = pairs.first
+                    let newIndex = pairs.last
                     
-                    if let count = self?.collectionView.numberOfSections() {
-                        if (count != 0) {
-                            if let count2 = self?.collectionView.numberOfItemsInSection(count-1) {
-                                self?.defineStateOfRightBarItem(count2)
-                            }
-                        }
-
+                    self.collectionView.moveItemAtIndexPath(oldIndex!,toIndexPath: newIndex!)
                     
                     
-                        if (count != 0) {
-                            self?.hideProgress()
+                }
+            }
+            
+            
+            
+            print("Insert \(insertArray.count) \nDelete \(deleteArray.count) \nUpdate \(reloadArray.count) \nMove \(moveArray.count)")
+            
+            //count = reloadArray.count + insertArray.count - deleteArray.count
+            
+            }, completion: {[weak self]  (finished) -> Void in
+                self?.sectionChanges = nil
+                self?.itemChanges = nil
+                
+                self?.checkTMState(self?.twitterManager)
+                
+                if let count = self?.collectionView.numberOfSections() {
+                    if (count != 0) {
+                        if let count2 = self?.collectionView.numberOfItemsInSection(count-1) {
+                            self?.defineStateOfRightBarItem(count2)
                         }
                     }
-                })
+                    
+                    
+                    
+                    if (count != 0) {
+                        self?.hideProgress()
+                    }
+                }
+            })
         //}
     }
     
@@ -459,10 +459,10 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
         }
         
         /*if !((newIndexPath == nil && indexPath != nil) ||
-               (newIndexPath != nil && indexPath == nil) ||
+        (newIndexPath != nil && indexPath == nil) ||
         (newIndexPath == indexPath)) {
-            print("New Index \(newIndexPath) Old Index \(indexPath)")
-            assert(false)
+        print("New Index \(newIndexPath) Old Index \(indexPath)")
+        assert(false)
         }*/
         
     }
@@ -470,32 +470,32 @@ extension TwitterFriendsViewController : NSFetchedResultsControllerDelegate
 
 //MARK: Controller's methods....
 /*extension TwitterFriendsViewController {
-    
-    func fetchedObjectsCountInSection(section:Int) -> Int {
-        
-        var count:Int = 0
-        DBManager.sharedInstance.managedObjectContext.performBlockAndWait { () -> Void in
-            
-            if let countInnter = self.controller?.sections?[section].numberOfObjects {
-                count = countInnter
-            }
-            else {
-                count = 0
-            }
-        }
-        
-        return count
-    }
-    
-    func twitterUserAtIndexPath(indexPath:NSIndexPath) -> TwitterUser! {
-        
-        var twitterUser:TwitterUser! = nil
-        
-        DBManager.sharedInstance.managedObjectContext.performBlockAndWait { () -> Void in
-            twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
-        }
-        return twitterUser
-    }
+
+func fetchedObjectsCountInSection(section:Int) -> Int {
+
+var count:Int = 0
+DBManager.sharedInstance.managedObjectContext.performBlockAndWait { () -> Void in
+
+if let countInnter = self.controller?.sections?[section].numberOfObjects {
+count = countInnter
+}
+else {
+count = 0
+}
+}
+
+return count
+}
+
+func twitterUserAtIndexPath(indexPath:NSIndexPath) -> TwitterUser! {
+
+var twitterUser:TwitterUser! = nil
+
+DBManager.sharedInstance.managedObjectContext.performBlockAndWait { () -> Void in
+twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
+}
+return twitterUser
+}
 }*/
 
 //MARK: CollectionView DS & Delegate
@@ -514,7 +514,7 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         
         
         return count
-
+        
     }
     
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
@@ -536,7 +536,7 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         }
         
         cell.setText(twitterUser.userName)
-    
+        
         cell.markAsSelected(twitterUser.selected)
         
         return cell
@@ -552,51 +552,51 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         var selected:Bool
         
         if (!twitterUser.userId!.isEmpty) {
-        
+            
             selected = !twitterUser.selected
         }
         else {
             selected = false
         }
         
-    
+        
         twitterUser.selected = selected
         
         
         /*if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
-            cell.markAsSelected(selected)
+        cell.markAsSelected(selected)
         }*/
         
         let context = DBManager.sharedInstance.managedObjectContext
-            context.performBlock {
-                [weak self] in
+        context.performBlock {
+            [weak self] in
+            
+            do {
                 
-                do {
-                    
-                    let rUser = try context.existingObjectWithID(twitterUser.objectID) as! TwitterUser
-             
-                    rUser.selected = selected
+                let rUser = try context.existingObjectWithID(twitterUser.objectID) as! TwitterUser
                 
-                    if context.hasChanges {
+                rUser.selected = selected
                 
-                        try context.save()
-                    }
+                if context.hasChanges {
                     
-                    let condition = selected || DBManager.sharedInstance.countSelectedItems() != 0
-                    
-                    dispatch_async(dispatch_get_main_queue()) {
-                        [weak self] in
-                        self?.moveInOutNextButton(condition, animated: true)
-                    }
-                    
+                    try context.save()
                 }
-
-                catch let error as NSError  {
-                    print("Erorr select \(error)")
+                
+                let condition = selected || DBManager.sharedInstance.countSelectedItems() != 0
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    [weak self] in
+                    self?.moveInOutNextButton(condition, animated: true)
                 }
+                
+            }
+                
+            catch let error as NSError  {
+                print("Erorr select \(error)")
+            }
         }
-
-
+        
+        
         
     }
 }
@@ -621,8 +621,8 @@ private extension TwitterFriendsViewController {
                 self?.view.layoutIfNeeded()
                 
                 }, completion: { [weak self] (finished) -> Void in
-                self?.nextBtn.hidden = true
-            })
+                    self?.nextBtn.hidden = true
+                })
         }
         else {
             self.view.layoutIfNeeded()
@@ -662,29 +662,29 @@ private extension TwitterFriendsViewController {
     private func defineStateOfRightBarItem(countExternal:Int = 0) {
         
         
-            print("defineStateOfRightBarItem: Before append External count \(countExternal)")
-            if countExternal != 0 {
+        print("defineStateOfRightBarItem: Before append External count \(countExternal)")
+        if countExternal != 0 {
+            
+            DBManager.sharedInstance.getSelectedItemsCount({  (count, error) -> Void in
                 
-                DBManager.sharedInstance.getSelectedItemsCount({  (count, error) -> Void in
+                dispatch_async(dispatch_get_main_queue()) {
+                    [weak self] in
                     
-                    dispatch_async(dispatch_get_main_queue()) {
-                        [weak self] in
-                        
-                        self?.appendRightBarItem()
-                        
-                        if count == countExternal {
-                            self?.unSelectAllTitle()
-                        }
-                        else {
-                            self?.selectAllTitle()
-                        }
+                    self?.appendRightBarItem()
+                    
+                    if count == countExternal {
+                        self?.unSelectAllTitle()
                     }
-                })
-                
-            }
-            else {
-                self.removeRightBarItem()
-            }
+                    else {
+                        self?.selectAllTitle()
+                    }
+                }
+            })
+            
+        }
+        else {
+            self.removeRightBarItem()
+        }
         
     }
     
@@ -709,10 +709,10 @@ private extension TwitterFriendsViewController {
 }
 
 //MARK: Refresh Control
-extension TwitterFriendsViewController {
+extension TwitterFriendsViewController/*: UIScrollViewDelegate*/ {
     
     func beginRefreshing() {
-       self.refreshAction()
+        self.refreshAction()
     }
     
     func initRefresh() {
@@ -751,6 +751,27 @@ extension TwitterFriendsViewController {
     func finishRefresh() {
         self.collectionView.endRefreshing()
     }
+    
+    /*func scrollViewDidScroll(scrollView: UIScrollView) {
+        
+        if (scrollView.contentOffset.y <= 0) {
+            let x = scrollView.contentOffset.x + CGRectGetWidth(scrollView.frame) * 0.5
+            
+            if let view = self.collectionView.refreshActivityIndicator {
+                view.center = CGPoint(x: x ,y: view.center.y)
+            }
+            
+            if let view = self.collectionView.arrowImageView {
+                view.center = CGPoint(x: x ,y: view.center.y)
+            }
+            
+            if let view = self.collectionView.pullLabel {
+                view.center = CGPoint(x: x ,y: view.center.y)
+            }
+            
+            self.collectionView.pullLabel?.layoutIfNeeded()
+        }
+    }*/
 }
 
 //MARK: Twitter's Manager methods

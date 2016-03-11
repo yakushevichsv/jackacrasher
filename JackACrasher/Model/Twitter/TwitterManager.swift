@@ -125,12 +125,12 @@ class TwitterManager: NSObject {
                 return true
             
             case .DownloadingTwitterUsersRateLimit(_,_):
-                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: true) {
+                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit()) {
                     return startUpdatingTotalList()
                 }
                 break;
             case .DownloadingTwitterIdsRateLimit(_,_):
-                if self.resetFailedState(true, userLimit: self.hasPassedFailUsersLimit()) {
+                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit()) {
                     return startUpdatingTotalList()
                 }
                 

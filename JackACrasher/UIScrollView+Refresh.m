@@ -21,6 +21,22 @@
         
     UIActivityIndicatorView *aiView = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
     aiView.tintColor = [UIColor blackColor];
+    aiView.translatesAutoresizingMaskIntoConstraints = NO;
+    aiView.hidden = false;
+    [self addSubview:aiView];
+    
+    CGFloat fixedXOffset = self.contentOffset.x;
+    
+    if (aiView.translatesAutoresizingMaskIntoConstraints)
+        aiView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleLeftMargin;
+    else {
+        NSLayoutConstraint *constr1 = [NSLayoutConstraint constraintWithItem:aiView attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:fixedXOffset];
+        constr1.identifier = @"X";
+        
+        NSLayoutConstraint *constr2 = [NSLayoutConstraint constraintWithItem:aiView attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:-50];
+        
+        [NSLayoutConstraint activateConstraints:@[constr1,constr2]];
+    }
     
     UIFont *font = [UIFont fontWithName:@"OpenSans-Semibold" size:13.0f];
     
@@ -30,13 +46,37 @@
     label.textColor = [UIColor grayColor];
     label.backgroundColor = [UIColor clearColor];
     [label sizeToFit];
+    label.translatesAutoresizingMaskIntoConstraints = NO;
+    [self addSubview:label];
+    
+    if (label.translatesAutoresizingMaskIntoConstraints)
+        label.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleLeftMargin;
+    else {
+        NSLayoutConstraint *constr1 = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterX relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeCenterX multiplier:1.0 constant:fixedXOffset];
+        constr1.identifier = @"X";
+        
+        NSLayoutConstraint *constr2 = [NSLayoutConstraint constraintWithItem:label attribute:NSLayoutAttributeCenterY relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTop multiplier:1.0 constant:-15];
+        
+        [NSLayoutConstraint activateConstraints:@[constr1,constr2]];
+    }
+    
     
     UIImageView *arrowImageView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"pull_to_refresh"] highlightedImage:[UIImage imageNamed:@"release_to_refresh"]];
-    
-    [self addSubview:aiView];
-    [self addSubview:label];
+    arrowImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleLeftMargin;
+    arrowImageView.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:arrowImageView];
-    aiView.hidden = false;
+    
+    
+    if (arrowImageView.translatesAutoresizingMaskIntoConstraints)
+        arrowImageView.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleLeftMargin;
+    else {
+        NSLayoutConstraint *constr1 = [NSLayoutConstraint constraintWithItem:arrowImageView attribute:NSLayoutAttributeLeading relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeLeading multiplier:1.0 constant:-20];
+        
+        NSLayoutConstraint *constr2 = [NSLayoutConstraint constraintWithItem:arrowImageView attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:label attribute:NSLayoutAttributeTop multiplier:1.0 constant:5];
+        
+        [NSLayoutConstraint activateConstraints:@[constr1,constr2]];
+    }
+    
     
     self.refreshActivityIndicator = aiView;
     self.arrowImageView = arrowImageView;
@@ -52,24 +92,47 @@
 
 - (void)position
 {
-    self.refreshActivityIndicator.center = CGPointMake(self.frame.size.width / 2, -50);
+    if (self.refreshActivityIndicator.translatesAutoresizingMaskIntoConstraints)
+        self.refreshActivityIndicator.center = CGPointMake(self.frame.size.width / 2, -50);
+    
     [self.pullLabel sizeToFit];
-    self.pullLabel.center = CGPointMake(self.frame.size.width / 2, -15);
-    CGRect frame = self.arrowImageView.frame;
-    frame.origin = CGPointMake(self.pullLabel.frame.origin.x - 20, self.pullLabel.frame.origin.y + 5);
-    self.arrowImageView.frame = frame;
+    if (self.pullLabel.translatesAutoresizingMaskIntoConstraints)
+        self.pullLabel.center = CGPointMake(self.frame.size.width / 2, -15);
+    if (self.arrowImageView.translatesAutoresizingMaskIntoConstraints)
+    {
+            CGRect frame = self.arrowImageView.frame;
+        frame.origin = CGPointMake(self.pullLabel.frame.origin.x - 20, self.pullLabel.frame.origin.y + 5);
+        self.arrowImageView.frame = frame;
+    }
 }
 
 - (void)updatePullLabelTextForCoordinate:(CGPoint)offset
 {
     if (offset.y < - 80) {
-        self.pullLabel.text = NSLocalizedString(@"Release to update", "");
-        [self.pullLabel sizeToFit];
+        self.pullLabel.text = NSLocalizedString(@"Release to stop", "");
         self.arrowImageView.highlighted = YES;
     } else {
         self.pullLabel.text = NSLocalizedString(@"Pull to update", "");
-        [self.pullLabel sizeToFit];
         self.arrowImageView.highlighted = NO;
+    }
+    [self.pullLabel sizeToFit];
+    
+    [self positionAtCenterOfContentForView:self.pullLabel];
+    [self positionAtCenterOfContentForView:self.refreshActivityIndicator];
+}
+
+- (void)positionAtCenterOfContentForView:(UIView *)curView
+{
+    if (!curView.translatesAutoresizingMaskIntoConstraints) {
+        
+        for (NSLayoutConstraint *constr in curView.superview.constraints){
+            
+            if ([constr.identifier isEqualToString:@"X"] && ( constr.secondItem == curView  || constr.firstItem == curView)) {
+                constr.constant = self.contentOffset.x;
+                [curView.superview setNeedsLayout];
+                break;
+            }
+        }
     }
 }
 
