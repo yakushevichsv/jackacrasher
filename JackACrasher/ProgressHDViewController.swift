@@ -202,8 +202,6 @@ class ProgressHDViewController: UIViewController {
     
     func hideProgress(animated:Bool = false ) {
         
-        return
-        
         if self.containerView == nil || self.containerView.hidden == true {
             return
         }

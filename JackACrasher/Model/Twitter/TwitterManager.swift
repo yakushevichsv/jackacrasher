@@ -116,11 +116,11 @@ class TwitterManager: NSObject {
                 
                 //print("Downloading should start. DeleteOldAgedTwitterUsers")
                 DBManager.sharedInstance.deleteOldAgedTwitterUsers{
-                    [unowned self]
+                    [weak self]
                     (error, saved) in
                     print("Error deleting old aged twitter \(error)")
                     
-                    self.startUpdatingInCycle(-1)
+                    self?.startUpdatingInCycle(-1)
                 }
                 return true
             
@@ -225,13 +225,13 @@ class TwitterManager: NSObject {
                                         let counter = SignalCounter(barrier: users!.count)
                                         
                                         counter.completionBlock = {
-                                            [unowned self] in
+                                            [weak self] in
                                             
                                             print("Did reach barrier!")
                                             DBManager.sharedInstance.saveContextWithCompletion({ (error, saved) -> Void in
                                                 print("Saved images update or not... \(error)\n Saved \(saved)")
                                                 
-                                                self.defineStateUsingCount(countUsers, count: countUsers, offset: offset, isLast: isLast, cancelled: cancelled)
+                                                self?.defineStateUsingCount(countUsers, count: countUsers, offset: offset, isLast: isLast, cancelled: cancelled)
                                                 
                                             })
                                         }
@@ -447,12 +447,14 @@ class TwitterManager: NSObject {
         let key = "friendship.\(userId).\(userIdsStr.hashValue))"
         print("detectFriendShipWithUsers start...")
         let client = TWTRAPIClient(userID: userId)
-        clientMap[key] = client
         
+        synch(self) {
+            self.clientMap[key] = client
+        }
         //https:
         
         dispatch_async(self.queue) {
-            [unowned self] in
+            [weak self] in
             
         
             
@@ -463,18 +465,31 @@ class TwitterManager: NSObject {
             
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
-                self.clientMap.removeValueForKey(key)
+                
+                guard let sSelf = self else {
+                    return
+                }
+                
+                synch(sSelf) {
+                    self?.clientMap.removeValueForKey(key)
+                }
                 assert(false)
                 return
             }
             
             print("detectFriendShipWithUsers start... sendTwitterRequest")
             client.sendTwitterRequest(request) {
-                [unowned self]
+                [weak self]
                 (response, data, connectionError)  in
                 
-                if self.clientMap.isEmpty || self.clientMap.removeValueForKey(key) == nil {
+                guard let sSelf = self else {
                     return
+                }
+                
+                synch(sSelf) {
+                if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(key) == nil {
+                    return
+                }
                 }
                 
                 
@@ -552,15 +567,21 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
         }
     }
     
+    deinit {
+        print("End")
+    }
+    
     func getTwitterUsers(userIds:[String],block:twitterFriendsCompletion!) {
         assert(!userIds.isEmpty)
         
         let userId = self.twitterId
         let client = TWTRAPIClient(userID: userId)
-        clientMap[userId] = client
+        synch(self) {
+            self.clientMap[userId] = client
+        }
         
         dispatch_async(self.queue) {
-            [unowned self] in
+            [weak self] in
             
             //No friends.!.... - friends
             var error:NSError? = nil
@@ -576,17 +597,25 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
             
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
-                self.clientMap.removeValueForKey(userId)
+                synch(self) {
+                    self?.clientMap.removeValueForKey(userId)
+                }
                 assert(false)
                 return
             }
             
             client.sendTwitterRequest(request) {
-                [unowned self]
+                [weak self]
                 (response, data, connectionError)  in
                 
-                if self.clientMap.removeValueForKey(userId) == nil {
+                guard let sSelf = self else {
                     return
+                }
+                
+                synch(sSelf) {
+                if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(userId) == nil {
+                    return
+                }
                 }
             
                 
@@ -624,29 +653,39 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
         
         let userId = self.twitterId
         let client = TWTRAPIClient(userID: userId)
-        clientMap[userId] = client
         
+        synch(self) {
+            self.clientMap[userId] = client
+        }
         dispatch_async(self.queue) {
-            [unowned self] in
+            [weak self] in
             
             //No friends.!.... - friends
             var error:NSError? = nil
-            let params:[NSObject:AnyObject] = ["cursor":"\(offset)", "count":"\(count)", "screen_name":"\(self.twitterId)'s friends"]
+            let params:[NSObject:AnyObject] = ["cursor":"\(offset)", "count":"\(count)", "screen_name":"\(userId)'s friends"]
             let request = client.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/friends/ids.json", parameters: params, error: &error)
             
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
-                self.clientMap.removeValueForKey(userId)
+                synch(self) {
+                    self?.clientMap.removeValueForKey(userId)
+                }
                 assert(false)
                 return
             }
             
             client.sendTwitterRequest(request) {
-                [unowned self]
+                [weak self]
                 (response, data, connectionError)  in
                 
-                if self.clientMap.removeValueForKey(userId) == nil {
+                guard let sSelf = self else {
                     return
+                }
+                
+                synch(sSelf) {
+                    if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(userId) == nil {
+                        return
+                    }
                 }
                 
                 if (connectionError == nil) {
@@ -682,17 +721,30 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     private func receiveTwitterFriend(userId:String,completion:((user:TWTRUser?,error:NSError?)->Void)!)  {
         
         let client = TWTRAPIClient(userID: userId)
-        clientMap[userId] = client
+        
+        synch(self) {
+            self.clientMap[userId] = client
+        }
         
         dispatch_async(self.queue) {
-            [unowned self] in
+            [weak self] in
             
             let client = TWTRAPIClient(userID: userId)
             client.loadUserWithID(client.userID!){
-                [unowned self]
+                [weak self]
                 (user,error) in
                 
-                if let _ = self.clientMap.removeValueForKey(userId) {
+                guard let sSelf = self else  {
+                    return
+                }
+                
+                var key:AnyObject?
+                
+                synch(sSelf) {
+                    key = sSelf.clientMap.removeValueForKey(userId)
+                }
+                
+                if key != nil {
                     completion(user: user,error:error)
                 }
                 else {
@@ -705,12 +757,12 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     func _receiveExtendedTwitterFriend(userId:String,completion:((user:TWTRUser?,image:UIImage?,error:NSError?)->Void)!) {
         
         receiveTwitterFriend(userId) {
-            [unowned self]
+            [weak self]
             (user, error) in
             
             if let user = user {
                 
-                self.scheduleTwitterUserImageReceive(user){
+                self?.scheduleTwitterUserImageReceive(user){
                     (image, error) in
                     
                     completion(user:user,image: image,error: error)
@@ -732,7 +784,7 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
         var cancelled = false
         
         dispatch_async(self.queue) {
-            [unowned self] in
+            [weak self] in
             
            
             
@@ -742,7 +794,7 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
                     break
                 }
                 
-                self.receiveTwitterFriend(userId){
+                self?.receiveTwitterFriend(userId){
                     (user,error) in
                     
                     if (user != nil && error == nil) {
@@ -788,7 +840,7 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
         
         
         self.receiveTwitterFriends(userIds) {
-            [unowned self]
+            [weak self]
             (users, error)  in
             
             
@@ -807,7 +859,7 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
                         expandedUsers.append((user:user,image:nil))
                     }
                     else {
-                        self.scheduleTwitterUserImageReceive(user) {
+                        self?.scheduleTwitterUserImageReceive(user) {
                             (image, error) in
                             if image != nil {
                                 expandedUsers.append((user:user,image:image))
@@ -822,9 +874,10 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
                         }
                     }
                 }
-                
-                dispatch_barrier_async(self.queue){
-                    completion(expandedUsers: !expandedUsers.isEmpty ? expandedUsers : nil,error:lastError)
+                if let queue = self?.queue {
+                    dispatch_barrier_async(queue){
+                        completion(expandedUsers: !expandedUsers.isEmpty ? expandedUsers : nil,error:lastError)
+                    }
                 }
                 
             }
@@ -836,7 +889,10 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     
     func cancelTwitterRequestForUser(userId:String) {
         
-        self.clientMap.removeValueForKey(userId)
+        synch(self) {
+            self.clientMap.removeValueForKey(userId)
+        }
+        
         if let taskId = self.userImageTasks.removeValueForKey(userId) {
             NetworkManager.sharedManager.cancelTask(taskId)
         }
@@ -850,14 +906,19 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     
     func cancelAllTwitterRequests() {
         
-        let userIds = self.clientMap.keys
         
-        for userId in userIds {
-            cancelTwitterRequestForUser(userId)
-        }
+        synch(self) {
+            let userIds = self.clientMap.keys
         
-        if !self.clientMap.isEmpty {
-            self.clientMap.removeAll()
+        
+            for userId in userIds {
+                self.cancelTwitterRequestForUser(userId)
+            }
+        
+            if !self.clientMap.isEmpty {
+                self.clientMap.removeAll()
+            }
+            
         }
         
         if !self.userImageTasks.isEmpty {
@@ -889,9 +950,9 @@ extension TwitterManager {
         let userId = user.userID
         
         let taskId = getTwitterUserImage(user) {
-            [unowned self]
+            [weak self]
             (image, error) in
-            if let _ = self.userImageTasks.removeValueForKey(userId) {
+            if let _ = self?.userImageTasks.removeValueForKey(userId) {
                 completion(image:image,error: error)
             }
             else {
@@ -914,9 +975,9 @@ extension TwitterManager {
         let userId = user.userId!
         
         let taskId = getTwitterUserImageForUrl(user.profileImageMiniURL) {
-            [unowned self]
+            [weak self]
             (image, error) in
-            if let _ = self.userImageTasks.removeValueForKey(userId) {
+            if let _ = self?.userImageTasks.removeValueForKey(userId) {
                 completion(image:image,error: error)
             }
             else {

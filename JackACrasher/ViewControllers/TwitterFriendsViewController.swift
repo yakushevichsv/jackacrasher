@@ -67,6 +67,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
         fetchOnNeed()
         
         initRefresh()
+        beginRefreshing()
         
     }
     
@@ -520,24 +521,26 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCellWithReuseIdentifier("Cell", forIndexPath: indexPath) as! TwitterFriendCollectionViewCell
         
-        let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
-        
-        assert(!(twitterUser.objectID.temporaryID /*|| twitterUser.fault*/))
-        
-        if let imageData = twitterUser.miniImage {
-            cell.setProfileImage(imaage: UIImage(data: imageData))
+        if let twitterUser = self.controller?.objectAtIndexPath(indexPath) as? TwitterUser {
+            
+            assert(!(twitterUser.objectID.temporaryID /*|| twitterUser.fault*/))
+            
+            if let imageData = twitterUser.miniImage {
+                cell.setProfileImage(imaage: UIImage(data: imageData))
+            }
+            else if twitterUser.profileImageMiniURL == nil {
+                cell.setProfileImage(imaage: nil)
+            }
+            
+            if (self.twitterManager.isCancelled) {
+                cell.stopActivityIndicator()
+            }
+            
+            cell.setText(twitterUser.userName)
+            
+            cell.markAsSelected(twitterUser.selected)
+            
         }
-        else if twitterUser.profileImageMiniURL == nil {
-            cell.setProfileImage(imaage: nil)
-        }
-        
-        if (self.twitterManager.isCancelled) {
-            cell.stopActivityIndicator()
-        }
-        
-        cell.setText(twitterUser.userName)
-        
-        cell.markAsSelected(twitterUser.selected)
         
         return cell
     }
@@ -546,57 +549,57 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
         
         collectionView.deselectItemAtIndexPath(indexPath, animated: false)
         
-        let twitterUser = self.controller.objectAtIndexPath(indexPath) as! TwitterUser
-        
-        
-        var selected:Bool
-        
-        if (!twitterUser.userId!.isEmpty) {
+        if let twitterUser = self.controller?.objectAtIndexPath(indexPath) as? TwitterUser {
             
-            selected = !twitterUser.selected
-        }
-        else {
-            selected = false
-        }
-        
-        
-        twitterUser.selected = selected
-        
-        
-        /*if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
-        cell.markAsSelected(selected)
-        }*/
-        
-        let context = DBManager.sharedInstance.managedObjectContext
-        context.performBlock {
-            [weak self] in
             
-            do {
+            var selected:Bool
+            
+            if (!twitterUser.userId!.isEmpty) {
                 
-                let rUser = try context.existingObjectWithID(twitterUser.objectID) as! TwitterUser
+                selected = !twitterUser.selected
+            }
+            else {
+                selected = false
+            }
+            
+            
+            twitterUser.selected = selected
+            
+            
+            /*if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? TwitterFriendCollectionViewCell {
+            cell.markAsSelected(selected)
+            }*/
+            
+            let context = DBManager.sharedInstance.managedObjectContext
+            context.performBlock {
+                [weak self] in
                 
-                rUser.selected = selected
-                
-                if context.hasChanges {
+                do {
                     
-                    try context.save()
+                    let rUser = try context.existingObjectWithID(twitterUser.objectID) as! TwitterUser
+                    
+                    rUser.selected = selected
+                    
+                    if context.hasChanges {
+                        
+                        try context.save()
+                    }
+                    
+                    let condition = selected || DBManager.sharedInstance.countSelectedItems() != 0
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [weak self] in
+                        self?.moveInOutNextButton(condition, animated: true)
+                    }
+                    
                 }
-                
-                let condition = selected || DBManager.sharedInstance.countSelectedItems() != 0
-                
-                dispatch_async(dispatch_get_main_queue()) {
-                    [weak self] in
-                    self?.moveInOutNextButton(condition, animated: true)
+                    
+                catch let error as NSError  {
+                    print("Erorr select \(error)")
                 }
-                
             }
-                
-            catch let error as NSError  {
-                print("Erorr select \(error)")
-            }
+            
         }
-        
-        
         
     }
 }
@@ -753,24 +756,24 @@ extension TwitterFriendsViewController/*: UIScrollViewDelegate*/ {
     }
     
     /*func scrollViewDidScroll(scrollView: UIScrollView) {
-        
-        if (scrollView.contentOffset.y <= 0) {
-            let x = scrollView.contentOffset.x + CGRectGetWidth(scrollView.frame) * 0.5
-            
-            if let view = self.collectionView.refreshActivityIndicator {
-                view.center = CGPoint(x: x ,y: view.center.y)
-            }
-            
-            if let view = self.collectionView.arrowImageView {
-                view.center = CGPoint(x: x ,y: view.center.y)
-            }
-            
-            if let view = self.collectionView.pullLabel {
-                view.center = CGPoint(x: x ,y: view.center.y)
-            }
-            
-            self.collectionView.pullLabel?.layoutIfNeeded()
-        }
+    
+    if (scrollView.contentOffset.y <= 0) {
+    let x = scrollView.contentOffset.x + CGRectGetWidth(scrollView.frame) * 0.5
+    
+    if let view = self.collectionView.refreshActivityIndicator {
+    view.center = CGPoint(x: x ,y: view.center.y)
+    }
+    
+    if let view = self.collectionView.arrowImageView {
+    view.center = CGPoint(x: x ,y: view.center.y)
+    }
+    
+    if let view = self.collectionView.pullLabel {
+    view.center = CGPoint(x: x ,y: view.center.y)
+    }
+    
+    self.collectionView.pullLabel?.layoutIfNeeded()
+    }
     }*/
 }
 

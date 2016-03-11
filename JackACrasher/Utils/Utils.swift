@@ -25,6 +25,14 @@ func convertNodePosition(node:SKNode!,toScene scene:SKScene!) -> CGPoint {
     return node.parent!.convertPoint(node.position, toNode: scene)
 }
 
+func synch(lockObj:AnyObject!,closure:()->Void) {
+    
+    objc_sync_enter(lockObj)
+    closure()
+    objc_sync_exit(lockObj)
+    return
+}
+
 func convertNodePositionUntilScene(node:SKNode!) -> CGPoint {
     
     var pos = node.position

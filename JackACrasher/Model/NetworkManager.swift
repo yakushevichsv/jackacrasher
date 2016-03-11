@@ -104,14 +104,6 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         return task.taskIdentifier
     }
     
-    func synch(lockObj:AnyObject!,closure:()->Void) {
-        
-        objc_sync_enter(lockObj)
-        closure()
-        objc_sync_exit(lockObj)
-        return
-    }
-    
     
     func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, var didFinishDownloadingToURL location: NSURL) {
         
