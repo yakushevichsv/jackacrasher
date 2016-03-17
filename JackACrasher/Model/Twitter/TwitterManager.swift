@@ -19,6 +19,11 @@ enum TwitterManagerState {
     case DownloadingTwitterUsersRateLimit(userIds:[String],error:NSError!)
     case DownloadingTwitterUsersError(offset:Int,error:NSError!)
     
+    
+    case DownloadingTwitterUserConnection(offset:Int)
+    case DonwloadingTwitteruserConnectionRateLimit(users:[TWTRUser],error:NSError!)
+    case DownloadingTwitterUserConnectionError(offset:Int,error:NSError!)
+    
     case DownloadingFinished(totalCount:Int)
     
     case DonwloadingTwitterUsersCancelled(lastEror:NSError?)
@@ -45,11 +50,11 @@ func == (lhs: TwitterManagerState, rhs: TwitterManagerState) -> Bool {
 }
 
 
-enum FriendshipStatus {
+enum FriendshipStatus:Int {
+    case None = 0
     case Following
     case FollowingRequested
     case FollowedBy
-    case None
     case Blocking
     case Muting
     
@@ -74,6 +79,14 @@ enum FriendshipStatus {
     func isFollowing() -> Bool {
         return self == .Following
     }
+    
+    func isFollowedBy() -> Bool {
+        return self == .FollowedBy
+    }
+    
+    func isFollowingRequested() -> Bool {
+        return self == .FollowingRequested
+    }
 }
 
 /**
@@ -84,6 +97,7 @@ class TwitterManager: NSObject {
     typealias friendsCompletion = (items:[String]?,error:NSError?,last:Bool) -> Void
     typealias twitterFriendsCompletion = (items:[TWTRUser]? ,error:NSError?) -> Void
     typealias twitterFriendShipCompletion = (usersInfo:[TWTRUser:[FriendshipStatus]]?,error:NSError?) -> Void
+    typealias twitterConfigurationCompletion = (configuration:[String:AnyObject]?,error:NSError?) -> Void
     
     private let twitterId:String!
     private let queue = dispatch_queue_create("sy.jac.twittermanager.queue", DISPATCH_QUEUE_CONCURRENT)//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
@@ -100,6 +114,7 @@ class TwitterManager: NSObject {
     init(twitterId:String!) {
         self.twitterId = twitterId
         super.init()
+        
     }
     
     
@@ -112,8 +127,8 @@ class TwitterManager: NSObject {
             case .DownloadingFinished(_): fallthrough
             case .DonwloadingTwitterUsersCancelled: fallthrough
             case .DownloadingTwitterUsersError(_, _): fallthrough
-            case .DownloadingTwitterIdsError(_, _):
-                
+            case .DownloadingTwitterIdsError(_, _): fallthrough
+            case .DownloadingTwitterUserConnectionError(_,_):
                 //print("Downloading should start. DeleteOldAgedTwitterUsers")
                 DBManager.sharedInstance.deleteOldAgedTwitterUsers{
                     [weak self]
@@ -125,15 +140,19 @@ class TwitterManager: NSObject {
                 return true
             
             case .DownloadingTwitterUsersRateLimit(_,_):
-                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit()) {
+                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit(),userConnectionLimit: self.hasPassedUserConnectionLimit()) {
                     return startUpdatingTotalList()
                 }
                 break;
             case .DownloadingTwitterIdsRateLimit(_,_):
-                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit()) {
+                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit(),userConnectionLimit: self.hasPassedUserConnectionLimit()) {
                     return startUpdatingTotalList()
                 }
-                
+                break;
+            case .DonwloadingTwitteruserConnectionRateLimit(_,_):
+                if self.resetFailedState(self.hasPassedFailUserIdLimit(), userLimit: self.hasPassedFailUsersLimit(),userConnectionLimit: self.hasPassedUserConnectionLimit()) {
+                    return startUpdatingTotalList()
+                }
                 break;
             default:
                 break;
@@ -168,50 +187,39 @@ class TwitterManager: NSObject {
                 else {
                     
                     if let countUsers = twitterUsers?.count {
-                        //TODO: store into DB status.., of friendShip...
                         
-                        //var count = 0;
-                        
-                        //for twitterUser in twitterUsers! {
-                            
-                            //count++
-                            
-                            //if (count == 20) {
-                            //    break
-                            //}
-                            //dispatch_async(dispatch_get_main_queue()) {
-                            self.detectFriendShipWithUsers(twitterUsers!, block: { (usersInfo, error) -> Void in
-                                print("Friendship error %@",error)
-                               
-                                if let usersInfoPrivate = usersInfo {
-                                    for (userInfo,connections) in usersInfoPrivate {
-                                        
-                                        guard let f = connections.first,l = connections.last else {
-                                            continue
-                                        }
-                                        
-                                        let isFriend = f.isFriend(l)
-                                        let isFollowing = f.isFollowing() || l.isFollowing()
-                                        
-                                       /*print("\(userInfo.name) Connections \(connections)   is Friend \(isFriend) IS following \(isFollowing)")*/
-                                        }
-                                    
-                                    /*
-                                    Телеканал Дождь Connections [JackACrasher.FriendshipStatus.Following]   is Friend false IS following true
-                                    Jason Majoue Connections [JackACrasher.FriendshipStatus.Following, JackACrasher.FriendshipStatus.FollowedBy]
-*/
-                                    
-                                    }
-                                })
-                            //}
-                            
-                        //}
                         DBManager.sharedInstance.insertOrUpdateTwitterUsers(twitterUsers!) { (error, saved) in
                             print("insertOrUpdateTwitterUsers Saved \(saved)\n Error \(error)")
                             
                             if (!saved || error != nil) {
                                 return
                             }
+                            
+                            
+                            self.managerState = .DownloadingTwitterUserConnection(offset:offset)
+                            self.detectFriendShipWithUsers(twitterUsers!, block: { (usersInfo, error) -> Void in
+                                
+                                if let error = error {
+                                
+                                    if TwitterManager.isTwitterLimitError(error) {
+                                        self.managerState = .DonwloadingTwitteruserConnectionRateLimit(users: twitterUsers!,error:error)
+                                    }
+                                    else {
+                                        self.managerState = .DownloadingTwitterUserConnectionError(offset: offset,error: error)
+                                    }
+                                }
+                                else if let usersInfoPrivate = usersInfo {
+                                    
+                                    if self.isCancelled {
+                                        return;
+                                    }
+                                    
+                                    DBManager.sharedInstance.storeTwitterUsers(usersInfoPrivate, completionHandler: { (error, saved) -> Void in
+                                        print("Connections save operation \(error) \(saved)")
+                                    })
+                                    
+                                }
+                            })
                             
                             DBManager.sharedInstance.fetchTwitterUsersWithEmptyProfileImages({ (users, error) -> Void in
                                 
@@ -221,7 +229,7 @@ class TwitterManager: NSObject {
                                     if (!users!.isEmpty) {
                                         
                                         //dispatch_async(self.queue) {
-                                        var cancelled = false
+                                        var cancelled = self.isCancelled
                                         let counter = SignalCounter(barrier: users!.count)
                                         
                                         counter.completionBlock = {
@@ -238,7 +246,7 @@ class TwitterManager: NSObject {
                                         
                                         for user in users! {
                                             
-                                            if cancelled {
+                                            if cancelled || self.isCancelled {
                                                 return
                                             }
                                             
@@ -568,7 +576,8 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     }
     
     deinit {
-        print("End")
+        print("DeInit")
+        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "tryToGetConfiguration", object: nil)
     }
     
     func getTwitterUsers(userIds:[String],block:twitterFriendsCompletion!) {
@@ -1063,6 +1072,9 @@ extension TwitterManager {
     private struct Constants {
         static let userIdLimit = "jc.userIdLimit"
         static let userLimit   = "jc.userLimit"
+        static let userConnectionLimit = "jc.userConnection"
+        
+        static let userConnectionLimitInterval = NSTimeInterval(1*60)
         static let userIdLimitInterval = NSTimeInterval(1*60)
         static let userLimitInterval   = NSTimeInterval(1*60)
     }
@@ -1075,7 +1087,7 @@ extension TwitterManager {
         
         dispatch_after(delayTime,self.queue) {
             [weak self] in
-            self?.resetFailedState(true,userLimit: false)
+            self?.resetFailedState(true,userLimit: false,userConnectionLimit: false)
         }
         
         return res
@@ -1089,13 +1101,28 @@ extension TwitterManager {
         
         dispatch_after(delayTime,self.queue) {
             [weak self] in
-            self?.resetFailedState(false,userLimit: true)
+            self?.resetFailedState(false,userLimit: true,userConnectionLimit: false)
         }
         
         return res
     }
     
-    func resetFailedState(let userIdLimit:Bool,let userLimit:Bool) -> Bool {
+    func storeFailUserConnectionLimit() -> Bool {
+        let res =  TwitterManager.storeFailForKey(Constants.userConnectionLimit)
+        
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW,
+            Int64(Constants.userConnectionLimitInterval * Double(NSEC_PER_SEC)))
+        
+        dispatch_after(delayTime,self.queue) {
+            [weak self] in
+            self?.resetFailedState(false,userLimit: false,userConnectionLimit: true)
+        }
+        
+        return res
+    }
+    
+    
+    func resetFailedState(let userIdLimit:Bool,let userLimit:Bool,let userConnectionLimit:Bool) -> Bool {
      
         var result:Bool = false
         
@@ -1113,6 +1140,11 @@ extension TwitterManager {
                 self.managerState = .None
             }
             break
+        case .DonwloadingTwitteruserConnectionRateLimit(_, _):
+            if (userConnectionLimit) {
+                result = removeFailUserConnectionLimit()
+                self.managerState = .None
+            }
         default:
             break
         }
@@ -1127,6 +1159,14 @@ extension TwitterManager {
     
     func hasPassedFailUsersLimit() -> Bool {
          return TwitterManager.hasPassedForKey(Constants.userLimit, interval: Constants.userLimitInterval)
+    }
+    
+    func hasPassedUserConnectionLimit() -> Bool {
+        return TwitterManager.hasPassedForKey(Constants.userConnectionLimit, interval: Constants.userConnectionLimitInterval)
+    }
+    
+    func removeFailUserConnectionLimit() -> Bool {
+        return TwitterManager.removeFailForKey(Constants.userConnectionLimit)
     }
     
     func removeFailUserIdLimit() -> Bool {
@@ -1157,6 +1197,185 @@ extension TwitterManager {
     
 }
 
+// MARK: Configuration
+extension TwitterManager {
+    
+    private struct ConfConst {
+        static let ConfigurationPrevDate = "ConfigurationPrevDate"
+        static let ConfigurationPrevDateInterval: Double = 1*24*60*60 // 1 day
+        static let ConfigurationPrevAttemptDate = "ConfigurationPrevAttemptDate"
+        static let ConfigurationPrevAttemptInterval:Double = 15*60
+        static let ConfigurationTextLimit = "ConfigurationTextLimit"
+    }
+    
+    func tryToGetConfiguration() -> Bool {
+        
+        let prevTimeInterval = prevConfigurationAttempDate()
+        let prevReqInterval = prevConfigurationPrevDate()
+        
+        let diff1 = NSDate().timeIntervalSinceReferenceDate  -  prevTimeInterval
+        let diff2 = NSDate().timeIntervalSinceReferenceDate  -  prevReqInterval
+        
+        
+        if  diff1 < ConfConst.ConfigurationPrevAttemptInterval || diff2 < ConfConst.ConfigurationPrevDateInterval {
+            
+            assert(prevTimeInterval != 0 || prevReqInterval != 0)
+            
+                NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "tryToGetConfiguration", object: nil)
+                self.performSelector("tryToGetConfiguration", withObject: nil, afterDelay: min(diff1,diff2))
+            
+            return false
+        }
+        
+        self.getConfiguration {
+            [weak self]
+            (configuration,error) in
+            
+            if let errorInternal = error {
+                
+                if TwitterManager.isTwitterLimitError(errorInternal) {
+                    self?.storePrevConfigurationAttempDate()
+                }
+            }
+            else {
+                self?.storePrevConfigurationPrevDate()
+             
+                if let dic = configuration {
+                    
+                    let textCharacterLimit =  dic["dm_text_character_limit"] as! Int
+                    
+                    if self?.storeTextLimitKey(textCharacterLimit) == Optional(true) {
+                        self?.storePrevConfigurationPrevDate()
+                        self?.storePrevConfigurationAttempDate(true)
+                    }
+                }
+            }
+        }
+        
+        return true
+    }
+    
+    func storeTextLimitKey(limit:Int) -> Bool {
+        NSUserDefaults.standardUserDefaults().setInteger(limit, forKey: ConfConst.ConfigurationTextLimit)
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    func textLimit() -> Int {
+        
+        let limit = NSUserDefaults.standardUserDefaults().integerForKey(ConfConst.ConfigurationTextLimit)
+        
+        return limit
+    }
+    
+    func prevConfigurationPrevDate() -> NSTimeInterval {
+        return NSUserDefaults.standardUserDefaults().doubleForKey(ConfConst.ConfigurationPrevDate)
+    }
+    
+    func storePrevConfigurationAttempDate(remove:Bool = false) -> Bool {
+        
+        let key = ConfConst.ConfigurationPrevAttemptDate
+        
+        if (remove) {
+            NSUserDefaults.standardUserDefaults().removeObjectForKey(key)
+        }
+        else {
+            NSUserDefaults.standardUserDefaults().setDouble(NSDate().timeIntervalSinceReferenceDate, forKey: key)
+        }
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    func storePrevConfigurationPrevDate() -> Bool {
+        
+        NSUserDefaults.standardUserDefaults().setDouble(NSDate().timeIntervalSinceReferenceDate, forKey: ConfConst.ConfigurationPrevDate)
+        
+        return NSUserDefaults.standardUserDefaults().synchronize()
+    }
+    
+    func prevConfigurationAttempDate() -> NSTimeInterval {
+        
+        return NSUserDefaults.standardUserDefaults().doubleForKey(ConfConst.ConfigurationPrevAttemptDate)
+    }
+    
+    func getConfiguration(completion:twitterConfigurationCompletion) {
+       
+        let client = TWTRAPIClient(userID: self.twitterId)
+        
+        let key = configurationKey()
+        
+        synch(self) {
+            self.clientMap[key] = client
+        }
+        
+        dispatch_async(self.queue) {
+            [weak self] in
+            
+            
+            
+            var error:NSError? = nil
+            
+            let request = client.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/help/configuration.json", parameters: nil, error: &error)
+            
+            if let errorInner = error {
+                print("Error formatting \(errorInner)")
+                
+                guard let sSelf = self else {
+                    return
+                }
+                
+                synch(sSelf) {
+                    self?.clientMap.removeValueForKey(key)
+                }
+                assert(false)
+                return
+            }
+
+            client.sendTwitterRequest(request) {
+                [weak self]
+                (response, data, connectionError)  in
+                
+                guard let sSelf = self else {
+                    return
+                }
+                
+                synch(sSelf) {
+                    if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(key) == nil {
+                        return
+                    }
+                }
+                
+                
+                if (connectionError == nil) {
+                    if let json = try? NSJSONSerialization.JSONObjectWithData(data!,
+                        options: NSJSONReadingOptions.AllowFragments) as! [String:AnyObject] {
+                        print("Configuration: \(json)")
+                            completion(configuration: json, error: nil)
+                    }
+                    else {
+                        print("Error was not able to convert response")
+                        completion(configuration: nil, error: nil)
+                    }
+                }
+                else {
+                    print("Error configuration \(connectionError)")
+                    completion(configuration: nil, error: connectionError)
+                }
+                
+            }
+            
+        }
+    }
+    
+    func configurationKey() -> String {
+        
+        let key = "configuration-\(self.twitterId)"
+        return key
+    }
+    
+    
+}
+
 //MARK: Error analysis
 extension TwitterManager {
     
@@ -1169,8 +1388,8 @@ extension TwitterManager {
         
         switch self.managerState {
         case .DownloadingTwitterUsersRateLimit(_, _): fallthrough
-        case .DownloadingTwitterIdsRateLimit(_, _):
-            
+        case .DownloadingTwitterIdsRateLimit(_, _): fallthrough
+        case .DonwloadingTwitteruserConnectionRateLimit(_, _):
             return true
         default:
             break
@@ -1192,6 +1411,11 @@ extension TwitterManager {
         case .DownloadingTwitterIdsError(_, let error):
             result = false
             retError = error
+            break
+        case .DownloadingTwitterUserConnectionError(_,let error):
+            result = false
+            retError = error
+            break
         default:
             break
         }

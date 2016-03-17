@@ -532,6 +532,28 @@ class DBManager: NSObject {
         
         }
     }
+    
+    func storeTwitterUsers( info:[TWTRUser : [FriendshipStatus]],completionHandler:(error:NSError?,saved:Bool) -> Void) {
+        
+        self.managedObjectContext.performBlock {
+            
+            for (twUser,connections) in info {
+                
+                let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+                request.predicate = NSPredicate(format: "userId == %@", twUser.userID)
+                
+                let dbUser = (try! self.managedObjectContext.executeFetchRequest(request) as! [TwitterUser]).last!
+                if !connections.isEmpty {
+                    
+                    dbUser.fromFriendShip = Int16(connections.first!.rawValue)
+                    if (connections.count == 2) {
+                        dbUser.toFriendShip = Int16(connections.last!.rawValue)
+                    }
+                }
+            }
+            self.saveContextWithCompletion(completionHandler)
+        }
+    }
 
     func insertOrUpdateTwitterUsers(users:[TWTRUser],completionHandler:(error:NSError?,saved:Bool) -> Void) {
        
@@ -843,6 +865,19 @@ extension DBManager {
     
     func getSelectedItemsCount(completion:(count:Int,error:NSError?)->Void) {
         countItemsWithPredicateAsync(NSPredicate(format: "selected == %@",NSNumber(bool: true)),completion:completion)
+    }
+    
+    func selectedITwitterUsers(offset:Int,batchSize:Int) -> [TwitterUser]? {
+        
+        let request = NSFetchRequest(entityName: TwitterUser.EntityName())
+        request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]
+        request.predicate = NSPredicate(format: "selected == %@",NSNumber(bool: true))
+        request.resultType = NSFetchRequestResultType.ManagedObjectResultType
+        request.fetchOffset = offset
+        request.fetchLimit = batchSize
+        //request.fetchBatchSize = batchSize
+        
+        return try? self.mainManagedObjectContext.executeFetchRequest(request) as! [TwitterUser]
     }
     
     func countSelectedItems() -> Int {

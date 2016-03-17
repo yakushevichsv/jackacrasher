@@ -16,6 +16,7 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
     
     private weak var labelLayer:CATextLayer! = nil
     private weak var imageLayer:CALayer! = nil
+    private var imageName:String? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -44,11 +45,6 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         createImageLayer(center)
         createImageBorderLayer(center)
         createTextLayer(center)
-        
-        self.imageLayer.contents = UIImage(imageLiteral: "no_twitter_profile_image").CGImage
-        self.setText(nil)
-        
-        markAsSelected(false)
         
         aiDownloadingImage.superview?.bringSubviewToFront(aiDownloadingImage)
     }
@@ -178,9 +174,16 @@ class TwitterFriendCollectionViewCell: UICollectionViewCell {
         aiDownloadingImage.stopAnimating()
     }
     
-    internal func setProfileImage(imaage imagePtr:UIImage?) {
+    internal func setProfileImage(imaage imagePtr:UIImage?, newImageName:String?) {
         
         stopActivityIndicator()
+        
+        
+        if (newImageName == self.imageName ) {
+            return
+        }
+        
+        self.imageName = newImageName
         
         guard let image = imagePtr else {
             self.imageLayer.contents = UIImage(imageLiteral: "no_twitter_profile_image").CGImage

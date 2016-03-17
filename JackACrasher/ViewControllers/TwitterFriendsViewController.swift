@@ -9,16 +9,6 @@
 import UIKit
 import TwitterKit
 
-
-/*
-TODO:
-2) Go to the next screen...
-3) Save relationships into DB ....
-4) Next screen with sending information...
-6) Correct Progress HD indicator...
-
-*/
-
 class TwitterFriendsViewController: ProgressHDViewController {
     
     @IBOutlet weak var collectionView:UICollectionView!
@@ -69,6 +59,30 @@ class TwitterFriendsViewController: ProgressHDViewController {
         initRefresh()
         beginRefreshing()
         
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if segue.identifier == Optional<String>("twitterSendSegue") {
+            
+            let dVC = segue.destinationViewController as! TwitterFriendsSendViewController
+            
+            dVC.twitterManager = self.twitterManager
+            
+            self.actionBeforeMove()
+        }
+        else {
+            super.prepareForSegue(segue, sender: sender)
+        }
+    }
+    
+    @IBAction func unwindFromSegue(segue:UIStoryboardSegue) {
+     
+        if (segue.identifier == Optional("twitterSendBackSegue")) {
+            startListeningTMNotifications()
+            initRefresh()
+            beginRefreshing()
+        }
     }
     
     
@@ -276,15 +290,19 @@ class TwitterFriendsViewController: ProgressHDViewController {
     
     @IBAction func cancelPressed(sender:AnyObject) {
         
-        self.stopListeningTMNotifications()
-        self.twitterManager?.cancelAllTwitterRequests()
-        DBManager.sharedInstance.disposeUIContext()
-        
-        self.collectionView.unload()
+        self.actionBeforeMove()
         
         self.controller = nil
+        DBManager.sharedInstance.disposeUIContext()
         self.navigationController?.dismissViewControllerAnimated(false, completion: nil)
+    }
+    
+    private func actionBeforeMove() {
         
+        self.stopListeningTMNotifications()
+        self.twitterManager?.cancelAllTwitterRequests()
+        
+        self.collectionView.unload()
     }
 }
 
@@ -526,10 +544,10 @@ extension TwitterFriendsViewController : UICollectionViewDataSource,UICollection
             assert(!(twitterUser.objectID.temporaryID /*|| twitterUser.fault*/))
             
             if let imageData = twitterUser.miniImage {
-                cell.setProfileImage(imaage: UIImage(data: imageData))
+                cell.setProfileImage(imaage: UIImage(data: imageData),newImageName: twitterUser.profileImageMiniURL)
             }
             else if twitterUser.profileImageMiniURL == nil {
-                cell.setProfileImage(imaage: nil)
+                cell.setProfileImage(imaage: nil,newImageName: nil)
             }
             
             if (self.twitterManager.isCancelled) {
@@ -795,6 +813,7 @@ extension TwitterFriendsViewController {
         }
         
         self.twitterManager = TwitterManager(twitterId: self.twitterId)
+        self.twitterManager.tryToGetConfiguration()
         
         startListeningTMNotifications()
     }
@@ -816,6 +835,8 @@ extension TwitterFriendsViewController {
         case .DownloadingTwitterIdsRateLimit(_, _): fallthrough
         case .DownloadingTwitterUsersRateLimit(_,_): fallthrough
         case .DownloadingTwitterUsersError(_): fallthrough
+        case .DownloadingTwitterUserConnectionError(_, _): fallthrough
+        case .DonwloadingTwitteruserConnectionRateLimit(_,_): fallthrough
         case .DownloadingFinished(_): fallthrough
         case .DonwloadingTwitterUsersCancelled(_):
             

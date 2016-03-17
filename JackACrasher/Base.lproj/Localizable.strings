@@ -67,3 +67,22 @@
 "Pull to update" = "Pull to update";
 "Release to stop" = "Release to stop";
 
+"Sending"      = "Sending";
+"Failed"       = "Failed";
+"Not Sended"   = "Not Sended";
+"Select All"   = "Select All";
+"Unselect All" = "Unselect All";
+
+"Cancel" = "Cancel";
+"Twitter API Rate Limit"="Exceeded Twitter API Calls Limit";
+ "Send" = "Send";
+ "Message To Send" = "Message To Send";
+ "Twitter Users"   = "Twitter Users";
+
+"Friend" = "Friend";
+"Blocking" = "Blocking";
+"Blocked" = "Blocked";
+"Request was sent"="Request was sent";
+"Following" = "Following";
+"FollowedBy" = "FollowedBy";
+

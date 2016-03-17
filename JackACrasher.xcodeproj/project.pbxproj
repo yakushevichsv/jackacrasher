@@ -50,6 +50,7 @@
 		2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */; };
 		2140023B1C5226E00035574E /* TwitterId+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214002391C5226E00035574E /* TwitterId+CoreDataProperties.swift */; };
 		214007A81B0D2E2900072C9F /* ScoreNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 214007A71B0D2E2900072C9F /* ScoreNode.swift */; };
+		21478AC61C95E54A00AB996E /* TwitterSendCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21478AC51C95E54A00AB996E /* TwitterSendCollectionViewCell.swift */; };
 		215A5D231AD67B5D00F136D3 /* AsteroidManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */; };
 		2163A8C31B3BE6C5003253C5 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2163A8C21B3BE6C5003253C5 /* CloudKit.framework */; };
 		2163A8C61B3BEF9E003253C5 /* CloudUserInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2163A8C51B3BEF9E003253C5 /* CloudUserInfo.swift */; };
@@ -57,6 +58,7 @@
 		216490FF1B2EDEBD0097BC4B /* PopupPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */; };
 		21689F651ADAD696001456D6 /* BGStarts.sks in Resources */ = {isa = PBXBuildFile; fileRef = 21689F641ADAD696001456D6 /* BGStarts.sks */; };
 		2169D2C51C4C069F00551DFF /* ExpandedTwitterUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2169D2C41C4C069F00551DFF /* ExpandedTwitterUser.swift */; };
+		216A24561C941EB70067CC17 /* TwitterFriendsSendViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A24551C941EB70067CC17 /* TwitterFriendsSendViewController.swift */; };
 		216A433C1B5FA4F7003B1035 /* BlackHole.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A433B1B5FA4F7003B1035 /* BlackHole.swift */; };
 		216A43421B5FB820003B1035 /* EnemiesGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216A43411B5FB820003B1035 /* EnemiesGenerator.swift */; };
 		216DDA831C48BA2B00331F5B /* TwitterManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 216DDA821C48BA2B00331F5B /* TwitterManager.swift */; };
@@ -107,11 +109,13 @@
 		21E56B321ADA9C2A0071A217 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E56B311ADA9C2A0071A217 /* Player.swift */; };
 		21E56B351ADA9D8F0071A217 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 21E56B341ADA9D8F0071A217 /* Images.xcassets */; };
 		21E5D2C01B79193700D7E614 /* MotionlessEnemySpaceShip.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E5D2BF1B79193700D7E614 /* MotionlessEnemySpaceShip.swift */; };
+		21E8958A1C9435CB00149BCF /* TwitterSendMessageCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21E895891C9435CB00149BCF /* TwitterSendMessageCollectionViewCell.swift */; };
 		21F0FFA51AED09AC00C2BDB6 /* DirectRope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */; };
 		21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */; };
 		21F7956A1B555788003464BF /* SurvivalGameInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21F795691B555788003464BF /* SurvivalGameInfo.swift */; };
 		21FA22A31B2AE9A7002539A6 /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FA22A21B2AE9A7002539A6 /* StoreKit.framework */; };
 		21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FA22A41B2B026E002539A6 /* PopupAnimator.swift */; };
+		21FB15451C943094001D330E /* TwitterSendSectionHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FB15441C943094001D330E /* TwitterSendSectionHeaderCollectionReusableView.swift */; };
 		21FC6D7C1AEC0457001D99B6 /* Rope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FC6D7B1AEC0457001D99B6 /* Rope.swift */; };
 		21FDB39C1C3E6F1000E16379 /* TwitterKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 21FDB3991C3E6F1000E16379 /* TwitterKit.framework */; };
 		21FDB39D1C3E6F1000E16379 /* TwitterKitResources.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 21FDB39A1C3E6F1000E16379 /* TwitterKitResources.bundle */; };
@@ -196,6 +200,7 @@
 		2138E0BB1B65607300FFD118 /* ReturnPausePopUpAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ReturnPausePopUpAnimator.swift; path = ViewControllers/ReturnPausePopUpAnimator.swift; sourceTree = "<group>"; };
 		214002391C5226E00035574E /* TwitterId+CoreDataProperties.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "TwitterId+CoreDataProperties.swift"; path = "Model/DataBase/TwitterId+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		214007A71B0D2E2900072C9F /* ScoreNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ScoreNode.swift; path = Score/ScoreNode.swift; sourceTree = "<group>"; };
+		21478AC51C95E54A00AB996E /* TwitterSendCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterSendCollectionViewCell.swift; path = Views/TwitterSendCollectionViewCell.swift; sourceTree = "<group>"; };
 		215A5D221AD67B5D00F136D3 /* AsteroidManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AsteroidManager.swift; path = Model/AsteroidManager.swift; sourceTree = "<group>"; };
 		2163A8C11B3BE6B4003253C5 /* JackACrasher.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = JackACrasher.entitlements; sourceTree = "<group>"; };
 		2163A8C21B3BE6C5003253C5 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
@@ -204,6 +209,7 @@
 		216490FE1B2EDEBD0097BC4B /* PopupPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupPresentationController.swift; path = ViewControllers/PopupPresentationController.swift; sourceTree = "<group>"; };
 		21689F641ADAD696001456D6 /* BGStarts.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; name = BGStarts.sks; path = JackACrasher/Particles/BGStarts.sks; sourceTree = "<group>"; };
 		2169D2C41C4C069F00551DFF /* ExpandedTwitterUser.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ExpandedTwitterUser.swift; path = Model/Twitter/ExpandedTwitterUser.swift; sourceTree = "<group>"; };
+		216A24551C941EB70067CC17 /* TwitterFriendsSendViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterFriendsSendViewController.swift; path = ViewControllers/TwitterFriendsSendViewController.swift; sourceTree = "<group>"; };
 		216A433B1B5FA4F7003B1035 /* BlackHole.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = BlackHole.swift; path = Entities/BlackHole.swift; sourceTree = "<group>"; };
 		216A43411B5FB820003B1035 /* EnemiesGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EnemiesGenerator.swift; path = Model/EnemiesGenerator.swift; sourceTree = "<group>"; };
 		216DDA821C48BA2B00331F5B /* TwitterManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterManager.swift; path = Model/Twitter/TwitterManager.swift; sourceTree = "<group>"; };
@@ -254,11 +260,13 @@
 		21E56B311ADA9C2A0071A217 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Player.swift; path = Entities/Player.swift; sourceTree = "<group>"; };
 		21E56B341ADA9D8F0071A217 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		21E5D2BF1B79193700D7E614 /* MotionlessEnemySpaceShip.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MotionlessEnemySpaceShip.swift; path = Entities/MotionlessEnemySpaceShip.swift; sourceTree = "<group>"; };
+		21E895891C9435CB00149BCF /* TwitterSendMessageCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterSendMessageCollectionViewCell.swift; path = Views/TwitterSendMessageCollectionViewCell.swift; sourceTree = "<group>"; };
 		21F0FFA41AED09AC00C2BDB6 /* DirectRope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = DirectRope.swift; path = Entities/DirectRope.swift; sourceTree = "<group>"; };
 		21F0FFA71AED1A9000C2BDB6 /* RopeJointAsteroids.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RopeJointAsteroids.swift; path = Entities/RopeJointAsteroids.swift; sourceTree = "<group>"; };
 		21F795691B555788003464BF /* SurvivalGameInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SurvivalGameInfo.swift; path = Model/SurvivalGameInfo.swift; sourceTree = "<group>"; };
 		21FA22A21B2AE9A7002539A6 /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		21FA22A41B2B026E002539A6 /* PopupAnimator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = PopupAnimator.swift; path = ViewControllers/PopupAnimator.swift; sourceTree = "<group>"; };
+		21FB15441C943094001D330E /* TwitterSendSectionHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TwitterSendSectionHeaderCollectionReusableView.swift; path = Views/TwitterSendSectionHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		21FC6D7B1AEC0457001D99B6 /* Rope.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Rope.swift; path = Entities/Rope.swift; sourceTree = "<group>"; };
 		21FDB3991C3E6F1000E16379 /* TwitterKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = TwitterKit.framework; sourceTree = SOURCE_ROOT; };
 		21FDB39A1C3E6F1000E16379 /* TwitterKitResources.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = TwitterKitResources.bundle; path = TwitterKit.framework/Versions/A/Resources/TwitterKitResources.bundle; sourceTree = SOURCE_ROOT; };
@@ -392,6 +400,15 @@
 			name = iCloud;
 			sourceTree = "<group>";
 		};
+		216A24571C941EE60067CC17 /* Twitter */ = {
+			isa = PBXGroup;
+			children = (
+				21FDB39F1C3E7FA900E16379 /* TwitterFriendsViewController.swift */,
+				216A24551C941EB70067CC17 /* TwitterFriendsSendViewController.swift */,
+			);
+			name = Twitter;
+			sourceTree = "<group>";
+		};
 		216A433F1B5FB7D6003B1035 /* Generators */ = {
 			isa = PBXGroup;
 			children = (
@@ -438,7 +455,7 @@
 				2138E0B71B65112300FFD118 /* PauseReturnViewController.swift */,
 				21BF9C271B89E0A60002AEAC /* HelpViewController.swift */,
 				2113C0751C37D6150094BD0F /* InviteFriendsViewController.swift */,
-				21FDB39F1C3E7FA900E16379 /* TwitterFriendsViewController.swift */,
+				216A24571C941EE60067CC17 /* Twitter */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -534,10 +551,9 @@
 		21DEA0CF1AFD1761004FF5D7 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				21FB15411C942FE5001D330E /* Twitter */,
 				2118AD0C1B00B14C00067348 /* RoundCornerButton.swift */,
 				210078D01B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift */,
-				2100E6351C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift */,
-				21BD57ED1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -606,6 +622,26 @@
 				21FFA04C1AE69A6900EF3EDC /* DigitNode.swift */,
 			);
 			name = TextOnAsteroid;
+			sourceTree = "<group>";
+		};
+		21FB15411C942FE5001D330E /* Twitter */ = {
+			isa = PBXGroup;
+			children = (
+				21FB15431C94305B001D330E /* Send */,
+				2100E6351C3ED2DF00DB56B7 /* TwitterFriendsViewLayout.swift */,
+				21BD57ED1C413EE000DD34C2 /* TwitterFriendCollectionViewCell.swift */,
+			);
+			name = Twitter;
+			sourceTree = "<group>";
+		};
+		21FB15431C94305B001D330E /* Send */ = {
+			isa = PBXGroup;
+			children = (
+				21FB15441C943094001D330E /* TwitterSendSectionHeaderCollectionReusableView.swift */,
+				21E895891C9435CB00149BCF /* TwitterSendMessageCollectionViewCell.swift */,
+				21478AC51C95E54A00AB996E /* TwitterSendCollectionViewCell.swift */,
+			);
+			name = Send;
 			sourceTree = "<group>";
 		};
 		21FFEADA1AD5E216000115F6 = {
@@ -883,6 +919,7 @@
 				21FFEAEF1AD5E216000115F6 /* GameViewController.swift in Sources */,
 				21C1FA041B0A67D900C514B0 /* GameCenterManager.swift in Sources */,
 				21068A3A1AE555DB007398B5 /* Utils.swift in Sources */,
+				21E8958A1C9435CB00149BCF /* TwitterSendMessageCollectionViewCell.swift in Sources */,
 				216DDA831C48BA2B00331F5B /* TwitterManager.swift in Sources */,
 				210464D41C0EFB4800326FDD /* SNFriendInfo.swift in Sources */,
 				21FFA04F1AE6EAAE00EF3EDC /* RegularAsteroid.swift in Sources */,
@@ -893,6 +930,7 @@
 				21CDE8F61C4451630090EE53 /* TwitterId.swift in Sources */,
 				217341021AFE54C1009E934A /* GameOverScene.swift in Sources */,
 				2169D2C51C4C069F00551DFF /* ExpandedTwitterUser.swift in Sources */,
+				216A24561C941EB70067CC17 /* TwitterFriendsSendViewController.swift in Sources */,
 				21103F821B289A39007D8649 /* ShopDetailsViewController.swift in Sources */,
 				210464CF1C0EF06300326FDD /* SNManager.swift in Sources */,
 				2138E0BC1B65607300FFD118 /* ReturnPausePopUpAnimator.swift in Sources */,
@@ -913,6 +951,7 @@
 				21E56B321ADA9C2A0071A217 /* Player.swift in Sources */,
 				21CDE8F01C4448DE0090EE53 /* DBManager.swift in Sources */,
 				21F0FFA81AED1A9000C2BDB6 /* RopeJointAsteroids.swift in Sources */,
+				21478AC61C95E54A00AB996E /* TwitterSendCollectionViewCell.swift in Sources */,
 				219A6D231AFABCC400A63E7F /* HUDNode.swift in Sources */,
 				2118AD0B1AFFE88100067348 /* GameMainViewController.swift in Sources */,
 				210EA9C91B26D54100C69D29 /* PurchaseManager.swift in Sources */,
@@ -931,6 +970,7 @@
 				2113C0761C37D6150094BD0F /* InviteFriendsViewController.swift in Sources */,
 				21FA22A51B2B026E002539A6 /* PopupAnimator.swift in Sources */,
 				21C3561B1B766E37009BE4F1 /* EnemySpaceShip.swift in Sources */,
+				21FB15451C943094001D330E /* TwitterSendSectionHeaderCollectionReusableView.swift in Sources */,
 				210464D11C0EF08900326FDD /* FBManager.swift in Sources */,
 				2105AE511B8868ED00DDB0CC /* Constants.swift in Sources */,
 				210078D11B298A3900CAF837 /* ShopDetailsCollectionViewCell.swift in Sources */,

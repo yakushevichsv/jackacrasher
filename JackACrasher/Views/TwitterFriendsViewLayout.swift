@@ -166,10 +166,6 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
             }
         }
         
-        /*if let refresh = self.collectionView?.pullToRefreshController {
-            size.height += CGRectGetHeight(refresh.frame)
-        }*/
-        
         return size
         
     }
