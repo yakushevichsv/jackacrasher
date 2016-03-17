@@ -9,6 +9,11 @@
 import UIKit
 import TwitterKit
 
+/*TODO:
+1) Add rate_limit_status - usage
+2) Add message send opportunity
+*/
+
 enum TwitterManagerState {
     case None
     case DownloadingTwitterIds(offset:Int)
@@ -1074,9 +1079,9 @@ extension TwitterManager {
         static let userLimit   = "jc.userLimit"
         static let userConnectionLimit = "jc.userConnection"
         
-        static let userConnectionLimitInterval = NSTimeInterval(1*60)
-        static let userIdLimitInterval = NSTimeInterval(1*60)
-        static let userLimitInterval   = NSTimeInterval(1*60)
+        static let userConnectionLimitInterval = NSTimeInterval(15*60)
+        static let userIdLimitInterval = NSTimeInterval(15*60)
+        static let userLimitInterval   = NSTimeInterval(15*60)
     }
     
     func storeFailUserIdLimit() -> Bool {
