@@ -175,6 +175,7 @@ class ProgressHDViewController: UIViewController {
 
     func displayProgress(animated:Bool = false) {
         
+        self.view.userInteractionEnabled = false
         print("displayProgress")
         self.appendViewsOnNeed()
         
@@ -201,6 +202,8 @@ class ProgressHDViewController: UIViewController {
     }
     
     func hideProgress(animated:Bool = false ) {
+        
+        self.view.userInteractionEnabled = true
         
         if self.containerView == nil || self.containerView.hidden == true {
             return

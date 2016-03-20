@@ -7,10 +7,12 @@
 //
 
 import UIKit
+//import TwitterKit
 
 /*
 TODO:
-4) Send messages, to users:
+4) Correct position when item is not selected for sending...
+5) add some fancy layers animation...
 Display at the end total description.
 Number of send/failed items....
 */
@@ -23,6 +25,9 @@ class TwitterFriendsSendViewController: ProgressHDViewController {
     private var bulkNumber:Int = 0
     private var checkedRows = Set<Int>()
     private var textLimit:Int = 200
+    
+    private var messageToSend:String! = nil
+    private var sendMessageError:NSError? = nil
     
     private lazy var objCache:NSCache = {
         let cache = NSCache()
@@ -153,6 +158,10 @@ extension TwitterFriendsSendViewController : UICollectionViewDelegateFlowLayout,
             
             //TODO: Store message Template...
             
+            if self.messageToSend == nil {
+                self.messageToSend = cell.tvMessage.text
+            }
+            
             return cell
         }
         else  {
@@ -180,7 +189,7 @@ extension TwitterFriendsSendViewController : UICollectionViewDelegateFlowLayout,
         var h:CGFloat = 0
         
         if (indexPath.section == 0) {
-           h = 250
+           h = 150
         }
         else {
             assert(indexPath.section == 1)
@@ -359,20 +368,120 @@ extension TwitterFriendsSendViewController {
         static let Cancel = NSLocalizedString("Cancel", comment: "Cancel")
     }
     
+    func refreshItemPressed(sender:UIBarButtonItem) {
+        
+        navigationItemPressed(sender)
+    }
+    
+    func navigationActionForRefresh() {
+        
+        let count = self.checkedRows.count
+        
+        self.sendMessageError = nil
+        
+        for selectedRow in self.checkedRows {
+            
+            let indexPath = NSIndexPath(forRow: selectedRow, inSection: 1)
+            
+            
+            if let twUser =  getTwitterUser(indexPath) {
+                
+                self.sendingSet.insert(selectedRow)
+                
+                self.twitterManager.sendMessageToUser(twUser.userId!, text: self.messageToSend) {
+                    (messageId,error) in
+                    
+                    
+                    dispatch_async(dispatch_get_main_queue()) {
+                        [weak self] in
+                        
+                        let row = indexPath.row
+                        
+                        self?.sendingSet.remove(row)
+                        
+                        if messageId != nil {
+                            self?.checkedRows.remove(row)
+                            self?.successSet.insert(row)
+                        }
+                        else if error != nil {
+                            self?.failedSet.insert(row)
+                            self?.sendMessageError = error
+                        }
+                        else {
+                            assert(false)
+                        }
+                        
+                        
+                        
+                        guard self != nil else {
+                            return
+                        }
+                        
+                        let failedCount  = self!.failedSet.count
+                        let successCount = self!.successSet.count
+                        
+                        if (count == failedCount + successCount)
+                        {
+                            self?.collectionView.performBatchUpdates({ () -> Void in
+                                self?.collectionView.reloadItemsAtIndexPaths([indexPath])
+                                }, completion: { (finished) -> Void in
+                                    
+                                    self?.navigationItem.rightBarButtonItem?.enabled = true
+                                    self?.hideProgress()
+                                    
+                                    var message = NSLocalizedString("Number of sent messages", comment: "Number of sent messages") + " \(successCount)"
+                                    
+                                    guard failedCount == 0 && self?.sendMessageError == nil  else {
+                                        
+                                        let eMessage = self!.sendMessageError!
+                                        
+                                        print("Error \(eMessage)")
+                                        message += "\n" + eMessage.description
+                                        self?.alertWithTitle(NSLocalizedString("Error", comment: "Error"), message: message)
+                                        self?.createRetryNavigationItem()
+                                        
+                                        //TODO: grant write permissions to the app...
+                                        
+                                        
+                                        return
+                                    }
+                                    
+                                    
+                                    self?.alertWithTitle(NSLocalizedString("Information",comment: "Information"), message: message)
+                                    
+                                    
+                            })
+                        }
+                        else {
+                            self?.collectionView.reloadItemsAtIndexPaths([indexPath])
+                        }
+                    }
+                }
+            }
+        }
+        
+        self.displayProgress()
+        self.navigationItem.rightBarButtonItem?.enabled = false
+        //sender.title = BarButtonItemConstants.Cancel
+    }
+    
     @IBAction func navigationItemPressed(sender:UIBarButtonItem) {
         
-        if sender.title == Optional(BarButtonItemConstants.Send) {
-            //TODO: start sending...
+        if sender.title == Optional(BarButtonItemConstants.Send) || sender.action == "refreshItemPressed:" {
             
-            self.displayProgress()
-            self.view.userInteractionEnabled = false
-            sender.title = BarButtonItemConstants.Cancel
+            
+            /*Twitter.sharedInstance().logInWithCompletion {[weak self]  (session, error) in
+                if (session != nil) {
+                    self?.navigationActionForRefresh()
+                } else if let errorInner = error {
+                    print("error: \(errorInner.localizedDescription)");
+                }
+            }*/
+            self.navigationActionForRefresh()
         }
         else if sender.title == Optional(BarButtonItemConstants.Cancel) {
-            //TODO: Cancel sending....
             
             self.hideProgress()
-            self.view.userInteractionEnabled = true
             sender.title = BarButtonItemConstants.Send
         }
     }
@@ -380,6 +489,13 @@ extension TwitterFriendsSendViewController {
     func correctTitleOfNavigationItemOnNeed() {
         if let rButton = self.navigationItem.rightBarButtonItem {
             rButton.enabled = self.countSendItems != 0
+        }
+    }
+    
+    func createRetryNavigationItem() {
+        
+         if let rButton = self.navigationItem.rightBarButtonItem {
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: rButton.target, action: "refreshItemPressed:")
         }
     }
 }

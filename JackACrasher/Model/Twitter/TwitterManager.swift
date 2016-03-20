@@ -105,8 +105,9 @@ class TwitterManager: NSObject {
     typealias twitterConfigurationCompletion = (configuration:[String:AnyObject]?,error:NSError?) -> Void
     
     private let twitterId:String!
-    private let queue = dispatch_queue_create("sy.jac.twittermanager.queue", DISPATCH_QUEUE_CONCURRENT)//dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)
-    private var clientMap  = [String:TWTRAPIClient]()
+    private let twitterClient:TWTRAPIClient!
+    
+    private let queue = dispatch_queue_create("sy.jac.twittermanager.queue", DISPATCH_QUEUE_CONCURRENT)
     private var userImageTasks = [String:Int]()
     
     private (set) var managerState = TwitterManagerState.None {
@@ -118,6 +119,8 @@ class TwitterManager: NSObject {
     
     init(twitterId:String!) {
         self.twitterId = twitterId
+        self.twitterClient = TWTRAPIClient(userID: twitterId)
+        
         super.init()
         
     }
@@ -459,12 +462,7 @@ class TwitterManager: NSObject {
         
         let key = "friendship.\(userId).\(userIdsStr.hashValue))"
         print("detectFriendShipWithUsers start...")
-        let client = TWTRAPIClient(userID: userId)
         
-        synch(self) {
-            self.clientMap[key] = client
-        }
-        //https:
         
         dispatch_async(self.queue) {
             [weak self] in
@@ -474,35 +472,27 @@ class TwitterManager: NSObject {
              var error:NSError? = nil
             
             let params:[NSObject:AnyObject] = ["user_id":userIdsStr,"screen_name":key]
-            let request = client.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/friendships/lookup.json", parameters: params, error: &error)
+            let request = self?.twitterClient.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/friendships/lookup.json", parameters: params, error: &error)
             
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
                 
-                guard let sSelf = self else {
-                    return
-                }
-                
-                synch(sSelf) {
-                    self?.clientMap.removeValueForKey(key)
-                }
                 assert(false)
                 return
             }
             
             print("detectFriendShipWithUsers start... sendTwitterRequest")
-            client.sendTwitterRequest(request) {
+            
+            guard let requestInner = request else {
+                return
+            }
+            
+            self?.twitterClient.sendTwitterRequest(requestInner) {
                 [weak self]
                 (response, data, connectionError)  in
                 
-                guard let sSelf = self else {
+                guard self != nil else {
                     return
-                }
-                
-                synch(sSelf) {
-                if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(key) == nil {
-                    return
-                }
                 }
                 
                 
@@ -588,11 +578,6 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     func getTwitterUsers(userIds:[String],block:twitterFriendsCompletion!) {
         assert(!userIds.isEmpty)
         
-        let userId = self.twitterId
-        let client = TWTRAPIClient(userID: userId)
-        synch(self) {
-            self.clientMap[userId] = client
-        }
         
         dispatch_async(self.queue) {
             [weak self] in
@@ -607,29 +592,24 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
             //.let screenNames = screenNamesInternal.joinWithSeparator(",")
             
             let params:[NSObject:AnyObject] = ["user_id":userIdsStr/*,"screen_name":screenNames*/]
-            let request = client.URLRequestWithMethod("POST", URL: "https://api.twitter.com/1.1/users/lookup.json", parameters: params, error: &error)
+            let request = self?.twitterClient.URLRequestWithMethod("POST", URL: "https://api.twitter.com/1.1/users/lookup.json", parameters: params, error: &error)
             
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
-                synch(self) {
-                    self?.clientMap.removeValueForKey(userId)
-                }
                 assert(false)
                 return
             }
             
-            client.sendTwitterRequest(request) {
+            guard let requestInner = request else {
+                return
+            }
+            
+            self?.twitterClient.sendTwitterRequest(requestInner) {
                 [weak self]
                 (response, data, connectionError)  in
                 
-                guard let sSelf = self else {
+                guard self != nil else {
                     return
-                }
-                
-                synch(sSelf) {
-                if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(userId) == nil {
-                    return
-                }
                 }
             
                 
@@ -665,42 +645,32 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     
     func getTwitterFriendIds(offset:Int = -1, count:Int = 100, block:friendsCompletion!) {
         
-        let userId = self.twitterId
-        let client = TWTRAPIClient(userID: userId)
-        
-        synch(self) {
-            self.clientMap[userId] = client
-        }
         dispatch_async(self.queue) {
             [weak self] in
             
             //No friends.!.... - friends
             var error:NSError? = nil
-            let params:[NSObject:AnyObject] = ["cursor":"\(offset)", "count":"\(count)", "screen_name":"\(userId)'s friends"]
-            let request = client.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/friends/ids.json", parameters: params, error: &error)
+            let params:[NSObject:AnyObject] = ["cursor":"\(offset)", "count":"\(count)", "screen_name":"\(self?.twitterId)'s friends"]
+            let request = self?.twitterClient.URLRequestWithMethod("GET", URL: "https://api.twitter.com/1.1/friends/ids.json", parameters: params, error: &error)
             
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
-                synch(self) {
-                    self?.clientMap.removeValueForKey(userId)
-                }
                 assert(false)
                 return
             }
             
-            client.sendTwitterRequest(request) {
+            guard let requestInner = request else {
+                return
+            }
+            
+            self?.twitterClient.sendTwitterRequest(requestInner) {
                 [weak self]
                 (response, data, connectionError)  in
                 
-                guard let sSelf = self else {
+                guard self != nil else {
                     return
                 }
                 
-                synch(sSelf) {
-                    if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(userId) == nil {
-                        return
-                    }
-                }
                 
                 if (connectionError == nil) {
                     if let json = try? NSJSONSerialization.JSONObjectWithData(data!,
@@ -734,36 +704,13 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     
     private func receiveTwitterFriend(userId:String,completion:((user:TWTRUser?,error:NSError?)->Void)!)  {
         
-        let client = TWTRAPIClient(userID: userId)
-        
-        synch(self) {
-            self.clientMap[userId] = client
-        }
-        
         dispatch_async(self.queue) {
             [weak self] in
             
-            let client = TWTRAPIClient(userID: userId)
-            client.loadUserWithID(client.userID!){
-                [weak self]
+            self?.twitterClient.loadUserWithID(userId){
                 (user,error) in
                 
-                guard let sSelf = self else  {
-                    return
-                }
-                
-                var key:AnyObject?
-                
-                synch(sSelf) {
-                    key = sSelf.clientMap.removeValueForKey(userId)
-                }
-                
-                if key != nil {
-                    completion(user: user,error:error)
-                }
-                else {
-                    completion(user:nil,error:nil)
-                }
+                completion(user: user,error:error)
             }
         }
     }
@@ -903,10 +850,6 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     
     func cancelTwitterRequestForUser(userId:String) {
         
-        synch(self) {
-            self.clientMap.removeValueForKey(userId)
-        }
-        
         if let taskId = self.userImageTasks.removeValueForKey(userId) {
             NetworkManager.sharedManager.cancelTask(taskId)
         }
@@ -919,21 +862,6 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     }
     
     func cancelAllTwitterRequests() {
-        
-        
-        synch(self) {
-            let userIds = self.clientMap.keys
-        
-        
-            for userId in userIds {
-                self.cancelTwitterRequestForUser(userId)
-            }
-        
-            if !self.clientMap.isEmpty {
-                self.clientMap.removeAll()
-            }
-            
-        }
         
         if !self.userImageTasks.isEmpty {
             let userIds = self.userImageTasks.keys
@@ -1305,17 +1233,10 @@ extension TwitterManager {
     
     func getConfiguration(completion:twitterConfigurationCompletion) {
        
-        let client = TWTRAPIClient(userID: self.twitterId)
+        let client = self.twitterClient
         
-        let key = configurationKey()
-        
-        synch(self) {
-            self.clientMap[key] = client
-        }
         
         dispatch_async(self.queue) {
-            [weak self] in
-            
             
             
             var error:NSError? = nil
@@ -1325,30 +1246,12 @@ extension TwitterManager {
             if let errorInner = error {
                 print("Error formatting \(errorInner)")
                 
-                guard let sSelf = self else {
-                    return
-                }
-                
-                synch(sSelf) {
-                    self?.clientMap.removeValueForKey(key)
-                }
                 assert(false)
                 return
             }
 
             client.sendTwitterRequest(request) {
-                [weak self]
                 (response, data, connectionError)  in
-                
-                guard let sSelf = self else {
-                    return
-                }
-                
-                synch(sSelf) {
-                    if sSelf.clientMap.isEmpty || sSelf.clientMap.removeValueForKey(key) == nil {
-                        return
-                    }
-                }
                 
                 
                 if (connectionError == nil) {
@@ -1426,5 +1329,52 @@ extension TwitterManager {
         }
         
         return (result,retError)
+    }
+}
+
+//MARK: Send direct message
+extension TwitterManager {
+    
+    func sendMessageToUser(userId:String,text:String,completion:(messageId:String?,error:NSError?) ->Void) {
+        
+        dispatch_async(self.queue) {
+            [weak self] in
+            
+            
+            var error:NSError? = nil
+            
+            
+            let customAllowedSet =  NSCharacterSet.URLQueryAllowedCharacterSet()
+            let eText = text.stringByAddingPercentEncodingWithAllowedCharacters(customAllowedSet)!
+            
+            let request = self?.twitterClient.URLRequestWithMethod("POST", URL: "https://api.twitter.com/1.1/direct_messages/new.json", parameters: ["user_id":userId,"text":eText], error: &error)
+            
+            guard error == nil else {
+                assert(false)
+                return
+            }
+            
+            self?.twitterClient.sendTwitterRequest(request!) {
+                (response, data, connectionError)  in
+
+                if (connectionError == nil) {
+                    if let json = try? NSJSONSerialization.JSONObjectWithData(data!,
+                        options: NSJSONReadingOptions.AllowFragments) as! [String:AnyObject] {
+                            print("Configuration: \(json)")
+                            completion(messageId: json["id_str"] as? String, error: nil)
+                    }
+                    else {
+                        print("Error was not able to convert response")
+                        completion(messageId: nil, error: nil)
+                    }
+                }
+                else {
+                    print("Error sendTwitterRequest \(connectionError)")
+                    completion(messageId: nil, error: connectionError)
+                }
+
+            }
+        }
+        
     }
 }

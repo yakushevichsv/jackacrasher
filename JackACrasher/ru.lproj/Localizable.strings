@@ -85,3 +85,6 @@
 "Request was sent"="Запрос отправлен";
 "Following" = "Подписан";
 "FollowedBy" = "Подписчик";
+
+"Information" = "Справочно";
+"Number of sent messages" = "Количество отправленных сообщений";

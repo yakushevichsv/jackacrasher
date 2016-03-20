@@ -999,21 +999,21 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A1z-60-wc7" userLabel="Check Box">
-                                                    <rect key="frame" x="13" y="20" width="37" height="31"/>
+                                                    <rect key="frame" x="13" y="20" width="32" height="31"/>
                                                     <state key="normal" image="btn-unchecked">
                                                         <color key="titleColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                                     </state>
                                                     <state key="selected" image="btn-checked"/>
                                                 </button>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="VkK-1D-HE6" userLabel="Image Logo">
-                                                    <rect key="frame" x="66" y="8" width="109" height="54"/>
+                                                    <rect key="frame" x="61" y="8" width="109" height="54"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="54" id="90t-kA-Uy0"/>
                                                         <constraint firstAttribute="width" constant="109" id="c34-CC-1EV"/>
                                                     </constraints>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" text="FriendShip" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="S5P-dm-Ev0" userLabel="FriendShip Status">
-                                                    <rect key="frame" x="184" y="41" width="323" height="21"/>
+                                                    <rect key="frame" x="179" y="41" width="323" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="323" id="ZcL-9d-kMf"/>
                                                     </constraints>
@@ -1021,14 +1021,14 @@
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="CorrectThis" textAlignment="natural" lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="afA-PE-d2z" userLabel="Send Status">
-                                                    <rect key="frame" x="528" y="14" width="58" height="41"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="CorrectThis" textAlignment="natural" lineBreakMode="middleTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" translatesAutoresizingMaskIntoConstraints="NO" id="afA-PE-d2z" userLabel="Send Status">
+                                                    <rect key="frame" x="523" y="24" width="63" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Name" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bX8-Hr-bF7" userLabel="Full Name">
-                                                    <rect key="frame" x="184" y="8" width="323" height="21"/>
+                                                    <rect key="frame" x="179" y="8" width="323" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="323" id="PZc-Ox-Zsw"/>
                                                     </constraints>
@@ -1061,20 +1061,20 @@
                                         </connections>
                                     </collectionViewCell>
                                     <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="messageCell" id="6dE-7G-gaL" userLabel="Message Row" customClass="TwitterSendMessageCollectionViewCell" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="130" width="600" height="250"/>
+                                        <rect key="frame" x="0.0" y="130" width="600" height="150"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="600" height="250"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="600" height="150"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Qj7-dx-7W0">
-                                                    <rect key="frame" x="0.0" y="55" width="600" height="195"/>
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" showsHorizontalScrollIndicator="NO" editable="NO" textAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="Qj7-dx-7W0">
+                                                    <rect key="frame" x="0.0" y="55" width="600" height="95"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                     <string key="text">Hi,
 I am playing JackACrasher on iOS . 
 Why don't you join me?</string>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences" keyboardType="twitter"/>
+                                                    <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                                     <dataDetectorType key="dataDetectorTypes" link="YES"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="6dE-7G-gaL" id="4QQ-po-OYn"/>
@@ -1106,7 +1106,7 @@ Why don't you join me?</string>
                                             <constraint firstAttribute="leadingMargin" secondItem="Ngh-7v-BCn" secondAttribute="leading" id="rBJ-EH-6F3"/>
                                             <constraint firstItem="Qj7-dx-7W0" firstAttribute="leading" secondItem="6dE-7G-gaL" secondAttribute="leadingMargin" constant="-8" id="wN2-w5-aC5"/>
                                         </constraints>
-                                        <size key="customSize" width="600" height="250"/>
+                                        <size key="customSize" width="600" height="150"/>
                                         <connections>
                                             <outlet property="lblCharacters" destination="ciI-0K-wNI" id="4re-6a-5XY"/>
                                             <outlet property="lblTitle" destination="Ngh-7v-BCn" id="B1y-ld-pMc"/>

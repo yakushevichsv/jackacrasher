@@ -34,16 +34,24 @@ class TwitterSendCollectionViewCell: UICollectionViewCell {
                     
                 case .Sending:
                     text = "Sending"
+                    self.lblStatus.textColor = UIColor.whiteColor()
+                    self.lblStatus.backgroundColor = UIColor.yellowColor()
                     break
                 case .Success:
                     text = "OK"
+                    self.lblStatus.textColor = UIColor.whiteColor()
+                    self.lblStatus.backgroundColor = UIColor.greenColor()
                     break
                 case .Failed:
                     text = "Failed"
+                    self.lblStatus.textColor = UIColor.whiteColor()
+                    self.lblStatus.backgroundColor = UIColor.redColor()
                     break
                 default:
                     assert(sendingState == .None)
                     text = "Not Sended"
+                    self.lblStatus.textColor = UIColor.blackColor()
+                    self.lblStatus.backgroundColor = self.contentView.backgroundColor
                     break
                 }
                 
