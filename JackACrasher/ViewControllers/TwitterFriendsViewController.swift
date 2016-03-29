@@ -134,7 +134,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
             return
         }
         
-        print("%@",__FUNCTION__)
+        print("%@",#function)
         assert(NSThread.isMainThread())
         
         let tuple = DBManager.sharedInstance.getFetchedTwitterUsers(self.twitterId, delegate: self)
@@ -148,7 +148,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
             }
         }
         
-        print("\(self.controller)",__FUNCTION__)
+        print("\(self.controller)",#function)
     }
     
     private func appendRightBarItem() -> Bool {

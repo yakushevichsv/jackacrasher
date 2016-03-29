@@ -111,11 +111,14 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
             
             if let popVC = dVC.popoverPresentationController {
                 popVC.delegate = self
-                popVC.permittedArrowDirections = .Any
+                popVC.permittedArrowDirections
+                    = .Any
+                
                 var prefHeight = popVC.preferredContentSize.height;
                 if let uiSender = sender as? UIButton {
                     if uiSender == popVC.sourceView {
-                        popVC.sourceRect = uiSender.frame
+                        popVC.sourceRect = uiSender.bounds
+                        
                     }
                 }
                 prefHeight = 200;
