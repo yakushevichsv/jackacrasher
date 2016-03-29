@@ -607,7 +607,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                 setRestoreProgressState(prodId, inProgress: false)
                 let code = transaction.error!.code
                 
-                completeTransaction(transaction, status:code != SKErrorPaymentCancelled && code != SKErrorUnknown ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
+                completeTransaction(transaction, status:code != SKErrorCode.PaymentCancelled.rawValue && code != SKErrorCode.Unknown.rawValue ? .IAPPurchaseFailed :.IAPPurchaseCancelled ,userInfo:userInfo)
                 
                 break;
             }
@@ -676,7 +676,7 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     
     func paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: NSError) {
         
-        if (error.code != SKErrorPaymentCancelled) {
+        if (error.code != SKErrorCode.PaymentCancelled.rawValue) {
             self.status = .IAPRestoredFailed
         }
         else {

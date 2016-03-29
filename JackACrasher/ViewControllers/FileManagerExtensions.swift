@@ -53,6 +53,34 @@ extension NSFileManager {
         return filePath
     }
     
+    
+    func jacCopyItemToCache(path:String!,fileName:String? = nil) throws -> String? {
+        
+        var fileName1:String? = nil
+        
+        if (fileName != nil) {
+            fileName1 = fileName!.lastPathComponent
+        }
+        else {
+            fileName1 = path.lastPathComponent
+        }
+        
+        var isDir:ObjCBool = false
+        
+        if (!self.fileExistsAtPath(self.jacCacheDirectory, isDirectory: &isDir)) {
+            try self.createDirectoryAtPath(self.jacCacheDirectory, withIntermediateDirectories: true, attributes: nil)
+            
+            
+        }
+        
+        let filePath = self.jacCacheDirectory.stringByAppendingPathComponent(fileName1)
+        
+        if !self.fileExistsAtPath(filePath) {
+            try self.copyItemAtPath(path, toPath: filePath)
+        }
+        return filePath
+    }
+    
     func jacStoreItemToCache(path:String!,fileName:String? = nil ,completion:((realPah:String?)->Void)?) {
         
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0)){

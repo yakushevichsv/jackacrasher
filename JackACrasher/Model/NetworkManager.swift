@@ -44,6 +44,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     private func initQueue() {
         self.queue.name = "sy.jac.network.queue"
         self.queue.maxConcurrentOperationCount = 5
+        self.queue.qualityOfService = .Utility
     }
     
     private func initBGSession() {
@@ -88,87 +89,129 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         let req = NSURLRequest(URL: url!)
     
         let task = self.bgSession.downloadTaskWithRequest(req)
-        
-        self.tasksDic[task.taskIdentifier] = task
-        if let completionInternal = completion {
+        synch(self) {
+         self.tasksDic[task.taskIdentifier] = task
+         if let completionInternal = completion {
             self.tasksCompletions[task.taskIdentifier] = completionInternal
+          }
         }
         
         if task.state == .Suspended {
             task.resume()
         }
+        
+        assert(task.state != .Completed || task.state != .Canceling)
         return task.taskIdentifier
     }
     
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, var didFinishDownloadingToURL location: NSURL) {
         
         let taskId = downloadTask.taskIdentifier
         
-        if (self.tasksDic[taskId] != nil) {
+    synch(self) {
+        if (!self.tasksDic.isEmpty  && self.tasksDic[taskId] != nil) {
             self.tasksDic.removeValueForKey(taskId)
         }
+    }
         
-        if (self.tasksCompletions[taskId] != nil) {
+        
+        if let ext = downloadTask.originalRequest?.URL?.lastPathComponent {
+            
+        
+            do{
+                if let location2Path = try NSFileManager.defaultManager().jacStoreItemToCache(location.path!, fileName: ext) {
+                
+                    location = NSURL(fileURLWithPath: location2Path)
+                    print("NEtworkManager downloading corrected location \(location)")
+                }
+            }
+            catch let error as NSError {
+                print("Error NEtworkManager downloading \(error)")
+                }
+        }
+        
+        synch(self) {
+         if (self.tasksCompletions[taskId] != nil) {
             if let completion = self.tasksCompletions.removeValueForKey(taskId){
                 completion(path: location.path, error:nil)
             }
+         }
         }
         
     }
     
     func URLSession(session: NSURLSession, task: NSURLSessionTask, didCompleteWithError error: NSError?) {
+    synch(self) {
+            
+        if (!self.tasksDic.isEmpty  && self.tasksDic[task.taskIdentifier] != nil) {
+            self.tasksDic.removeValueForKey(task.taskIdentifier)
+        }
+    }
         
-        self.tasksDic.removeValueForKey(task.taskIdentifier)
         if let errorInter = error {
             print("\(errorInter)")
-            if let completion = self.tasksCompletions.removeValueForKey(task.taskIdentifier){
+            synch(self) {
+             if let completion = self.tasksCompletions.removeValueForKey(task.taskIdentifier){
                 completion(path: nil, error:error)
+             }
             }
         }
     }
     
     
     internal func cancelTask(taskId:Int) -> Bool {
-        if taskId != NetworkManager.invalidTaskIdentifier  {
-            
+        var result:Bool = false
         
+        if taskId != NetworkManager.invalidTaskIdentifier  {
+        
+         synch(self) {
             if let oldTask = self.tasksDic.removeValueForKey(taskId) {
                 oldTask.cancel()
                 self.tasksCompletions.removeValueForKey(taskId)
-                return true
+                result = true
             }
+         }
+            
         }
         
-        return false
+        return result
     }
     
     internal func suspendTask(taskId:Int) -> Bool {
+        
+        var result:Bool = false
+        
+        
         if taskId != NetworkManager.invalidTaskIdentifier  {
             
-            
-            if let oldTask = self.tasksDic.removeValueForKey(taskId) {
+           synch(self) {
+             if let oldTask = self.tasksDic.removeValueForKey(taskId) {
                 oldTask.suspend()
-                return true
+                result = true
+             }
             }
         }
         
-        return false
+        return result
     }
     
     internal func resumeSuspendedTask(taskId:Int) -> Bool {
         
+        var result:Bool = false
+        
         if taskId != NetworkManager.invalidTaskIdentifier  {
             
-            
-            if let oldTask = self.tasksDic[taskId] {
+            synch(self) {
+             if let oldTask = self.tasksDic[taskId] {
                 if (oldTask.state == .Suspended) {
                 
                     oldTask.resume()
-                    return true
+                    result = true
                 }
+              }
             }
         }
-        return false
+        return result
     }
 }

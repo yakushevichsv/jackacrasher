@@ -13,7 +13,7 @@
 "help-page005.png" = "ru-help-page005.png";
 "help-page006.png" = "help-page006.png";
 
-"FontName" = "Arial-BoldMT";
+"FontName"  = "Arial-BoldMT";
 "HelpPage1" = "Игрок не может пошевелиться\n Атакуйте мусор";
 "HelpPage2" = "Игрок неподвижен\n Уничтожте красные астеройды";
 "HelpPage3" = "При появлении ракеты\n Уничтож её находясь в луче трансмиттера\n";

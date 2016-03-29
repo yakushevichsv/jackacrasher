@@ -31,6 +31,12 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        #if DEBUG
+            let manager = DBManager.sharedInstance
+            print("Manager \(manager)")
+            
+        #endif
+        
         self.containerView.hidden = true
         
         if let scene = GameOverScene.unarchiveFromFile("GameOverScene") as? GameOverScene {
@@ -93,5 +99,51 @@ class GameOverViewController: UIViewController, GameOverSceneDelegate {
         }
         else if (sender == self.btnReplay) {
         }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        if (segue.identifier == Optional<String>("inviteFriendsSegue"))
+        {
+            //TODO: detect allowance to use different social functions....
+            
+            let dVC = segue.destinationViewController
+            
+            if let popVC = dVC.popoverPresentationController {
+                popVC.delegate = self
+                popVC.permittedArrowDirections
+                    = .Any
+                
+                var prefHeight = popVC.preferredContentSize.height;
+                if let uiSender = sender as? UIButton {
+                    if uiSender == popVC.sourceView {
+                        popVC.sourceRect = uiSender.bounds
+                        
+                    }
+                }
+                prefHeight = 200;
+                
+                dVC.preferredContentSize = CGSizeMake(min(300,popVC.preferredContentSize.width),prefHeight)
+            }
+        }
+    }
+    
+    override func shouldPerformSegueWithIdentifier(identifier: String, sender: AnyObject?) -> Bool {
+        if (identifier == "inviteFriendsSegue") {
+            
+            return InviteFriendsViewController.canInviteFriends()
+        }
+        else {
+            return super.shouldPerformSegueWithIdentifier(identifier, sender: sender)
+        }
+    }
+}
+
+
+//MARK: Pop over for invite friends...
+extension GameOverViewController:UIPopoverPresentationControllerDelegate
+{
+    func adaptivePresentationStyleForPresentationController(controller: UIPresentationController) -> UIModalPresentationStyle {
+        return .None
     }
 }

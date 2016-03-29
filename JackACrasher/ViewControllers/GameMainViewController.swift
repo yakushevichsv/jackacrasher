@@ -472,6 +472,7 @@ class GameMainViewController: UIViewController {
                 
                 dVC.transitioningDelegate = self.transitionDelegate
             } else if (identifier == "help") {
+                print("perform help action!!!")
                 cancelAdvActions()
                 let start:Int32 = 1
                 let end :Int32 = 6
@@ -1056,6 +1057,13 @@ class GameMainViewController: UIViewController {
     //MARK: FB's methods
     
     private func shareOnFB() {
+        
+        let manager = FBManager.sharedManager
+        
+        manager.getFriends { (friendsList, error) -> Void in
+            
+        }
+        return
         
         let content = FBSDKShareLinkContent()
         content.contentTitle = NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!")
