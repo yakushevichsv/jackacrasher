@@ -756,6 +756,14 @@ class GameMainViewController: UIViewController {
             
             self.needToDisplayAnimation = false
         }
+        else if segue.identifier == Optional("helpUnwind") {
+            
+            UIView.transitionWithView(self.btnHelp, duration: 0.5, options:  UIViewAnimationOptions(rawValue: UIViewAnimationOptions.TransitionFlipFromBottom.rawValue + UIViewAnimationOptions.CurveEaseOut.rawValue + UIViewAnimationOptions.ShowHideTransitionViews.rawValue), animations:nil,completion:{ (_) -> Void in
+                self.btnHelp.enabled = true
+            })
+            
+        }
+        
         correctSoundButton()
         
         unwindForAd()

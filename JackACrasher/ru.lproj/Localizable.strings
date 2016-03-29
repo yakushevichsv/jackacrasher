@@ -64,4 +64,28 @@
 "Download Status" = "Статус Загрузки";
 "Enable iCloud" = "Активируйте iCloud";
 "Please login into iCloud via Settings" = "Залогинтесь в iCloud через Настройки";
+"Twitter API Rate Limit" = "Лимит вызовов для Twitter API";
+"Push to update" = "Потяните для обновления";
+"Release to stop" = "Отпустите для остановки";
+
+"Sending"    = "Передача";
+"Failed"     = "Не получилось";
+"Not Sended" = "Не отправлено";
+"Select All" = "Выбрать всё";
+
+"Cancel" = "Отмена";
+"Twitter API Rate Limit"="Превыщен лимит вызовов твиттера";
+"Send" = "Послать";
+"Message To Send" = "Сообщение для отправки";
+"Twitter Users"   = "Пользователи твиттера";
+
+"Friend" = "Друг";
+"Blocking" = "Заблокировал вас";
+"Blocked" = "Заблокирован";
+"Request was sent"="Запрос отправлен";
+"Following" = "Подписан";
+"FollowedBy" = "Подписчик";
+
+"Information" = "Справочно";
+"Number of sent messages" = "Количество отправленных сообщений";
 "Can't access help file" = "Проблемы доступа к файлам помощи";
