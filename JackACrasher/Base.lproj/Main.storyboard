@@ -78,7 +78,7 @@
                                 </constraints>
                             </imageView>
                             <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FSu-Xs-tHM" userLabel="Explosion IV">
-                                <rect key="frame" x="200" y="213" width="200" height="108"/>
+                                <rect key="frame" x="200" y="267" width="200" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Vb0-re-OwX"/>
                                 </constraints>
@@ -310,13 +310,12 @@
                             <constraint firstItem="AcO-iW-VYX" firstAttribute="centerY" secondItem="AF8-Mz-FY1" secondAttribute="centerY" id="0Cg-9a-Sho"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="leading" secondItem="1XG-Tp-FSs" secondAttribute="trailing" constant="40" id="0al-3c-mgm"/>
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
-                            <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="FSu-Xs-tHM" secondAttribute="bottom" constant="58" id="3jx-WZ-5n9">
-                                <variation key="heightClass=compact" constant="18"/>
-                            </constraint>
                             <constraint firstAttribute="centerY" secondItem="zOq-Ua-ez5" secondAttribute="centerY" constant="122" id="4nG-Qg-QlL"/>
                             <constraint firstAttribute="centerX" secondItem="FSu-Xs-tHM" secondAttribute="centerX" id="7AU-2s-Toc"/>
                             <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="-8" id="8jb-EZ-pAf"/>
-                            <constraint firstItem="fjR-H4-NMu" firstAttribute="top" secondItem="Muy-t8-eeK" secondAttribute="bottom" constant="40" id="A9Y-rz-Xvt"/>
+                            <constraint firstItem="fjR-H4-NMu" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Muy-t8-eeK" secondAttribute="bottom" constant="40" id="A9Y-rz-Xvt">
+                                <variation key="heightClass=regular-widthClass=regular" constant="150"/>
+                            </constraint>
                             <constraint firstItem="Bzh-ay-0sk" firstAttribute="top" secondItem="Muy-t8-eeK" secondAttribute="top" id="BWA-Q2-VqN"/>
                             <constraint firstItem="FJb-8H-lOJ" firstAttribute="trailing" secondItem="5vs-8M-X8t" secondAttribute="trailingMargin" id="CU3-2b-yf3"/>
                             <constraint firstItem="cVr-yc-HC5" firstAttribute="top" secondItem="PTq-DP-qnf" secondAttribute="bottom" constant="20" id="GOd-eI-ATg"/>
