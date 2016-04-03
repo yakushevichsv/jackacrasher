@@ -312,7 +312,6 @@
                             <constraint firstItem="bxu-q9-Fcb" firstAttribute="leading" secondItem="AF8-Mz-FY1" secondAttribute="trailing" constant="23" id="3Do-S9-aWD"/>
                             <constraint firstAttribute="centerY" secondItem="zOq-Ua-ez5" secondAttribute="centerY" constant="122" id="4nG-Qg-QlL"/>
                             <constraint firstAttribute="centerX" secondItem="FSu-Xs-tHM" secondAttribute="centerX" id="7AU-2s-Toc"/>
-                            <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="-8" id="8jb-EZ-pAf"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Muy-t8-eeK" secondAttribute="bottom" constant="40" id="A9Y-rz-Xvt">
                                 <variation key="heightClass=regular-widthClass=regular" constant="150"/>
                             </constraint>
@@ -332,7 +331,6 @@
                             <constraint firstAttribute="centerY" secondItem="Muy-t8-eeK" secondAttribute="centerY" constant="25" id="cFN-KV-9Po"/>
                             <constraint firstItem="12G-JR-etf" firstAttribute="centerY" secondItem="fjR-H4-NMu" secondAttribute="centerY" id="e30-4Y-3Jc"/>
                             <constraint firstItem="1XG-Tp-FSs" firstAttribute="centerY" secondItem="12G-JR-etf" secondAttribute="centerY" id="mfw-qV-XKP"/>
-                            <constraint firstItem="FSu-Xs-tHM" firstAttribute="centerY" secondItem="Bzh-ay-0sk" secondAttribute="centerY" constant="-8" id="nRk-5x-Ka9"/>
                             <constraint firstItem="Muy-t8-eeK" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" constant="150" id="ozB-y0-7hy"/>
                             <constraint firstItem="Bzh-ay-0sk" firstAttribute="centerX" secondItem="5vs-8M-X8t" secondAttribute="centerX" constant="-150" id="q6V-hm-i0M"/>
                             <constraint firstItem="fjR-H4-NMu" firstAttribute="leading" secondItem="12G-JR-etf" secondAttribute="trailing" constant="40" id="vSm-gq-Oz5"/>

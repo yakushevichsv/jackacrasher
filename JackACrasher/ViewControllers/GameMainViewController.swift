@@ -11,6 +11,7 @@ import GameKit
 import Social
 import FBSDKShareKit
 import iAd
+import TwitterKit
 
 class GameMainViewController: UIViewController {
 
@@ -102,7 +103,7 @@ class GameMainViewController: UIViewController {
         
         authDidChange(nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "authDidChange:", name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMainViewController.authDidChange(_:)), name: GKPlayerAuthenticationDidChangeNotificationName, object: nil)
         
         self.performActionOnRMainButton(nil,animated:false)
         
@@ -233,9 +234,9 @@ class GameMainViewController: UIViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "correctSoundButton", name: SYGameLogicManagerSoundNotification, object: GameLogicManager.sharedInstance)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMainViewController.correctSoundButton), name: SYGameLogicManagerSoundNotification, object: GameLogicManager.sharedInstance)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationWillEnterForegroundNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMainViewController.willMoveToFG(_:)), name: UIApplicationWillEnterForegroundNotification, object: nil)
         
         correctSoundButton()
         
@@ -292,7 +293,7 @@ class GameMainViewController: UIViewController {
     private func displayCloudKitAuthStatus() {
         
         if (!self.ckManager.simulateAlertAboutPermissionGrant()) {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToEnableCloudKit", name: SYLoggingToCloudNotification, object: self.ckManager)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMainViewController.needToEnableCloudKit), name: SYLoggingToCloudNotification, object: self.ckManager)
         }
         else {
             //needToEnableCloudKit()
@@ -396,7 +397,7 @@ class GameMainViewController: UIViewController {
     private func shakeStrategyBtn() {
         
         if self.view.gestureRecognizers == nil || self.view.gestureRecognizers!.isEmpty {
-            let recog = UITapGestureRecognizer(target: self, action: "handlePress:")
+            let recog = UITapGestureRecognizer(target: self, action: #selector(GameMainViewController.handlePress(_:)))
             self.view.addGestureRecognizer(recog)
         }
         
@@ -1037,7 +1038,23 @@ class GameMainViewController: UIViewController {
         
         if !SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
             
-            self.alertWithTitle(NSLocalizedString("Sorry",comment:"Sorry"), message: NSLocalizedString("SorryTwitter", comment: "You can\'t send a tweet right now,\n make sure your device has an internet connection and you have\n at least one Twitter account setup"), actionTitle: NSLocalizedString("OK",comment:"OK"), completion: nil)
+            
+            let composer = TWTRComposer()
+            
+            composer.setText(NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!"))
+            composer.setImage(UIImage(named: "enemyShip"))
+            composer.setURL(NSURL(string: "https://developers.facebook.com"))
+            
+            // Called from a UIViewController
+            composer.showFromViewController(self) { result in
+                if (result == TWTRComposerResult.Cancelled) {
+                    print("Tweet composition cancelled")
+                }
+                else {
+                    print("Sending tweet!")
+                }
+            }
+            
             return
         }
         
