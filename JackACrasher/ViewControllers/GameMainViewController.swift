@@ -1083,20 +1083,12 @@ class GameMainViewController: UIViewController {
     
     private func shareOnFB() {
         
-        let manager = FBManager.sharedManager
-        
-        manager.getFriends { (friendsList, error) -> Void in
-            
-        }
-        return
-        
         let content = FBSDKShareLinkContent()
         content.contentTitle = NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!")
         content.contentURL = NSURL(string: "https://developers.facebook.com")
         content.contentDescription = NSLocalizedString("FBDecsr", comment:  "Have fun!. Help Jack to crash as much as you can!")
         
         
-        content.imageURL = NSURL(string:"http://www.nasa.gov/sites/default/files/images/685735main_pia15678-43_full.jpg")
         let dialog = FBSDKShareDialog() //.showFromViewController(self, withContent: content, delegate: self)
         dialog.fromViewController = self
         dialog.delegate = self
