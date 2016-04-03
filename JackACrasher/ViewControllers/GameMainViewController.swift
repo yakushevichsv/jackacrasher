@@ -993,19 +993,27 @@ class GameMainViewController: UIViewController {
                         
                         dispatch_async(dispatch_get_main_queue())
                         {
-                            [unowned self] in
+                            let opt = UIViewAnimationOptions(rawValue: UIViewAnimationOptions.ShowHideTransitionViews.rawValue + UIViewAnimationOptions.TransitionFlipFromTop.rawValue)
                             
-                            sender.enabled = true
-                            
-                            self.hideOverlay()
-                            
-                            if (error == nil) {
-                                self.performSegueWithIdentifier("help", sender: self.btnHelp)
-                            }
-                            else {
-                                self.alertWithTitle(NSLocalizedString("Error", comment: "") , message: NSLocalizedString("Can't access help file", comment: ""))
-                                print("Error \(error)")
+                            UIView.transitionWithView(sender, duration: 0.5, options: opt, animations: nil) {
+                                [weak self]
+                                (completed) in
+                                
+                                self?.hideOverlay()
+                                self?.btnHelp.enabled = true
+                                
+                                if (error == nil) {
+                                    self?.performSegueWithIdentifier("help", sender: sender)
                                 }
+                                else {
+                                    self?.alertWithTitle(NSLocalizedString("Error", comment: "") , message: NSLocalizedString("Can't access help file", comment: ""))
+                                    print("Error \(error)")
+                                }
+
+                                
+                            }
+                            
+                            
                         }
                 })
             })
