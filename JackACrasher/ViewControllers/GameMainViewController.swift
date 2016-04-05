@@ -157,6 +157,10 @@ class GameMainViewController: UIViewController {
         correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 5 : 0)
         
     }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
 
     private func hideAsters() {
     

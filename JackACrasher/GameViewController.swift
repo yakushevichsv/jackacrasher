@@ -255,7 +255,22 @@ class GameViewController: UIViewController,GameSceneDelegate {
                 }
                 
                 let transDelegate = self.returnPauseTransDelegate
-                transDelegate.rect = self.view.bounds
+                
+                var rect = self.view.bounds
+                
+                if self.traitCollection.userInterfaceIdiom == .Pad {
+                    
+                    let h = CGRectGetHeight(rect)*0.3
+                    let w = CGRectGetWidth(rect)*0.4
+                    
+                    
+                    let x = rect.center.x - w*0.5
+                    let y = rect.center.y - h*0.5
+                    
+                    rect = CGRectMake(x, y, w, h)
+                }
+                
+                transDelegate.rect = rect
                 transDelegate.isPortrait = CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame)
                 
                 dVC.modalPresentationStyle = .Custom

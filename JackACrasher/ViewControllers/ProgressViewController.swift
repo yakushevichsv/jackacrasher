@@ -25,7 +25,7 @@ class ProgressViewController: UIViewController {
         // Do any additional setup after loading the view.
         stopIndicator()
         self.pvStatus.progress = 0
-        btnClose.addTarget(self, action: "btnPressed:", forControlEvents: UIControlEvents.TouchUpInside)
+        btnClose.addTarget(self, action: #selector(ProgressViewController.btnPressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         activateIndicator()
         
         if progressValue != 0 {
@@ -35,6 +35,10 @@ class ProgressViewController: UIViewController {
         }
         
         self.btnClose.hidden = true
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
 
     

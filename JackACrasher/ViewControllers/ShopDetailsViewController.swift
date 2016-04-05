@@ -62,6 +62,9 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
         correctFontOfChildViews(self.view)
     }
     
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()

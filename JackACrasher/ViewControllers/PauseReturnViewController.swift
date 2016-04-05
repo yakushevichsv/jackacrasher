@@ -27,6 +27,15 @@ class PauseReturnViewController: UIViewController {
         correctFontOfChildViews(self.view,reduction: UIApplication.sharedApplication().isRussian ? 4 : 0)
     }
     
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
+    }
+    
     @IBAction func buttonPressed(sender:UIButton) {
         if sender == self.btnSound {
             

@@ -13,11 +13,15 @@ class JackACrasherNavigationController: UINavigationController {
     
     override func viewDidLoad() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector:
-            Selector("showAuthenticationViewController"), name:
+            #selector(JackACrasherNavigationController.showAuthenticationViewController), name:
             GameCenterManagerViewController, object: nil)
         
         GameCenterManager.sharedInstance.authenticateLocalPlayer()
         super.viewDidLoad()
+    }
+    
+    override func prefersStatusBarHidden() -> Bool {
+        return true
     }
     
     func showAuthenticationViewController() {

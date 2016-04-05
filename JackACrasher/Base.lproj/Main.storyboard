@@ -733,6 +733,7 @@
                         <constraints>
                             <constraint firstItem="TGW-Qx-yrp" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" id="W31-Nt-ZiH"/>
                             <constraint firstItem="TGW-Qx-yrp" firstAttribute="leading" secondItem="3se-qz-xqx" secondAttribute="leadingMargin" id="WGf-Jd-HlL"/>
+                            <constraint firstItem="xAw-7M-c5W" firstAttribute="top" secondItem="maK-i9-Uhn" secondAttribute="bottom" constant="3" id="aeV-hX-7OY"/>
                             <constraint firstItem="xAw-7M-c5W" firstAttribute="top" secondItem="TGW-Qx-yrp" secondAttribute="top" constant="3" id="e9C-6Q-zf6"/>
                             <constraint firstItem="xAw-7M-c5W" firstAttribute="centerX" secondItem="3se-qz-xqx" secondAttribute="centerX" constant="-5.5" id="wIB-wo-7Ii"/>
                         </constraints>
@@ -1394,6 +1395,10 @@ Why don't you join me?</string>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
+                    <toolbar key="toolbar" opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="nbA-Z7-tSP">
+                        <rect key="frame" x="0.0" y="556" width="600" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </toolbar>
                     <connections>
                         <segue destination="2gv-Q9-0S3" kind="relationship" relationship="rootViewController" id="5Bb-TK-c2O"/>
                     </connections>

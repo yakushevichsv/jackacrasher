@@ -9,9 +9,9 @@
 import UIKit
 
 class ReturnPausePopUpAnimator: PopupAnimator {
-   
-    override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
     
+    override func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
+        
         let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)
         
         let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
@@ -27,10 +27,10 @@ class ReturnPausePopUpAnimator: PopupAnimator {
                 let fFrame = CGRectOffset(fromViewInternal.frame, 0, CGRectGetMaxY(fromViewInternal.frame))
                 UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
                     fromViewInternal.frame = fFrame
-                    }) { (flag) -> Void in
-                        transitionContext.completeTransition(true)
-                        fromViewInternal.removeFromSuperview()
-                        toVC?.view.userInteractionEnabled = true
+                }) { (flag) -> Void in
+                    transitionContext.completeTransition(true)
+                    fromViewInternal.removeFromSuperview()
+                    toVC?.view.userInteractionEnabled = true
                 }
                 
             }
@@ -47,29 +47,33 @@ class ReturnPausePopUpAnimator: PopupAnimator {
             
             fromVC?.view.userInteractionEnabled = false
             
-            
-            let tW = self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
-            let tH =  !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
-            
-            let wScale = CGFloat( (isPhone4s() || isPhone5s()) ? 0.6 : (isPhone6Plus() ? 0.4 : 0.5) )
-            let hScale = CGFloat( isPhone4s() ? 0.5 : (isPhone6Plus() ? 0.4 : 0.4) )
-            let xMargin = (1 - wScale) * 0.5
-            let yMargin =  (1 - hScale) * 0.5
-            
-            let w  = round(wScale * tW)
-            let h  = round(hScale * tH)
-            let oX = round(xMargin * tW)
-            let oY = round(yMargin * tH)
-            
             var toViewFrame:CGRect
             
-            if (self.isPortrait) {
-                toViewFrame = CGRectMake(oY, oX, h, w)
+            if toVC!.traitCollection.userInterfaceIdiom == .Phone {
+                
+                let tW = self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
+                let tH =  !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
+                
+                let wScale = CGFloat( (isPhone4s() || isPhone5s()) ? 0.6 : (isPhone6Plus() ? 0.4 : 0.5) )
+                let hScale = CGFloat( isPhone4s() ? 0.5 : (isPhone6Plus() ? 0.4 : 0.4) )
+                let xMargin = (1 - wScale) * 0.5
+                let yMargin =  (1 - hScale) * 0.5
+                
+                let w  = round(wScale * tW)
+                let h  = round(hScale * tH)
+                let oX = round(xMargin * tW)
+                let oY = round(yMargin * tH)
+                
+                if (self.isPortrait) {
+                    toViewFrame = CGRectMake(oY, oX, h, w)
+                }
+                else {
+                    toViewFrame = CGRectMake(oX, oY, w, h)
+                }
             }
             else {
-                toViewFrame = CGRectMake(oX, oY, w, h)
+                toViewFrame = rect
             }
-            
             toViewInternal.frame = toViewFrame
             
             
@@ -78,8 +82,8 @@ class ReturnPausePopUpAnimator: PopupAnimator {
             
             UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
                 toViewInternal.frame = toViewFrame
-                }) { (flag) -> Void in
-                    transitionContext.completeTransition(true)
+            }) { (flag) -> Void in
+                transitionContext.completeTransition(true)
             }
         }
     }
