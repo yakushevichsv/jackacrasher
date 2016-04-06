@@ -364,10 +364,8 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         
         let payment = SKMutablePayment(product: product!.skProduct)
         payment.quantity = 1
-        if #available(iOS 8.3, *) {
-            payment.simulatesAskToBuyInSandbox = sPurchaseManagerSandBox
-        }
         
+            payment.simulatesAskToBuyInSandbox = sPurchaseManagerSandBox
         
         if let userName = userNameForPurchases() {
             payment.applicationUsername = userName

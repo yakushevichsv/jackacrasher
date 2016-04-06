@@ -471,7 +471,24 @@ class GameMainViewController: UIViewController {
                 let isPortrait = CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame)
                 
                 self.transitionDelegate.isPortrait = isPortrait
-                self.transitionDelegate.rect = self.view.frame
+                
+                var rect = self.view.bounds
+                
+                if self.traitCollection.userInterfaceIdiom == .Pad {
+                    
+                    let h = CGRectGetHeight(rect)*0.3
+                    let w = CGRectGetWidth(rect)*0.3
+                    
+                    
+                    let x = rect.center.x - w*0.5
+                    let y = rect.center.y - h*0.5
+                    
+                    rect = CGRectIntegral(CGRectMake(x, y, w, h))
+                }
+            
+                self.transitionDelegate.rect = rect
+                
+                
                 self.transitionDelegate.backgroundColor = UIColor.lightGrayColor()
                 self.transitionDelegate.backgroundAlpha = 1.0
                 
@@ -781,9 +798,9 @@ class GameMainViewController: UIViewController {
     }
     
     func appendPurchaseValidationListeners() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "purchaseValideted:", name: kPurchaseManagerValidatedProductsNotification, object: PurchaseManager.sharedInstance)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMainViewController.purchaseValideted(_:)), name: kPurchaseManagerValidatedProductsNotification, object: PurchaseManager.sharedInstance)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "purchaseValidationFailed:", name: kPurchaseManagerDidFailedProductsValidationNotification, object: PurchaseManager.sharedInstance)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameMainViewController.purchaseValidationFailed(_:)), name: kPurchaseManagerDidFailedProductsValidationNotification, object: PurchaseManager.sharedInstance)
     }
     
     func removePurchaseValidationListeners() {
@@ -796,7 +813,7 @@ class GameMainViewController: UIViewController {
         
         if !NSThread.isMainThread() {
             
-            self.performSelectorOnMainThread("purchaseValideted:", withObject: aNotification, waitUntilDone: false)
+            self.performSelectorOnMainThread(#selector(GameMainViewController.purchaseValideted(_:)), withObject: aNotification, waitUntilDone: false)
             return
         }
         puchaseValidationInternal()
@@ -807,7 +824,7 @@ class GameMainViewController: UIViewController {
         
         if !NSThread.isMainThread() {
             
-            self.performSelectorOnMainThread("purchaseValidationFailed:", withObject: aNotification, waitUntilDone: false)
+            self.performSelectorOnMainThread(#selector(GameMainViewController.purchaseValidationFailed(_:)), withObject: aNotification, waitUntilDone: false)
             return
         }
         puchaseValidationInternal()
@@ -1050,22 +1067,49 @@ class GameMainViewController: UIViewController {
         
         if !SLComposeViewController.isAvailableForServiceType(SLServiceTypeTwitter) {
             
-            
-            let composer = TWTRComposer()
-            
-            composer.setText(NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!"))
-            composer.setImage(UIImage(named: "enemyShip"))
-            composer.setURL(NSURL(string: "https://developers.facebook.com"))
-            
-            // Called from a UIViewController
-            composer.showFromViewController(self) { result in
-                if (result == TWTRComposerResult.Cancelled) {
-                    print("Tweet composition cancelled")
+            Twitter.sharedInstance().logInWithCompletion({ (session, error) in
+                
+                guard error == nil else {
+                    
+                    if error!.domain == TWTRLogInErrorDomain && error!.code == TWTRLogInErrorCode.Canceled.rawValue {
+                        
+                    }
+                    else if error!.domain == TWTRLogInErrorDomain && error!.code == TWTRLogInErrorCode.Denied.rawValue {
+                        
+                        
+                    }
+                    
+                    return
                 }
-                else {
-                    print("Sending tweet!")
+                
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                [weak self] in
+                    
+                let composer = TWTRComposer()
+                
+                composer.setText(NSLocalizedString("LogoText",comment:"I am playing on JackACrasher!"))
+                composer.setImage(UIImage(named: "enemyShip"))
+                composer.setURL(NSURL(string: "https://developers.facebook.com"))
+                
+                // Called from a UIViewController
+                    guard let sSelf = self else {
+                        return
+                    }
+                    
+                    composer.showFromViewController(sSelf) { result in
+                    if (result == TWTRComposerResult.Cancelled) {
+                        print("Tweet composition cancelled")
+                    }
+                    else {
+                        print("Sending tweet!")
+                    }
                 }
-            }
+                }
+                
+            })
+            
+            
             
             return
         }
@@ -1083,7 +1127,11 @@ class GameMainViewController: UIViewController {
             }
             else {
                 print("Sending tweet!")
-                self.alertWithTitle(NSLocalizedString("Success",comment:"Success"), message: NSLocalizedString("ThanksTweeting",comment:"Thanks for tweeting!"), actionTitle: nil)
+                dispatch_async(dispatch_get_main_queue()) {
+                    [weak self] in
+                    
+                    self?.alertWithTitle(NSLocalizedString("Success",comment:"Success"), message: NSLocalizedString("ThanksTweeting",comment:"Thanks for tweeting!"), actionTitle: nil)
+                }
             }
         }
         
@@ -1357,7 +1405,7 @@ extension GameMainViewController : ADInterstitialAdDelegate {
                             
                             let btn = UIButton()
                             btn.setImage(UIImage(named: "close"), forState: .Normal)
-                            btn.addTarget(self, action: "closePressed:", forControlEvents: UIControlEvents.TouchUpInside)
+                            btn.addTarget(self, action: #selector(GameMainViewController.closePressed(_:)), forControlEvents: UIControlEvents.TouchUpInside)
                             let btnCenter = CGPointMake(CGRectGetWidth(self.view.bounds) * 0.9, CGRectGetHeight(self.view.bounds)*0.1)
                             btn.center = btnCenter
                             btn.bounds = CGRectMake(0, 0, btn.imageForState(.Normal)!.size.width, btn.imageForState(.Normal)!.size.height)
@@ -1558,7 +1606,7 @@ extension GameMainViewController {
                 
                 if (!exist) {
                     
-                    self.performSelectorOnMainThread("showOverlayPrivate:", withObject: sender, waitUntilDone: false)
+                    self.performSelectorOnMainThread(#selector(GameMainViewController.showOverlayPrivate(_:)), withObject: sender, waitUntilDone: false)
                 }
             }
         }

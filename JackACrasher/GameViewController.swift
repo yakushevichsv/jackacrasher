@@ -155,9 +155,9 @@ class GameViewController: UIViewController,GameSceneDelegate {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didMoveToBG:", name: UIApplicationWillResignActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameViewController.didMoveToBG(_:)), name: UIApplicationWillResignActiveNotification, object: nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willMoveToFG:", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameViewController.willMoveToFG(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
         
         
         if self.gameOverOnNeed() {
@@ -342,7 +342,7 @@ class GameViewController: UIViewController,GameSceneDelegate {
             if self.btnRecord.hidden {
                 self.displayRecordButton()
                 
-                self.performSelector("hideScreenRecording", withObject:  nil, afterDelay: 60)
+                self.performSelector(#selector(GameViewController.hideScreenRecording), withObject:  nil, afterDelay: 60)
             }
             
             self.logicManager.setScreenRecordingValue(totalScore)
@@ -377,7 +377,7 @@ extension GameViewController {
         sender.selected = !sender.selected
         
         if (sender.selected) {
-            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "hideScreenRecording", object: nil)
+            NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(GameViewController.hideScreenRecording), object: nil)
             
             startRecording()
         }
@@ -544,7 +544,7 @@ extension GameViewController {
     func restoreRemainingRecordTime(timeRemained:Int  = 120) {
         
         self.terminateRecordingTimer?.invalidate()
-        self.terminateRecordingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: "decrementRemainedTime:", userInfo: NSDate(timeIntervalSinceNow: Double(timeRemained)), repeats: true)
+        self.terminateRecordingTimer = NSTimer.scheduledTimerWithTimeInterval(1.0, target: self, selector: #selector(GameViewController.decrementRemainedTime(_:)), userInfo: NSDate(timeIntervalSinceNow: Double(timeRemained)), repeats: true)
         self.terminateRecordingTimer.fire()
     }
     

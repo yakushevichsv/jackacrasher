@@ -383,7 +383,7 @@ class TwitterManager: NSObject {
     
     private func startUpdatingInCycle(offset:Int) {
         
-        print("%@ Offset %d",__FUNCTION__,offset)
+        print("%@ Offset %d",#function,offset)
         
         if self.isCancelled {
             print("Cancelled")
@@ -572,7 +572,7 @@ Optional(Error Domain=TwitterAPIErrorDomain Code=88 "Request failed: client erro
     
     deinit {
         print("DeInit")
-        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "tryToGetConfiguration", object: nil)
+        NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(TwitterManager.tryToGetConfiguration), object: nil)
     }
     
     func getTwitterUsers(userIds:[String],block:twitterFriendsCompletion!) {
@@ -1154,8 +1154,8 @@ extension TwitterManager {
             
             assert(prevTimeInterval != 0 || prevReqInterval != 0)
             
-                NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: "tryToGetConfiguration", object: nil)
-                self.performSelector("tryToGetConfiguration", withObject: nil, afterDelay: min(diff1,diff2))
+                NSObject.cancelPreviousPerformRequestsWithTarget(self, selector: #selector(TwitterManager.tryToGetConfiguration), object: nil)
+                self.performSelector(#selector(TwitterManager.tryToGetConfiguration), withObject: nil, afterDelay: min(diff1,diff2))
             
             return false
         }

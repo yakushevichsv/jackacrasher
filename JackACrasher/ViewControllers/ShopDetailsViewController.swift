@@ -57,7 +57,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
         if CGRectGetHeight(self.view.frame) > CGRectGetWidth(self.view.frame) {
             rotatePrivateForSize(self.view.frame.size)
         }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePurchasesNotification:", name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ShopDetailsViewController.handlePurchasesNotification(_:)), name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
         
         correctFontOfChildViews(self.view)
     }
@@ -75,7 +75,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
     func handlePurchasesNotification(aNotification:NSNotification!)
     {
         if (!NSThread.isMainThread()) {
-            self.performSelectorOnMainThread("handlePurchasesNotification:", withObject: aNotification, waitUntilDone: false)
+            self.performSelectorOnMainThread(#selector(ShopDetailsViewController.handlePurchasesNotification(_:)), withObject: aNotification, waitUntilDone: false)
             return
         }
         
@@ -186,7 +186,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                 removeNonConsumableItemFromLocal(index)
                 return
             }
-            index++
+            index += 1
         }
     }
     
@@ -275,7 +275,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                     
                     break
                 }
-                index++
+                index += 1
             }
         }
     }
@@ -311,7 +311,7 @@ class ShopDetailsViewController: UIViewController,ShopDetailsCellDelegate,UIColl
                         break
                     }
                 }
-                i++
+                i += 1
                 
                 if (needToBreak) {
                     break

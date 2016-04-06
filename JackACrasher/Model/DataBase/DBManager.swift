@@ -482,7 +482,7 @@ class DBManager: NSObject {
                 
                 let objIDs = result.result as![NSManagedObjectID]
                 
-                print("changeSelectionState Changed items \(objIDs.count)",__FUNCTION__)
+                print("changeSelectionState Changed items \(objIDs.count)",#function)
                 
                 for objID in objIDs {
                     let retObj = self.managedObjectContext.objectWithID(objID)
@@ -508,9 +508,9 @@ class DBManager: NSObject {
                                     if (retObj.fault == false) {
                                         context.refreshObject(retObj, mergeChanges: false)
                                     }
-                                    else {
+                                    /*else {
                                         try? context.existingObjectWithID(objID)
-                                    }
+                                    }*/
                                 }
                                 self.saveContextWithCompletion(context) {
                                     (error, saved) in
@@ -777,7 +777,7 @@ extension DBManager {
         
         assert(self.mainManagedObjectContext != nil)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeContext:", name: NSManagedObjectContextDidSaveNotification, object: context)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(DBManager.didChangeContext(_:)), name: NSManagedObjectContextDidSaveNotification, object: context)
     }
     
     func stopListeningForChangesInManagedContext() {
@@ -832,8 +832,8 @@ extension DBManager {
         //self.mainManagedObjectContext.performBlockAndWait{
           //  [unowned self] in
             
-            print(__FUNCTION__)
-            
+            print(#function)
+        
             //assert(self.countTestTwitterUser() != 0)
             let request = NSFetchRequest(entityName: TwitterUser.EntityName())
             request.sortDescriptors = [NSSortDescriptor(key: "userName", ascending: true)]

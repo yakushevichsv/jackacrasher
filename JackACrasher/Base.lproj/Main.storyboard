@@ -77,13 +77,13 @@
                                     <constraint firstAttribute="width" secondItem="zOq-Ua-ez5" secondAttribute="height" multiplier="55:58" id="Bh9-hH-BsU"/>
                                 </constraints>
                             </imageView>
-                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="FSu-Xs-tHM" userLabel="Explosion IV">
+                            <imageView hidden="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="FSu-Xs-tHM" userLabel="Explosion IV">
                                 <rect key="frame" x="200" y="267" width="200" height="0.0"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="200" id="Vb0-re-OwX"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="378" y="379" width="136" height="40"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -244,7 +244,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="263" y="379" width="75" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="82" id="0r0-lm-6Hw"/>
@@ -278,7 +278,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="gcK-0M-Jf5"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="149" y="379" width="74" height="40"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
                                 <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>

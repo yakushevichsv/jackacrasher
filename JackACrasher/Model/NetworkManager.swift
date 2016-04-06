@@ -105,8 +105,9 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
     }
     
     
-    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, var didFinishDownloadingToURL location: NSURL) {
+    func URLSession(session: NSURLSession, downloadTask: NSURLSessionDownloadTask, didFinishDownloadingToURL location: NSURL) {
         
+        var location2 = location
         let taskId = downloadTask.taskIdentifier
         
     synch(self) {
@@ -120,10 +121,10 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
             
         
             do{
-                if let location2Path = try NSFileManager.defaultManager().jacStoreItemToCache(location.path!, fileName: ext) {
+                if let location2Path = try NSFileManager.defaultManager().jacStoreItemToCache(location2.path!, fileName: ext) {
                 
-                    location = NSURL(fileURLWithPath: location2Path)
-                    print("NEtworkManager downloading corrected location \(location)")
+                     location2 = NSURL(fileURLWithPath: location2Path)
+                    print("NEtworkManager downloading corrected location \(location2)")
                 }
             }
             catch let error as NSError {
@@ -134,7 +135,7 @@ class NetworkManager: NSObject, NSURLSessionDelegate,NSURLSessionDownloadDelegat
         synch(self) {
          if (self.tasksCompletions[taskId] != nil) {
             if let completion = self.tasksCompletions.removeValueForKey(taskId){
-                completion(path: location.path, error:nil)
+                completion(path: location2.path, error:nil)
             }
          }
         }

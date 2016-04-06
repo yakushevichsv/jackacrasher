@@ -48,18 +48,17 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
         return self.targetContentOffsetForProposedContentOffset(proposedContentOffset)
     }
     
-    override func targetContentOffsetForProposedContentOffset(var proposedContentOffset: CGPoint) -> CGPoint {
+    override func targetContentOffsetForProposedContentOffset( proposedContentOffset: CGPoint) -> CGPoint {
+        
+        var retOffset = proposedContentOffset
         
         let height = self.collectionViewContentSize().height
         
         if (proposedContentOffset.y > height) {
-            proposedContentOffset.y = height
+            retOffset.y = height
         }
-        /*else if (proposedContentOffset.y < 0 && proposedContentOffset.y > -CGRectGetHeight(self.collectionView!.pullToRefreshController.frame)/2){
-            proposedContentOffset.y = 0
-        }*/
         
-        return proposedContentOffset
+        return retOffset
     }
     
     override func prepareLayout() {
@@ -111,7 +110,7 @@ class TwitterFriendsViewLayout: UICollectionViewLayout {
                 
                 layoutAttributes.append(attribute)
                 
-                maxRowItem--
+                maxRowItem -= 1
                 
                 if (maxRowItem == 0 && index != numberOfItems - 1) {
                     

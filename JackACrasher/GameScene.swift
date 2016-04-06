@@ -201,7 +201,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                     
                     self.setTotalScore(self.totalGameScore)
                     self.updatePlayerLives(extraLives: gameInfo.numberOfLives)
-                    self.hudNode.setLifePercentUsingRatio(gameInfo.ratio)
+                    self.hudNode.setLifePercentUsingRatio(ratio: gameInfo.ratio)
                     
                 }
             }
@@ -348,7 +348,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     override func didMoveToView(view: SKView) {
         SoundManager.sharedInstance.prepareToPlayBGMusic()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "willTerminateApp", name: UIApplicationWillTerminateNotification, object: UIApplication.sharedApplication())
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameScene.willTerminateApp), name: UIApplicationWillTerminateNotification, object: UIApplication.sharedApplication())
         
         self.startPlayTime = NSDate.timeIntervalSinceReferenceDate()
         SoundManager.sharedInstance.playBGMusic()
@@ -431,7 +431,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
     
     
     private func setTotalScoreLabelValue() {
-        self.gameScoreNode?.setScore(self.totalGameScore)
+        self.gameScoreNode?.setScore(score: self.totalGameScore)
     }
     
     private func canCutRope(touches: Set<NSObject>) -> Bool {
@@ -961,7 +961,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
         switch (type) {
         case .Trash:
             if (self.trashAsteroidsCount != 0 && asteroid.parent != nil) {
-                self.trashAsteroidsCount--
+                self.trashAsteroidsCount -= 1
             }
             
             if (self.trashAsteroidsCount == 0) {
@@ -979,7 +979,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
             
             if !self.ropeBasedArray.isEmpty {
                 
-                for (var i = self.ropeBasedArray.startIndex; i < self.ropeBasedArray.endIndex;i++) {
+                for i in self.ropeBasedArray.startIndex ..< self.ropeBasedArray.endIndex {
                     
                     let curAster = self.ropeBasedArray[i]
                     
@@ -1643,7 +1643,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 if !curPhysBody.joints.isEmpty {
                     
-                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                    for i in curPhysBody.joints.startIndex ..< curPhysBody.joints.endIndex {
                         let joint: AnyObject = curPhysBody.joints[i]
                         
                         let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
@@ -1673,7 +1673,7 @@ class GameScene: SKScene, AsteroidGeneratorDelegate,EnemiesGeneratorDelegate, SK
                 
                 if !curPhysBody.joints.isEmpty {
                     
-                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                    for i in curPhysBody.joints.startIndex ..< curPhysBody.joints.endIndex {
                         let joint: AnyObject = curPhysBody.joints[i]
                         
                         let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
@@ -2569,7 +2569,7 @@ extension GameScene {
             // Here you add the delta value to the blade position
             
             var initCount = self.blades.count
-            for var index = initCount; index < 3; index++ {
+            for _ in initCount ..< 3 {
                 if let lastCopy = self.blades.last?.copy() as? SWBlade {
                     addChild(lastCopy)
                     self.blades.insert(lastCopy, atIndex:0)
@@ -2578,7 +2578,7 @@ extension GameScene {
             
             initCount = self.blades.count
             
-            for var index = 0; index < initCount; index++ {
+            for index in 0 ..< initCount {
                 
                 let mult = CGFloat(index+1)/CGFloat(initCount)
                 let position = self.blades.last!.position  + (delta * mult)
@@ -2610,7 +2610,7 @@ extension GameScene {
                 
                 if !curPhysBody.joints.isEmpty {
                     
-                    for var i = curPhysBody.joints.startIndex; i < curPhysBody.joints.endIndex;i++ {
+                    for i in curPhysBody.joints.startIndex ..< curPhysBody.joints.endIndex {
                         let joint: AnyObject = curPhysBody.joints[i]
                         
                         let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)

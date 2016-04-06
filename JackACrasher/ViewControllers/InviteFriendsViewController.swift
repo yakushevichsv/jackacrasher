@@ -38,6 +38,10 @@ class InviteFriendsViewController: UIViewController {
                     twitterVC.twitterId = self.twitterUserId
                 }
             }
+            
+            if self.traitCollection.userInterfaceIdiom == .Pad {
+                segue.destinationViewController.modalPresentationStyle = .FormSheet
+            }
         }
         else {
             super.prepareForSegue(segue, sender: sender)

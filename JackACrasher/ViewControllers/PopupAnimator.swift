@@ -9,7 +9,7 @@
 import UIKit
 
 class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
-   
+    
     internal let isPresenting:Bool
     internal let isPortrait:Bool
     internal let rect:CGRect
@@ -27,13 +27,13 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
     }
     
     func animateTransition(transitionContext: UIViewControllerContextTransitioning) {
-    
+        
         let fromVC = transitionContext.viewControllerForKey(UITransitionContextFromViewControllerKey)
         
         let toVC = transitionContext.viewControllerForKey(UITransitionContextToViewControllerKey)
         
         if (!isPresenting) {
-        
+            
             if let fromViewInternal = fromVC?.view {
                 
                 fromVC?.view.userInteractionEnabled = false
@@ -43,10 +43,10 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
                 UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
                     fromViewInternal.transform = CGAffineTransformMakeScale(1e-1, 1e-1)
                     
-                    }) { (flag) -> Void in
-                        transitionContext.completeTransition(true)
-                        fromViewInternal.removeFromSuperview()
-                        toVC?.view.userInteractionEnabled = true
+                }) { (flag) -> Void in
+                    transitionContext.completeTransition(true)
+                    fromViewInternal.removeFromSuperview()
+                    toVC?.view.userInteractionEnabled = true
                 }
                 
             }
@@ -63,40 +63,48 @@ class PopupAnimator: NSObject, UIViewControllerAnimatedTransitioning {
             
             fromVC?.view.userInteractionEnabled = false
             
-            let tW = self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
-            let tH =  !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
-            
-            let wScale = CGFloat( isPhone4s() ? 0.8 : (isPhone6Plus() ? 0.6 : 0.6) )
-            let hScale = CGFloat( (isPhone4s() || isPhone5s()) ? 0.9 : (isPhone6Plus() ? 0.7 : 0.8) )
-            let xMargin = (1 - wScale) * 0.5
-            let yMargin =  (1 - hScale) * 0.5
-            
-            let w  = round(wScale * tW)
-            let h  = round(hScale * tH)
-            let oX = round(xMargin * tW)
-            let oY = round(yMargin * tH)
-            
             var toViewFrame:CGRect
             
-            if (self.isPortrait) {
-                toViewFrame = CGRectMake(oY, oX, h, w)
+            if toVC!.traitCollection.userInterfaceIdiom == .Phone {
+                let tW = self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
+                let tH =  !self.isPortrait ? CGRectGetHeight(rect) : CGRectGetWidth(rect)
+                
+                let wScale = CGFloat( isPhone4s() ? 0.8 : (isPhone6Plus() ? 0.6 : 0.6) )
+                let hScale = CGFloat( (isPhone4s() || isPhone5s()) ? 0.9 : (isPhone6Plus() ? 0.7 : 0.8) )
+                let xMargin = (1 - wScale) * 0.5
+                let yMargin =  (1 - hScale) * 0.5
+                
+                let w  = round(wScale * tW)
+                let h  = round(hScale * tH)
+                let oX = round(xMargin * tW)
+                let oY = round(yMargin * tH)
+                
+                
+                if (self.isPortrait) {
+                    toViewFrame = CGRectMake(oY, oX, h, w)
+                }
+                else {
+                    toViewFrame = CGRectMake(oX, oY, w, h)
+                }
             }
             else {
-                toViewFrame = CGRectMake(oX, oY, w, h)
+                toViewFrame = rect
             }
-            
             
             toViewInternal.frame = toViewFrame
+        
+        
+            toViewInternal.frame = toViewFrame
             toViewInternal.transform = CGAffineTransformMakeScale(1e-1, 1e-1)
-            
-            
+        
+        
             UIView.animateWithDuration(self.transitionDuration(transitionContext), animations: { () -> Void in
                 toViewInternal.transform = CGAffineTransformIdentity
-                }) { (flag) -> Void in
-                    transitionContext.completeTransition(true)
+            }) { (flag) -> Void in
+                transitionContext.completeTransition(true)
             }
         }
-        
-        
+    
+    
     }
 }

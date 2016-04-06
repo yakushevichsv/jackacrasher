@@ -191,7 +191,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
         self.scene?.addChild(bullet)
        
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(self.attackInterval, target: self, selector: "allowsAttackAction", userInfo: nil, repeats: false)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(self.attackInterval, target: self, selector: #selector(EnemySpaceShip.allowsAttackAction), userInfo: nil, repeats: false)
         
         self.canAtack = false
     }

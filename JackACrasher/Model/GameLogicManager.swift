@@ -47,9 +47,9 @@ class GameLogicManager: NSObject {
         
         cloudChangedAuth()
         //gameCenterChangedAuth()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "cloudChangedAuth", name: SYiCloudAuthStatusChangeNotification, object: self.cloudManager)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameLogicManager.cloudChangedAuth), name: SYiCloudAuthStatusChangeNotification, object: self.cloudManager)
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "gameCenterChangedAuth", name: GameCenterManagerDidChangeAuth, object: self.centerManager)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameLogicManager.gameCenterChangedAuth), name: GameCenterManagerDidChangeAuth, object: self.centerManager)
     
         initODR()
         
@@ -303,7 +303,7 @@ extension GameLogicManager
         let fTime = !NSUserDefaults.standardUserDefaults().boolForKey(Constants.AppState)
         
         if (fTime) {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: "handlePurchasesNotification:", name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameLogicManager.handlePurchasesNotification(_:)), name: IAPPurchaseNotification, object: PurchaseManager.sharedInstance)
             PurchaseManager.sharedInstance.restore()
             return true
         }
@@ -1052,7 +1052,7 @@ extension GameLogicManager {
     }
     
     func initODR() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "needToPurgeODR:", name: ODRManagerShouldEndAccessOfRequestNotitification, object: self.odrManager)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameLogicManager.needToPurgeODR(_:)), name: ODRManagerShouldEndAccessOfRequestNotitification, object: self.odrManager)
         
         self.odrManager.definePreservationPriorityForResources(ODRConstants.helpSet, priority: 0.1)
         self.odrManager.definePreservationPriorityForResources(ODRConstants.soundSet, priority: 0.9)

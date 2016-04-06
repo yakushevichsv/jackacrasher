@@ -97,7 +97,7 @@ class EnemiesGenerator: NSObject {
                 lTimer.invalidate()
             }
         }
-        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(EnemiesGenerator.generateItem), userInfo: nil, repeats: true)
     }
     
     internal func generateItem() {

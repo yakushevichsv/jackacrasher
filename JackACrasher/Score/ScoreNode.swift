@@ -22,14 +22,15 @@ class ScoreNode: SKNode {
         label.position = point
         addChild(label)
         
-        setScore(score)
+        setScore(score: score)
     }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    internal func setScore(var score:UInt64) {
+    internal func setScore(score scoreInner:UInt64) {
+        var score = scoreInner
         if (score < 0) {
             score = 0
         }
