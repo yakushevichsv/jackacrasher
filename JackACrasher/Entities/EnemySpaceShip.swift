@@ -28,9 +28,9 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     
     
     internal struct Constants {
-        static let speed:CGFloat = 150
+        static var speed:CGFloat = 100
         static let name = "Bomb"
-        static let laserSpeed:CGFloat = speed * 2
+        static let laserSpeed:CGFloat = speed * 2.5
     }
     
     
@@ -46,6 +46,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     internal var canAtack:Bool = true
     
     override init(texture: SKTexture!, color: UIColor, size: CGSize) {
+        Constants.speed *= (UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 1.5 : 1.2)
         let texture = EnemySpaceShip.sPlayerTexture
         super.init(texture: texture, color: SKColor.blackColor(), size: texture.size())
         

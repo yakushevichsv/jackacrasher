@@ -41,7 +41,7 @@ class TwitterFriendsSendViewController: ProgressHDViewController {
     private var sendingSet = Set<Int>()
     private var failedSet  = Set<Int>()
     private var successSet = Set<Int>()
-    
+    private var doneOnce:Bool = false
     
     @IBOutlet weak var collectionView:UICollectionView!
     
@@ -57,6 +57,14 @@ class TwitterFriendsSendViewController: ProgressHDViewController {
         detectBulkRowsNumber()
         self.twitterManager.tryToGetConfiguration()
         correctTitleOfNavigationItemOnNeed()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        if (!doneOnce) {
+            self.doneOnce = true
+            self.collectionView.reloadData()
+        }
     }
 }
 
@@ -100,7 +108,7 @@ extension TwitterFriendsSendViewController {
             for twitterUser in array {
                 
                 let indexPath2 = NSIndexPath(forRow: startRow + index, inSection: indexPath.section)
-                index++
+                index += 1
             
                 if indexPath2 == indexPath {
                     fUser = twitterUser
@@ -245,7 +253,7 @@ extension TwitterFriendsSendViewController : UICollectionViewDelegateFlowLayout,
             
             if (cell.gestureRecognizers == nil || cell.gestureRecognizers!.isEmpty) {
                 
-                let recognizer = UITapGestureRecognizer(target: self, action: "tapGestureRecogniser:")
+                let recognizer = UITapGestureRecognizer(target: self, action: #selector(TwitterFriendsSendViewController.tapGestureRecogniser(_:)))
                 
                 if cell.gestureRecognizers == nil {
                     cell.gestureRecognizers = [UIGestureRecognizer](arrayLiteral: recognizer)
@@ -285,11 +293,11 @@ extension TwitterFriendsSendViewController : UICollectionViewDelegateFlowLayout,
                 cell.checked = !cell.checked
                 
                 if cell.checked {
-                    countSendItems++
+                    countSendItems += 1
                     checkedRows.insert(indexPath.row)
                 }
                 else {
-                    countSendItems--
+                    countSendItems -= 1
                     checkedRows.remove(indexPath.row)
                 }
                 
@@ -467,16 +475,8 @@ extension TwitterFriendsSendViewController {
     
     @IBAction func navigationItemPressed(sender:UIBarButtonItem) {
         
-        if sender.title == Optional(BarButtonItemConstants.Send) || sender.action == "refreshItemPressed:" {
+        if sender.title == Optional(BarButtonItemConstants.Send) || sender.action == #selector(TwitterFriendsSendViewController.refreshItemPressed(_:)) {
             
-            
-            /*Twitter.sharedInstance().logInWithCompletion {[weak self]  (session, error) in
-                if (session != nil) {
-                    self?.navigationActionForRefresh()
-                } else if let errorInner = error {
-                    print("error: \(errorInner.localizedDescription)");
-                }
-            }*/
             self.navigationActionForRefresh()
         }
         else if sender.title == Optional(BarButtonItemConstants.Cancel) {
@@ -495,7 +495,7 @@ extension TwitterFriendsSendViewController {
     func createRetryNavigationItem() {
         
          if let rButton = self.navigationItem.rightBarButtonItem {
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: rButton.target, action: "refreshItemPressed:")
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .Refresh, target: rButton.target, action: #selector(TwitterFriendsSendViewController.refreshItemPressed(_:)))
         }
     }
 }

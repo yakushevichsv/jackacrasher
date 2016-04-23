@@ -304,6 +304,10 @@ class GameViewController: UIViewController,GameSceneDelegate {
     
     func gameScenePlayerDied(scene:GameScene,totalScore:UInt64,currentScore:Int64, playedTime:NSTimeInterval,needToContinue:Bool) {
         
+        scene.pauseGame()
+        scene.removeAllActions()
+        scene.delegate = nil
+        scene.userInteractionEnabled = false
         
         let needToReport = playedTime != 0  && currentScore != 0
         

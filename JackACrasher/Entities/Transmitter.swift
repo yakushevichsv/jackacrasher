@@ -28,8 +28,8 @@ class Transmitter:SKNode,AssetsContainer {
     
     private  struct Constants {
         static let bgSpriteName = "bgSpriteName"
-        static let movingSpeed:CGFloat = 100.0
-        static let beamSpeed:CGFloat = 60.0
+        static var movingSpeed:CGFloat = 100.0
+        static var beamSpeed:CGFloat = 60.0
         static let transmitterLaserName = "TransmitterLaser"
     }
     
@@ -52,6 +52,10 @@ class Transmitter:SKNode,AssetsContainer {
             if let laser = SKEmitterNode(fileNamed: Transmitter.Constants.transmitterLaserName){
                 laser.name = self.Constants.transmitterLaserName
                 self.sLaserEmitter = laser
+                
+                let factor:CGFloat = (UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 1.5 : 1.2)
+                Constants.beamSpeed *= factor
+                Constants.movingSpeed *= factor
             }
         }
     }

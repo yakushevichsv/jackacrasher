@@ -1174,7 +1174,7 @@
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = Sound;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sygamefun.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sygamefun.JackACrasher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";
@@ -1190,8 +1190,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = JackACrasher/JackACrasher.entitlements;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1213,7 +1213,7 @@
 					"$(PROJECT_DIR)/OpenSSL/lib",
 				);
 				ON_DEMAND_RESOURCES_INITIAL_INSTALL_TAGS = Sound;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sygamefun.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.sygamefun.JackACrasher;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "JackACrasher/JackACrasher-Bridging-Header.h";

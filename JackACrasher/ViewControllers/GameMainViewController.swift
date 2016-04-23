@@ -476,8 +476,8 @@ class GameMainViewController: UIViewController {
                 
                 if self.traitCollection.userInterfaceIdiom == .Pad {
                     
-                    let h = CGRectGetHeight(rect)*0.3
-                    let w = CGRectGetWidth(rect)*0.3
+                    let h = CGRectGetHeight(rect)*0.4
+                    let w = CGRectGetWidth(rect)*0.4
                     
                     
                     let x = rect.center.x - w*0.5

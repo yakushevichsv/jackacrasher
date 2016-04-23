@@ -14,7 +14,7 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker, ItemDestructable {
     internal weak var target:Player?
     
     internal struct Constants {
-        static let speed:CGFloat = 200
+        static var speed:CGFloat = 200
         static let name = "Bomb"
     }
     
@@ -27,6 +27,7 @@ class Bomb: SKSpriteNode, AssetsContainer,Attacker, ItemDestructable {
     
     static func loadAssets() {
         dispatch_once(&Bomb.sOnce) {
+            Constants.speed *= (UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 1.5 : 1.2)
             Bomb.sBombTexture = SKTexture(imageNamed: "cartoon-bomb")
             Bomb.sBombTexture2 = SKTexture(imageNamed: "cartoon-bomb2")
         }

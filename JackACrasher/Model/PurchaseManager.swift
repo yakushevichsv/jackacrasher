@@ -174,7 +174,6 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
     internal func restoreFromReceipt() {
         
         self.receiptValidator.forceCheckReceiptWithCompletionHandler{
-            [unowned self]
             arrayAny,error in
             print("\(arrayAny)")
             
@@ -489,7 +488,6 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         //TODO: support other styles...
                         let productId = transaction.payment.productIdentifier
                         self.receiptValidator.forceCheckReceiptWithCompletionHandler{
-                            [unowned self]
                             arrayAny,error in
                             print("\(arrayAny)")
                             
@@ -554,7 +552,6 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                         
                         let productId = transaction.payment.productIdentifier
                         self.receiptValidator.forceCheckReceiptWithCompletionHandler{
-                            [unowned self]
                             arrayAny,error in
                             print("\(arrayAny)")
                             

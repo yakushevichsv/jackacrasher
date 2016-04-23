@@ -1,3 +1,4 @@
+
 //
 //  GameOverScene.swift
 //  JackACrasher
@@ -134,7 +135,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             createMoveActionForEnemy(attacker)
         }
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: "produceEnemyBullets", userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(0.5, target: self, selector: #selector(GameOverScene.produceEnemyBullets), userInfo: nil, repeats: true)
     }
     
     private func createMoveActionForEnemy(attacker:SKSpriteNode!) {
@@ -151,7 +152,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             attacker.xScale = -1.0
         }
         
-        let act = SKAction.moveTo(playerPos, duration: NSTimeInterval(distance/EnemySpaceShip.Constants.speed))
+        let act = SKAction.moveTo(playerPos, duration: NSTimeInterval(10*distance/EnemySpaceShip.Constants.speed))
         attacker.runAction(act)
     }
     

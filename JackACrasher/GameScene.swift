@@ -2609,10 +2609,7 @@ extension GameScene {
                 let curPhysBody = curNode.physicsBody!
                 
                 if !curPhysBody.joints.isEmpty {
-                    
-                    for i in curPhysBody.joints.startIndex ..< curPhysBody.joints.endIndex {
-                        let joint: AnyObject = curPhysBody.joints[i]
-                        
+                    for joint in curPhysBody.joints {
                         let skJoint = unsafeBitCast(joint, SKPhysicsJoint.self)
                         
                         self.physicsWorld.removeJoint(skJoint)

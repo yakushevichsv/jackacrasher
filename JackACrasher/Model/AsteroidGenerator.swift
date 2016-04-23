@@ -94,7 +94,7 @@ class AsteroidGenerator: NSObject {
     
     private func redifineTimer() {
         
-        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: "generateItem", userInfo: nil, repeats: true)
+        self.timer = NSTimer.scheduledTimerWithTimeInterval(1, target: self, selector: #selector(AsteroidGenerator.generateItem), userInfo: nil, repeats: true)
     }
     
     internal func produceSeqActionToAsteroid(asteroid:RegularAsteroid,asteroidSpeed:CGFloat = 30.0) -> SKAction! {
@@ -123,7 +123,7 @@ class AsteroidGenerator: NSObject {
     }
     
     internal class var regularAsteroidSpeed:CGFloat {
-        get { return 60  }
+        get { return 60 * (UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 1.5 : 1.2)  }
     }
     
     private func produceRegularAsteroidPrivate(size:RegularAsteroidSize,initialAnimation:Bool) -> (asteroid:RegularAsteroid,actions:SKAction)  {
@@ -273,8 +273,9 @@ class AsteroidGenerator: NSObject {
                 asteroids.rope = rope
             }
         
-            let speed:CGFloat = 40.0
-            
+            var speed:CGFloat = 40.0
+            speed *= (UIDevice.currentDevice().userInterfaceIdiom == .Pad ? 1.5 : 1.2)
+        
             let time:NSTimeInterval = NSTimeInterval(CGRectGetWidth(self.playableRect)/speed)
             
             var minXAsteroid:RegularAsteroid!
