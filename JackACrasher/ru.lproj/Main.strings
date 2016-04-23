@@ -45,5 +45,8 @@
 /* Class = "UIButton"; normalTitle = "Replay"; ObjectID = "q2p-pw-i4f"; */
 "q2p-pw-i4f.normalTitle" = "Повторить";
 
+/* Class = "UIButton"; normalTitle = "Replay"; ObjectID = "Ab1-9a-Swz"; */
+"Ab1-9a-Swz.normalTitle" = "Пригласить Друзей";
+
 /* Class = "UILabel"; text = "Select an action"; ObjectID = "w7g-AR-pH7"; */
 "w7g-AR-pH7.text" = "Выберите действие";

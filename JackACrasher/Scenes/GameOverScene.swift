@@ -240,7 +240,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             let length = diff.length()
             
         
-            let duration = (distanceBetweenPoints(sPoint, point2: tPoint) + extraLen)/(EnemySpaceShip.Constants.laserSpeed * 5)
+            let duration = (distanceBetweenPoints(sPoint, point2: tPoint) + extraLen)/(EnemySpaceShip.Constants.laserSpeed * 2)
         
             print("Attacker \(attacker)\n Lenght \(length) Duration \(duration)")
                 
