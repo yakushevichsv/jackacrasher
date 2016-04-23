@@ -558,6 +558,11 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                             var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
                             var found:Bool = false
                             
+                            guard arrayAny != nil else {
+                                self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
+                                return
+                            }
+                            
                             for item in arrayAny {
                                 let dic = item as! [NSObject:AnyObject]
                                 if let dicProductId = dic["productIdentifier"] as? String {

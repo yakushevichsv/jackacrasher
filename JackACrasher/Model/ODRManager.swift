@@ -36,7 +36,7 @@ class ODRManager: NSObject {
         super.init()
         
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "lowDiskSpace:", name:NSBundleResourceRequestLowDiskSpaceNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(ODRManager.lowDiskSpace(_:)), name:NSBundleResourceRequestLowDiskSpaceNotification, object: nil)
         
         
     }

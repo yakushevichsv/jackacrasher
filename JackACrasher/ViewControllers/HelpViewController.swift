@@ -107,17 +107,17 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         
         
         // Purge anything before the first page
-        for var index = 0; index < firstPage; ++index {
+        for index in 0 ..< firstPage {
             purgePage(index)
         }
         
         // Load pages in our range
-        for var index = firstPage; index <= lastPage; ++index {
+        for var index = firstPage; index <= lastPage; index += 1 {
             loadPage(index)
         }
         
         // Purge anything after the last page
-        for var index = lastPage+1; index < pageControl.numberOfPages; ++index {
+        for var index = lastPage+1; index < pageControl.numberOfPages; index += 1 {
             purgePage(index)
         }
     }

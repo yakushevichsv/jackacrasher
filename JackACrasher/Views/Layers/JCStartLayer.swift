@@ -136,7 +136,7 @@ class JCStartLayer: CALayer {
             self.animationForKey(Constants.shrinkZero) == anim ||
                 self.animationForKey(Constants.position) == anim  ||
                 self.animationForKey(Constants.scale) == anim) {
-                    animCompletionCount++
+                    animCompletionCount += 1
         }
     }
     
@@ -150,12 +150,12 @@ class JCStartLayer: CALayer {
             self.animationForKey(Constants.shrinkZero) == anim ||
             self.animationForKey(Constants.position) == anim  ||
             self.animationForKey(Constants.scale) == anim) {
-                animCompletionCount--
+                animCompletionCount -= 1
         }
         
         if (animCompletionCount == 0) {
             shrinkToZero()
-            animCompletionCount--
+            animCompletionCount -= 1
         }
         else if (animCompletionCount < 0) {
             self.completionBlock()

@@ -28,7 +28,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
             fetchOnNeed()
             if !(twitterId == nil || twitterId.isEmpty) {
                 
-                self.performSelectorInBackground("setupTM", withObject: nil)
+                self.performSelectorInBackground(#selector(TwitterFriendsViewController.setupTM), withObject: nil)
             }
         }
     }
@@ -163,7 +163,7 @@ class TwitterFriendsViewController: ProgressHDViewController {
         
         let item = UIBarButtonItem()
         item.target = self
-        item.action = "checkUnCheckedPressed"
+        item.action = #selector(TwitterFriendsViewController.checkUnCheckedPressed)
         let selectAll = NSLocalizedString("Select All", comment: "Select All")
         let unselectAll = NSLocalizedString("Unselect All", comment: "Unselect All")
         
@@ -799,7 +799,7 @@ extension TwitterFriendsViewController/*: UIScrollViewDelegate*/ {
 extension TwitterFriendsViewController {
     
     private func startListeningTMNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeTMState:", name: TwitterManagerStateNotification, object: self.twitterManager)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(TwitterFriendsViewController.didChangeTMState(_:)), name: TwitterManagerStateNotification, object: self.twitterManager)
     }
     
     private func stopListeningTMNotifications() {

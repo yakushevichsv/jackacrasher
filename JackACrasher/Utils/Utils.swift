@@ -418,6 +418,10 @@ func recursiveConvertPositionToScene(node:SKNode!) -> CGPoint {
     return pos
 }
 
+func isNullOrEmpty(str:String?) -> Bool {
+    return str == nil || str!.isEmpty
+}
+
 extension String {
     
     func stringByAppendingPathComponent(lastComponent:String?) -> String {

@@ -101,7 +101,7 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
                 
                 self.spritesAtlas = SKTextureAtlas(named: "player")
                 
-                for var index = 0 ; index < 6; index++ {
+                for index in 0  ..< 6 {
                     print("Player textures \(self.spritesAtlas.textureNames)")
                     let texture = self.spritesAtlas.textureNamed("astr\(index+1)")
                     textures.append(texture)

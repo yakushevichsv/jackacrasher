@@ -35,11 +35,11 @@ class CloudManager: NSObject {
         self.userInfo = CloudUserInfo(container: container)
         super.init()
         cloudChanged(nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "cloudChanged:", name: NSUbiquityIdentityDidChangeNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CloudManager.cloudChanged(_:)), name: NSUbiquityIdentityDidChangeNotification, object: nil)
         self.userInfo.getUserId(){
             recordID,error in
         }
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didBecomeActive:", name: UIApplicationDidBecomeActiveNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CloudManager.didBecomeActive(_:)), name: UIApplicationDidBecomeActiveNotification, object: nil)
     }
     
     deinit {
@@ -471,7 +471,7 @@ extension CloudManager {
                     objc_sync_enter(result)
                     
                     result[index] = pauseVal
-                    count--
+                    count -= 1
                     objc_sync_exit(result)
                 }
                 else {

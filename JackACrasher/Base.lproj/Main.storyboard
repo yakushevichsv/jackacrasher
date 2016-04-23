@@ -973,13 +973,13 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" style="whiteLarge" translatesAutoresizingMaskIntoConstraints="NO" id="78F-id-mgv">
-                                                    <rect key="frame" x="88" y="63" width="37" height="37"/>
+                                                    <rect key="frame" x="98" y="63" width="37" height="37"/>
                                                 </activityIndicatorView>
                                             </subviews>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </view>
                                         <constraints>
-                                            <constraint firstItem="78F-id-mgv" firstAttribute="centerX" secondItem="dKB-B3-VAj" secondAttribute="centerX" id="fC6-Gy-kQe"/>
+                                            <constraint firstItem="78F-id-mgv" firstAttribute="centerX" secondItem="dKB-B3-VAj" secondAttribute="centerX" constant="10" id="fC6-Gy-kQe"/>
                                             <constraint firstItem="78F-id-mgv" firstAttribute="centerY" secondItem="dKB-B3-VAj" secondAttribute="centerY" id="oby-vO-c8M"/>
                                         </constraints>
                                         <size key="customSize" width="212" height="163"/>

@@ -295,7 +295,7 @@ class Transmitter:SKNode,AssetsContainer {
     
     
     private func restoreCapturedNode() {
-        if let capturedNode = self.capturedNodeName != nil ? self.childNodeWithName(self.capturedNodeName) : self.transmitNode {
+        if let capturedNode = !isNullOrEmpty(self.capturedNodeName) ? self.childNodeWithName(self.capturedNodeName) : self.transmitNode {
             let sPosition = self.convertPoint(capturedNode.position, toNode: self.scene!)
             capturedNode.position = sPosition
             capturedNode.removeFromParent()

@@ -152,7 +152,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             attacker.xScale = -1.0
         }
         
-        let act = SKAction.moveTo(playerPos, duration: NSTimeInterval(10*distance/EnemySpaceShip.Constants.speed))
+        let act = SKAction.moveTo(playerPos, duration: NSTimeInterval(20*distance/EnemySpaceShip.Constants.speed))
         attacker.runAction(act)
     }
     
@@ -188,7 +188,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             attackerBullet?.removeFromParent()
             
             if self.playerHealthCount > 0 {
-                self.playerHealthCount--
+                self.playerHealthCount -= 1
             }
             
             if self.playerHealthCount == 0 {
@@ -265,7 +265,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
         
         if canAttackPlayer {
             
-            self.attackCount++
+            self.attackCount += 1
             
             if self.attackCount == 4 {
                 canAttackPlayer = false
@@ -273,7 +273,7 @@ class GameOverScene: SKScene,SKPhysicsContactDelegate {
             }
         }
         else {
-            self.attackCount--
+            self.attackCount -= 1
             
             if self.attackCount == 0 {
                 canAttackPlayer = true

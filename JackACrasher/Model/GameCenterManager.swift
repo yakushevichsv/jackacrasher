@@ -34,7 +34,7 @@ class GameCenterManager: NSObject, GKGameCenterControllerDelegate {
         self.gameCenterEnabled = true
         super.init()
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "didChangeAuth", name:
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(GameCenterManager.didChangeAuth), name:
             GKPlayerAuthenticationDidChangeNotificationName
             , object: GKLocalPlayer.localPlayer())
     }
