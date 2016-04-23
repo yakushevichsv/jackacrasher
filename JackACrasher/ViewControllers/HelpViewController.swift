@@ -107,7 +107,7 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         
         
         // Purge anything before the first page
-        for index in 0 ..< firstPage {
+        for var index = 0; index < firstPage; index += 1 {
             purgePage(index)
         }
         
