@@ -404,7 +404,7 @@ class AsteroidGenerator: NSObject {
             
             var curFrame = CGRectMake(xMargin - sprite.size.width * 0.5, yPos - sprite.size.height * 0.5, sprite.size.width, sprite.size.height)
             
-            for var i = 0 ; i < spriteFrames.count; i += 1 {
+            for var i in 0 ..< spriteFrames.count {
                 
                 let prevFrame = spriteFrames[i];
                 

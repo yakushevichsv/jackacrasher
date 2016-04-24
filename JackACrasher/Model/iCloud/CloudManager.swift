@@ -477,7 +477,7 @@ extension CloudManager {
                 else {
                     
                     objc_sync_enter(result)
-                    count--
+                    count -= 1
                     objc_sync_exit(result)
                 }
                 

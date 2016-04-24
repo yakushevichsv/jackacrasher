@@ -30,7 +30,7 @@ class EnemySpaceShip: SKSpriteNode,Attacker, ItemDamaging, ItemDestructable {
     internal struct Constants {
         static var speed:CGFloat = 100
         static let name = "Bomb"
-        static let laserSpeed:CGFloat = speed * 1.5
+        static let laserSpeed:CGFloat = speed * (UIDevice.currentDevice().userInterfaceIdiom == .Phone ? 2.5 : 1.7)
     }
     
     

@@ -542,7 +542,8 @@ class Player: SKSpriteNode, ItemDestructable, AssetsContainer {
         projectile.runAction(SKAction.sequence([fadeIn,moveTo,SKAction.removeFromParent()]))
         projectile.position = position
         projectile.physicsBody = SKPhysicsBody(rectangleOfSize: projectile.size)
-        projectile.name = "projectile_\(++self.numberOfThrownProjectiles)"
+        self.numberOfThrownProjectiles += 1
+        projectile.name = "projectile_\(self.numberOfThrownProjectiles)"
         projectile.physicsBody!.collisionBitMask = 0
         
         projectile.physicsBody!.categoryBitMask  = EntityCategory.PlayerLaser

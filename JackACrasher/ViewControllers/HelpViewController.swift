@@ -102,22 +102,25 @@ class HelpViewController: UIViewController, UIScrollViewDelegate {
         setCurrentPage(page)
         
         // Work out which pages you want to load
-        let firstPage = page - 1
+        var firstPage = page - 1
         let lastPage = page + 1
         
+        if (firstPage < 0) {
+            firstPage = 0
+        }
         
         // Purge anything before the first page
-        for var index = 0; index < firstPage; index += 1 {
+        for index in 0 ..< firstPage {
             purgePage(index)
         }
         
         // Load pages in our range
-        for var index = firstPage; index <= lastPage; index += 1 {
+        for index in firstPage ..< lastPage+1 {
             loadPage(index)
         }
         
         // Purge anything after the last page
-        for var index = lastPage+1; index < pageControl.numberOfPages; index += 1 {
+        for index in lastPage+1 ..< pageControl.numberOfPages {
             purgePage(index)
         }
     }

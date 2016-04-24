@@ -80,8 +80,11 @@ class DirectRope: Rope {
         
         var xPos = -(CGFloat(self.numberOfSteps) - 1 ) * ringDiff.x * 0.5
         
+        if self.numberOfSteps < 0 {
+            self.numberOfSteps = 0
+        }
         
-        for var i = 0 ; i < self.numberOfSteps; i += 1 {
+        for i in 0  ..< self.numberOfSteps {
            
             let sprite = SKSpriteNode(texture:self.ringTexture)
             let body = SKPhysicsBody(rectangleOfSize: self.ringTexture.size())

@@ -83,7 +83,7 @@
                                     <constraint firstAttribute="width" constant="200" id="Vb0-re-OwX"/>
                                 </constraints>
                             </imageView>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" showsTouchWhenHighlighted="YES" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fjR-H4-NMu" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="378" y="379" width="136" height="40"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
                                 <color key="tintColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
@@ -106,9 +106,6 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="478" y="379" width="136" height="40"/>
-                                </variation>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="JcH-uk-xDZ"/>
                                 </connections>
@@ -247,7 +244,7 @@
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="yXX-tb-LFT"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="characterWrap" translatesAutoresizingMaskIntoConstraints="NO" id="12G-JR-etf" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="263" y="379" width="75" height="40"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="82" id="0r0-lm-6Hw"/>
@@ -277,14 +274,11 @@
                                         <exclude reference="0r0-lm-6Hw"/>
                                     </mask>
                                 </variation>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="363" y="379" width="75" height="40"/>
-                                </variation>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="gcK-0M-Jf5"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" ambiguous="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
+                            <button opaque="NO" alpha="0.80000000000000004" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1XG-Tp-FSs" userLabel="Shop" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
                                 <rect key="frame" x="149" y="379" width="74" height="40"/>
                                 <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="30"/>
                                 <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
@@ -306,9 +300,6 @@
                                         <color key="value" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
-                                <variation key="heightClass=regular-widthClass=regular" ambiguous="YES" misplaced="YES">
-                                    <rect key="frame" x="249" y="379" width="74" height="40"/>
-                                </variation>
                                 <connections>
                                     <action selector="btnPressed:" destination="2gv-Q9-0S3" eventType="touchUpInside" id="CWo-wD-shJ"/>
                                 </connections>
@@ -774,7 +765,7 @@
                                 <rect key="frame" x="90" y="438" width="420" height="132"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="hIE-rY-cmt" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="41" y="86" width="159" height="38"/>
+                                        <rect key="frame" x="16" y="86" width="159" height="38"/>
                                         <constraints>
                                             <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="172" id="JDL-Wg-yB7"/>
                                         </constraints>
@@ -805,7 +796,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="wordWrap" translatesAutoresizingMaskIntoConstraints="NO" id="q2p-pw-i4f" customClass="RoundCornerButton" customModule="JackACrasher" customModuleProvider="target">
-                                        <rect key="frame" x="230" y="86" width="104" height="38"/>
+                                        <rect key="frame" x="254" y="86" width="104" height="38"/>
                                         <fontDescription key="fontDescription" name="gamerobot" family="game robot" pointSize="28"/>
                                         <inset key="contentEdgeInsets" minX="3" minY="3" maxX="3" maxY="3"/>
                                         <state key="normal" title="Replay">
@@ -854,13 +845,16 @@
                                     </button>
                                 </subviews>
                                 <constraints>
-                                    <constraint firstItem="hIE-rY-cmt" firstAttribute="trailing" secondItem="u7c-lb-ttF" secondAttribute="centerX" constant="-10" id="5K2-yv-8ag"/>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="top" secondItem="Ab1-9a-Swz" secondAttribute="bottom" constant="15" id="5Km-Ua-MEo"/>
                                     <constraint firstItem="q2p-pw-i4f" firstAttribute="baseline" secondItem="hIE-rY-cmt" secondAttribute="baseline" id="88D-Gg-l8I"/>
                                     <constraint firstAttribute="bottom" secondItem="hIE-rY-cmt" secondAttribute="bottom" constant="8" id="RYb-ni-jbK"/>
+                                    <constraint firstItem="Ab1-9a-Swz" firstAttribute="leading" secondItem="hIE-rY-cmt" secondAttribute="centerX" id="VA5-gn-uP3"/>
                                     <constraint firstAttribute="height" constant="132" id="oVe-gq-jNl"/>
-                                    <constraint firstItem="Ab1-9a-Swz" firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" constant="-10" id="uX0-3h-Oie"/>
-                                    <constraint firstItem="q2p-pw-i4f" firstAttribute="leading" secondItem="u7c-lb-ttF" secondAttribute="centerX" constant="20" id="vnQ-WK-HDn"/>
+                                    <constraint firstItem="Ab1-9a-Swz" firstAttribute="centerX" secondItem="u7c-lb-ttF" secondAttribute="centerX" constant="-10" id="uX0-3h-Oie">
+                                        <variation key="heightClass=compact" constant="-10"/>
+                                        <variation key="heightClass=regular-widthClass=regular" constant="-10"/>
+                                    </constraint>
+                                    <constraint firstItem="q2p-pw-i4f" firstAttribute="centerX" secondItem="Ab1-9a-Swz" secondAttribute="trailing" id="vRR-b0-Exg"/>
                                 </constraints>
                             </view>
                         </subviews>
