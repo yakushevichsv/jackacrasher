@@ -450,6 +450,26 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
         }
     }
     
+    private func markProductAsPurchased(productId:String!) -> Bool {
+        if let fProduct = self.validProducs[productId] {
+            fProduct.purchaseInProgress = false
+            fProduct.purchase = false
+            
+            if let prodInfo = fProduct.productInfo {
+                
+                if !prodInfo.consumable {
+                    fProduct.availableForPurchase = false
+                    GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
+                }
+                
+                GameLogicManager.sharedInstance.purchasedProduct(fProduct)
+            }
+            return true
+        }
+        return false
+    }
+    
+    
     //MARK: SKPaymentTransactionObserver
     
     func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction])
@@ -484,51 +504,40 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     if(!transaction.downloads.isEmpty) {
                         completeTransaction(transaction, status: IAPPurchaseNotificationStatus.IAPDownloadStarted, userInfo:userInfo)
                     }
+                    else if self.markProductAsPurchased(self.purchaseId) {
+                        self.completeTransaction(transaction, status:.IAPPurchaseSucceeded,userInfo:userInfo)
+                    }
                     else {
-                        //TODO: support other styles...
                         let productId = transaction.payment.productIdentifier
                         self.receiptValidator.forceCheckReceiptWithCompletionHandler{
                             arrayAny,error in
                             print("\(arrayAny)")
                             
                             var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
-                            var found:Bool = false
                             
                             if arrayAny != nil {
-                            for item in arrayAny {
-                                let dic = item as! [NSObject:AnyObject]
-                                if let dicProductId = dic["productIdentifier"] as? String {
-                                    if (!found) {
+                                purchaseStatus = .IAPPurchaseFailed
+                                for item in arrayAny {
+                                    let dic = item as! [NSObject:AnyObject]
+                                    if let dicProductId = dic["productIdentifier"] as? String {
                                         if dicProductId == productId {
                                             purchaseStatus = .IAPPurchaseSucceeded
-                                            found = true
-                                            
-                                            if let fProduct = self.validProducs[dicProductId] {
-                                                fProduct.purchaseInProgress = false
-                                                fProduct.purchase = false
-                                                
-                                                if let prodInfo = fProduct.productInfo {
-                                                    
-                                                    if !prodInfo.consumable {
-                                                        fProduct.availableForPurchase = false
-                                                        GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
-                                                    }
-                                                    
-                                                    GameLogicManager.sharedInstance.purchasedProduct(fProduct)
-                                                }
-                                            }
-                                            
-                                        } else {
-                                            purchaseStatus = .IAPPurchaseFailed
+                                
+                                            self.markProductAsPurchased(productId)
+                                            break
                                         }
                                     }
-                                    }
+                                }
+                            }
+                            else if error != nil {
+                                if error.domain == "SSErrorDomain" && error.code == 16 {
+                                    purchaseStatus = .IAPPurchaseSucceeded
+                                    self.markProductAsPurchased(productId)
                                 }
                             }
                             self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
                         }
                     }
-                
                 break
                 // There are restored products
             case .Restored:
@@ -542,6 +551,10 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                     
                     if(!transaction.downloads.isEmpty) {
                         status = .IAPDownloadStarted
+                    } else if self.markProductAsPurchased(self.purchaseId) {
+                        self.status = .IAPRestoredSucceeded
+                        NSNotificationCenter.defaultCenter().postNotificationName(IAPPurchaseNotification, object: self, userInfo: userInfo)
+                        self.completeTransaction(transaction, status:.IAPPurchaseSucceeded,userInfo:userInfo)
                     }
                     else {
                         
@@ -556,39 +569,30 @@ class PurchaseManager: NSObject, SKProductsRequestDelegate,SKPaymentTransactionO
                             print("\(arrayAny)")
                             
                             var purchaseStatus:IAPPurchaseNotificationStatus = .IAPPurchaseNone
-                            var found:Bool = false
                             
                             guard arrayAny != nil else {
+                                
+                                if error != nil {
+                                    if error.domain == "SSErrorDomain" && error.code == 16 {
+                                        purchaseStatus = .IAPPurchaseSucceeded
+                                        self.markProductAsPurchased(productId)
+                                    }
+                                }
                                 self.completeTransaction(transaction, status:purchaseStatus,userInfo:userInfo)
                                 return
                             }
                             
+                            purchaseStatus = .IAPPurchaseFailed
                             for item in arrayAny {
                                 let dic = item as! [NSObject:AnyObject]
                                 if let dicProductId = dic["productIdentifier"] as? String {
-                                    if (!found) {
-                                        if dicProductId == productId {
-                                            purchaseStatus = .IAPPurchaseSucceeded
-                                            found = true
-                                            
-                                            if let fProduct = self.validProducs[dicProductId] {
-                                                fProduct.purchaseInProgress = false
-                                                fProduct.purchase = false
-                                                
-                                                if let prodInfo = fProduct.productInfo {
-                                                    
-                                                    if !prodInfo.consumable {
-                                                        fProduct.availableForPurchase = false
-                                                        GameLogicManager.sharedInstance.storePurchaseInDefaultsForNonConsumableWithID(productId)
-                                                    }
-                                                    
-                                                    GameLogicManager.sharedInstance.purchasedProduct(fProduct)
-                                                }
-                                            }
-                                            
-                                        } else {
-                                            purchaseStatus = .IAPPurchaseFailed
-                                        }
+                                    
+                                    if dicProductId == productId {
+                                        purchaseStatus = .IAPPurchaseSucceeded
+                                        
+                                        self.markProductAsPurchased(productId)
+                                        break
+                                        
                                     }
                                 }
                             }
